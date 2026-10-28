@@ -4,6 +4,7 @@
   "private": true,
   "description": "Plataforma interactiva 3D de Geometría del Espacio con el profesor virtual Vértiz",
   "scripts": {
+    "test": "node --test regresiones.cjs",
     "start": "node server.js",
     "dev": "node server.js",
     "build": "node build.js"
