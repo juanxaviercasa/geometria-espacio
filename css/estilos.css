@@ -2548,3 +2548,9 @@ body.movimiento-reducido .tutor-pokemon { transition:none; }
 @media(prefers-reduced-motion:reduce) { .guia-foco-punto::after { animation:none; } .tutor-pokemon { transition:none; } }
 .tutor-senalando[data-direccion='izq'] .tutor-mano { left:8%;top:35%; }
 .tutor-senalando[data-direccion='arriba'] .tutor-mano { left:55%;top:3%; }
+
+/* Fórmulas accesibles y adaptables, también sin conexión. */
+.katex { font-size:1.08em; }
+.m:has(.katex), .cuenta:has(.katex) { white-space:normal; font-family:inherit; }
+.fml dt, .cuenta { overflow-x:auto; max-width:100%; }
+.katex-display { overflow-x:auto; overflow-y:hidden; padding:.3rem 0; }
