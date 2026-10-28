@@ -1,10 +1,14 @@
 /* ============================================================
-   visor.js — orquestador de figuras y Modo Maestro 3D
+   visor.js — Escenario de Clase 3D, Modo Maestro y Modo Proyector
    ------------------------------------------------------------
-   - Escenario 3D interactivo con HUD flotante de cristal.
-   - Modo Maestro integrado directamente sobre la escena 3D.
-   - Sincronización con Vértiz (voz, cámara 3D y resaltado).
-   - Modo Hero optimizado para máxima elegancia en portada.
+   - Diseño sin encimados: barra superior fuera del lienzo y
+     panel docente de Vértiz al costado (escritorio) o debajo (móvil).
+   - El 100 % del lienzo 3D queda libre para que la figura jamás
+     se recorte ni quede tapada por botones.
+   - Vértiz aparece junto a la figura que explica, señala la capa
+     activa y sincroniza voz y movimiento de boca.
+   - Modo Proyector (pantalla completa + tema oscuro opcional +
+     atajos de teclado y presentador inalámbrico).
    ============================================================ */
 (function (global) {
   'use strict';
@@ -13,6 +17,7 @@
   var modulo3d = null;
   var fallo3d = false;
   var instancias = [];
+  var visorActivo = null;
 
   function prefiereReducido() {
     return global.Progreso ? global.Progreso.prefiereMovimientoReducido() : false;
@@ -80,28 +85,36 @@
     return [
       {
         titulo: 'Presentación del sólido 3D',
-        texto: spec.alt || ('Observen este sólido tridimensional: ' + spec.titulo + '. Puedes rotarlo libremente en 360° con el ratón o el dedo.'),
+        texto: spec.alt || ('Observa este modelo tridimensional: ' + spec.titulo + '. Arrástralo para girarlo en 360°.'),
         camara: spec.camara || { theta: 0.7, phi: 0.35 },
         capaResaltada: capa1
       },
       {
         titulo: 'Elementos y aristas clave',
-        texto: spec.pie || 'Fíjate en las relaciones de perpendicularidad, caras y aristas destacadas en el modelo.',
+        texto: spec.pie || 'Fíjate en las relaciones espaciales entre caras, alturas y aristas destacadas en color.',
         camara: { theta: ((spec.camara && spec.camara.theta) || 0.7) + 0.45, phi: 0.28 },
         capaResaltada: capa2
       },
       {
-        titulo: 'Propiedades y cálculo métrico',
+        titulo: 'Propiedades y relación métrica',
         texto: (spec.medidas && spec.medidas.length)
-          ? ('Medidas destacadas del modelo: ' + spec.medidas.map(function (m) { return m[0] + ' (' + m[1] + ')'; }).join(', ') + '.')
-          : 'Comprender visualmente el cuerpo es la clave para resolver los problemas tipo admisión.',
+          ? ('Datos clave del modelo: ' + spec.medidas.map(function (m) { return m[0] + ' = ' + m[1]; }).join(' · ') + '.')
+          : 'Identifica el triángulo rectángulo auxiliar dentro del sólido para calcular las longitudes pedidas.',
         camara: spec.camara || { theta: 0.7, phi: 0.35 },
         capaResaltada: capa1
       }
     ];
   }
 
-  /* Contenedor de figura con diseño moderno y Modo Maestro */
+  function nombreCapa(spec, idCapa) {
+    var lista = (spec && spec.capas) || [];
+    for (var i = 0; i < lista.length; i++) {
+      if (lista[i].id === idCapa) return lista[i];
+    }
+    return null;
+  }
+
+  /* Montaje del Escenario de Clase 3D */
   function montarFigura(contenedor, idFigura, opciones) {
     opciones = opciones || {};
     var esHero = !!opciones.modoHero;
@@ -116,89 +129,65 @@
       if (c.activa === false) capasOcultas[c.id] = true;
     });
 
+    var pasos = (spec.pasosGuia && spec.pasosGuia.length) ? spec.pasosGuia : generarPasosPorDefecto(spec);
+
     var figura = document.createElement('figure');
-    figura.className = 'figura' + (esHero ? ' figura-hero-mode' : '');
+    figura.className = 'figura' + (esHero ? ' figura-hero-modo' : '');
+    figura.setAttribute('tabindex', '-1');
 
-    // Escenario contenedor que agrupa el HUD flotante, el lienzo y el Modo Maestro
-    var stageWrap = document.createElement('div');
-    stageWrap.className = 'figura-stage-wrap';
-
-    // HUD Superior Flotante de Cristal
-    var hudTop = document.createElement('div');
-    hudTop.className = 'figura-hud-top';
-    hudTop.innerHTML =
+    /* 1. Barra superior dedicada (fuera del lienzo, nunca tapa la figura) */
+    var barraSup = document.createElement('div');
+    barraSup.className = 'figura-barra-sup';
+    barraSup.innerHTML =
       '<div class="hud-titulo-wrap">' +
-        '<span class="hud-badge">' + (esHero ? '✨ MODELO 3D' : '📐 3D LAB') + '</span>' +
-        '<h4 class="hud-fig-titulo">' + spec.titulo + '</h4>' +
+        '<span class="hud-badge">' + (esHero ? '✨ AULA 3D' : '📐 VISOR 3D') + '</span>' +
+        '<h3 class="hud-fig-titulo">' + spec.titulo + '</h3>' +
       '</div>' +
       '<div class="acciones-fig">' +
-        '<button type="button" class="btn-fig btn-fig-hud" data-accion="vista" aria-pressed="false" title="Cambiar a vista 2D/3D">' +
-          '<span data-vista-texto>2D</span>' +
+        '<button type="button" class="btn-fig btn-fig-hud" data-accion="vista" aria-pressed="false" title="Alternar entre vista 3D y dibujo 2D">' +
+          '<span data-vista-texto>Vista 2D</span>' +
         '</button>' +
-        '<button type="button" class="btn-fig btn-fig-hud" data-accion="reset" title="Recentrar cámara">' +
+        '<button type="button" class="btn-fig btn-fig-hud" data-accion="reset" title="Recentrar figura (tecla R)">' +
           '<span>Recentrar</span>' +
         '</button>' +
-        '<button type="button" class="btn-fig btn-fig-hud" data-accion="giro" aria-pressed="true" title="Pausar o activar giro automático">' +
+        '<button type="button" class="btn-fig btn-fig-hud" data-accion="giro" aria-pressed="true" title="Pausar o reanudar rotación">' +
           '<span data-giro-texto>Giro</span>' +
         '</button>' +
+        '<button type="button" class="btn-fig btn-fig-hud" data-accion="contraste" aria-pressed="false" title="Fondo oscuro de alto contraste para proyector">' +
+          '<span>🌙 Fondo</span>' +
+        '</button>' +
+        '<button type="button" class="btn-fig btn-fig-hud btn-proyectar" data-accion="proyectar" aria-pressed="false" title="Modo Proyector a pantalla completa (tecla F)">' +
+          '<span data-proyectar-texto>⛶ Proyectar</span>' +
+        '</button>' +
       '</div>';
-    stageWrap.appendChild(hudTop);
+    figura.appendChild(barraSup);
 
-    // Lienzo 3D
+    /* 2. Escenario de clase: Columna Lienzo 3D + Columna Profesor Vértiz */
+    var escenarioClase = document.createElement('div');
+    escenarioClase.className = 'figura-escenario-clase';
+
+    /* 2a. Columna del lienzo 3D + capas + medidas */
+    var colLienzo = document.createElement('div');
+    colLienzo.className = 'figura-col-lienzo';
+
+    var lienzoWrap = document.createElement('div');
+    lienzoWrap.className = 'figura-stage-wrap';
+
     var lienzo = document.createElement('div');
     lienzo.className = 'figura-lienzo' + (esHero ? ' lienzo-hero' : '');
     lienzo.setAttribute('role', 'group');
     lienzo.setAttribute('aria-label', spec.alt || spec.titulo);
-    stageWrap.appendChild(lienzo);
+    lienzoWrap.appendChild(lienzo);
 
     var aviso = document.createElement('div');
     aviso.className = 'figura-aviso';
-    aviso.textContent = 'Arrastra para rotar en 360°';
+    aviso.textContent = 'Arrastra para girar · Rueda para zoom';
     if (opciones.sinAviso) aviso.hidden = true;
-    lienzo.appendChild(aviso);
+    lienzoWrap.appendChild(aviso);
 
-    // Panel interactivo del Modo Maestro (flotante sobre el lienzo)
-    var pasos = (spec.pasosGuia && spec.pasosGuia.length) ? spec.pasosGuia : generarPasosPorDefecto(spec);
+    colLienzo.appendChild(lienzoWrap);
 
-    var modoMaestroWrap = document.createElement('div');
-    modoMaestroWrap.className = 'modo-maestro modo-maestro-dock';
-    modoMaestroWrap.innerHTML =
-      '<div class="mm-cabecera">' +
-        '<button type="button" class="btn-mm-iniciar-glow" data-mm-accion="iniciar">' +
-          '<span class="mm-ico">▶</span> <span class="mm-txt-iniciar">Iniciar Explicación con Vértiz</span>' +
-        '</button>' +
-        '<button type="button" class="btn-fig btn-fig-hud btn-mm-voz" data-mm-accion="voz" title="Activar/Silenciar voz">' +
-          '<span class="mm-ico-voz">' + (global.Avatar && global.Avatar.getVozHabilitada && global.Avatar.getVozHabilitada() ? '🔊' : '🔇') + '</span> ' +
-          '<span class="mm-txt-voz">Voz</span>' +
-        '</button>' +
-      '</div>' +
-      '<div class="mm-panel-interactivo" data-mm-panel hidden>' +
-        '<div class="mm-nav-barra">' +
-          '<div class="mm-paso-contador">' +
-            '<span class="mm-num-tag" data-mm-paso-num>Paso 1</span> de <span data-mm-paso-total>' + pasos.length + '</span>' +
-            '<div class="mm-barra-progreso"><i data-mm-progreso style="width:' + (100 / pasos.length) + '%"></i></div>' +
-          '</div>' +
-          '<div class="mm-nav-botones">' +
-            '<button type="button" class="btn-mm-nav btn-mm-ant" data-mm-accion="ant" disabled title="Paso anterior">' +
-              '◀ Anterior' +
-            '</button>' +
-            '<button type="button" class="btn-mm-nav btn-mm-sig" data-mm-accion="sig" title="Avanzar al siguiente paso">' +
-              'Avanzar ⏭' +
-            '</button>' +
-          '</div>' +
-        '</div>' +
-        '<div class="mm-caja-dialogo">' +
-          '<div class="mm-dialogo-header">' +
-            '<span class="mm-avatar-tag">🗣️ Vértiz explica:</span>' +
-            '<strong class="mm-dialogo-titulo" data-mm-titulo>' + pasos[0].titulo + '</strong>' +
-          '</div>' +
-          '<p class="mm-dialogo-texto" data-mm-texto>' + pasos[0].texto + '</p>' +
-        '</div>' +
-      '</div>';
-    stageWrap.appendChild(modoMaestroWrap);
-    figura.appendChild(stageWrap);
-
-    // Barra de Capas (píldoras horizontales limpias debajo del escenario)
+    /* Barra de capas + medidas debajo del lienzo */
     var capasBar = document.createElement('div');
     capasBar.className = 'figura-capas';
     capasBar.innerHTML = '<span class="et">Capas:</span>';
@@ -211,23 +200,106 @@
       b.innerHTML = '<span class="capa-color-dot" style="background:' + c.color + '"></span>' + c.nombre;
       capasBar.appendChild(b);
     });
-    figura.appendChild(capasBar);
 
-    // Pie de figura y medidas (se oculta en hero para evitar saturación visual)
-    if (!esHero) {
+    if (spec.medidas && spec.medidas.length) {
+      var medWrap = document.createElement('div');
+      medWrap.className = 'figura-medidas-chips';
+      medWrap.innerHTML = spec.medidas.map(function (m) {
+        return '<span class="chip-medida"><b>' + m[0] + ':</b> ' + m[1] + '</span>';
+      }).join('');
+      capasBar.appendChild(medWrap);
+    }
+    colLienzo.appendChild(capasBar);
+    escenarioClase.appendChild(colLienzo);
+
+    /* 2b. Columna Docente: Vértiz + Paso a Paso */
+    var colMaestro = document.createElement('aside');
+    colMaestro.className = 'figura-col-maestro';
+    colMaestro.setAttribute('aria-label', 'Explicación paso a paso con Vértiz');
+
+    var puntosHtml = pasos.map(function (p, idx) {
+      return '<button type="button" class="mm-punto-paso' + (idx === 0 ? ' activo' : '') + '" data-mm-ir="' + idx + '" title="Ir al paso ' + (idx + 1) + ': ' + p.titulo + '">' + (idx + 1) + '</button>';
+    }).join('');
+
+    var capaInicial = nombreCapa(spec, pasos[0].capaResaltada);
+    var badgeCapaHtml = capaInicial
+      ? '<span class="mm-capa-foco" data-mm-capa-tag><span class="capa-color-dot" style="background:' + capaInicial.color + '"></span>Enfoca: ' + capaInicial.nombre + '</span>'
+      : '<span class="mm-capa-foco" data-mm-capa-tag hidden></span>';
+
+    colMaestro.innerHTML =
+      '<div class="mm-profesor-cabecera">' +
+        '<div class="mm-avatar-slot" data-mm-avatar-slot></div>' +
+        '<div class="mm-profesor-info">' +
+          '<div class="mm-profesor-top">' +
+            '<span class="mm-rol-tag">🎓 MODO MAESTRO</span>' +
+            '<span class="avatar-ondas-voz" data-mm-ondas aria-hidden="true">' +
+              '<span class="onda-1"></span><span class="onda-2"></span><span class="onda-3"></span><span class="onda-4"></span>' +
+            '</span>' +
+          '</div>' +
+          '<strong class="mm-profesor-nombre">Vértiz explica este modelo</strong>' +
+          '<div class="mm-controles-audio">' +
+            '<button type="button" class="btn-mm-chip-voz" data-mm-accion="voz" title="Activar o silenciar voz">' +
+              '<span class="mm-ico-voz">🔊</span> <span class="mm-txt-voz">Voz activa</span>' +
+            '</button>' +
+            '<button type="button" class="btn-mm-chip-voz" data-mm-accion="repetir" title="Volver a escuchar este paso">' +
+              '🔄 Escuchar' +
+            '</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="mm-progreso-fila">' +
+        '<span class="mm-num-tag" data-mm-paso-num>Paso 1 de ' + pasos.length + '</span>' +
+        '<div class="mm-puntos-lista" role="tablist" aria-label="Pasos de la explicación">' + puntosHtml + '</div>' +
+      '</div>' +
+
+      '<div class="mm-caja-dialogo">' +
+        '<div class="mm-dialogo-header">' +
+          '<strong class="mm-dialogo-titulo" data-mm-titulo>' + pasos[0].titulo + '</strong>' +
+          badgeCapaHtml +
+        '</div>' +
+        '<p class="mm-dialogo-texto" data-mm-texto>' + pasos[0].texto + '</p>' +
+      '</div>' +
+
+      '<div class="mm-guion-lista" aria-label="Índice de pasos de la figura">' +
+        pasos.map(function (p, idx) {
+          return '<button type="button" class="mm-guion-item' + (idx === 0 ? ' activo' : '') + '" data-mm-ir="' + idx + '">' +
+            '<span class="mm-guion-idx">' + (idx + 1) + '</span>' +
+            '<span class="mm-guion-tit">' + p.titulo + '</span>' +
+          '</button>';
+        }).join('') +
+      '</div>' +
+
+      '<div class="mm-acciones-fila">' +
+        '<button type="button" class="btn-mm-nav btn-mm-ant" data-mm-accion="ant" disabled title="Paso anterior (←)">' +
+          '◀ Anterior' +
+        '</button>' +
+        '<button type="button" class="btn-mm-nav btn-mm-sig" data-mm-accion="sig" title="Iniciar o avanzar al siguiente paso (→ o Espacio)">' +
+          '<span data-mm-sig-txt>▶ Explicar paso 1</span>' +
+        '</button>' +
+      '</div>';
+
+    escenarioClase.appendChild(colMaestro);
+    figura.appendChild(escenarioClase);
+
+    /* Pie descriptivo en lecciones */
+    if (!esHero && spec.pie) {
       var pie = document.createElement('figcaption');
       pie.className = 'figura-pie';
-      var medidas = (spec.medidas || []).map(function (m) {
-        return '<span><strong>' + m[0] + '</strong> ' + m[1] + '</span>';
-      }).join('');
-      pie.innerHTML =
-        '<p class="figura-pie-desc">' + spec.pie + '</p>' +
-        (medidas ? '<div class="medidas">' + medidas + '</div>' : '');
+      pie.innerHTML = '<p class="figura-pie-desc">' + spec.pie + '</p>';
       figura.appendChild(pie);
     }
 
     contenedor.innerHTML = '';
     contenedor.appendChild(figura);
+
+    /* Montar mini Vértiz dentro del panel docente */
+    var slotAvatar = colMaestro.querySelector('[data-mm-avatar-slot]');
+    var miniAvatar = null;
+    if (slotAvatar && global.Avatar && global.Avatar.crearMini) {
+      miniAvatar = global.Avatar.crearMini();
+      slotAvatar.appendChild(miniAvatar.nodo);
+    }
 
     var estado = {
       api: null,
@@ -236,12 +308,14 @@
       spec: spec,
       capasOcultas: capasOcultas,
       giro: !prefiereReducido(),
-      pasoActual: -1,
-      explicando: false
+      pasoActual: 0,
+      iniciado: false,
+      figura: figura
     };
 
     function pintar2d() {
       estado.tipo = '2d';
+      lienzo.innerHTML = '';
       global.Visor2D.render(lienzo, spec, { capasOcultas: estado.capasOcultas });
       aviso.hidden = true;
     }
@@ -249,11 +323,11 @@
     function usar2d(motivo) {
       estado.tipo = '2d';
       pintar2d();
-      var b = hudTop.querySelector('[data-vista-texto]');
-      if (b) b.textContent = '3D';
-      var btn = hudTop.querySelector('[data-accion="vista"]');
+      var b = barraSup.querySelector('[data-vista-texto]');
+      if (b) b.textContent = 'Vista 3D';
+      var btn = barraSup.querySelector('[data-accion="vista"]');
       if (btn) btn.setAttribute('aria-pressed', 'true');
-      var giroBtn = hudTop.querySelector('[data-accion="giro"]');
+      var giroBtn = barraSup.querySelector('[data-accion="giro"]');
       if (giroBtn) giroBtn.hidden = true;
       if (motivo === 'error') {
         aviso.hidden = false;
@@ -268,7 +342,6 @@
           estado.api = null;
         }
         lienzo.innerHTML = '';
-        lienzo.appendChild(aviso);
         try {
           estado.api = new Clase(lienzo, spec, {
             capasOcultas: estado.capasOcultas,
@@ -276,12 +349,12 @@
           });
           estado.tipo = '3d';
           estado.api.setAutoGiro(estado.giro && !estado.reducido);
-          aviso.hidden = false;
-          var btn = hudTop.querySelector('[data-accion="vista"]');
+          if (!opciones.sinAviso) aviso.hidden = false;
+          var btn = barraSup.querySelector('[data-accion="vista"]');
           if (btn) btn.setAttribute('aria-pressed', 'false');
-          var vt = hudTop.querySelector('[data-vista-texto]');
-          if (vt) vt.textContent = '2D';
-          var giroBtn = hudTop.querySelector('[data-accion="giro"]');
+          var vt = barraSup.querySelector('[data-vista-texto]');
+          if (vt) vt.textContent = 'Vista 2D';
+          var giroBtn = barraSup.querySelector('[data-accion="giro"]');
           if (giroBtn) giroBtn.hidden = estado.reducido;
           instancias.push(estado);
         } catch (e) {
@@ -294,25 +367,24 @@
       });
     }
 
-    // Arranque 3D por defecto
     if (vistaPreferida() === '2d') {
       usar2d();
-      var bt = hudTop.querySelector('[data-accion="vista"]');
-      if (bt) bt.setAttribute('aria-pressed', 'true');
     } else {
       usar3d();
     }
 
-    /* ---------- Lógica del Modo Maestro (Paso a Paso) ---------- */
-    var panelMM = modoMaestroWrap.querySelector('[data-mm-panel]');
-    var btnIniciar = modoMaestroWrap.querySelector('[data-mm-accion="iniciar"]');
-    var btnVoz = modoMaestroWrap.querySelector('[data-mm-accion="voz"]');
-    var btnAnt = modoMaestroWrap.querySelector('[data-mm-accion="ant"]');
-    var btnSig = modoMaestroWrap.querySelector('[data-mm-accion="sig"]');
-    var txtPasoNum = modoMaestroWrap.querySelector('[data-mm-paso-num]');
-    var barraProg = modoMaestroWrap.querySelector('[data-mm-progreso]');
-    var txtTitulo = modoMaestroWrap.querySelector('[data-mm-titulo]');
-    var txtExplicacion = modoMaestroWrap.querySelector('[data-mm-texto]');
+    /* ---------- Lógica del Modo Maestro ---------- */
+    var btnVoz = colMaestro.querySelector('[data-mm-accion="voz"]');
+    var btnRepetir = colMaestro.querySelector('[data-mm-accion="repetir"]');
+    var btnAnt = colMaestro.querySelector('[data-mm-accion="ant"]');
+    var btnSig = colMaestro.querySelector('[data-mm-accion="sig"]');
+    var txtSig = colMaestro.querySelector('[data-mm-sig-txt]');
+    var txtPasoNum = colMaestro.querySelector('[data-mm-paso-num]');
+    var txtTitulo = colMaestro.querySelector('[data-mm-titulo]');
+    var txtExplicacion = colMaestro.querySelector('[data-mm-texto]');
+    var tagCapa = colMaestro.querySelector('[data-mm-capa-tag]');
+    var ondasMM = colMaestro.querySelector('[data-mm-ondas]');
+    var botonesPuntos = colMaestro.querySelectorAll('[data-mm-ir]');
 
     function actualizarBotonVoz() {
       var activa = global.Avatar && global.Avatar.getVozHabilitada ? global.Avatar.getVozHabilitada() : true;
@@ -323,86 +395,100 @@
       btnVoz.classList.toggle('voz-activa', activa);
     }
 
-    function irAPaso(idx) {
+    function irAPaso(idx, conAudio) {
       if (idx < 0 || idx >= pasos.length) return;
+      visorActivo = instanciaPublica;
       estado.pasoActual = idx;
+      estado.iniciado = true;
       var paso = pasos[idx];
 
-      txtPasoNum.textContent = 'Paso ' + (idx + 1);
-      barraProg.style.width = (((idx + 1) / pasos.length) * 100) + '%';
+      txtPasoNum.textContent = 'Paso ' + (idx + 1) + ' de ' + pasos.length;
       txtTitulo.textContent = paso.titulo;
       txtExplicacion.innerHTML = paso.texto;
 
+      var infoCapa = nombreCapa(spec, paso.capaResaltada);
+      if (tagCapa) {
+        if (infoCapa) {
+          tagCapa.hidden = false;
+          tagCapa.innerHTML = '<span class="capa-color-dot" style="background:' + infoCapa.color + '"></span>Enfoca: ' + infoCapa.nombre;
+        } else {
+          tagCapa.hidden = true;
+        }
+      }
+
+      botonesPuntos.forEach(function (b) {
+        var nPaso = parseInt(b.getAttribute('data-mm-ir'), 10);
+        b.classList.toggle('activo', nPaso === idx);
+        b.classList.toggle('visitado', nPaso < idx);
+      });
+
       btnAnt.disabled = (idx === 0);
       if (idx === pasos.length - 1) {
-        btnSig.innerHTML = '🎉 Finalizar';
+        txtSig.textContent = '↻ Reiniciar explicación';
         btnSig.classList.add('btn-completado');
       } else {
-        btnSig.innerHTML = 'Avanzar ⏭';
+        txtSig.textContent = 'Avanzar al paso ' + (idx + 2) + ' ⏭';
         btnSig.classList.remove('btn-completado');
       }
 
-      // Animación en la figura 3D
+      /* Animar cámara y resaltar capa en el modelo 3D */
       if (estado.tipo === '3d' && estado.api) {
+        estado.giro = false;
+        estado.api.setAutoGiro(false);
+        var giroBtn = barraSup.querySelector('[data-accion="giro"]');
+        if (giroBtn) giroBtn.setAttribute('aria-pressed', 'false');
+
         if (paso.camara && estado.api.enfocarCamara) {
           estado.api.enfocarCamara(paso.camara.theta, paso.camara.phi, paso.camara.dist, 750);
         }
         if (paso.capaResaltada && estado.api.resaltarCapa) {
-          estado.api.resaltarCapa(paso.capaResaltada, 2400);
+          estado.api.resaltarCapa(paso.capaResaltada, 4200);
+          var pillCapa = capasBar.querySelector('[data-capa="' + paso.capaResaltada + '"]');
+          if (pillCapa) pillCapa.setAttribute('aria-pressed', 'true');
         }
       }
 
-      // Locución del Personaje
-      if (global.AvatarGuia && global.AvatarGuia.hablar) {
-        global.AvatarGuia.hablar(paso.texto, {
-          estadoFinal: (idx === pasos.length - 1) ? 'celebra' : 'senala',
-          conVoz: true
-        });
-      } else if (global.Avatar && global.Avatar.hablarVoz) {
-        global.Avatar.hablarVoz(paso.texto);
-      }
-
-      if (idx === pasos.length - 1 && global.AvatarGuia && global.AvatarGuia.celebracion) {
-        setTimeout(function () {
-          global.AvatarGuia.celebracion();
-        }, 1200);
+      /* Locución y animación de Vértiz */
+      if (conAudio !== false) {
+        if (global.AvatarGuia && global.AvatarGuia.hablar) {
+          global.AvatarGuia.hablar(paso.texto, {
+            estadoFinal: (idx === pasos.length - 1) ? 'celebra' : 'senala',
+            conVoz: true
+          });
+        } else if (global.Avatar && global.Avatar.hablarVoz) {
+          global.Avatar.hablarVoz(paso.texto);
+        }
+        if (idx === pasos.length - 1 && miniAvatar) {
+          setTimeout(function () { miniAvatar.celebrar(); }, 900);
+        }
       }
     }
 
-    btnIniciar.addEventListener('click', function () {
-      if (panelMM.hidden) {
-        panelMM.hidden = false;
-        btnIniciar.classList.add('activo');
-        btnIniciar.querySelector('.mm-txt-iniciar').textContent = 'Pausar Explicación';
-        btnIniciar.querySelector('.mm-ico').textContent = '⏸';
-        estado.explicando = true;
-        if (estado.pasoActual < 0) {
-          irAPaso(0);
-        } else {
-          irAPaso(estado.pasoActual);
-        }
-      } else {
-        panelMM.hidden = true;
-        btnIniciar.classList.remove('activo');
-        btnIniciar.querySelector('.mm-txt-iniciar').textContent = 'Continuar Explicación';
-        btnIniciar.querySelector('.mm-ico').textContent = '▶';
-        estado.explicando = false;
-        if (global.Avatar && global.Avatar.detenerVoz) global.Avatar.detenerVoz();
-      }
-    });
-
     btnSig.addEventListener('click', function () {
-      if (estado.pasoActual < pasos.length - 1) {
-        irAPaso(estado.pasoActual + 1);
+      if (!estado.iniciado) {
+        irAPaso(0, true);
+      } else if (estado.pasoActual < pasos.length - 1) {
+        irAPaso(estado.pasoActual + 1, true);
       } else {
-        irAPaso(0);
+        irAPaso(0, true);
       }
     });
 
     btnAnt.addEventListener('click', function () {
       if (estado.pasoActual > 0) {
-        irAPaso(estado.pasoActual - 1);
+        irAPaso(estado.pasoActual - 1, true);
       }
+    });
+
+    btnRepetir.addEventListener('click', function () {
+      irAPaso(estado.pasoActual, true);
+    });
+
+    botonesPuntos.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var idx = parseInt(b.getAttribute('data-mm-ir'), 10);
+        if (!isNaN(idx)) irAPaso(idx, true);
+      });
     });
 
     btnVoz.addEventListener('click', function () {
@@ -410,17 +496,22 @@
         var nueva = !global.Avatar.getVozHabilitada();
         global.Avatar.setVozHabilitada(nueva);
         actualizarBotonVoz();
-        if (nueva && estado.pasoActual >= 0) {
-          global.Avatar.hablarVoz(pasos[estado.pasoActual].texto);
+        if (nueva) {
+          irAPaso(estado.pasoActual, true);
         }
       }
     });
 
     document.addEventListener('voz-cambiada', actualizarBotonVoz);
+    document.addEventListener('avatar-hablando', function (e) {
+      var activo = !!(e.detail && e.detail.activo);
+      if (ondasMM) ondasMM.classList.toggle('activo', activo);
+      colMaestro.classList.toggle('hablando-ahora', activo);
+    });
     actualizarBotonVoz();
 
-    /* Controles generales del visor */
-    hudTop.querySelector('[data-accion="vista"]').addEventListener('click', function () {
+    /* ---------- Controles de la barra superior ---------- */
+    barraSup.querySelector('[data-accion="vista"]').addEventListener('click', function () {
       if (estado.tipo === '3d') {
         if (estado.api) { estado.api.destruir(); estado.api = null; }
         usar2d();
@@ -431,45 +522,68 @@
       }
     });
 
-    hudTop.querySelector('[data-accion="reset"]').addEventListener('click', function () {
-      if (estado.tipo === '3d' && estado.api) estado.api.reset();
-      else pintar2d();
+    barraSup.querySelector('[data-accion="reset"]').addEventListener('click', function () {
+      if (estado.tipo === '3d' && estado.api) {
+        estado.api.quitarResalte();
+        estado.api.reset();
+      } else {
+        pintar2d();
+      }
     });
 
-    hudTop.querySelector('[data-accion="giro"]').addEventListener('click', function () {
+    barraSup.querySelector('[data-accion="giro"]').addEventListener('click', function () {
       estado.giro = !estado.giro;
       this.setAttribute('aria-pressed', estado.giro ? 'true' : 'false');
       if (estado.api) estado.api.setAutoGiro(estado.giro);
     });
 
-    /* Pausa las figuras fuera de pantalla */
-    if ('IntersectionObserver' in window) {
-      var obs = new IntersectionObserver(function (entradas) {
-        entradas.forEach(function (e) {
-          if (!estado.api) return;
-          if (e.isIntersecting) estado.api.reanudar();
-          else {
-            estado.api.pausar();
-            if (estado.explicando && global.Avatar && global.Avatar.detenerVoz) {
-              global.Avatar.detenerVoz();
-            }
-          }
-        });
-      }, { rootMargin: '120px' });
-      obs.observe(lienzo);
+    barraSup.querySelector('[data-accion="contraste"]').addEventListener('click', function () {
+      var oscuro = figura.classList.toggle('tema-oscuro-visor');
+      this.setAttribute('aria-pressed', oscuro ? 'true' : 'false');
+      if (estado.api && estado.api._resize) estado.api._resize();
+    });
+
+    var btnProyectar = barraSup.querySelector('[data-accion="proyectar"]');
+    var txtProyectar = barraSup.querySelector('[data-proyectar-texto]');
+
+    function alternarProyector() {
+      visorActivo = instanciaPublica;
+      var proyectando = figura.classList.toggle('modo-proyector');
+      document.body.classList.toggle('con-visor-proyectado', proyectando);
+      btnProyectar.setAttribute('aria-pressed', proyectando ? 'true' : 'false');
+      if (txtProyectar) txtProyectar.textContent = proyectando ? '✕ Salir' : '⛶ Proyectar';
+
+      if (proyectando) {
+        if (figura.requestFullscreen) {
+          figura.requestFullscreen().catch(function () {});
+        }
+        figura.focus();
+      } else {
+        if (document.fullscreenElement && document.exitFullscreen) {
+          document.exitFullscreen().catch(function () {});
+        }
+      }
+      setTimeout(function () {
+        if (estado.api && estado.api._resize) estado.api._resize();
+        else if (estado.tipo === '2d') pintar2d();
+      }, 60);
     }
 
-    window.addEventListener('resize', function () {
-      if (estado.tipo !== '2d') return;
-      pintar2d();
+    btnProyectar.addEventListener('click', alternarProyector);
+
+    document.addEventListener('fullscreenchange', function () {
+      if (!document.fullscreenElement && figura.classList.contains('modo-proyector')) {
+        figura.classList.remove('modo-proyector');
+        document.body.classList.remove('con-visor-proyectado');
+        btnProyectar.setAttribute('aria-pressed', 'false');
+        if (txtProyectar) txtProyectar.textContent = '⛶ Proyectar';
+        setTimeout(function () {
+          if (estado.api && estado.api._resize) estado.api._resize();
+        }, 60);
+      }
     });
 
-    document.addEventListener('movimiento-cambiado', function (e) {
-      estado.reducido = e.detail.reducido;
-      if (estado.api) estado.api.setReducido(estado.reducido);
-      if (estado.api && estado.reducido) estado.api.setAutoGiro(false);
-    });
-
+    /* ---------- Capas ---------- */
     capasBar.querySelectorAll('[data-capa]').forEach(function (b) {
       b.addEventListener('click', function () {
         var id = b.getAttribute('data-capa');
@@ -481,12 +595,78 @@
       });
     });
 
-    return {
+    /* ---------- Visibilidad en pantalla ---------- */
+    if ('IntersectionObserver' in window) {
+      var obs = new IntersectionObserver(function (entradas) {
+        entradas.forEach(function (e) {
+          if (!estado.api) return;
+          if (e.isIntersecting) {
+            estado.api.reanudar();
+            if (!visorActivo) visorActivo = instanciaPublica;
+          } else {
+            estado.api.pausar();
+          }
+        });
+      }, { rootMargin: '140px' });
+      obs.observe(figura);
+    }
+
+    figura.addEventListener('mouseenter', function () {
+      visorActivo = instanciaPublica;
+    });
+    figura.addEventListener('focusin', function () {
+      visorActivo = instanciaPublica;
+    });
+
+    window.addEventListener('resize', function () {
+      if (estado.tipo === '2d') pintar2d();
+    });
+
+    document.addEventListener('movimiento-cambiado', function (e) {
+      estado.reducido = e.detail.reducido;
+      if (estado.api) estado.api.setReducido(estado.reducido);
+      if (estado.api && estado.reducido) estado.api.setAutoGiro(false);
+    });
+
+    var instanciaPublica = {
       elemento: figura,
       irAPaso: irAPaso,
+      siguientePaso: function () { btnSig.click(); },
+      anteriorPaso: function () { btnAnt.click(); },
+      alternarProyector: alternarProyector,
       obtenerEstado: function () { return estado; }
     };
+
+    if (!visorActivo) visorActivo = instanciaPublica;
+    return instanciaPublica;
   }
+
+  /* Atajos de teclado de aula (cuando se proyecta o no se está en un input) */
+  window.addEventListener('keydown', function (e) {
+    if (!visorActivo) return;
+    var tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+    if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+
+    var st = visorActivo.obtenerEstado();
+    var enProyector = st && st.figura && st.figura.classList.contains('modo-proyector');
+    var focoEnFigura = st && st.figura && st.figura.contains(document.activeElement);
+
+    if (!enProyector && !focoEnFigura) return;
+
+    if (e.key === 'PageDown' || (enProyector && (e.key === 'ArrowRight' || e.key === ' '))) {
+      e.preventDefault();
+      visorActivo.siguientePaso();
+    } else if (e.key === 'PageUp' || (enProyector && e.key === 'ArrowLeft')) {
+      e.preventDefault();
+      visorActivo.anteriorPaso();
+    } else if (e.key === 'f' || e.key === 'F') {
+      e.preventDefault();
+      visorActivo.alternarProyector();
+    } else if (e.key === 'Escape' && enProyector) {
+      e.preventDefault();
+      visorActivo.alternarProyector();
+    }
+  });
 
   global.Visor = {
     montar: montarFigura,
