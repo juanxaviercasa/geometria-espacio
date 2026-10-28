@@ -1722,6 +1722,19 @@ table.datos td.m { white-space: nowrap; }
 
 .avatar { display: block; width: 100%; height: 100%; overflow: visible; }
 
+/* Personajes elegibles: el lienzo de geometría conserva todo su espacio. */
+.tutor-selector { display: grid; gap: 4px; width: 100%; max-width: 210px; text-align: left; margin-top: 8px; }
+.tutor-selector > span { color: var(--muted); font-size: .69rem; font-weight: 700; letter-spacing: .03em; }
+.tutor-selector select { width: 100%; min-width: 0; padding: 7px 24px 7px 9px; border: 1px solid #c7d2fe; border-radius: 9px; background: #fff; color: #312e81; font: inherit; font-size: .78rem; cursor: pointer; }
+.tutor-selector select:focus-visible { outline: 3px solid #8b5cf6; outline-offset: 3px; }
+.avatar-escena.tutor-personalizado > .avatar { visibility: hidden; }
+.tutor-visual { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.tutor-canvas { touch-action: pan-y; cursor: grab; }
+.tutor-canvas:active { cursor: grabbing; }
+.tutor-pokemon { image-rendering: pixelated; padding: 12%; filter: drop-shadow(0 9px 5px #42334c25); }
+.avatar-columna-figura:has(.tutor-personalizado) .avatar-escenario { max-width: 210px; width: 210px; height: 210px; }
+.avatar-escena.tutor-personalizado { width: 100%; height: 100%; left: 0; margin-left: 0; bottom: 0; }
+
 /* Puntos de giro exactos para el viewBox 200 x 250 */
 .avatar .pierna-izq { transform-box: view-box; transform-origin: 82px 154px; }
 .avatar .pierna-der { transform-box: view-box; transform-origin: 118px 154px; }
@@ -2490,3 +2503,25 @@ body.movimiento-reducido .avatar-escenario.fiesta .avatar-confeti { opacity: 0; 
   a { color: #000; text-decoration: none; }
 }
 
+
+/* Espacio del tutor dentro del panel de explicación. */
+.mm-profesor-cabecera { grid-template-columns: 108px minmax(0,1fr); }
+.mm-avatar-slot { width:108px; height:132px; }
+.vertiz-stage-mini .mini-escenario { width:108px; height:132px; }
+.vertiz-stage-mini .avatar-escena.tutor-personalizado { width:108px; height:132px; margin-left:0; left:0; bottom:0; }
+.mm-profesor-info { min-width:0; }
+.mm-profesor-info .tutor-selector { max-width:100%; }
+@media (max-width:420px) {
+  .mm-profesor-cabecera { grid-template-columns:90px minmax(0,1fr); }
+  .mm-avatar-slot,.vertiz-stage-mini .mini-escenario,.vertiz-stage-mini .avatar-escena.tutor-personalizado { width:90px; height:118px; }
+  .avatar-columna-figura:has(.tutor-personalizado) .avatar-escenario { width:180px; height:180px; }
+}
+.tutor-preferencias { width:100%; max-width:210px; }
+.tutor-preferencias small { display:block; margin-top:6px; color:#68637b; font-size:.65rem; line-height:1.4; }
+.mm-profesor-info .tutor-preferencias { max-width:100%; }
+.vertiz-marco .avatar-escena.tutor-personalizado,
+.aside-leccion #avatar-guia .avatar-escena.tutor-personalizado { left:0; margin-left:0; bottom:0; width:100%; height:100%; }
+@media (min-width:421px) {
+  .mm-profesor-cabecera { grid-template-columns:132px minmax(0,1fr); }
+  .mm-avatar-slot,.vertiz-stage-mini .mini-escenario,.vertiz-stage-mini .avatar-escena.tutor-personalizado { width:132px; height:166px; }
+}
