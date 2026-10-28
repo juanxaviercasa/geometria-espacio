@@ -206,7 +206,7 @@
       var medWrap = document.createElement('div');
       medWrap.className = 'figura-medidas-chips';
       medWrap.innerHTML = spec.medidas.map(function (m) {
-        return '<span class="chip-medida"><b>' + m[0] + ':</b> ' + m[1] + '</span>';
+        return '<span class="chip-medida"><b>' + m[0] + ':</b> <span class="m">' + m[1] + '</span></span>';
       }).join('');
       capasBar.appendChild(medWrap);
     }

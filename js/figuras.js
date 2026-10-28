@@ -810,7 +810,7 @@
       },
       {
         titulo: 'Pitágoras en tres dimensiones',
-        texto: 'La fórmula es: diagonal al cuadrado = a² + b² + c². Con 2, 3 y 6: 4 + 9 + 36 = 49. La diagonal mide raíz cuadrada de 49: 7 unidades.',
+        texto: 'La fórmula es: <span class="m">d² = a² + b² + c²</span>. Con 2, 3 y 6: <span class="m">4 + 9 + 36 = 49</span>. La diagonal mide <span class="m">√49 = 7</span> unidades.',
         camara: { theta: 0.7, phi: 0.26 },
         capasVisibles: ['aristas', 'diagonal-espacial', 'etiquetas'],
         capaResaltada: 'diagonal-espacial'

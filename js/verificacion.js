@@ -37,26 +37,26 @@
 
   function seccion() {
     /* --- Diagonal espacial del ortoedro y del cubo --- */
-    comprobar('Fórmulas', 'Diagonal del ortoedro 2·3·6 = 7 (ternas)', function () {
+    comprobar('Fórmulas', 'Diagonal del ortoedro de dimensiones 2, 3 y 6: \\(d = 7\\)', function () {
       var d = Math.sqrt(4 + 9 + 36);
       var terna = 7;
       return { ok: cerca(d, terna, TOL), detalle: '√(4+9+36) = √49 = ' + d };
     });
 
-    comprobar('Fórmulas', 'Diagonal del cubo = a√3 (coincide con la fórmula general)', function () {
+    comprobar('Fórmulas', 'Diagonal del cubo = \\(a\\sqrt{3}\\) (coincide con la fórmula general)', function () {
       var a = 5;
       var general = Math.sqrt(a * a + a * a + a * a);
       var cubo = a * Math.sqrt(3);
       return { ok: cerca(general, cubo, 1e-12), detalle: general.toFixed(6) + ' = ' + cubo.toFixed(6) };
     });
 
-    comprobar('Fórmulas', 'Diagonal de cara del cubo = a√2 (dos dimensiones)', function () {
+    comprobar('Fórmulas', 'Diagonal de cara del cubo = \\(a\\sqrt{2}\\) (dos dimensiones)', function () {
       var a = 5;
       return { ok: cerca(Math.sqrt(25 + 25), a * Math.SQRT2, 1e-12), detalle: '√50 = ' + Math.sqrt(50).toFixed(6) };
     });
 
     /* --- Volumen de la pirámide: 1/3 frente a la suma de tetraedros --- */
-    comprobar('Fórmulas', 'Volumen de pirámide = 1/3 · prisma (integración numérica)', function () {
+    comprobar('Fórmulas', 'Volumen de pirámide = \\(\\frac{1}{3}\\) del prisma (integración numérica)', function () {
       // Compara B·h/3 con una suma de Simpson de secciones paralelas de escala lineal
       var B = 36, h = 12;
       var exacto = (B * h) / 3;
@@ -76,7 +76,7 @@
     });
 
     /* --- Tetraedro regular: fórmula frente a base × altura --- */
-    comprobar('Fórmulas', 'Volumen del tetraedro regular: a³√2/12 = (1/3)·base·altura', function () {
+    comprobar('Fórmulas', 'Volumen del tetraedro regular: \\(\\frac{a^3\\sqrt{2}}{12} = \\frac{B h}{3}\\)', function () {
       var a = 6;
       var formula = (a * a * a * Math.sqrt(2)) / 12;
       var base = (a * a * Math.sqrt(3)) / 4;
@@ -89,7 +89,7 @@
     });
 
     /* --- Octaedro inscrito: s³√2/3 = 8 tetraedros --- */
-    comprobar('Fórmulas', 'Octaedro inscrito en cubo: s³√2/3 = 8 tetraedros = a³/6', function () {
+    comprobar('Fórmulas', 'Octaedro inscrito en cubo: \\(\\frac{s^3\\sqrt{2}}{3} = \\frac{a^3}{6}\\) por ocho tetraedros', function () {
       var a = 2;
       var s = (a * Math.SQRT2) / 2;
       var porFormula = (s * s * s * Math.sqrt(2)) / 3;
@@ -101,7 +101,7 @@
     });
 
     /* --- Esfera en cilindro circunscrito: 2/3 en volumen y superficie --- */
-    comprobar('Fórmulas', 'Esfera inscrita en cilindro: razón 2/3 en volumen y en superficie', function () {
+    comprobar('Fórmulas', 'Esfera inscrita en cilindro: razón \\(\\frac{2}{3}\\) en volumen y en superficie', function () {
       var R = 3.5;
       var vEsf = (4 / 3) * Math.PI * R * R * R;
       var vCil = Math.PI * R * R * (2 * R);
@@ -178,7 +178,7 @@
     });
 
     /* --- Sección de esfera --- */
-    comprobar('Fórmulas', 'Sección de esfera: r = √(R² − d²) comprobada con distancia 3D', function () {
+    comprobar('Fórmulas', 'Sección de esfera: \\(r = \\sqrt{R^2-d^2}\\) comprobada con distancia 3D', function () {
       var R = 13, d = 5;
       var r = Math.sqrt(R * R - d * d);
       // Toma un punto del círculo de corte y comprueba que está en la esfera
@@ -269,7 +269,7 @@
     });
 
     /* --- Ángulo diagonal-arista del cubo --- */
-    comprobar('Fórmulas', 'Ángulo diagonal espacial-arista: cos = 1/√3 ≈ 54,7°', function () {
+    comprobar('Fórmulas', 'Ángulo diagonal espacial-arista: \\(\\cos\\theta = \\frac{1}{\\sqrt{3}}\\), \\(\\theta \\approx 54{,}7^\\circ\\)', function () {
       var a = 1;
       var cos = a / (a * Math.sqrt(3));
       var grados = (Math.acos(cos) * 180) / Math.PI;
@@ -277,7 +277,7 @@
     });
 
     /* --- Ángulo diagonal-cara (base) --- */
-    comprobar('Fórmulas', 'Ángulo diagonal espacial-base: sen = 1/√3 ≈ 35,26°', function () {
+    comprobar('Fórmulas', 'Ángulo diagonal espacial-base: \\(\\sin\\theta = \\frac{1}{\\sqrt{3}}\\), \\(\\theta \\approx 35{,}26^\\circ\\)', function () {
       var a = 1;
       var sen = a / (a * Math.sqrt(3));
       var grados = (Math.asin(sen) * 180) / Math.PI;
