@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Descargar el proyecto · Geometría del espacio: piensa en 3D</title>
+<meta name="description" content="Genera y descarga un archivo ZIP con todos los archivos del proyecto: las cinco páginas, los estilos, el JavaScript, la dependencia Three.js y la documentación.">
+<meta name="theme-color" content="#2c3c9e">
+<meta name="color-scheme" content="light">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/estilos.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232c3c9e'/%3E%3Cpath d='M16 6l9 5v10l-9 5-9-5V11z' fill='none' stroke='%23fff' stroke-width='1.8'/%3E%3C/svg%3E">
+</head>
+<body data-pagina="descarga">
+<a class="salto-contenido" href="#cuerpo-descarga">Saltar al contenido</a>
+
+<header class="sitio-head">
+  <div class="wrap">
+    <a class="marca" href="index.html">
+      <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="7" fill="#2c3c9e"/>
+        <path d="M16 6l9 5v10l-9 5-9-5V11z" fill="none" stroke="#fff" stroke-width="1.7"/>
+        <path d="M16 6v20M7 11l9 5 9-5" stroke="#fff" stroke-width="1.1" opacity=".65"/>
+        <circle cx="16" cy="16" r="1.6" fill="#e07a2f"/>
+      </svg>
+      <span><small>Geometría del espacio</small><b>Piensa en 3D</b></span>
+    </a>
+
+    <nav class="nav-principal" aria-label="Navegación principal">
+      <a href="index.html#ruta" data-nav="inicio">Ruta</a>
+      <a href="practica.html" data-nav="practica">Práctica</a>
+      <a href="acerca.html" data-nav="acerca">Método y licencias</a>
+    </nav>
+
+    <a class="insignia-progreso" href="index.html#ruta" aria-label="Progreso de la ruta">
+      <span class="anillo" id="anillo-progreso" style="--p:0"><span>0%</span></span>
+      <span data-progreso-texto>0/14 lecciones</span>
+    </a>
+
+    <button type="button" class="btn-movimiento" id="btn-movimiento" aria-pressed="false">
+      <svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><circle cx="8" cy="8" r="6" opacity=".35"/><path d="M8 2a6 6 0 016 6h-6z"/></svg>
+      <span data-etiqueta>Animaciones</span>
+    </button>
+  </div>
+</header>
+
+<main class="wrap" id="cuerpo-descarga">
+  <nav class="migas" aria-label="Ubicación">
+    <a href="index.html">Ruta</a><span aria-hidden="true">/</span><span>Descargar el proyecto</span>
+  </nav>
+
+  <header class="leccion-cabeza">
+    <div class="etiquetas">
+      <span class="pildora mod">Código fuente</span>
+      <span class="pildora">ZIP · sin servidor</span>
+    </div>
+    <h1>Descargar el proyecto completo</h1>
+    <p class="objetivo">
+      El botón arma un archivo <code>.zip</code> con <strong>todos</strong> los archivos del sitio
+      &mdash;páginas, estilos, lógica, la dependencia Three.js y la documentación&mdash; listo para
+      subirlo a GitHub. El paquete se construye <em>en tu navegador</em>, leyendo los archivos de
+      este mismo sitio: no se envía nada a ningún servidor.
+    </p>
+  </header>
+
+  <section class="doc-seccion">
+    <div class="tarjeta" style="display:grid;gap:1rem">
+      <div>
+        <button type="button" class="btn" id="btn-descargar">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/>
+          </svg>
+          Descargar geometria-espacio.zip
+        </button>
+        <p id="estado-descarga" role="status" aria-live="polite"
+           style="font-size:.86rem;color:var(--ink-3);margin:.7rem 0 0">
+          Pulsa el botón para leer los archivos y generar el paquete.
+        </p>
+      </div>
+      <div id="resumen-zip"></div>
+    </div>
+  </section>
+
+  <section class="doc-seccion">
+    <div class="seccion-cabeza" style="margin-bottom:1rem">
+      <h2>Qué incluye el paquete</h2>
+      <p>
+        El listado se rellena al generar el ZIP: verás el tamaño de cada archivo leído. Si alguno
+        no se pudiera leer, aparecería marcado en rojo con el motivo, en lugar de entregarte un
+        paquete incompleto sin avisar.
+      </p>
+    </div>
+
+    <div class="tabla-envoltura">
+      <table class="datos">
+        <caption>Inventario del ZIP — <span id="total-archivos">—</span> archivos</caption>
+        <thead>
+          <tr><th scope="col">Ruta dentro del ZIP</th><th scope="col" style="text-align:right">Lectura</th></tr>
+        </thead>
+        <tbody id="lista-archivos">
+          <tr><td colspan="2">Se carga al pulsar el botón.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="doc-seccion prosa">
+    <h2>Qué hacer con el ZIP</h2>
+    <ol>
+      <li>Descomprímelo. Obtendrás una carpeta con los <code>.html</code> en la raíz y las carpetas
+        <code>css/</code>, <code>js/</code> y <code>vendor/</code>.</li>
+      <li>Para verlo funcionando sin subirlo, abre <code>index.html</code> con doble clic.
+        Algunas cosas (la vista 3D por módulos ES) pueden requerir un servidor local; el resto
+        del sitio funciona igual.</li>
+      <li>Para publicarlo en GitHub, sigue <code>SUBIR-A-GITHUB.md</code>, que va incluido dentro
+        del ZIP y explica la subida por web, la subida por terminal y la activación de GitHub Pages.</li>
+    </ol>
+
+    <div class="nota" style="margin-top:1.2rem">
+      <strong>Importante:</strong> la carpeta <code>vendor/</code> no es opcional. Contiene
+      <code>three.module.min.js</code> (392 KB, licencia MIT), la única ruta 3D del proyecto.
+      Si se excluye al subir, todas las figuras pasan a la vista 2D.
+    </div>
+  </section>
+
+  <nav class="nav-leccion" aria-label="Continuar">
+    <a href="#" class="anterior vacio" aria-hidden="true" tabindex="-1"></a>
+    <a href="index.html#ruta" class="siguiente">
+      <span class="dir">Volver →</span><span class="nom">Ruta de módulos</span>
+    </a>
+  </nav>
+</main>
+
+<footer class="sitio-pie">
+  <div class="wrap">
+    <div>
+      <h4>Geometría del espacio</h4>
+      <p>
+        Las figuras 3D y la vista 2D comparten la misma especificación geométrica, así que nunca
+        muestran cosas distintas. Tu avance se guarda solo en este dispositivo.
+      </p>
+    </div>
+    <div>
+      <h4>Estudiar</h4>
+      <ul>
+        <li><a href="index.html#ruta">Ruta de módulos</a></li>
+        <li><a href="practica.html">Práctica y retos</a></li>
+        <li><a href="leccion.html?id=m6l1">Lección completa: prismas</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Proyecto</h4>
+      <ul>
+        <li><a href="acerca.html">Método y licencias</a></li>
+        <li><a href="descarga.html">Descargar el código</a></li>
+        <li><a href="verificacion.html">Autocomprobaciones</a></li>
+      </ul>
+    </div>
+    <div class="legal">
+      <span>© <span id="anio">2026</span> Geometría del espacio · Contenido didáctico original</span>
+      <span>Progreso local · Sin cuentas · Sin cookies de seguimiento</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/progreso.js"></script>
+<script src="js/contenido.js"></script>
+<script src="js/contenido-a.js"></script>
+<script src="js/contenido-b.js"></script>
+<script src="js/contenido-c.js"></script>
+<script src="js/contenido-d.js"></script>
+<script src="js/avatar.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/descarga.js"></script>
+</body>
+</html>

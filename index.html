@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Geometría del espacio: piensa en 3D</title>
+<meta name="description" content="Ruta completa en español de geometría del espacio para estudiantes de secundaria que preparan exámenes de admisión: lecciones rigurosas, figuras 3D interactivas, práctica con pistas y retos tipo UNI. El avance se guarda en tu dispositivo, sin cuenta.">
+<meta name="theme-color" content="#2c3c9e">
+<meta name="color-scheme" content="light">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Geometría del espacio: piensa en 3D">
+<meta property="og:description" content="12 módulos, figuras que puedes girar, ejercicios con pistas graduadas y retos de nivel admisión. Progreso guardado localmente.">
+<meta property="og:locale" content="es_ES">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/estilos.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232c3c9e'/%3E%3Cpath d='M16 6l9 5v10l-9 5-9-5V11z' fill='none' stroke='%23fff' stroke-width='1.8'/%3E%3Cpath d='M16 6v20M7 11l9 5 9-5' stroke='%23fff' stroke-width='1.2' opacity='.7'/%3E%3C/svg%3E">
+</head>
+<body data-pagina="inicio">
+<a class="salto-contenido" href="#ruta">Saltar a la ruta de módulos</a>
+
+<header class="sitio-head">
+  <div class="wrap">
+    <a class="marca" href="index.html">
+      <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="7" fill="#2c3c9e"/>
+        <path d="M16 6l9 5v10l-9 5-9-5V11z" fill="none" stroke="#fff" stroke-width="1.7"/>
+        <path d="M16 6v20M7 11l9 5 9-5" stroke="#fff" stroke-width="1.1" opacity=".65"/>
+        <circle cx="16" cy="16" r="1.6" fill="#e07a2f"/>
+      </svg>
+      <span><small>Geometría del espacio</small><b>Piensa en 3D</b></span>
+    </a>
+
+    <nav class="nav-principal" aria-label="Navegación principal">
+      <a href="index.html#ruta" data-nav="inicio">Ruta</a>
+      <a href="practica.html" data-nav="practica">Práctica</a>
+      <a href="acerca.html" data-nav="acerca">Método y licencias</a>
+    </nav>
+
+    <a class="insignia-progreso" href="#ruta" aria-label="Progreso de la ruta">
+      <span class="anillo" id="anillo-progreso" style="--p:0"><span>0%</span></span>
+      <span data-progreso-texto>0/14 lecciones</span>
+    </a>
+
+    <button type="button" class="btn-movimiento" id="btn-movimiento" aria-pressed="false">
+      <svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><circle cx="8" cy="8" r="6" opacity=".35"/><path d="M8 2a6 6 0 016 6h-6z"/></svg>
+      <span data-etiqueta>Animaciones</span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <!-- Portada -->
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <span class="eyebrow">Ruta de admisión · 12 módulos</span>
+        <h1>Geometría del espacio: <em>piensa en 3D</em></h1>
+        <p class="entradilla">
+          Una ruta ordenada para secundaria que prepara exámenes exigentes. Figuras que puedes
+          girar, definiciones precisas, fórmulas verificadas y retos de nivel UNI con solución
+          progresiva. Tu avance se guarda en este dispositivo, sin crear cuenta.
+        </p>
+        <div class="hero-acciones">
+          <a class="btn" href="#" id="btn-continuar-hero">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 2.5v11l9-5.5z"/></svg>
+            <span id="texto-continuar">Empezar la ruta</span>
+          </a>
+          <a class="btn secundario" href="practica.html">Practicar ahora</a>
+          <a class="btn secundario" href="descarga.html">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg>
+            Descargar el código
+          </a>
+        </div>
+        <div class="hero-datos">
+          <div><strong>12</strong>módulos progresivos</div>
+          <div><strong>14</strong>lecciones guiadas</div>
+          <div><strong id="dato-ejercicios">—</strong>ejercicios con pistas</div>
+          <div><strong id="dato-retos">—</strong>retos tipo admisión</div>
+        </div>
+      </div>
+
+      <figure class="hero-figura" id="hero-figura-contenedor" aria-labelledby="hf-cap">
+        <svg viewBox="0 0 380 320" role="img" aria-label="Prisma recto de base rectangular con su diagonal espacial, una diagonal de cara y la altura marcadas.">
+          <defs>
+            <linearGradient id="gCara" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#5b6bd6" stop-opacity=".16"/>
+              <stop offset="1" stop-color="#5b6bd6" stop-opacity=".04"/>
+            </linearGradient>
+            <linearGradient id="gSup" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#b85c0d" stop-opacity=".16"/>
+              <stop offset="1" stop-color="#b85c0d" stop-opacity=".05"/>
+            </linearGradient>
+          </defs>
+          <!-- Caras -->
+          <path d="M62 214 L172 168 L292 214 L182 260 Z" fill="url(#gCara)" stroke="#1b2033" stroke-width="1.7" stroke-linejoin="round"/>
+          <path d="M62 92 L172 46 L292 92 L182 138 Z" fill="url(#gCara)" stroke="#1b2033" stroke-width="1.7" stroke-linejoin="round"/>
+          <path d="M62 92 L62 214 L182 260 L182 138 Z" fill="url(#gSup)" stroke="#1b2033" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M182 138 L292 92 L292 214 L182 260 Z" fill="#fdfcf9" fill-opacity=".55" stroke="#1b2033" stroke-width="1.5" stroke-linejoin="round"/>
+          <!-- Aristas ocultas -->
+          <path d="M62 214 L62 92" stroke="#1b2033" stroke-width="1.2" stroke-dasharray="4 4" opacity=".5"/>
+          <path d="M62 92 L182 138" stroke="#1b2033" stroke-width="1.2" stroke-dasharray="4 4" opacity=".5"/>
+          <!-- Diagonal espacial -->
+          <path d="M62 214 L292 92" stroke="#a8271f" stroke-width="2.6" stroke-linecap="round"/>
+          <!-- Diagonal de cara -->
+          <path d="M62 92 L292 92" stroke="#b85c0d" stroke-width="2" stroke-linecap="round" stroke-dasharray="6 4"/>
+          <!-- Altura -->
+          <path d="M62 92 L62 214" stroke="#0c7367" stroke-width="2.4" stroke-linecap="round"/>
+          <!-- Vértices -->
+          <g fill="#fdfcf9" stroke="#131829" stroke-width="1.6">
+            <circle cx="62" cy="214" r="3.4"/><circle cx="172" cy="168" r="3.4"/>
+            <circle cx="292" cy="214" r="3.4"/><circle cx="182" cy="260" r="3.4"/>
+            <circle cx="62" cy="92" r="3.4"/><circle cx="172" cy="46" r="3.4"/>
+            <circle cx="292" cy="92" r="3.4"/><circle cx="182" cy="138" r="3.4"/>
+          </g>
+          <g font-family="'JetBrains Mono', monospace" font-size="12" font-weight="600" fill="#414a63">
+            <text x="46" y="228">A</text><text x="288" y="232">C</text>
+            <text x="46" y="86">A₁</text><text x="298" y="86">C₁</text>
+            <text x="180" y="34">B₁</text>
+          </g>
+          <g font-family="'JetBrains Mono', monospace" font-size="11.5">
+            <text x="176" y="160" fill="#a8271f">diagonal espacial AC₁</text>
+            <text x="176" y="80" fill="#b85c0d">diagonal de cara</text>
+            <text x="30" y="158" fill="#0c7367" transform="rotate(-90 30 158)">altura h</text>
+          </g>
+        </svg>
+        <figcaption id="hf-cap">
+          Prisma recto: la altura coincide con la arista lateral, la diagonal de cara usa dos
+          dimensiones y la diagonal espacial, las tres.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- Vértiz, el personaje guía -->
+  <section class="seccion banda-vertiz" aria-labelledby="titulo-vertiz">
+    <div class="wrap">
+      <h2 id="titulo-vertiz" class="visualmente-oculto">Vértiz, el personaje que te acompaña</h2>
+      <div class="vertiz-marco">
+        <div id="avatar-guia" aria-label="Vértiz, el personaje guía"></div>
+        <div class="vertiz-texto">
+          <span class="pildora">Tu compañero de ruta</span>
+          <h3>Vértiz camina contigo por las lecciones</h3>
+          <p>
+            Es un personaje original dibujado para este curso, con estética de videojuego: se
+            desplaza por su escenario, señala la figura cuando conviene mirarla, se lleva la mano
+            al mentón cuando toca pensar y celebra cuando aciertas. Habla siempre por escrito
+            &mdash;nada del contenido depende del sonido&mdash; y si activas «Animaciones» o tu
+            sistema pide movimiento reducido, se queda quieto y sigue explicando.
+          </p>
+          <p class="vertiz-nota">
+            Es un sprite 2D animado con CSS, no un modelo 3D con esqueleto. Puedes leer el detalle
+            en <a href="acerca.html#avatar">método y licencias</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Continuar + ruta -->
+  <section class="seccion" id="ruta" aria-labelledby="titulo-ruta">
+    <div class="wrap">
+      <div class="continuar" id="bloque-continuar">
+        <span class="icono" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19V5l7 4 7-4v14l-7-4z"/>
+          </svg>
+        </span>
+        <div>
+          <h2 id="continuar-titulo">Continúa donde lo dejaste</h2>
+          <p id="continuar-detalle">Aún no has empezado. La ruta comienza con puntos, rectas y planos.</p>
+        </div>
+        <a class="btn" href="#" id="btn-continuar">Continuar</a>
+      </div>
+
+      <div class="seccion-cabeza">
+        <h2 id="titulo-ruta">Ruta de módulos</h2>
+        <p>
+          Cada módulo se apoya en el anterior. Abre un módulo para ver sus lecciones; el
+          progreso se actualiza a medida que completas ejercicios y retos.
+        </p>
+      </div>
+
+      <div class="ruta" id="lista-modulos" aria-live="polite">
+        <noscript>
+          <p class="vacio-aviso">
+            Esta ruta necesita JavaScript para recordar tu progreso y dibujar las figuras.
+            Puedes activarlo en tu navegador; todo el contenido funciona sin cuenta y sin conexión
+            a un servidor propio.
+          </p>
+        </noscript>
+      </div>
+
+      <div class="tarjeta" style="margin-top:1.6rem;display:grid;gap:.8rem;grid-template-columns:minmax(0,1fr) auto;align-items:center">
+        <div>
+          <h3 style="margin:0 0 .2rem;font-size:1rem">Tu avance vive en este dispositivo</h3>
+          <p style="margin:0;font-size:.87rem;color:var(--ink-2)">
+            Se guarda con <code>localStorage</code>. No se envía nada a ningún servidor y no hace falta
+            registrarse. Si limpias los datos del navegador, se borrará también: puedes descargar una
+            copia desde la página de método y licencias.
+          </p>
+        </div>
+        <a class="btn secundario pequeno" href="acerca.html#datos">Gestionar mis datos</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Por qué funciona -->
+  <section class="seccion" aria-labelledby="titulo-enfoque">
+    <div class="wrap">
+      <div class="seccion-cabeza">
+        <h2 id="titulo-enfoque">Cómo está construida la ruta</h2>
+        <p>Tres decisiones pedagógicas sostienen todo el material.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.9rem">
+        <article class="tarjeta">
+          <span class="pildora" style="background:var(--primary-soft);color:var(--primary-ink)">Intuición → rigor</span>
+          <h3 style="margin:.7rem 0 .35rem;font-size:1rem">Ninguna fórmula sin explicación</h3>
+          <p style="font-size:.9rem;color:var(--ink-2);margin:0">
+            Cada teorema incluye su justificación. Antes de la fórmula hay una imagen mental y un
+            caso concreto. Así la fórmula deja de ser algo que memorizar y pasa a ser algo que
+            puedes reconstruir en el examen.
+          </p>
+        </article>
+        <article class="tarjeta">
+          <span class="pildora" style="background:var(--accent-soft);color:var(--accent)">Error como contenido</span>
+          <h3 style="margin:.7rem 0 .35rem;font-size:1rem">Los errores están escritos</h3>
+          <p style="font-size:.9rem;color:var(--ink-2);margin:0">
+            Altura contra arista lateral, área contra volumen, radio contra diámetro, perpendicularidad
+            mal aplicada. Los errores frecuentes aparecen explícitamente con el motivo de por qué
+            fallan.
+          </p>
+        </article>
+        <article class="tarjeta">
+          <span class="pildora" style="background:var(--teal-soft);color:var(--teal)">Verificación</span>
+          <h3 style="margin:.7rem 0 .35rem;font-size:1rem">Respuestas comprobadas</h3>
+          <p style="font-size:.9rem;color:var(--ink-2);margin:0">
+            Los cálculos de los ejercicios se comprueban por una segunda vía, y los distractores de
+            opción múltiple corresponden a errores reales, no a números aleatorios. Hay una página de
+            autocomprobaciones abierta.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="sitio-pie">
+  <div class="wrap">
+    <div>
+      <h4>Geometría del espacio</h4>
+      <p>
+        Material didáctico abierto para preparar geometría del espacio en secundaria y exámenes
+        de admisión. Sin cuentas, sin publicidad, sin seguimiento.
+      </p>
+    </div>
+    <div>
+      <h4>Estudiar</h4>
+      <ul>
+        <li><a href="#ruta">Ruta de módulos</a></li>
+        <li><a href="practica.html">Práctica y retos</a></li>
+        <li><a href="leccion.html?id=m6l1">Lección completa: prismas</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Proyecto</h4>
+      <ul>
+        <li><a href="acerca.html">Método y licencias</a></li>
+        <li><a href="acerca.html#datos">Tus datos</a></li>
+        <li><a href="verificacion.html">Autocomprobaciones</a></li>
+      </ul>
+    </div>
+    <div class="legal">
+      <span>© <span id="anio">2026</span> Geometría del espacio · Contenido didáctico original</span>
+      <span>Progreso local · Sin cuentas · Sin cookies de seguimiento</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/progreso.js"></script>
+<script src="js/contenido.js"></script>
+<script src="js/contenido-a.js"></script>
+<script src="js/contenido-b.js"></script>
+<script src="js/contenido-c.js"></script>
+<script src="js/contenido-d.js"></script>
+<script src="js/figuras.js"></script>
+<script src="vendor/three.min.js"></script>
+<script src="js/visor3d.js"></script>
+<script src="js/visor2d.js"></script>
+<script src="js/avatar.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/visor.js"></script>
+<script src="js/inicio.js"></script>
+</body>
+</html>

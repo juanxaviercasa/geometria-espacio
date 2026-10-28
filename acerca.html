@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Método, dependencias y licencias · Geometría del espacio</title>
+<meta name="description" content="Cómo está construida la aplicación: decisiones pedagógicas, dependencias realmente integradas con estrellas y fecha de consulta, herramientas evaluadas y descartadas, licencias y gestión de tus datos locales.">
+<meta name="theme-color" content="#2c3c9e">
+<meta name="color-scheme" content="light">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/estilos.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232c3c9e'/%3E%3Cpath d='M16 6l9 5v10l-9 5-9-5V11z' fill='none' stroke='%23fff' stroke-width='1.8'/%3E%3C/svg%3E">
+</head>
+<body data-pagina="acerca">
+<a class="salto-contenido" href="#metodo">Saltar al contenido</a>
+
+<header class="sitio-head">
+  <div class="wrap">
+    <a class="marca" href="index.html">
+      <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="7" fill="#2c3c9e"/>
+        <path d="M16 6l9 5v10l-9 5-9-5V11z" fill="none" stroke="#fff" stroke-width="1.7"/>
+        <path d="M16 6v20M7 11l9 5 9-5" stroke="#fff" stroke-width="1.1" opacity=".65"/>
+        <circle cx="16" cy="16" r="1.6" fill="#e07a2f"/>
+      </svg>
+      <span><small>Geometría del espacio</small><b>Piensa en 3D</b></span>
+    </a>
+
+    <nav class="nav-principal" aria-label="Navegación principal">
+      <a href="index.html#ruta" data-nav="inicio">Ruta</a>
+      <a href="practica.html" data-nav="practica">Práctica</a>
+      <a href="acerca.html" data-nav="acerca">Método y licencias</a>
+    </nav>
+
+    <a class="insignia-progreso" href="index.html#ruta" aria-label="Progreso de la ruta">
+      <span class="anillo" id="anillo-progreso" style="--p:0"><span>0%</span></span>
+      <span data-progreso-texto>0/14 lecciones</span>
+    </a>
+
+    <button type="button" class="btn-movimiento" id="btn-movimiento" aria-pressed="false">
+      <svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><circle cx="8" cy="8" r="6" opacity=".35"/><path d="M8 2a6 6 0 016 6h-6z"/></svg>
+      <span data-etiqueta>Animaciones</span>
+    </button>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="migas" aria-label="Ubicación">
+    <a href="index.html">Ruta</a><span aria-hidden="true">/</span><span>Método y licencias</span>
+  </nav>
+
+  <header class="leccion-cabeza">
+    <div class="etiquetas">
+      <span class="pildora mod">Transparencia</span>
+      <span class="pildora">Sin seguimiento</span>
+    </div>
+    <h1>Método, dependencias y licencias</h1>
+    <p class="objetivo">
+      Qué decisiones pedagógicas y técnicas hay detrás de la aplicación, qué bibliotecas se usan
+      realmente, cuáles se evaluaron y se descartaron, y cómo se tratan tus datos. Los datos de
+      repositorios que aparecen aquí se consultaron el <strong>27 de octubre de 2026</strong>.
+    </p>
+  </header>
+
+  <!-- Método -->
+  <section class="doc-seccion prosa" id="metodo">
+    <h2>Cómo enseña esta ruta</h2>
+    <p>
+      El material está pensado para estudiantes de secundaria que preparan exámenes de admisión
+      exigentes, en particular el tipo de pregunta de la UNI. Eso impone tres reglas.
+    </p>
+
+    <h3>1. Ninguna fórmula antes de la imagen</h3>
+    <p>
+      Cada lección abre con una situación concreta (una hoja, una cuerda, una piscina, un lápiz
+      apoyado) y solo después formaliza. Las figuras 3D están ahí para que la definición no llegue
+      en el vacío: puedes girar el sólido, aislar una capa y comprobar con tus ojos lo que dice el
+      teorema.
+    </p>
+
+    <h3>2. Todo teorema lleva su justificación</h3>
+    <p>
+      No se enuncian resultados «porque sí». Los axiomas de incidencia, el criterio recta-plano,
+      el teorema de las tres perpendiculares y la relación de Euler aparecen con su demostración
+      o con un argumento honesto de por qué no se demuestran (los axiomas). La diferencia entre
+      ambos casos se marca explícitamente.
+    </p>
+
+    <h3>3. Los errores son contenido, no anécdotas</h3>
+    <p>
+      Cada lección tiene una sección de errores frecuentes con tres columnas: el error típico, la
+      forma correcta y el motivo por el que el error falla. Confundir la altura con la arista
+      lateral en un prisma oblicuo no es un descuido: es un error conceptual con consecuencias
+      numéricas grandes, y por eso se explica.
+    </p>
+
+    <h3>Sobre la verificación de las respuestas</h3>
+    <p>
+      Todas las fórmulas y los cálculos de los ejercicios se comprobaron por una segunda vía
+      (por ejemplo, calcular el volumen de un tetraedro con la fórmula del tetraedro trirrectángulo
+      y de nuevo con base × altura). La página <a href="verificacion.html">Autocomprobaciones</a>
+      ejecuta estas comprobaciones en tu navegador y muestra el resultado: no es una afirmación,
+      es una prueba reproducible.
+    </p>
+    <p>
+      Los distractores de las preguntas de opción múltiple corresponden a errores reales
+      (olvidar el factor <span class="m">1/3</span>, usar el diámetro como radio, sumar dos bases
+      en una pirámide), no a números aleatorios. Cuando se usa una aproximación se indica el
+      número de decimales y la tolerancia aceptada.
+    </p>
+  </section>
+
+  <!-- Dependencias integradas -->
+  <section class="doc-seccion" id="dependencias">
+    <div class="prosa">
+      <h2>Dependencias realmente integradas</h2>
+      <p>
+        Solo hay una biblioteca de terceros integrada en la aplicación. Todo lo demás es código
+        propio de este repositorio. Los datos de cada repositorio se consultaron en la API pública
+        de GitHub y en el registro de npm el 27 de octubre de 2026.
+      </p>
+    </div>
+
+    <div class="tabla-envoltura" style="margin-top:1rem">
+      <table class="datos tabla-larga">
+        <caption>
+          Estrellas y actividad tal como se consultaron el 2026-10-27. Las cifras cambian con el
+          tiempo; se citan con su fecha para que puedan comprobarse.
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Dependencia</th>
+            <th scope="col">Repositorio oficial</th>
+            <th scope="col">Licencia</th>
+            <th scope="col">Estrellas</th>
+            <th scope="col">Último push</th>
+            <th scope="col">Función concreta aquí</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">three.js <span class="estado-si">integrada</span><br>
+              <span class="nota-celda">v0.186.1 (npm latest)</span>
+            </th>
+            <td><a href="https://github.com/mrdoob/three.js" rel="noopener noreferrer" target="_blank">mrdoob/three.js</a></td>
+            <td>MIT</td>
+            <td>117 008</td>
+            <td>2026-10-26</td>
+            <td>Render WebGL de las figuras geométricas. Se sirve desde <code>vendor/three.min.js</code> y <code>vendor/three.module.min.js</code> en este repositorio, sin dependencias externas ni CDN en tiempo de ejecución. Permite abrir el proyecto tanto en servidor como localmente haciendo doble clic en el archivo HTML.</td>
+          </tr>
+          <tr>
+            <th scope="row">Google Fonts <span class="estado-si">integrada</span></th>
+            <td><a href="https://fonts.google.com/" rel="noopener noreferrer" target="_blank">fonts.google.com</a></td>
+            <td>SIL Open Font License 1.1</td>
+            <td>—</td>
+            <td>—</td>
+            <td>Tipografías Outfit (interfaz), Newsreader (variables matemáticas en cursiva) y JetBrains Mono (fórmulas y cifras). Si la red las bloquea, el sistema recurre a fuentes del propio dispositivo y la página sigue siendo legible.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="nota dato" style="margin-top:1rem">
+      <span class="icono-nota" aria-hidden="true">i</span>
+      <div>
+        <p>
+          <strong>Sin CDN en tiempo de ejecución para el 3D.</strong> Three.js está copiado dentro
+          del repositorio. Es una decisión deliberada: evita que un bloqueo de red, una política
+          escolar restrictiva o una caída de CDN deje sin figuras al estudiante.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Evaluadas y descartadas -->
+  <section class="doc-seccion" id="descartadas">
+    <div class="prosa">
+      <h2>Herramientas evaluadas y no utilizadas</h2>
+      <p>
+        Estas opciones se consideraron antes de elegir la ruta 3D principal. Se documentan para
+        que la decisión sea auditable, no para insinuar que sean peores: simplemente no encajan
+        con un sitio estático sin proceso de compilación.
+      </p>
+    </div>
+
+    <div class="tabla-envoltura" style="margin-top:1rem">
+      <table class="datos tabla-larga">
+        <caption>Datos de repositorios consultados el 2026-10-27.</caption>
+        <thead>
+          <tr>
+            <th scope="col">Herramienta</th>
+            <th scope="col">Repositorio oficial</th>
+            <th scope="col">Licencia</th>
+            <th scope="col">Estrellas</th>
+            <th scope="col">Último push</th>
+            <th scope="col">Decisión y motivo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">React Three Fiber</th>
+            <td><a href="https://github.com/pmndrs/react-three-fiber" rel="noopener noreferrer" target="_blank">pmndrs/react-three-fiber</a></td>
+            <td>MIT</td>
+            <td>33 264</td>
+            <td>2026-10-21</td>
+            <td><span class="estado-no">No integrada</span> Excelente envoltorio declarativo, pero exige React y un paso de compilación. Este proyecto es HTML, CSS y JavaScript servidos tal cual desde el repositorio.</td>
+          </tr>
+          <tr>
+            <th scope="row">Babylon.js</th>
+            <td><a href="https://github.com/BabylonJS/Babylon.js" rel="noopener noreferrer" target="_blank">BabylonJS/Babylon.js</a></td>
+            <td>Apache-2.0</td>
+            <td>26 235</td>
+            <td>2026-10-27</td>
+            <td><span class="estado-no">No integrada</span> Motor completo y muy activo. Se descartó por tamaño: para seis figuras pedagógicas el peso adicional no se justifica frente a Three.js.</td>
+          </tr>
+          <tr>
+            <th scope="row">three-vrm</th>
+            <td><a href="https://github.com/pixiv/three-vrm" rel="noopener noreferrer" target="_blank">pixiv/three-vrm</a></td>
+            <td>MIT</td>
+            <td>2 237</td>
+            <td>2026-10-22</td>
+            <td><span class="estado-no">No integrada</span> Permitiría cargar un avatar VRM con esqueleto. No se usó porque no hay un modelo VRM original con derechos claros disponible en este proyecto, y no se quería incluir un recurso de procedencia dudosa.</td>
+          </tr>
+          <tr>
+            <th scope="row">Formato glTF / GLB</th>
+            <td><a href="https://github.com/KhronosGroup/glTF" rel="noopener noreferrer" target="_blank">KhronosGroup/glTF</a></td>
+            <td>Especificación Khronos (términos propios)</td>
+            <td>7 870</td>
+            <td>2026-10-26</td>
+            <td><span class="estado-no">No usado</span> Sería el formato natural para un avatar con rig. Al no haber modelo propio, la guía se implementó como SVG animado por CSS y las figuras se generan por código, sin archivos binarios externos.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Ruta 3D principal y alternativa -->
+  <section class="doc-seccion prosa" id="ruta3d">
+    <h2>Una única ruta 3D principal, con alternativa honesta</h2>
+    <p>
+      La ruta 3D principal es <strong>Three.js cargado como módulo ES desde el propio
+      repositorio</strong>. La escena se construye a partir de un objeto de especificación
+      geométrica (<code>js/figuras.js</code>) que declara vértices, aristas, caras, líneas
+      auxiliares y capas.
+    </p>
+    <p>
+      La misma especificación alimenta la <strong>alternativa 2D en SVG</strong>
+      (<code>js/visor2d.js</code>), que proyecta con la misma cámara y aplica un algoritmo de
+      líneas ocultas por sondeo. Esto tiene tres consecuencias prácticas:
+    </p>
+    <ul>
+      <li>Si WebGL no está disponible o el módulo no carga, la figura aparece igual, en SVG, sin
+        mensajes de error visibles.</li>
+      <li>Nunca puede ocurrir que el 3D y el 2D muestren cosas distintas: son la misma
+        especificación.</li>
+      <li>La vista 2D no descarga nada, funciona con el procesador más modesto y respeta la
+        preferencia de movimiento reducido.</li>
+    </ul>
+    <p>
+      El visor se carga de forma diferida (<code>import()</code>) y solo cuando hay una figura en
+      pantalla. Además, cada figura pausa su bucle de render cuando sale del área visible, y en
+      equipos con dos núcleos o menos se abre directamente en 2D. El botón
+      <em>Vista 2D / Vista 3D</em> está en cada figura, y la elección se recuerda.
+    </p>
+
+    <h3>Qué se puede hacer con las figuras</h3>
+    <ul>
+      <li>Rotar con arrastre (ratón o dedo), zoom con rueda o pellizco.</li>
+      <li>Rotar con las flechas del teclado cuando el lienzo tiene el foco; <kbd>R</kbd> recentra.</li>
+      <li>Mostrar y ocultar capas: caras, aristas, vértices, nombres, diagonales, alturas,
+        radios, planos y secciones.</li>
+      <li>Lectura de la descripción textual de cada figura, disponible para lectores de pantalla.</li>
+    </ul>
+  </section>
+
+  <!-- Avatar -->
+  <section class="doc-seccion prosa" id="avatar">
+    <h2>La guía: Vértiz y el Modo Maestro</h2>
+    <p>
+      Vértiz es un personaje <strong>original</strong>, dibujado como SVG vectorial dentro de este
+      repositorio. No reproduce ni se inspira en un personaje o marca existente. Su diseño usa la
+      propia paleta de la aplicación y un prendedor triangular en el cabello como guiño al tema.
+    </p>
+    <p>
+      <strong>Locución y Modo Maestro:</strong> Vértiz ahora cuenta con síntesis de voz en español
+      nativa (mediante la Web Speech API del navegador), lo que le permite explicar en voz alta
+      los teoremas, figuras y pasos didácticos. Puedes silenciarlo en cualquier momento con el botón
+      de volumen si el maestro prefiere dar la explicación con su propia voz.
+    </p>
+    <p>
+      <strong>Qué hace y qué no hace:</strong> Cambia de postura y de mensaje según el momento
+      pedagógico: señala cuando introduce una figura, explica con movimiento labial, celebra un acierto,
+      anima tras un error y piensa cuando pides una pista. En el <em>Modo Maestro</em>, coordina cada
+      paso de la lección con la cámara 3D y el encendido de capas.
+    </p>
+    <p>
+      Con <em>movimiento reducido</em> activado (por preferencia del sistema o por el botón de la
+      cabecera), las animaciones del avatar, el giro automático de las figuras y las transiciones
+      se detienen por completo, manteniendo el texto y la explicación accesibles.
+    </p>
+  </section>
+
+  <!-- Accesibilidad -->
+  <section class="doc-seccion prosa" id="accesibilidad">
+    <h2>Accesibilidad y diseño adaptable</h2>
+    <ul>
+      <li>Estructura semántica: <code>header</code>, <code>nav</code>, <code>main</code>,
+        <code>section</code>, <code>article</code>, <code>figure</code>, <code>figcaption</code>,
+        <code>footer</code>, con jerarquía de encabezados correcta.</li>
+      <li>Enlace de salto al contenido y foco visible en todos los elementos interactivos.</li>
+      <li>Ejercicios construidos con <code>role="radiogroup"</code> y etiquetas reales; la
+        retroalimentación se anuncia con <code>role="status"</code>.</li>
+      <li>Cada figura 3D oculta su <code>canvas</code> a las tecnologías de asistencia y expone una
+        descripción textual completa; la versión 2D usa <code>role="img"</code> con
+        <code>aria-label</code> y un <code>title</code> interno.</li>
+      <li>Contraste comprobado en texto principal, secundario y en los bloques de fórmula oscuros.</li>
+      <li>Navegación por teclado: menús, acordeones de módulos, capas de figuras, opciones de
+        ejercicio y fases de los retos se manejan con <kbd>Tab</kbd> y <kbd>Enter</kbd>/<kbd>Espacio</kbd>.</li>
+      <li>Diseño fluido de 320 px a pantallas grandes; probado en móvil, tableta y escritorio.</li>
+      <li>Hoja de estilos de impresión: las figuras se imprimen y los controles no.</li>
+    </ul>
+  </section>
+
+  <!-- Datos -->
+  <section class="doc-seccion" id="datos">
+    <h2>Tus datos</h2>
+    <div class="prosa">
+      <p>
+        El progreso se guarda exclusivamente en el almacenamiento local de tu navegador, en dos
+        claves: <code>geo3d.progreso.v1</code> (lecciones, ejercicios, retos y puntos) y
+        <code>geo3d.prefs.v1</code> (preferencias de movimiento y de vista de las figuras). No hay
+        cuentas, no hay servidor propio, no hay cookies de seguimiento ni analítica.
+      </p>
+      <p>
+        Como vive en tu dispositivo, se pierde si borras los datos del navegador o si usas otro
+        equipo. Puedes descargar una copia en texto antes de limpiar nada.
+      </p>
+    </div>
+
+    <div class="tarjeta" style="margin-top:1rem;display:grid;gap:1rem">
+      <div>
+        <h3 style="margin:0 0 .3rem;font-size:1rem">Estado del almacenamiento</h3>
+        <p id="estado-storage" style="margin:0;font-size:.9rem;color:var(--ink-2)">
+          Comprobando…
+        </p>
+      </div>
+
+      <div>
+        <h3 style="margin:0 0 .3rem;font-size:1rem">Resumen de tu avance</h3>
+        <p id="resumen-datos" style="margin:0;font-size:.9rem;color:var(--ink-2)">—</p>
+      </div>
+
+      <div class="acciones-ej" style="gap:.5rem">
+        <button type="button" class="btn secundario pequeno" id="btn-exportar">Descargar copia (JSON)</button>
+        <button type="button" class="btn secundario pequeno" id="btn-copiar">Copiar al portapapeles</button>
+      </div>
+
+      <div>
+        <label for="salida-datos" style="font-size:.82rem;color:var(--ink-2);display:block;margin-bottom:.3rem">
+          Vista previa de la copia
+        </label>
+        <textarea id="salida-datos" readonly rows="8"
+          style="width:100%;font-family:var(--mono);font-size:.76rem;padding:.6rem;border:1px solid var(--line-2);border-radius:10px;background:var(--surface-2);color:var(--ink-2);resize:vertical"
+          aria-describedby="nota-exportar"></textarea>
+        <p id="nota-exportar" style="font-size:.78rem;color:var(--ink-3);margin:.4rem 0 0">
+          La copia es solo de lectura: esta página nunca borra ni modifica tu avance.
+        </p>
+      </div>
+    </div>
+
+    <div class="nota ojo" style="margin-top:1rem">
+      <span class="icono-nota" aria-hidden="true">!</span>
+      <div>
+        <p>
+          <strong>Esta aplicación no borra tu progreso.</strong> Si en el futuro añades funciones
+          que cambien el formato de los datos, la migración será explícita y conservará los
+          registros existentes. Si alguna vez ves el avance vacío, comprueba si estás en otro
+          navegador, en una ventana privada o si los datos del sitio se borraron.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Alcance -->
+  <section class="doc-seccion prosa" id="alcance">
+    <h2>Alcance y limitaciones declaradas</h2>
+    <ul>
+      <li><strong>La lección «completa» es la del módulo 6</strong> (prismas y diagonales): es la
+        más desarrollada, con 8 ejercicios y 2 retos. El resto de módulos son lecciones sólidas,
+        no monografías.</li>
+      <li>El avatar es una animación vectorial, no un rig 3D con esqueleto. Está indicado en esta
+        página y no se presenta como otra cosa.</li>
+      <li>No hay figuras con texturas ni modelos GLB: todas se generan por código, lo que mantiene
+        el repositorio sin binarios y sin dudas de licencia sobre recursos externos.</li>
+      <li>No hay exámenes oficiales de la UNI reproducidos: los retos son de dificultad
+        comparable, redactados para este proyecto.</li>
+      <li>El sitio es estático: se puede alojar en cualquier servidor de archivos, incluido GitHub
+        Pages. La vista 3D requiere WebGL; la 2D funciona en cualquier navegador con SVG.</li>
+    </ul>
+  </section>
+</main>
+
+<footer class="sitio-pie">
+  <div class="wrap">
+    <div>
+      <h4>Geometría del espacio</h4>
+      <p>
+        Contenido didáctico original. Las dependencias de terceros conservan su licencia y se citan
+        con enlace a su repositorio oficial.
+      </p>
+    </div>
+    <div>
+      <h4>Estudiar</h4>
+      <ul>
+        <li><a href="index.html#ruta">Ruta de módulos</a></li>
+        <li><a href="practica.html">Práctica y retos</a></li>
+        <li><a href="leccion.html?id=m6l1">Lección completa: prismas</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Proyecto</h4>
+      <ul>
+        <li><a href="acerca.html#dependencias">Dependencias</a></li>
+        <li><a href="acerca.html#datos">Tus datos</a></li>
+        <li><a href="verificacion.html">Autocomprobaciones</a></li>
+      </ul>
+    </div>
+    <div class="legal">
+      <span>© <span id="anio">2026</span> Geometría del espacio · Contenido didáctico original</span>
+      <span>Datos de repositorios consultados el 2026-10-27</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/progreso.js"></script>
+<script src="js/contenido.js"></script>
+<script src="js/contenido-a.js"></script>
+<script src="js/contenido-b.js"></script>
+<script src="js/contenido-c.js"></script>
+<script src="js/contenido-d.js"></script>
+<script src="js/avatar.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/acerca.js"></script>
+</body>
+</html>

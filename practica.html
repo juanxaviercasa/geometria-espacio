@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Práctica y retos · Geometría del espacio</title>
+<meta name="description" content="Banco de práctica de geometría del espacio: ejercicios filtrables por módulo con pistas graduadas y retroalimentación explicativa, más retos de nivel admisión con revelado progresivo.">
+<meta name="theme-color" content="#2c3c9e">
+<meta name="color-scheme" content="light">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/estilos.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232c3c9e'/%3E%3Cpath d='M16 6l9 5v10l-9 5-9-5V11z' fill='none' stroke='%23fff' stroke-width='1.8'/%3E%3C/svg%3E">
+</head>
+<body data-pagina="practica">
+<a class="salto-contenido" href="#banco">Saltar al banco de ejercicios</a>
+
+<header class="sitio-head">
+  <div class="wrap">
+    <a class="marca" href="index.html">
+      <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="7" fill="#2c3c9e"/>
+        <path d="M16 6l9 5v10l-9 5-9-5V11z" fill="none" stroke="#fff" stroke-width="1.7"/>
+        <path d="M16 6v20M7 11l9 5 9-5" stroke="#fff" stroke-width="1.1" opacity=".65"/>
+        <circle cx="16" cy="16" r="1.6" fill="#e07a2f"/>
+      </svg>
+      <span><small>Geometría del espacio</small><b>Piensa en 3D</b></span>
+    </a>
+
+    <nav class="nav-principal" aria-label="Navegación principal">
+      <a href="index.html#ruta" data-nav="inicio">Ruta</a>
+      <a href="practica.html" data-nav="practica">Práctica</a>
+      <a href="acerca.html" data-nav="acerca">Método y licencias</a>
+    </nav>
+
+    <a class="insignia-progreso" href="index.html#ruta" aria-label="Progreso de la ruta">
+      <span class="anillo" id="anillo-progreso" style="--p:0"><span>0%</span></span>
+      <span data-progreso-texto>0/14 lecciones</span>
+    </a>
+
+    <button type="button" class="btn-movimiento" id="btn-movimiento" aria-pressed="false">
+      <svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><circle cx="8" cy="8" r="6" opacity=".35"/><path d="M8 2a6 6 0 016 6h-6z"/></svg>
+      <span data-etiqueta>Animaciones</span>
+    </button>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="migas" aria-label="Ubicación">
+    <a href="index.html">Ruta</a><span aria-hidden="true">/</span><span>Práctica y retos</span>
+  </nav>
+
+  <header class="leccion-cabeza">
+    <div class="etiquetas">
+      <span class="pildora mod">Modo práctica</span>
+      <span class="pildora">Pistas graduadas</span>
+    </div>
+    <h1>Practica y resuelve retos</h1>
+    <p class="objetivo">
+      Todos los ejercicios de la ruta en un solo lugar. Filtra por módulo, pide pistas si te
+      trabas y lee la explicación incluso cuando aciertes: ahí está el razonamiento que sirve
+      en el examen. Abajo encontrarás los retos de nivel admisión con revelado progresivo.
+    </p>
+  </header>
+
+  <div class="practica-layout">
+    <div>
+      <div class="filtros" id="filtros" role="group" aria-label="Filtrar ejercicios por módulo"></div>
+      <div id="banco" aria-live="polite"></div>
+
+      <section id="retos" style="margin-top:2.6rem" aria-labelledby="titulo-retos-banco">
+        <h2 id="titulo-retos-banco">Retos de nivel admisión</h2>
+        <p class="parrafo" style="max-width:70ch">
+          Problemas largos, del tipo que aparece al final de un examen de admisión. Cada uno tiene
+          tres fases: estrategia sin cálculos, desarrollo completo y respuesta comentada. Intenta
+          cada fase antes de abrir la siguiente.
+        </p>
+        <div id="banco-retos"></div>
+      </section>
+    </div>
+
+    <aside class="panel-practica" aria-label="Resumen de la sesión">
+      <div class="tarjeta-aside" id="avatar-guia" aria-label="Vértiz, el personaje guía"></div>
+
+      <div class="tarjeta-aside">
+        <h3>Sesión</h3>
+        <div class="marcador">
+          <div><strong id="marcador-resueltos">0</strong><span>resueltos</span></div>
+          <div><strong id="marcador-intentados">0</strong><span>intentados</span></div>
+        </div>
+        <p style="font-size:.8rem;color:var(--ink-3);margin:.6rem 0 0">
+          El marcador se actualiza al comprobar cada ejercicio y queda guardado en este dispositivo.
+        </p>
+      </div>
+
+      <div class="tarjeta-aside">
+        <h3>Retos</h3>
+        <div class="marcador" style="grid-template-columns:1fr">
+          <div><strong data-puntos>0</strong><span>puntos acumulados</span></div>
+        </div>
+        <p style="font-size:.8rem;color:var(--ink-3);margin:.6rem 0 0">
+          10 puntos por ejercicio correcto, 25 por reto resuelto y 15 al completar una lección.
+        </p>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<footer class="sitio-pie">
+  <div class="wrap">
+    <div>
+      <h4>Geometría del espacio</h4>
+      <p>
+        Banco de práctica generado a partir del mismo contenido que las lecciones: una única
+        fuente de verdad para preguntas, respuestas y explicaciones.
+      </p>
+    </div>
+    <div>
+      <h4>Estudiar</h4>
+      <ul>
+        <li><a href="index.html#ruta">Ruta de módulos</a></li>
+        <li><a href="leccion.html?id=m6l1">Lección completa: prismas</a></li>
+        <li><a href="leccion.html?id=m12l1">Simulacro final</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Proyecto</h4>
+      <ul>
+        <li><a href="acerca.html">Método y licencias</a></li>
+        <li><a href="acerca.html#datos">Tus datos</a></li>
+        <li><a href="verificacion.html">Autocomprobaciones</a></li>
+      </ul>
+    </div>
+    <div class="legal">
+      <span>© <span id="anio">2026</span> Geometría del espacio · Contenido didáctico original</span>
+      <span>Progreso local · Sin cuentas · Sin cookies de seguimiento</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/progreso.js"></script>
+<script src="js/contenido.js"></script>
+<script src="js/contenido-a.js"></script>
+<script src="js/contenido-b.js"></script>
+<script src="js/contenido-c.js"></script>
+<script src="js/contenido-d.js"></script>
+<script src="js/figuras.js"></script>
+<script src="js/visor2d.js"></script>
+<script src="js/avatar.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/actividades.js"></script>
+<script src="js/practica.js"></script>
+</body>
+</html>

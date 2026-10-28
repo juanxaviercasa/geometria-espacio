@@ -1,0 +1,18 @@
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+.idea/
+*.swp
+*~
+
+# Registros
+*.log
+
+# NOTA IMPORTANTE
+# No se ignora nada del sitio: los 6 .html, README.md, css/, js/ y vendor/
+# son necesarios para que la web funcione. En particular, vendor/three.module.min.js
+# (392 KB) es la única ruta 3D y NO debe excluirse.
