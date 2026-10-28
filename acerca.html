@@ -11,8 +11,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/estilos.css?v=20261028-4">
+<link rel="stylesheet" href="css/estilos.css?v=20261028-5">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232c3c9e'/%3E%3Cpath d='M16 6l9 5v10l-9 5-9-5V11z' fill='none' stroke='%23fff' stroke-width='1.8'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="vendor/katex.min.css">
+<script defer src="vendor/katex.min.js"></script>
+<script defer src="vendor/katex-auto-render.min.js"></script>
+<script defer src="js/matematicas.js?v=20261028-1"></script>
 </head>
 <body data-pagina="acerca">
 <a class="salto-contenido" href="#metodo">Saltar al contenido</a>
@@ -143,13 +147,18 @@
         <tbody>
           <tr>
             <th scope="row">three.js <span class="estado-si">integrada</span><br>
-              <span class="nota-celda">v0.186.1 (npm latest)</span>
+              <span class="nota-celda">r160 (versión incluida)</span>
             </th>
             <td><a href="https://github.com/mrdoob/three.js" rel="noopener noreferrer" target="_blank">mrdoob/three.js</a></td>
             <td>MIT</td>
             <td>117 008</td>
             <td>2026-10-26</td>
             <td>Render WebGL de las figuras geométricas. Se sirve desde <code>vendor/three.min.js</code> y <code>vendor/three.module.min.js</code> en este repositorio, sin dependencias externas ni CDN en tiempo de ejecución. Permite abrir el proyecto tanto en servidor como localmente haciendo doble clic en el archivo HTML.</td>
+          </tr>
+          <tr>
+            <th scope="row">KaTeX <span class="estado-si">integrada</span><br><span class="nota-celda">v0.16.22</span></th>
+            <td><a href="https://katex.org/">KaTeX</a></td><td>MIT</td><td>—</td><td>2026-10-28</td>
+            <td>Composición LaTeX de raíces, fracciones y potencias en lecciones, ejercicios y comprobaciones. Motor, estilos y fuentes incluidos localmente. Admite fórmulas entre delimitadores LaTeX y genera MathML accesible.</td>
           </tr>
           <tr>
             <th scope="row">Google Fonts <span class="estado-si">integrada</span></th>

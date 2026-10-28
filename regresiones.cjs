@@ -3,6 +3,23 @@ const assert = require('node:assert/strict');
 const vm = require('node:vm');
 const fs = require('node:fs');
 const path = require('node:path');
+test('KaTeX compone las fórmulas del curso, raíces cúbicas y fracciones', () => {
+  const context = {};
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/matematicas.js'),'utf8'), context);
+  const latex = context.Matematicas.latex, katex = require('./vendor/katex.min.js');
+  assert.equal(latex('∛2'), '\\sqrt[3]{2}');
+  assert.equal(latex('a³√2/12'), '\\frac{a^{3} \\sqrt{2}}{12}');
+  assert.equal(latex('√(R² − d²)'), '\\sqrt{R^{2} - d^{2}}');
+  let total = 0;
+  for (const file of fs.readdirSync(path.join(__dirname,'js')).filter(f=>/^contenido/.test(f))) {
+    const source = fs.readFileSync(path.join(__dirname,'js',file),'utf8');
+    for (const match of source.matchAll(/class="m">([^<]+)</g)) {
+      katex.renderToString(latex(match[1]), {throwOnError:true, strict:'ignore'});
+      total++;
+    }
+  }
+  assert.ok(total > 100, 'comprueba las fórmulas reales del curso');
+});
 function voz() {
   const events = [], timers = [], spoken = [];
   const window = { speechSynthesis: { getVoices: () => [], cancel() {}, resume() {}, speak(u) { spoken.push(u); } } };
