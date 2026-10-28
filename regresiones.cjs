@@ -82,4 +82,23 @@ test('el prisma contiene una diagonal de base y una espacial con longitudes corr
     assert.ok(Math.abs(2*Math.cos(t)+3*Math.sin(t))>2.5);
   });
 });
+test('el foco cae en la diagonal explicada y se puede proyectar en ambos motores',()=>{
+  const window={};vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/figuras.js'),'utf8'),{window});
+  const spec=window.Figuras.obtener('prisma-diagonales');
+  assert.deepEqual(Array.from(window.Figuras.puntoAtencion(spec,'diagonal-espacial')),[0,3,0]);
+  assert.deepEqual(Array.from(window.Figuras.puntoAtencion(spec,'diagonal-cara')),[0,0,0]);
+  assert.equal(window.Figuras.puntoAtencion({vertices:{}},'vacia'),null);
+});
+test('la vista 2D muestra una capa inicialmente apagada cuando la guía la activa',()=>{
+  function node(tag){return {tag,attrs:{},children:[],setAttribute(k,v){this.attrs[k]=String(v);},appendChild(n){this.children.push(n);},set innerHTML(v){this.children=[];}};}
+  const window={document:{createElementNS(ns,tag){return node(tag);}}};
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/figuras.js'),'utf8'),{window});
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/visor2d.js'),'utf8'),{window});
+  const spec={titulo:'Prueba',camara:{theta:0.7,phi:0.3},vertices:{A:{p:[-1,0,0]},B:{p:[1,1,0]}},lineas:[{v:['A','B'],capa:'diagonal'}],capas:[{id:'diagonal',activa:false,color:'#ff0000'}]};
+  const cont=node('div');cont.clientWidth=500;cont.clientHeight=300;
+  function lineas(n){return (n.tag==='path'&&n.attrs.stroke==='#ff0000'?1:0)+n.children.reduce((s,c)=>s+lineas(c),0);}
+  window.Visor2D.render(cont,spec,{});assert.equal(lineas(cont),0);
+  const api=window.Visor2D.render(cont,spec,{capasOcultas:{diagonal:false}});assert.ok(lineas(cont)>0);
+  const p=api.proyectar([0,0.5,0]);assert.ok(p.visible);assert.ok(Number.isFinite(p.x)&&Number.isFinite(p.y));
+});
 
