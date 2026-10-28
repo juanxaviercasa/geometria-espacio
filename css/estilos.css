@@ -2525,3 +2525,26 @@ body.movimiento-reducido .avatar-escenario.fiesta .avatar-confeti { opacity: 0; 
   .mm-profesor-cabecera { grid-template-columns:132px minmax(0,1fr); }
   .mm-avatar-slot,.vertiz-stage-mini .mini-escenario,.vertiz-stage-mini .avatar-escena.tutor-personalizado { width:132px; height:166px; }
 }
+
+/* Atención conjunta: el tutor dirige la mirada a un elemento geométrico. */
+.guia-foco { position:absolute; inset:0; pointer-events:none; z-index:3; --foco-color:#6366f1; }
+.guia-foco[hidden] { display:none; }
+.guia-foco-trazo { overflow:visible; }
+.guia-foco-trazo path { stroke:var(--foco-color); stroke-width:2.5; stroke-dasharray:6 5; opacity:.8; }
+.guia-foco-punto { position:absolute; left:var(--foco-x); top:var(--foco-y); width:23px; height:23px; border:3px solid var(--foco-color); border-radius:50%; transform:translate(-50%,-50%); background:transparent; box-shadow:0 0 0 5px #ffffffa8; }
+.guia-foco-punto::after { content:''; position:absolute; inset:-10px; border:2px solid var(--foco-color); border-radius:50%; opacity:.3; animation:guia-atencion 1.6s ease-out 2; }
+.guia-foco-etiqueta { position:absolute; left:12px; bottom:12px; max-width:calc(100% - 24px); border:1px solid var(--foco-color); border-radius:999px; padding:6px 11px; background:#ffffffed; color:#27334a; font-size:.72rem; font-weight:750; box-shadow:0 2px 10px #17203314; }
+.tutor-consigna { margin:9px 0 0; padding:7px 9px; border-radius:8px; background:#e7f4f1; color:#21594a; font-size:.72rem; line-height:1.4; font-weight:700; }
+.tutor-consigna[hidden] { display:none; }
+.tutor-mano { display:none; position:absolute; inset:auto; left:68%; top:24%; width:auto; height:auto; font-size:27px; line-height:1; filter:drop-shadow(0 2px 2px #24324b25); transform-origin:50% 65%; }
+.tutor-senalando .tutor-mano { display:block; transform:rotate(var(--tutor-mano-angulo)); }
+.tutor-senalando .tutor-pokemon { transform:rotate(var(--tutor-inclinacion)); transform-origin:50% 80%; transition:transform 350ms ease; }
+.tutor-senalando[data-direccion='izq'] .avatar .brazo-izq { transform:rotate(70deg); animation:none; }
+.tutor-senalando[data-direccion='der'] .avatar .brazo-der { transform:rotate(-70deg); animation:none; }
+.tutor-senalando[data-direccion='arriba'] .avatar .brazo-der { transform:rotate(-130deg); animation:none; }
+@keyframes guia-atencion { from { transform:scale(.75);opacity:.6; } to { transform:scale(1.5);opacity:0; } }
+body.movimiento-reducido .guia-foco-punto::after { animation:none; }
+body.movimiento-reducido .tutor-pokemon { transition:none; }
+@media(prefers-reduced-motion:reduce) { .guia-foco-punto::after { animation:none; } .tutor-pokemon { transition:none; } }
+.tutor-senalando[data-direccion='izq'] .tutor-mano { left:8%;top:35%; }
+.tutor-senalando[data-direccion='arriba'] .tutor-mano { left:55%;top:3%; }
