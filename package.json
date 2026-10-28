@@ -1,0 +1,11 @@
+{
+  "name": "geometria-espacio-3d",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Plataforma interactiva 3D de Geometría del Espacio con el profesor virtual Vértiz",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "build": "node build.js"
+  }
+}
