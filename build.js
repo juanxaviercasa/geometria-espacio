@@ -14,6 +14,11 @@ const ITEMS = [
   'descarga.html',
   'verificacion.html',
   '.nojekyll',
+  '.gitignore',
+  'README.md',
+  'SUBIR-A-GITHUB.md',
+  'TODO.md',
+  'TUTORES-2026-10-28.md',
   'css',
   'js',
   'vendor'

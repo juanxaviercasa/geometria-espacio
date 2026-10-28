@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/estilos.css">
+<link rel="stylesheet" href="css/estilos.css?v=20261028-3">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232c3c9e'/%3E%3Cpath d='M16 6l9 5v10l-9 5-9-5V11z' fill='none' stroke='%23fff' stroke-width='1.8'/%3E%3C/svg%3E">
 </head>
 <body data-pagina="acerca">
@@ -230,7 +230,7 @@
             <td>Especificación Khronos (términos propios)</td>
             <td>7 870</td>
             <td>2026-10-26</td>
-            <td><span class="estado-no">No usado</span> Sería el formato natural para un avatar con rig. Al no haber modelo propio, la guía se implementó como SVG animado por CSS y las figuras se generan por código, sin archivos binarios externos.</td>
+            <td><span class="estado-si">Integrado</span> El dragón de Quaternius se carga como GLB con esqueleto y animaciones. El capibara y el águila se generan por código.</td>
           </tr>
         </tbody>
       </table>
@@ -278,9 +278,12 @@
 
   <!-- Avatar -->
   <section class="doc-seccion prosa" id="avatar">
-    <h2>La guía: Vértiz y el Modo Maestro</h2>
+    <h2>Tutores y voces de personaje</h2>
+    <p>El selector permite cambiar entre ocho animales 3D con estética de bloques tipo Roblox (modelos originales), más el dragón alado animado de Quaternius; Pikachu, Charizard, Eevee y Dragonite con sprites animados 2D; o Vértiz clásico. La elección y el modo de voz se guardan localmente.</p>
+    <p>El dragón animado es de <a href="https://quaternius.com/packs/animatedmonster.html">Quaternius (CC0)</a>, con conversión GLB del <a href="https://github.com/trebeljahr/gamedev">catálogo GameDev</a>. Los animales de bloques son creaciones originales de esta aplicación, sin usar modelos ni cuentas de Roblox. Los sprites proceden de <a href="https://github.com/PokeAPI/sprites">PokéAPI Sprites</a>; Pokémon y sus personajes pertenecen a sus respectivos titulares. Esta app no es un producto oficial Pokémon.</p>
+    <p>La voz usa el sintetizador en español del navegador con tono y ritmo propios para cada tutor. «Héroe de anime» ofrece una tonalidad original más enérgica; «Voz natural» desactiva esos cambios. Son tonalidades originales de caricatura, no imitaciones de actores ni voces oficiales. Su resultado depende de las voces disponibles en el dispositivo. Consulta los <a href="vendor/TUTORES-CREDITOS.md">créditos de recursos</a>.</p>
     <p>
-      Vértiz es un personaje <strong>original</strong>, dibujado como SVG vectorial dentro de este
+      La opción «Vértiz clásico» es un personaje <strong>original</strong>, dibujado como SVG vectorial dentro de este
       repositorio. No reproduce ni se inspira en un personaje o marca existente. Su diseño usa la
       propia paleta de la aplicación y un prendedor triangular en el cabello como guiño al tema.
     </p>
@@ -292,7 +295,7 @@
     </p>
     <p>
       <strong>Qué hace y qué no hace:</strong> Cambia de postura y de mensaje según el momento
-      pedagógico: señala cuando introduce una figura, explica con movimiento labial, celebra un acierto,
+      pedagógico: señala cuando introduce una figura, acompaña la voz con gestos (Vértiz clásico también mueve la boca), celebra un acierto,
       anima tras un error y piensa cuando pides una pista. En el <em>Modo Maestro</em>, coordina cada
       paso de la lección con la cámara 3D y el encendido de capas.
     </p>
@@ -391,7 +394,7 @@
       <li><strong>La lección «completa» es la del módulo 6</strong> (prismas y diagonales): es la
         más desarrollada, con 8 ejercicios y 2 retos. El resto de módulos son lecciones sólidas,
         no monografías.</li>
-      <li>El avatar es una animación vectorial, no un rig 3D con esqueleto. Está indicado en esta
+      <li>Vértiz clásico es una animación vectorial. El dragón sí tiene esqueleto 3D. Está indicado en esta
         página y no se presenta como otra cosa.</li>
       <li>No hay figuras con texturas ni modelos GLB: todas se generan por código, lo que mantiene
         el repositorio sin binarios y sin dudas de licencia sobre recursos externos.</li>
@@ -441,7 +444,8 @@
 <script src="js/contenido-b.js"></script>
 <script src="js/contenido-c.js"></script>
 <script src="js/contenido-d.js"></script>
-<script src="js/avatar.js?v=20261028-2"></script>
+<script src="js/tutores.js?v=20261028-3"></script>
+<script src="js/avatar.js?v=20261028-3"></script>
 <script src="js/ui.js"></script>
 <script src="js/acerca.js"></script>
 </body>

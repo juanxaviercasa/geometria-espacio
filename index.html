@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/estilos.css">
+<link rel="stylesheet" href="css/estilos.css?v=20261028-3">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232c3c9e'/%3E%3Cpath d='M16 6l9 5v10l-9 5-9-5V11z' fill='none' stroke='%23fff' stroke-width='1.8'/%3E%3Cpath d='M16 6v20M7 11l9 5 9-5' stroke='%23fff' stroke-width='1.2' opacity='.7'/%3E%3C/svg%3E">
 </head>
 <body data-pagina="inicio">
@@ -143,12 +143,13 @@
         <div id="avatar-guia" aria-label="Vértiz, el personaje guía"></div>
         <div class="vertiz-texto">
           <span class="pildora">Profesor Virtual y Guía 3D</span>
-          <h3>Vértiz explica cada figura con voz y animación paso a paso</h3>
+          <h3>Elige quién te acompaña en cada explicación</h3>
           <p>
-            Vértiz es tu tutor interactivo: se desplaza por la pantalla, enfoca la cámara 3D,
-            resalta caras y aristas clave, y te guía mediante locución de voz y texto didáctico.
-            En cada figura 3D puedes pulsar <strong>«Iniciar Explicación con Vértiz»</strong> para
-            que te enseñe la teoría de forma guiada como en una clase magistral.
+            Animales de bloques: dragón, capibara, águila, zorro, gato, panda, conejo y lobo. También puedes elegir el dragón alado animado o tu Pokémon favorito. Cambia de tutor
+            en el selector y elige su tonalidad de voz: todos explican las mismas matemáticas
+            en español. Las criaturas son 3D; Pokémon usa imágenes animadas 2D.
+            Tu elección se recuerda en este dispositivo. Pulsa <strong>«Explicar paso 1»</strong>
+            junto a cualquier figura para comenzar la clase.
           </p>
           <p class="vertiz-nota">
             🎙️ <strong>Audio activo:</strong> Si tu navegador tiene silenciado el audio, pulsa el botón <em>«Probar Voz»</em> en el avatar o activa el interruptor de sonido en cualquier modelo 3D.
@@ -288,9 +289,10 @@
 <script src="vendor/three.min.js"></script>
 <script src="js/visor3d.js?v=20261028-2"></script>
 <script src="js/visor2d.js?v=20261028-2"></script>
-<script src="js/avatar.js?v=20261028-2"></script>
+<script src="js/tutores.js?v=20261028-3"></script>
+<script src="js/avatar.js?v=20261028-3"></script>
 <script src="js/ui.js"></script>
-<script src="js/visor.js?v=20261028-2"></script>
+<script src="js/visor.js?v=20261028-3"></script>
 <script src="js/inicio.js"></script>
 </body>
 </html>
