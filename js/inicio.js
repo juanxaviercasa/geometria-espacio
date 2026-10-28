@@ -26,7 +26,7 @@
     if (!cont || !window.Visor) return;
     try {
       cont.innerHTML = '';
-      window.Visor.montar(cont, 'prisma-diagonales', { sinAviso: false });
+      window.Visor.montar(cont, 'prisma-diagonales', { modoHero: true, sinAviso: true });
     } catch (e) {
       console.warn('Error al montar figura hero 3D:', e);
     }
