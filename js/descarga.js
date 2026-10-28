@@ -29,6 +29,7 @@
     'README.md',
     'SUBIR-A-GITHUB.md',
     'TODO.md',
+    'TUTORES-2026-10-28.md',
     '.gitignore',
     '.nojekyll',
     // Estilos
@@ -45,6 +46,7 @@
     'js/visor3d.js',
     'js/visor.js',
     'js/avatar.js',
+    'js/tutores.js',
     'js/ui.js',
     'js/actividades.js',
     'js/leccion.js',
@@ -55,7 +57,15 @@
     'js/descarga.js',
     // Dependencia vendorizada (necesaria para la vista 3D)
     'vendor/three.min.js',
-    'vendor/three.module.min.js'
+    'vendor/three.module.min.js',
+    'vendor/GLTFLoader.js',
+    'vendor/THREE-LICENSE.txt',
+    'vendor/TUTORES-CREDITOS.md',
+    'vendor/tutor-dragon.glb',
+    'vendor/pokemon-6.gif', 'vendor/pokemon-6.png',
+    'vendor/pokemon-25.gif', 'vendor/pokemon-25.png',
+    'vendor/pokemon-133.gif', 'vendor/pokemon-133.png',
+    'vendor/pokemon-149.gif', 'vendor/pokemon-149.png'
   ];
 
   /* ---------- CRC-32 (tabla precalculada) ---------- */

@@ -293,6 +293,7 @@
 
     /* Montar mini Vértiz dentro del panel docente */
     var slotAvatar = colMaestro.querySelector('[data-mm-avatar-slot]');
+    if (global.Tutores) colMaestro.querySelector('.mm-profesor-info').appendChild(global.Tutores.selector());
     var miniAvatar = null;
     if (slotAvatar && global.Avatar && global.Avatar.crearMini) {
       miniAvatar = global.Avatar.crearMini();

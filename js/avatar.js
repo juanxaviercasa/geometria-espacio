@@ -308,8 +308,9 @@
             } else {
               u.lang = 'es-ES';
             }
-            u.rate = velocidadVoz;
-            u.pitch = 1.04;
+            var perfil = global.Tutores ? global.Tutores.perfilVoz() : {rate:1,pitch:1.04};
+            u.rate = Math.max(0.75, Math.min(1.35, velocidadVoz * perfil.rate));
+            u.pitch = perfil.pitch;
 
             u.onboundary = function (ev) {
               if (sesion === vozSesion && ev.name === 'word') {
@@ -434,6 +435,10 @@
 
     var escenario = cont.querySelector('.avatar-escenario');
     var escena = cont.querySelector('.avatar-escena');
+    if (global.Tutores) {
+      global.Tutores.montar(escena);
+      cont.querySelector('.avatar-columna-figura').appendChild(global.Tutores.selector());
+    }
     var texto = cont.querySelector('[data-avatar-texto]');
     var botonOtro = cont.querySelector('[data-avatar-otro]');
     var botonVoz = cont.querySelector('[data-avatar-voz]');
@@ -586,6 +591,7 @@
 
     var escenario = wrap.querySelector('.avatar-escenario');
     var escena = wrap.querySelector('.avatar-escena');
+    if (global.Tutores) global.Tutores.montar(escena);
 
     function setEstado(nuevo) {
       if (ESTADOS.indexOf(nuevo) === -1) return;
