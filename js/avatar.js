@@ -236,7 +236,14 @@
       .replace(/√/g, 'raíz cuadrada de ')
       .replace(/²/g, ' al cuadrado ')
       .replace(/³/g, ' al cubo ')
-      .replace(/·/g, ' por ')
+      .replace(/\^2\b/g, ' al cuadrado ')
+      .replace(/\^3\b/g, ' al cubo ')
+      .replace(/\bb(?= al cuadrado)/g, 'be')
+      .replace(/\bc(?= al cuadrado)/g, 'ce')
+      .replace(/\+/g, ' más ')
+      .replace(/=/g, ' igual a ')
+      .replace(/[×·]/g, ' por ')
+      .replace(/π/g, ' pi ')
       .replace(/≠/g, ' distinto de ')
       .replace(/≤/g, ' menor o igual que ')
       .replace(/≥/g, ' mayor o igual que ')
@@ -245,7 +252,10 @@
       .trim();
   }
 
+  var vozSesion = 0;
+
   function hablarVoz(texto, callbackFin, opciones) {
+    var sesion = ++vozSesion;
     opciones = opciones || {};
     if (!vozHabilitada) {
       if (callbackFin) callbackFin();
@@ -270,7 +280,7 @@
     var timerSeguridad = null;
 
     function finalizar() {
-      if (terminado) return;
+      if (terminado || sesion !== vozSesion) return;
       terminado = true;
       if (timerSeguridad) clearTimeout(timerSeguridad);
       window._activeSpeechUtterance = null;
@@ -286,7 +296,7 @@
         window.speechSynthesis.resume();
 
         setTimeout(function () {
-          if (terminado) return;
+          if (terminado || sesion !== vozSesion || !vozHabilitada) return;
           try {
             var u = new SpeechSynthesisUtterance(limpio);
             window._activeSpeechUtterance = u;
@@ -302,7 +312,7 @@
             u.pitch = 1.04;
 
             u.onboundary = function (ev) {
-              if (ev.name === 'word') {
+              if (sesion === vozSesion && ev.name === 'word') {
                 document.dispatchEvent(new CustomEvent('avatar-palabra', {
                   detail: { charIndex: ev.charIndex, charLength: ev.charLength || 0, texto: limpio }
                 }));
@@ -312,7 +322,7 @@
             u.onerror = finalizar;
 
             window.speechSynthesis.speak(u);
-            timerSeguridad = setTimeout(finalizar, duracionEstimadaMs + 2000);
+            // La voz real determina el final; no cortar la animación con una estimación.
           } catch (e) {
             timerSeguridad = setTimeout(finalizar, duracionEstimadaMs);
           }
@@ -326,6 +336,7 @@
   }
 
   function detenerVoz() {
+    vozSesion++;
     if ('speechSynthesis' in window) {
       try { window.speechSynthesis.cancel(); } catch (e) {}
     }
@@ -613,6 +624,7 @@
     POSICIONES: POSICIONES,
     svg: function () { return SVG; },
     hablarVoz: hablarVoz,
+    limpiarTextoParaVoz: limpiarTextoParaVoz,
     detenerVoz: detenerVoz,
     setVozHabilitada: setVozHabilitada,
     getVozHabilitada: function () { return vozHabilitada; },

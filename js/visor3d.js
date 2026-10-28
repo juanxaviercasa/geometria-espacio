@@ -670,6 +670,7 @@
       o.userData._guardado = {
         opacity: o.material.opacity,
         transparent: o.material.transparent,
+        depthWrite: o.material.depthWrite,
         escala: o.scale.clone()
       };
       tocados.push(o);
@@ -682,6 +683,7 @@
         if (!o.material) return;
         o.material.transparent = true;
         o.material.opacity = o.userData._guardado.opacity * 0.22;
+        o.material.depthWrite = false;
         o.material.needsUpdate = true;
       });
     });
@@ -714,6 +716,7 @@
       if (o.material) {
         o.material.opacity = g.opacity;
         o.material.transparent = g.transparent;
+        o.material.depthWrite = g.depthWrite;
         o.material.needsUpdate = true;
       }
       o.scale.copy(g.escala);
