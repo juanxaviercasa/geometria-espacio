@@ -421,7 +421,7 @@
       alt: 'Paralelepípedo recto de dimensiones 2, 3 y 6. Se muestran la diagonal AC de la base y la diagonal espacial que va de A a C₁.',
       pie: 'Las diagonales de cara viven dentro de una cara; la diagonal espacial une dos vértices no situados en la misma cara. Aquí AC₁ mide √(2² + 3² + 6²) = 7.',
       medidas: [['AB', '2 u', 'arista'], ['BC', '3 u', 'arista'], ['AA₁', '6 u', 'altura'], ['AC₁', '7 u', 'diagonal']],
-      camara: { theta: -0.62, phi: 0.26 },
+      camara: { theta: 0.7, phi: 0.26 },
       vertices: vs,
       caras: pr.caras.map(function (f) { return { v: f, capa: 'caras' }; }),
       aristas: pr.aristas.map(function (p) { return { a: p[0], b: p[1], capa: 'aristas' }; }),
@@ -790,28 +790,28 @@
       {
         titulo: 'Dimensiones del ortoedro',
         texto: 'Tenemos un paralelepípedo recto de aristas 2, 3 y 6. Fíjense cómo se distribuyen en el largo, ancho y alto.',
-        camara: { theta: -0.62, phi: 0.26 },
+        camara: { theta: 0.7, phi: 0.26 },
         capasVisibles: ['caras', 'aristas', 'etiquetas'],
         capaResaltada: 'aristas'
       },
       {
         titulo: 'Diagonales de cara',
         texto: 'La línea naranja AC es la diagonal de la base. En esa base de 2 por 3, AC al cuadrado es 2 al cuadrado más 3 al cuadrado: 13. Por tanto, AC mide raíz cuadrada de 13.',
-        camara: { theta: -0.62, phi: 0.58 },
+        camara: { theta: 0.7, phi: 0.58 },
         capasVisibles: ['aristas', 'diagonal-cara', 'etiquetas'],
         capaResaltada: 'diagonal-cara'
       },
       {
         titulo: 'La diagonal espacial AC₁',
         texto: '¡Miren la línea roja que cruza el interior del sólido! Une dos vértices opuestos sin compartir cara: es la diagonal espacial.',
-        camara: { theta: -0.62, phi: 0.26 },
+        camara: { theta: 0.7, phi: 0.26 },
         capasVisibles: ['aristas', 'diagonal-espacial', 'etiquetas'],
         capaResaltada: 'diagonal-espacial'
       },
       {
         titulo: 'Pitágoras en tres dimensiones',
         texto: 'La fórmula es: diagonal al cuadrado = a² + b² + c². Con 2, 3 y 6: 4 + 9 + 36 = 49. La diagonal mide raíz cuadrada de 49: 7 unidades.',
-        camara: { theta: -0.62, phi: 0.26 },
+        camara: { theta: 0.7, phi: 0.26 },
         capasVisibles: ['aristas', 'diagonal-espacial', 'etiquetas'],
         capaResaltada: 'diagonal-espacial'
       }
