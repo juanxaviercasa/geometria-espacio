@@ -142,6 +142,7 @@
       return { color: '#5b6bd6', activa: true, opacidad: 0.12 };
     }
     function activa(id) {
+      if(Object.prototype.hasOwnProperty.call(capasOcultas,id))return !capasOcultas[id];
       if (capasOcultas[id]) return false;
       return capa(id).activa !== false;
     }
@@ -386,6 +387,7 @@
     }
 
     contenedor.appendChild(svg);
+    return {proyectar:function(p){var q=aPantalla(p);q.visible=q.x>=0&&q.x<=ancho&&q.y>=0&&q.y<=alto;return q;}};
   }
 
   global.Visor2D = { render: render };

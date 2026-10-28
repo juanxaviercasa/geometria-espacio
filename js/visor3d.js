@@ -495,6 +495,13 @@
     );
     this.camara.lookAt(this.centro);
     this._sucio = true;
+    if(this.opciones.alMoverCamara)this.opciones.alMoverCamara();
+  };
+
+  Visor3D.prototype.proyectarPunto = function(p) {
+    this.camara.updateMatrixWorld(true);
+    var q=new this.THREE.Vector3(p[0],p[1],p[2]).project(this.camara);
+    return {x:(q.x+1)*this.contenedor.clientWidth/2,y:(1-q.y)*this.contenedor.clientHeight/2,visible:q.z>=-1 && q.z<=1 && Math.abs(q.x)<=1 && Math.abs(q.y)<=1};
   };
 
   Visor3D.prototype._fijarZoom = function (z) {

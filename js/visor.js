@@ -182,6 +182,9 @@
     aviso.textContent = 'Arrastra para girar · Rueda para zoom';
     if (opciones.sinAviso) aviso.hidden = true;
     lienzoWrap.appendChild(aviso);
+    var guiaFoco=document.createElement('div');guiaFoco.className='guia-foco';guiaFoco.hidden=true;guiaFoco.setAttribute('aria-hidden','true');
+    guiaFoco.innerHTML='<svg class="guia-foco-trazo" width="100%" height="100%"><path fill="none"></path></svg><span class="guia-foco-punto"></span><span class="guia-foco-etiqueta"></span>';
+    lienzoWrap.appendChild(guiaFoco);
 
     colLienzo.appendChild(lienzoWrap);
 
@@ -312,11 +315,33 @@
       figura: figura
     };
 
+    function actualizarAtencion() {
+      if(!estado.iniciado || !estado.atencionActiva || !estado.puntoAtencion || !estado.capaAtencion || estado.capasOcultas[estado.capaAtencion]) {
+        guiaFoco.hidden=true;
+        if(estado.atencionActiva && estado.capasOcultas[estado.capaAtencion] && global.Tutores)global.Tutores.suspender(figura);
+        return;
+      }
+      var q=estado.tipo==='3d' && estado.api && estado.api.proyectarPunto
+        ? estado.api.proyectarPunto(estado.puntoAtencion)
+        : estado.proyeccion2d && estado.proyeccion2d.proyectar(estado.puntoAtencion);
+      if(!q || !q.visible || !Number.isFinite(q.x) || !Number.isFinite(q.y)){guiaFoco.hidden=true;return;}
+      guiaFoco.hidden=false;
+      guiaFoco.style.setProperty('--foco-x',q.x+'px');guiaFoco.style.setProperty('--foco-y',q.y+'px');
+      var r=lienzo.getBoundingClientRect(), tutor=slotAvatar.getBoundingClientRect();
+      var w=r.width,h=r.height;
+      var alCostado=tutor.left>=r.right-10;
+      var sx=alCostado?w-12:Math.max(12,Math.min(w-12,tutor.left+tutor.width/2-r.left));
+      var sy=alCostado?Math.max(12,Math.min(h-12,q.y+40)):h-12;
+      guiaFoco.querySelector('path').setAttribute('d','M '+sx+' '+sy+' Q '+sx+' '+q.y+' '+q.x+' '+q.y);
+      if(global.Tutores)global.Tutores.orientar({figura:figura,lienzo:lienzo,x:q.x,y:q.y,nombre:estado.nombreAtencion});
+    }
+
     function pintar2d() {
       estado.tipo = '2d';
       lienzo.innerHTML = '';
-      global.Visor2D.render(lienzo, spec, { capasOcultas: estado.capasOcultas, camara: estado.camaraGuia });
+      estado.proyeccion2d=global.Visor2D.render(lienzo, spec, { capasOcultas: estado.capasOcultas, camara: estado.camaraGuia });
       aviso.hidden = true;
+      actualizarAtencion();
     }
 
     function usar2d(motivo) {
@@ -344,7 +369,8 @@
         try {
           estado.api = new Clase(lienzo, spec, {
             capasOcultas: estado.capasOcultas,
-            reducido: estado.reducido
+            reducido: estado.reducido,
+            alMoverCamara: actualizarAtencion
           });
           estado.tipo = '3d';
           estado.api.setAutoGiro(estado.giro && !estado.reducido);
@@ -401,6 +427,15 @@
       estado.pasoActual = idx;
       estado.iniciado = true;
       var paso = pasos[idx];
+      estado.atencionActiva=true;
+      var objetivo=nombreCapa(spec,paso.capaResaltada);
+      estado.capaAtencion=paso.capaResaltada;
+      estado.nombreAtencion=objetivo?objetivo.nombre:paso.titulo;
+      estado.puntoAtencion=global.Figuras.puntoAtencion(spec,paso.capaResaltada);
+      guiaFoco.querySelector('.guia-foco-etiqueta').textContent='Mira: '+estado.nombreAtencion;
+      guiaFoco.style.setProperty('--foco-color',objetivo?objetivo.color:'#6366f1');
+      if(global.Tutores)global.Tutores.enfocar({figura:figura,lienzo:lienzo,nombre:estado.nombreAtencion,paso:idx+1});
+      aviso.hidden=true;
       estado.camaraGuia = paso.camara;
       // Mantener la selección y la capa visible en ambos motores.
       if (paso.capaResaltada) estado.capasOcultas[paso.capaResaltada] = false;
@@ -464,6 +499,7 @@
       }
 
       /* Locución y animación de Vértiz */
+      actualizarAtencion();
       if (conAudio !== false) {
         if (global.AvatarGuia && global.AvatarGuia.hablar) {
           global.AvatarGuia.hablar(paso.texto, {
@@ -516,6 +552,9 @@
     });
 
     document.addEventListener('voz-cambiada', actualizarBotonVoz);
+    document.addEventListener('tutor-enfocando',function(e){
+      if(e.detail.figura!==figura){estado.atencionActiva=false;guiaFoco.hidden=true;var m=colMaestro.querySelector('.tutor-consigna');if(m)m.hidden=true;}
+    });
     document.addEventListener('avatar-hablando', function (e) {
       var activo = !!(e.detail && e.detail.activo);
       if (ondasMM) ondasMM.classList.toggle('activo', activo);
@@ -605,6 +644,7 @@
         estado.capasOcultas[id] = activa;
         if (estado.tipo === '3d' && estado.api) estado.api.setCapa(id, !activa);
         else pintar2d();
+        actualizarAtencion();
       });
     });
 
@@ -633,6 +673,7 @@
 
     window.addEventListener('resize', function () {
       if (estado.tipo === '2d') pintar2d();
+      actualizarAtencion();
     });
 
     document.addEventListener('movimiento-cambiado', function (e) {

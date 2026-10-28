@@ -1063,7 +1063,24 @@
   };
 
   /* ---------- API ---------- */
+  function puntoAtencion(spec, capa) {
+    function puntos(ids) { return (ids || []).map(function(id){return Array.isArray(id)?id:spec.vertices && spec.vertices[id] && spec.vertices[id].p;}).filter(function(p){return p && p.length===3 && p.every(Number.isFinite);}); }
+    var linea=(spec.lineas || []).find(function(l){return l.capa===capa;});
+    var ps=linea?puntos(linea.pts || linea.v):[];
+    if(!ps.length) {
+      var arista=(spec.aristas || []).find(function(a){return (a.capa || 'aristas')===capa;});
+      if(arista)ps=puntos([arista.a,arista.b]);
+    }
+    if(!ps.length) {
+      var cara=(spec.caras || []).find(function(c){return c.capa===capa;});
+      if(cara)ps=puntos(cara.v);
+    }
+    if(!ps.length && spec.tipo==='esfera')return [spec.radio*0.6,0,0];
+    if(!ps.length)ps=puntos(Object.keys(spec.vertices || {}));
+    return ps.length?centroide(ps):null;
+  }
   global.Figuras = {
+    puntoAtencion: puntoAtencion,
     spec: FIGURAS,
     obtener: function (id) {
       var fig = FIGURAS[id] || null;

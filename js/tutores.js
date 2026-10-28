@@ -43,6 +43,7 @@
   try { var valor = localStorage.getItem(clave); if (buscar(valor)) elegido = valor; } catch (e) {}
   var vistas = [], selectores = [], cargas = {}, T, renderer, scene, camera, modelo, mixer, alas = [], cabeza;
   var revision = 0, animacion = 0, ultimo = 0, hablando = false, giro = 0.35, arrastrando = false;
+  var foco=null, huesosGuia=null;
   var baseURL = new URL('../', document.currentScript.src);
   function url(ruta) { return new URL(ruta, baseURL).href; }
   function buscar(id) { return CATALOGO.find(function (p) { return p.id === id; }); }
@@ -106,6 +107,31 @@
     if(estiloVoz==='anime')return {pitch:1.08,rate:1.06,descripcion:'Heroica y enérgica'};
     return PERFILES[elegido];
   }
+  function participa(v) { var f=v.nodo.closest('.figura');return !!foco && (!f || f===foco.figura); }
+  function direccion(v) {
+    var r=v.nodo.getBoundingClientRect(),l=foco.lienzo.getBoundingClientRect();
+    var dx=l.left+(Number.isFinite(foco.x)?foco.x:l.width/2)-(r.left+r.width/2);
+    var dy=l.top+(Number.isFinite(foco.y)?foco.y:l.height/2)-(r.top+r.height/2);
+    return {x:Math.abs(dx)>45 && Math.abs(dx)>Math.abs(dy)*0.7?(dx<0?-1:1):0,y:dy<0?-1:1,angulo:Math.atan2(dy,dx)*180/Math.PI+90};
+  }
+  function actualizarGestos() {
+    vistas.forEach(function(v){
+      var activa=participa(v);v.nodo.classList.toggle('tutor-senalando',activa);
+      v.nodo.dataset.gesto=activa?'senala':'reposo';v.nodo.dataset.objetivo=activa?foco.nombre:'';
+      if(activa){var d=direccion(v);v.nodo.dataset.direccion=d.x<0?'izq':d.x>0?'der':'arriba';v.nodo.style.setProperty('--tutor-mano-angulo',d.angulo+'deg');v.nodo.style.setProperty('--tutor-inclinacion',(d.x*6)+'deg');}
+    });
+  }
+  function enfocar(info) {
+    foco=info;
+    document.dispatchEvent(new CustomEvent('tutor-enfocando',{detail:{figura:info.figura}}));
+    var panel=info.figura.querySelector('.mm-profesor-info');
+    var mensaje=panel.querySelector('.tutor-consigna');
+    if(!mensaje){mensaje=document.createElement('p');mensaje.className='tutor-consigna';mensaje.setAttribute('role','status');panel.appendChild(mensaje);}
+    mensaje.hidden=false;mensaje.textContent='☝ Fíjate en: '+info.nombre;
+    actualizarGestos();despertar();
+  }
+  function orientar(info) { if(!foco){enfocar(info);return;}if(foco.figura!==info.figura)return;foco=Object.assign({},foco,info);actualizarGestos();despertar(); }
+  function suspender(figura) {if(foco && foco.figura===figura){foco=null;actualizarGestos();var m=figura.querySelector('.tutor-consigna');if(m)m.hidden=true;despertar();}}
   function pintar(v) {
     var p = buscar(elegido); v.canvas = null;
     v.nodo.classList.toggle('tutor-personalizado', p.id !== 'vertiz');
@@ -132,6 +158,8 @@
       var ctx=visual.getContext('2d'); if(ctx) { ctx.font='80px sans-serif'; ctx.textAlign='center'; ctx.fillText(p.emoji,210,240); }
     }
     v.nodo.appendChild(visual);
+    if(p.pokemon){var mano=document.createElement('span');mano.className='tutor-mano tutor-visual';mano.textContent='☝';mano.setAttribute('aria-hidden','true');v.nodo.appendChild(mano);}
+    actualizarGestos();
     if(v.canvas && renderer && cargadoId===p.id)copiar(v);
   }
   function copiar(v) { if(!v.canvas)return;var ctx=v.canvas.getContext('2d');if(ctx){ctx.clearRect(0,0,420,420);ctx.drawImage(renderer.domElement,0,0);} }
@@ -173,7 +201,9 @@
       cubo(pierna,'#26374a',[0,-0.38,0.06],[0.32,0.13,0.43]);
       var brazo=new T.Group();brazo.position.set(s*0.49,1.15,0);root.add(brazo);
       cubo(brazo,datos.ropa,[0,-0.19,0],[0.27,0.4,0.35]);
-      cubo(brazo,oscuro,[0,-0.47,0.015],[0.27,0.18,0.34]);alas.push(brazo);
+      cubo(brazo,oscuro,[0,-0.47,0.015],[0.27,0.18,0.34]);
+      cubo(brazo,oscuro,[s*0.055,-0.61,0.08],[0.08,0.16,0.12]);
+      brazo.userData.tutorBrazo=s;alas.push(brazo);
     });
     cabeza=new T.Group();cabeza.position.set(0,1.64,0);root.add(cabeza);
     cubo(cabeza,datos.cabeza||datos.piel,[0,0,0],[0.86,0.68,0.62]);
@@ -188,7 +218,7 @@
       if(id==='dragon'||id==='aguila') {
         var ala=new T.Group();ala.position.set(s*0.33,1.15,-0.2);root.add(ala);
         for(var i=0;i<3;i++) { var pluma=cubo(ala,id==='dragon'?'#8470b8':'#9f7950',[s*(0.26+i*0.18),0.05-i*0.13,-0.07],[0.23,0.55-i*0.06,0.1]);pluma.rotation.z=-s*0.3; }
-        alas.push(ala);
+        ala.userData.tutorAla=s;alas.push(ala);
       }
       if(id==='capibara')cubo(cabeza,'#5a3c2b',[s*0.15,-0.07,0.505],[0.075,0.035,0.025]);
     });
@@ -208,7 +238,7 @@
       modelo.traverse(function (o) { if(o.geometry)o.geometry.dispose(); if(o.material) (Array.isArray(o.material)?o.material:[o.material]).forEach(function(m){Object.keys(m).forEach(function(k){if(m[k]&&m[k].isTexture)m[k].dispose();});m.dispose();}); });
       modelo=null;
     }
-    alas=[]; cabeza=null;
+    alas=[]; cabeza=null;huesosGuia=null;
   }
   function iniciarMotor() {
     if(renderer) return;
@@ -260,12 +290,13 @@
         modelo.position.set(-centro.x*escala,-caja.min.y*escala,-centro.z*escala);
         var cont=new T.Group(); cont.add(modelo); modelo=cont;
         if(resultado.animations.length) { mixer=new T.AnimationMixer(modelo); var clip=resultado.animations.find(function(a){return /flying/i.test(a.name);}) || resultado.animations[0]; mixer.clipAction(clip).play(); }
+        huesosGuia={head:modelo.getObjectByName('Head'),left:modelo.getObjectByName('Wing1L'),right:modelo.getObjectByName('Wing1R')};
       }
       scene.add(modelo); cargadoId=p.id; pendienteId=null;
       camera.position.set(0,p.id==='conejo'?1.4:1.15,p.id==='conejo'?5.5:4.8);camera.lookAt(0,p.id==='conejo'?1.2:0.96,0);
       modelo.rotation.y=giro;
       if(mixer)mixer.update(0);
-      renderer.render(scene,camera);vistas.forEach(copiar);
+      dibujarVistas(vistas,performance.now()/1000,reducido());
       vistas.forEach(function(v){v.nodo.dataset.carga="listo";}); despertar();
     }).catch(function (error) {
       if(token!==revision)return;
@@ -275,6 +306,30 @@
     });
   }
   function despertar() { if(!animacion && renderer && modelo && !document.hidden) animacion=requestAnimationFrame(frame); }
+  function dibujarVistas(lista,t,quieto) {
+    var bases={};
+    if(huesosGuia)Object.keys(huesosGuia).forEach(function(k){var b=huesosGuia[k];if(b)bases[k]=b.quaternion.clone();});
+    lista.forEach(function(v){
+      if(!v.canvas)return;
+      var activa=participa(v),d=activa?direccion(v):{x:0,y:0};
+      modelo.rotation.y=giro+(activa?d.x*0.32:(quieto?0:Math.sin(t*0.5)*0.08));
+      modelo.position.y=quieto?0:Math.sin(t*2)*0.025;
+      if(cabeza){cabeza.rotation.y=activa?d.x*0.34:0;cabeza.rotation.x=(activa?d.y*0.16:0)+(quieto?0:Math.sin(t*(hablando?7:1.2))*(hablando?0.035:0.015));}
+      alas.forEach(function(a,i){
+        a.rotation.x=0;
+        a.rotation.z=quieto?0:Math.sin(t*(hablando?5:1.4))*(hablando?0.12:0.035)*(a.userData.tutorBrazo || a.userData.tutorAla || (i?1:-1));
+        var lado=d.x || -1;
+        if(activa && a.userData.tutorBrazo===lado){a.rotation.z=lado*(d.x?1.25:2.7);a.rotation.x=-0.3+(hablando&&!quieto?Math.sin(t*6)*0.03:0);}
+        if(activa && a.userData.tutorAla===lado)a.rotation.z=lado*0.45;
+      });
+      if(huesosGuia){
+        Object.keys(bases).forEach(function(k){huesosGuia[k].quaternion.copy(bases[k]);});
+        if(activa){if(huesosGuia.head){huesosGuia.head.rotateY(d.x*0.28);huesosGuia.head.rotateX(d.y*0.1);}var ala=d.x>0?huesosGuia.right:huesosGuia.left;if(ala)ala.rotateZ((d.x || -1)*0.22);}
+      }
+      renderer.render(scene,camera);copiar(v);
+    });
+    if(huesosGuia)Object.keys(bases).forEach(function(k){huesosGuia[k].quaternion.copy(bases[k]);});
+  }
   function frame(now) {
     animacion=0;
     var visibles=vistas.filter(function(v){return v.canvas && v.visible && v.nodo.isConnected;});
@@ -283,16 +338,11 @@
     if(now-ultimo<66 && !reducido()) { despertar(); return; } ultimo=now;
     var t=now/1000, quieto=reducido();
     if(mixer) { mixer.update(quieto?0:dt*(hablando?1:0.65)); }
-    modelo.rotation.y=giro+(quieto?0:Math.sin(t*0.5)*0.08);
-    modelo.position.y=quieto?0:Math.sin(t*2)*0.025;
-    if(cabeza)cabeza.rotation.x=quieto?0:Math.sin(t*(hablando?9:1.2))*(hablando?0.06:0.025);
-    alas.forEach(function(a,i){a.rotation.z=quieto?0:Math.sin(t*(hablando?5:1.4))*(hablando?0.18:0.045)*(i?1:-1);});
-    renderer.render(scene,camera);
-    visibles.forEach(copiar);
+    dibujarVistas(visibles,t,quieto);
     if(!quieto)despertar();
   }
   document.addEventListener('avatar-hablando',function(e){hablando=!!(e.detail&&e.detail.activo);despertar();});
   document.addEventListener('movimiento-cambiado',function(){if(buscar(elegido).pokemon)vistas.forEach(pintar);despertar();});
   document.addEventListener('visibilitychange',despertar);
-  global.Tutores={catalogo:CATALOGO,actual:function(){return elegido;},elegir:elegir,montar:montar,selector:selector,perfilVoz:perfilVoz};
+  global.Tutores={catalogo:CATALOGO,actual:function(){return elegido;},elegir:elegir,montar:montar,selector:selector,perfilVoz:perfilVoz,enfocar:enfocar,orientar:orientar,suspender:suspender};
 })(window);
