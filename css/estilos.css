@@ -1573,30 +1573,69 @@ table.datos td.m { white-space: nowrap; }
 .figura-pie p { margin: 0; }
 
 /* Modo Proyector (Pantalla completa de aula) */
+body.con-visor-proyectado { overflow: hidden; }
 .figura.modo-proyector {
   position: fixed !important;
   inset: 0 !important;
   z-index: 9999 !important;
   width: 100vw !important;
   height: 100vh !important;
+  height: 100dvh !important;
+  margin: 0 !important;
+  max-width: none !important;
+  overflow: hidden;
   border-radius: 0 !important;
   border: none !important;
   display: flex;
   flex-direction: column;
   background: var(--surface);
 }
+.figura.modo-proyector > .figura-barra-sup,
+.figura.modo-proyector > .figura-pie { flex: 0 0 auto; }
 .figura.modo-proyector .figura-escenario-clase {
-  flex: 1;
+  flex: 1 1 0;
   min-height: 0;
   grid-template-columns: minmax(0, 1.6fr) 380px;
+  grid-template-rows: minmax(0, 1fr);
+  overflow: hidden;
+}
+.figura.modo-proyector .figura-col-lienzo {
+  min-height: 0;
+  overflow: hidden;
+}
+.figura.modo-proyector .figura-stage-wrap {
+  flex: 1 1 0;
+  min-height: 0;
 }
 .figura.modo-proyector .figura-lienzo {
+  position: absolute;
+  inset: 0;
   height: 100% !important;
-  min-height: 460px;
+  min-height: 0 !important;
+}
+.figura.modo-proyector .figura-capas { flex: 0 0 auto; max-height: 30%; overflow-y: auto; }
+.figura.modo-proyector .figura-col-maestro {
+  min-height: 0;
+  min-width: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  justify-content: flex-start;
+}
+.figura.modo-proyector .figura-col-maestro > * { flex-shrink: 0; }
+.figura.modo-proyector .mm-acciones-fila {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  background: var(--surface);
+  padding-block: .4rem;
+  margin-bottom: -.4rem;
 }
 .figura.modo-proyector .mm-dialogo-titulo { font-size: 1.05rem; }
 .figura.modo-proyector .mm-dialogo-texto { font-size: 1.06rem; line-height: 1.6; }
 .figura.modo-proyector .btn-mm-nav { font-size: 0.92rem; padding: .7rem 1.1rem; }
+@media (max-height: 600px) {
+  .figura.modo-proyector > .figura-pie { display: none; }
+}
 
 /* ---------- 10. Avatar guía ---------- */
 .avatar-caja {
@@ -2412,6 +2451,13 @@ table.datos td.m { white-space: nowrap; }
   }
   .figura.modo-proyector .figura-escenario-clase {
     grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+@media (max-width: 860px) and (orientation: landscape) {
+  .figura.modo-proyector .figura-escenario-clase {
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 38%);
+    grid-template-rows: minmax(0, 1fr);
   }
 }
 
