@@ -56,9 +56,7 @@
     cargando = Promise.resolve().then(function () {
       return (typeof importScripts === 'function')
         ? null
-        : import('./js/visor3d.js').catch(function () {
-            return import('./visor3d.js');
-          });
+        : import('./visor3d.js');
     }).then(function (mod) {
       var V = (mod && mod.Visor3D) || global.Visor3D;
       var s = (mod && mod.soportaWebGL) || global.soportaWebGL;
@@ -250,7 +248,7 @@
 
       '<div class="mm-progreso-fila">' +
         '<span class="mm-num-tag" data-mm-paso-num>Paso 1 de ' + pasos.length + '</span>' +
-        '<div class="mm-puntos-lista" role="tablist" aria-label="Pasos de la explicación">' + puntosHtml + '</div>' +
+        '<div class="mm-puntos-lista" role="group" aria-label="Pasos de la explicación">' + puntosHtml + '</div>' +
       '</div>' +
 
       '<div class="mm-caja-dialogo">' +
@@ -316,7 +314,7 @@
     function pintar2d() {
       estado.tipo = '2d';
       lienzo.innerHTML = '';
-      global.Visor2D.render(lienzo, spec, { capasOcultas: estado.capasOcultas });
+      global.Visor2D.render(lienzo, spec, { capasOcultas: estado.capasOcultas, camara: estado.camaraGuia });
       aviso.hidden = true;
     }
 
@@ -356,7 +354,8 @@
           if (vt) vt.textContent = 'Vista 2D';
           var giroBtn = barraSup.querySelector('[data-accion="giro"]');
           if (giroBtn) giroBtn.hidden = estado.reducido;
-          instancias.push(estado);
+          if (instancias.indexOf(estado) === -1) instancias.push(estado);
+          if (estado.iniciado) irAPaso(estado.pasoActual, false);
         } catch (e) {
           console.warn('Error inicializando Visor3D:', e);
           usar2d('error');
@@ -401,6 +400,20 @@
       estado.pasoActual = idx;
       estado.iniciado = true;
       var paso = pasos[idx];
+      estado.camaraGuia = paso.camara;
+      // Mantener la selección y la capa visible en ambos motores.
+      if (paso.capaResaltada) estado.capasOcultas[paso.capaResaltada] = false;
+      if (paso.capasVisibles) {
+        (spec.capas || []).forEach(function (c) {
+          estado.capasOcultas[c.id] = paso.capasVisibles.indexOf(c.id) === -1;
+        });
+      }
+      capasBar.querySelectorAll('[data-capa]').forEach(function (b) {
+        var id = b.getAttribute('data-capa');
+        b.setAttribute('aria-pressed', estado.capasOcultas[id] ? 'false' : 'true');
+        if (estado.api) estado.api.setCapa(id, !estado.capasOcultas[id]);
+      });
+      if (estado.tipo === '2d') pintar2d();
 
       txtPasoNum.textContent = 'Paso ' + (idx + 1) + ' de ' + pasos.length;
       txtTitulo.textContent = paso.titulo;
@@ -419,6 +432,7 @@
       botonesPuntos.forEach(function (b) {
         var nPaso = parseInt(b.getAttribute('data-mm-ir'), 10);
         b.classList.toggle('activo', nPaso === idx);
+        b.setAttribute('aria-current', nPaso === idx ? 'step' : 'false');
         b.classList.toggle('visitado', nPaso < idx);
       });
 
@@ -442,7 +456,7 @@
           estado.api.enfocarCamara(paso.camara.theta, paso.camara.phi, paso.camara.dist, 750);
         }
         if (paso.capaResaltada && estado.api.resaltarCapa) {
-          estado.api.resaltarCapa(paso.capaResaltada, 4200);
+          estado.api.resaltarCapa(paso.capaResaltada, 0);
           var pillCapa = capasBar.querySelector('[data-capa="' + paso.capaResaltada + '"]');
           if (pillCapa) pillCapa.setAttribute('aria-pressed', 'true');
         }
@@ -458,9 +472,7 @@
         } else if (global.Avatar && global.Avatar.hablarVoz) {
           global.Avatar.hablarVoz(paso.texto);
         }
-        if (idx === pasos.length - 1 && miniAvatar) {
-          setTimeout(function () { miniAvatar.celebrar(); }, 900);
-        }
+
       }
     }
 
@@ -524,8 +536,8 @@
 
     barraSup.querySelector('[data-accion="reset"]').addEventListener('click', function () {
       if (estado.tipo === '3d' && estado.api) {
-        estado.api.quitarResalte();
         estado.api.reset();
+        if (estado.iniciado) irAPaso(estado.pasoActual, false);
       } else {
         pintar2d();
       }
@@ -645,7 +657,8 @@
   window.addEventListener('keydown', function (e) {
     if (!visorActivo) return;
     var tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
-    if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+    if (tag === 'input' || tag === 'textarea' || tag === 'select' || (e.target && e.target.isContentEditable)) return;
+    if ((tag === 'button' || tag === 'a') && e.key === ' ') return;
 
     var st = visorActivo.obtenerEstado();
     var enProyector = st && st.figura && st.figura.classList.contains('modo-proyector');

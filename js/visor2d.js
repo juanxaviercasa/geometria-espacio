@@ -77,7 +77,7 @@
     var ps = puntosDeSpec(spec);
     var centro = centroDe(ps, spec);
     var radio = spec.tipo === 'esfera' ? spec.radio : radioDe(ps);
-    var eye = global.Figuras.ojoCamara(spec.camara || { theta: 0.7, phi: 0.3 }, centro, radio);
+    var eye = global.Figuras.ojoCamara(opciones.camara || spec.camara || { theta: 0.7, phi: 0.3 }, centro, radio);
     var base = global.Figuras.construirCamara(eye.p, centro);
     var V = global.Figuras.vectores;
 
