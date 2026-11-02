@@ -75,10 +75,10 @@
   /* ---------- capas por defecto ---------- */
   function capas(extras) {
     var base = [
-      { id: 'caras', nombre: 'Caras', color: '#5b6bd6', activa: true },
-      { id: 'aristas', nombre: 'Aristas', color: '#1b2033', activa: true },
-      { id: 'vertices', nombre: 'Vértices', color: '#1b2033', activa: true },
-      { id: 'etiquetas', nombre: 'Nombres', color: '#6c748c', activa: true }
+      { id: 'caras', nombre: 'Caras', color: '#3b82f6', activa: true, opacidad: 0.40 },
+      { id: 'aristas', nombre: 'Aristas', color: '#0f172a', activa: true },
+      { id: 'vertices', nombre: 'Vértices', color: '#f59e0b', activa: true },
+      { id: 'etiquetas', nombre: 'Nombres', color: '#475569', activa: true }
     ];
     return base.concat(extras || []);
   }
@@ -401,11 +401,11 @@
         { v: ['A1', 'H'], capa: 'altura', estilo: 'fuerte', grosor: 2.6 }
       ],
       capas: [
-        { id: 'bases', nombre: 'Bases', color: '#2c3c9e', activa: true, opacidad: 0.16 },
-        { id: 'laterales', nombre: 'Caras laterales', color: '#b85c0d', activa: true, opacidad: 0.1 },
-        { id: 'aristas', nombre: 'Aristas', color: '#131829', activa: true },
-        { id: 'altura', nombre: 'Altura', color: '#0c7367', activa: true },
-        { id: 'etiquetas', nombre: 'Nombres', color: '#6c748c', activa: true }
+        { id: 'bases', nombre: 'Bases', color: '#2563eb', activa: true, opacidad: 0.45 },
+        { id: 'laterales', nombre: 'Caras laterales', color: '#06b6d4', activa: true, opacidad: 0.38 },
+        { id: 'aristas', nombre: 'Aristas', color: '#0f172a', activa: true },
+        { id: 'altura', nombre: 'Altura', color: '#10b981', activa: true },
+        { id: 'etiquetas', nombre: 'Nombres', color: '#475569', activa: true }
       ]
     });
   })();
@@ -430,11 +430,11 @@
         { v: ['A', 'C'], capa: 'diagonal-cara', estilo: 'fuerte', grosor: 2.4 }
       ],
       capas: [
-        { id: 'caras', nombre: 'Caras', color: '#5b6bd6', activa: true, opacidad: 0.08 },
-        { id: 'aristas', nombre: 'Aristas', color: '#131829', activa: true },
-        { id: 'diagonal-cara', nombre: 'Diagonales de cara', color: '#b85c0d', activa: false },
-        { id: 'diagonal-espacial', nombre: 'Diagonal espacial', color: '#a8271f', activa: false },
-        { id: 'etiquetas', nombre: 'Nombres', color: '#6c748c', activa: true }
+        { id: 'caras', nombre: 'Caras', color: '#3b82f6', activa: true, opacidad: 0.36 },
+        { id: 'aristas', nombre: 'Aristas', color: '#0f172a', activa: true },
+        { id: 'diagonal-cara', nombre: 'Diagonales de cara', color: '#f59e0b', activa: false },
+        { id: 'diagonal-espacial', nombre: 'Diagonal espacial', color: '#ef4444', activa: false },
+        { id: 'etiquetas', nombre: 'Nombres', color: '#475569', activa: true }
       ]
     });
   })();
@@ -474,11 +474,11 @@
         { pts: [vs.H0.p, vs.H1.p, vs.H2.p, vs.H3.p, vs.H4.p, vs.H5.p], capa: 'seccion', estilo: 'fuerte', grosor: 2.4, cerrado: true }
       ],
       capas: [
-        { id: 'caras', nombre: 'Caras', color: '#5b6bd6', activa: true, opacidad: 0.06 },
-        { id: 'aristas', nombre: 'Aristas', color: '#131829', activa: true },
-        { id: 'seccion', nombre: 'Sección', color: '#a8271f', activa: true, opacidad: 0.2 },
-        { id: 'diagonal-espacial', nombre: 'Diagonal', color: '#0c7367', activa: true },
-        { id: 'etiquetas', nombre: 'Nombres', color: '#6c748c', activa: false }
+        { id: 'caras', nombre: 'Caras', color: '#3b82f6', activa: true, opacidad: 0.30 },
+        { id: 'aristas', nombre: 'Aristas', color: '#0f172a', activa: true },
+        { id: 'seccion', nombre: 'Sección', color: '#ec4899', activa: true, opacidad: 0.55 },
+        { id: 'diagonal-espacial', nombre: 'Diagonal', color: '#10b981', activa: true },
+        { id: 'etiquetas', nombre: 'Nombres', color: '#475569', activa: false }
       ]
     });
   })();
@@ -551,13 +551,13 @@
         { pts: marcaRecta(vs.O.p, resta(vs.V.p, vs.O.p), resta(vs.M.p, vs.O.p), 0.4), capa: 'altura' }
       ],
       capas: [
-        { id: 'base', nombre: 'Base', color: '#2c3c9e', activa: true, opacidad: 0.16 },
-        { id: 'laterales', nombre: 'Caras laterales', color: '#b85c0d', activa: true, opacidad: 0.1 },
-        { id: 'aristas', nombre: 'Aristas', color: '#131829', activa: true },
-        { id: 'altura', nombre: 'Altura', color: '#0c7367', activa: true },
-        { id: 'apotema', nombre: 'Apotema', color: '#a8271f', activa: true },
-        { id: 'aristas2', nombre: 'Arista lateral', color: '#6b4ba8', activa: true },
-        { id: 'etiquetas', nombre: 'Nombres', color: '#6c748c', activa: true }
+        { id: 'base', nombre: 'Base', color: '#2563eb', activa: true, opacidad: 0.45 },
+        { id: 'laterales', nombre: 'Caras laterales', color: '#8b5cf6', activa: true, opacidad: 0.38 },
+        { id: 'aristas', nombre: 'Aristas', color: '#0f172a', activa: true },
+        { id: 'altura', nombre: 'Altura', color: '#10b981', activa: true },
+        { id: 'apotema', nombre: 'Apotema', color: '#ec4899', activa: true },
+        { id: 'aristas2', nombre: 'Arista lateral', color: '#3b82f6', activa: true },
+        { id: 'etiquetas', nombre: 'Nombres', color: '#475569', activa: true }
       ]
     });
   })();
@@ -586,11 +586,11 @@
         { pts: [v(0, 0, 0), v(0, 3.0, 0)], capa: 'altura', estilo: 'punteada', grosor: 2.6 }
       ],
       capas: [
-        { id: 'lateral', nombre: 'Superficie', color: '#5b6bd6', activa: true, opacidad: 0.08 },
-        { id: 'bordes', nombre: 'Bordes', color: '#131829', activa: true },
-        { id: 'radio', nombre: 'Radio', color: '#0c7367', activa: true },
-        { id: 'altura', nombre: 'Altura', color: '#a8271f', activa: true },
-        { id: 'etiquetas', nombre: 'Nombres', color: '#6c748c', activa: true }
+        { id: 'lateral', nombre: 'Superficie', color: '#06b6d4', activa: true, opacidad: 0.38 },
+        { id: 'bordes', nombre: 'Bordes', color: '#0f172a', activa: true },
+        { id: 'radio', nombre: 'Radio', color: '#f59e0b', activa: true },
+        { id: 'altura', nombre: 'Altura', color: '#10b981', activa: true },
+        { id: 'etiquetas', nombre: 'Nombres', color: '#475569', activa: true }
       ]
     });
   })();
@@ -616,12 +616,12 @@
         { pts: [v(0, 0, 0), v(1.6, 0, 0)], capa: 'radio', estilo: 'fuerte', grosor: 2.4 }
       ],
       capas: [
-        { id: 'lateral', nombre: 'Superficie', color: '#5b6bd6', activa: true, opacidad: 0.08 },
-        { id: 'bordes', nombre: 'Borde de la base', color: '#131829', activa: true },
-        { id: 'altura', nombre: 'Altura', color: '#a8271f', activa: true },
-        { id: 'generatriz', nombre: 'Generatriz', color: '#b85c0d', activa: true },
-        { id: 'radio', nombre: 'Radio', color: '#0c7367', activa: true },
-        { id: 'etiquetas', nombre: 'Nombres', color: '#6c748c', activa: true }
+        { id: 'lateral', nombre: 'Superficie', color: '#8b5cf6', activa: true, opacidad: 0.38 },
+        { id: 'bordes', nombre: 'Borde de la base', color: '#0f172a', activa: true },
+        { id: 'altura', nombre: 'Altura', color: '#10b981', activa: true },
+        { id: 'generatriz', nombre: 'Generatriz', color: '#ec4899', activa: true },
+        { id: 'radio', nombre: 'Radio', color: '#f59e0b', activa: true },
+        { id: 'etiquetas', nombre: 'Nombres', color: '#475569', activa: true }
       ]
     });
   })();
@@ -636,9 +636,9 @@
     camara: { theta: -0.6, phi: 0.28 },
     radio: 1.7,
     capas: [
-      { id: 'superficie', nombre: 'Superficie', color: '#5b6bd6', activa: true, opacidad: 0.1 },
-      { id: 'meridianos', nombre: 'Meridianos', color: '#6c748c', activa: true },
-      { id: 'radio', nombre: 'Radio', color: '#0c7367', activa: true }
+      { id: 'superficie', nombre: 'Superficie', color: '#3b82f6', activa: true, opacidad: 0.40 },
+      { id: 'meridianos', nombre: 'Meridianos', color: '#93c5fd', activa: true },
+      { id: 'radio', nombre: 'Radio', color: '#10b981', activa: true }
     ]
   });
 

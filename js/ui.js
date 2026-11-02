@@ -49,6 +49,51 @@
     });
   }
 
+  /* ---------- Modo Aula / TV (Pantalla Gigante de Proyección) ---------- */
+  function esModoAulaTV() {
+    try {
+      return localStorage.getItem('geo3d.modoAulaTV') === 'true';
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function aplicarModoAulaTV(activo) {
+    document.body.classList.toggle('modo-aula-tv', activo);
+    var btns = document.querySelectorAll('#btn-modo-tv, .btn-modo-tv');
+    btns.forEach(function (b) {
+      b.setAttribute('aria-pressed', activo ? 'true' : 'false');
+    });
+    try {
+      localStorage.setItem('geo3d.modoAulaTV', activo ? 'true' : 'false');
+    } catch (e) {}
+    document.dispatchEvent(new CustomEvent('modo-aula-tv-cambiado', {
+      detail: { activo: activo }
+    }));
+    setTimeout(function () {
+      window.dispatchEvent(new Event('resize'));
+    }, 60);
+  }
+
+  function alternarModoAulaTV() {
+    var actual = document.body.classList.contains('modo-aula-tv');
+    aplicarModoAulaTV(!actual);
+  }
+
+  function montarModoAulaTV() {
+    var activo = esModoAulaTV();
+    aplicarModoAulaTV(activo);
+    var btns = document.querySelectorAll('#btn-modo-tv, .btn-modo-tv');
+    btns.forEach(function (b) {
+      b.addEventListener('click', alternarModoAulaTV);
+    });
+    window.addEventListener('keydown', function (e) {
+      if ((e.key === 't' || e.key === 'T') && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+        alternarModoAulaTV();
+      }
+    });
+  }
+
   /* ---------- movimiento reducido ---------- */
   function montarBotonMovimiento() {
     var btn = document.getElementById('btn-movimiento');
@@ -118,6 +163,7 @@
     marcarNav();
     pintarCabecera();
     montarBotonMovimiento();
+    montarModoAulaTV();
     if (opciones.avatar !== false) montarAvatar(opciones.avatar);
     var anio = document.getElementById('anio');
     if (anio) anio.textContent = new Date().getFullYear();
@@ -131,6 +177,10 @@
     texto: texto,
     pintarCabecera: pintarCabecera,
     montarBotonMovimiento: montarBotonMovimiento,
+    montarModoAulaTV: montarModoAulaTV,
+    alternarModoAulaTV: alternarModoAulaTV,
+    aplicarModoAulaTV: aplicarModoAulaTV,
+    esModoAulaTV: esModoAulaTV,
     montarAvatar: montarAvatar,
     pintarProgresoLeccion: pintarProgresoLeccion,
     iniciar: iniciar

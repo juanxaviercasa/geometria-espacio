@@ -91,13 +91,16 @@
     this.grupo = new T.Group();
     this.escena.add(this.grupo);
 
-    var luz1 = new T.DirectionalLight(0xffffff, 2.0);
-    luz1.position.set(4, 7, 6);
+    var luz1 = new T.DirectionalLight(0xffffff, 2.2);
+    luz1.position.set(5, 8, 7);
     this.escena.add(luz1);
-    var luz2 = new T.DirectionalLight(0xdfe4ff, 1.0);
-    luz2.position.set(-6, -2, -5);
+    var luz2 = new T.DirectionalLight(0xcfd8ff, 1.3);
+    luz2.position.set(-7, -3, -6);
     this.escena.add(luz2);
-    this.escena.add(new T.AmbientLight(0xffffff, 1.2));
+    var luz3 = new T.DirectionalLight(0xffecd2, 1.1);
+    luz3.position.set(-3, 6, 4);
+    this.escena.add(luz3);
+    this.escena.add(new T.AmbientLight(0xffffff, 1.35));
 
     this.objetosCapa = {}; // capaId -> [Object3D]
     this.etiquetas = [];
@@ -253,14 +256,16 @@
       for (var i = 1; i < n - 1; i++) idx.push(0, i, i + 1);
       geo.setIndex(idx);
       geo.computeVertexNormals();
+      var baseOpc = opacidadDe(spec, capaId);
+      var opcCalc = cara.traslucida ? Math.min(baseOpc, 0.28) : Math.max(baseOpc, 0.38);
       var mat = new T.MeshStandardMaterial({
         color: new T.Color(def.color),
         transparent: true,
-        opacity: cara.traslucida ? Math.min(opacidadDe(spec, capaId), 0.12) : opacidadDe(spec, capaId),
+        opacity: opcCalc,
         side: T.DoubleSide,
         depthWrite: false,
-        roughness: 0.72,
-        metalness: 0.02,
+        roughness: 0.42,
+        metalness: 0.08,
         flatShading: true
       });
       var malla = new T.Mesh(geo, mat);
@@ -306,9 +311,10 @@
       var v = V[k];
       if (v.sinEsfera) return;
       var r = v.r != null ? v.r : self.radio * 0.019;
-      var mat = new T.MeshStandardMaterial({ color: 0x131829, roughness: 0.45 });
+      var rReal = v.r != null ? v.r : self.radio * 0.028;
+      var mat = new T.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.28, metalness: 0.4 });
       var esf = new T.Mesh(self._geoEsf, mat);
-      esf.scale.setScalar(r);
+      esf.scale.setScalar(rReal);
       esf.position.set(v.p[0], v.p[1], v.p[2]);
       esf.renderOrder = 5;
       self.grupo.add(esf);
@@ -422,7 +428,7 @@
     tex.minFilter = T.LinearFilter;
     var mat = new T.SpriteMaterial({ map: tex, transparent: true, depthTest: false });
     var sprite = new T.Sprite(mat);
-    var alto = this.radio * 0.085;
+    var alto = this.radio * 0.115;
     sprite.scale.set((ancho / 58) * alto, alto, 1);
     sprite.renderOrder = 20;
     return sprite;
@@ -619,6 +625,28 @@
       null,
       600
     );
+  };
+
+  Visor3D.prototype.vistaFrente = function () {
+    this.setAutoGiro(false);
+    this.enfocarCamara(0, 0, null, 500);
+  };
+
+  Visor3D.prototype.vistaArriba = function () {
+    this.setAutoGiro(false);
+    this.enfocarCamara(0, 1.45, null, 500);
+  };
+
+  Visor3D.prototype.vistaIsometrica = function () {
+    this.setAutoGiro(false);
+    this.enfocarCamara(0.785, 0.52, null, 500);
+  };
+
+  Visor3D.prototype.escalaDinamica = function (sx, sy, sz) {
+    if (!this.grupo) return;
+    this.grupo.scale.set(sx || 1, sy || 1, sz || 1);
+    this._sucio = true;
+    if (this.opciones.alMoverCamara) this.opciones.alMoverCamara();
   };
 
   Visor3D.prototype.vista = function () {

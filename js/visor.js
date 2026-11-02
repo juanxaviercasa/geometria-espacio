@@ -142,6 +142,16 @@
         '<h3 class="hud-fig-titulo">' + spec.titulo + '</h3>' +
       '</div>' +
       '<div class="acciones-fig">' +
+        '<button type="button" class="btn-fig btn-fig-hud" data-accion="vista-frente" title="Vista frontal del sólido (📐 Frente)">' +
+          '<span>📐 Frente</span>' +
+        '</button>' +
+        '<button type="button" class="btn-fig btn-fig-hud" data-accion="vista-arriba" title="Vista superior o planta (🔼 Arriba)">' +
+          '<span>🔼 Arriba</span>' +
+        '</button>' +
+        '<button type="button" class="btn-fig btn-fig-hud" data-accion="vista-iso" title="Perspectiva 3D isométrica"><span>🎲 3D</span></button>' +
+        '<button type="button" class="btn-fig btn-fig-hud btn-lab-trigger" data-accion="laboratorio" aria-pressed="false" title="Abrir Laboratorio para variar medidas y calcular en tiempo real">' +
+          '<span>⚙️ Medidas en vivo</span>' +
+        '</button>' +
         '<button type="button" class="btn-fig btn-fig-hud" data-accion="vista" aria-pressed="false" title="Alternar entre vista 3D y dibujo 2D">' +
           '<span data-vista-texto>Vista 2D</span>' +
         '</button>' +
@@ -154,8 +164,8 @@
         '<button type="button" class="btn-fig btn-fig-hud" data-accion="contraste" aria-pressed="false" title="Fondo oscuro de alto contraste para proyector">' +
           '<span>🌙 Fondo</span>' +
         '</button>' +
-        '<button type="button" class="btn-fig btn-fig-hud btn-proyectar" data-accion="proyectar" aria-pressed="false" title="Modo Proyector a pantalla completa (tecla F)">' +
-          '<span data-proyectar-texto>⛶ Proyectar</span>' +
+        '<button type="button" class="btn-fig btn-fig-hud btn-proyectar" data-accion="proyectar" aria-pressed="false" title="Modo Pantalla Completa / Proyector para Televisor (tecla F)">' +
+          '<span data-proyectar-texto>⛶ Pantalla Completa TV</span>' +
         '</button>' +
       '</div>';
     figura.appendChild(barraSup);
@@ -187,6 +197,168 @@
     lienzoWrap.appendChild(guiaFoco);
 
     colLienzo.appendChild(lienzoWrap);
+
+    /* Panel del Laboratorio 3D Interactivo (Medidas y Fórmulas en Vivo) */
+    var panelLab = document.createElement('div');
+    panelLab.className = 'figura-laboratorio-panel';
+    panelLab.hidden = true;
+    panelLab.setAttribute('aria-label', 'Laboratorio interactivo de dimensiones y cálculo en vivo');
+    colLienzo.appendChild(panelLab);
+
+    
+    /* Lógica del Laboratorio Interactivo */
+    var labEstado = { activo: false, a: 2, b: 3, h: 6, r: 3 };
+    if (idFigura.indexOf('cilindro') !== -1 || idFigura.indexOf('cono') !== -1) {
+      labEstado = { activo: false, r: 3, h: 6 };
+    } else if (idFigura.indexOf('piramide') !== -1) {
+      labEstado = { activo: false, a: 4, h: 6 };
+    }
+
+    function renderLab() {
+      var html = '<div class="lab-cabecera">' +
+        '<h4>📐 Laboratorio 3D: Modifica Dimensiones y Observa el Cálculo en Vivo</h4>' +
+        '<button type="button" class="lab-btn-cerrar" data-lab-cerrar title="Cerrar laboratorio">✕</button>' +
+      '</div>' +
+      '<div class="lab-cuerpo">' +
+        '<div class="lab-controles">';
+
+      if (labEstado.r != null) {
+        html += '<div class="lab-control-fila">' +
+          '<label><b>Radio base (r):</b> <span class="lab-val-num">' + labEstado.r.toFixed(1) + ' u</span></label>' +
+          '<div class="lab-slider-wrap">' +
+            '<button type="button" class="btn-lab-step" data-lab-step="r,-0.5">-</button>' +
+            '<input type="range" min="1" max="8" step="0.5" value="' + labEstado.r + '" data-lab-slider="r">' +
+            '<button type="button" class="btn-lab-step" data-lab-step="r,0.5">+</button>' +
+          '</div>' +
+        '</div>';
+      } else {
+        html += '<div class="lab-control-fila">' +
+          '<label><b>Lado base (a):</b> <span class="lab-val-num">' + labEstado.a.toFixed(1) + ' u</span></label>' +
+          '<div class="lab-slider-wrap">' +
+            '<button type="button" class="btn-lab-step" data-lab-step="a,-0.5">-</button>' +
+            '<input type="range" min="1" max="8" step="0.5" value="' + labEstado.a + '" data-lab-slider="a">' +
+            '<button type="button" class="btn-lab-step" data-lab-step="a,0.5">+</button>' +
+          '</div>' +
+        '</div>';
+        if (labEstado.b != null) {
+          html += '<div class="lab-control-fila">' +
+            '<label><b>Profundidad (b):</b> <span class="lab-val-num">' + labEstado.b.toFixed(1) + ' u</span></label>' +
+            '<div class="lab-slider-wrap">' +
+              '<button type="button" class="btn-lab-step" data-lab-step="b,-0.5">-</button>' +
+              '<input type="range" min="1" max="8" step="0.5" value="' + labEstado.b + '" data-lab-slider="b">' +
+              '<button type="button" class="btn-lab-step" data-lab-step="b,0.5">+</button>' +
+            '</div>' +
+          '</div>';
+        }
+      }
+
+      html += '<div class="lab-control-fila">' +
+        '<label><b>Altura (h):</b> <span class="lab-val-num">' + labEstado.h.toFixed(1) + ' u</span></label>' +
+        '<div class="lab-slider-wrap">' +
+          '<button type="button" class="btn-lab-step" data-lab-step="h,-0.5">-</button>' +
+          '<input type="range" min="1" max="12" step="0.5" value="' + labEstado.h + '" data-lab-slider="h">' +
+          '<button type="button" class="btn-lab-step" data-lab-step="h,0.5">+</button>' +
+        '</div>' +
+      '</div>' +
+      '<button type="button" class="btn-lab-reset" data-lab-reset>Restablecer originales</button>' +
+      '</div>';
+
+      html += '<div class="lab-calculos-tarjeta">';
+      if (idFigura.indexOf('cilindro') !== -1) {
+        var r = labEstado.r, h = labEstado.h;
+        var ab = Math.PI * r * r;
+        var al = 2 * Math.PI * r * h;
+        var at = al + 2 * ab;
+        var v = ab * h;
+        html += '<div class="lab-calc-titulo">Cálculo de Cilindro en Vivo</div>' +
+          '<div class="lab-calc-fila"><span>Área base (A_B):</span> <span class="m">A_B = \\pi r^2 = ' + ab.toFixed(2) + ' u^2</span></div>' +
+          '<div class="lab-calc-fila"><span>Área lateral (A_L):</span> <span class="m">A_L = 2\\pi r h = ' + al.toFixed(2) + ' u^2</span></div>' +
+          '<div class="lab-calc-fila"><span>Área total (A_T):</span> <span class="m">A_T = A_L + 2A_B = ' + at.toFixed(2) + ' u^2</span></div>' +
+          '<div class="lab-calc-fila destaque"><span>Volumen (V):</span> <span class="m">V = A_B \\cdot h = ' + v.toFixed(2) + ' u^3</span></div>';
+      } else if (idFigura.indexOf('cono') !== -1) {
+        var r2 = labEstado.r, h2 = labEstado.h;
+        var g = Math.sqrt(r2 * r2 + h2 * h2);
+        var ab2 = Math.PI * r2 * r2;
+        var al2 = Math.PI * r2 * g;
+        var at2 = al2 + ab2;
+        var v2 = (1 / 3) * ab2 * h2;
+        html += '<div class="lab-calc-titulo">Cálculo de Cono en Vivo</div>' +
+          '<div class="lab-calc-fila"><span>Generatriz (g):</span> <span class="m">g = \\sqrt{r^2 + h^2} = ' + g.toFixed(2) + ' u</span></div>' +
+          '<div class="lab-calc-fila"><span>Área lateral (A_L):</span> <span class="m">A_L = \\pi r g = ' + al2.toFixed(2) + ' u^2</span></div>' +
+          '<div class="lab-calc-fila destaque"><span>Volumen (V):</span> <span class="m">V = \\frac{1}{3} \\pi r^2 h = ' + v2.toFixed(2) + ' u^3</span></div>';
+      } else if (idFigura.indexOf('piramide') !== -1) {
+        var aP = labEstado.a, hP = labEstado.h;
+        var apP = aP / 2;
+        var Ap = Math.sqrt(hP * hP + apP * apP);
+        var abP = aP * aP;
+        var alP = (4 * aP / 2) * Ap;
+        var atP = alP + abP;
+        var vP = (1 / 3) * abP * hP;
+        html += '<div class="lab-calc-titulo">Cálculo de Pirámide en Vivo</div>' +
+          '<div class="lab-calc-fila"><span>Apotema (Ap):</span> <span class="m">Ap = \\sqrt{h^2 + ap^2} = ' + Ap.toFixed(2) + ' u</span></div>' +
+          '<div class="lab-calc-fila"><span>Área lateral (A_L):</span> <span class="m">A_L = p_{base} \\times Ap = ' + alP.toFixed(2) + ' u^2</span></div>' +
+          '<div class="lab-calc-fila destaque"><span>Volumen (V):</span> <span class="m">V = \\frac{1}{3} A_B \\cdot h = ' + vP.toFixed(2) + ' u^3</span></div>';
+      } else {
+        var aPr = labEstado.a, bPr = labEstado.b != null ? labEstado.b : labEstado.a, hPr = labEstado.h;
+        var abPr = aPr * bPr;
+        var alPr = 2 * (aPr + bPr) * hPr;
+        var atPr = alPr + 2 * abPr;
+        var vPr = abPr * hPr;
+        var dEsp = Math.sqrt(aPr * aPr + bPr * bPr + hPr * hPr);
+        html += '<div class="lab-calc-titulo">Cálculo de Prisma Recto en Vivo</div>' +
+          '<div class="lab-calc-fila"><span>Área base (A_B):</span> <span class="m">A_B = a \\times b = ' + abPr.toFixed(2) + ' u^2</span></div>' +
+          '<div class="lab-calc-fila"><span>Área lateral (A_L):</span> <span class="m">A_L = 2(a+b)h = ' + alPr.toFixed(2) + ' u^2</span></div>' +
+          '<div class="lab-calc-fila"><span>Diagonal espacial (D):</span> <span class="m">D = \\sqrt{a^2+b^2+h^2} = ' + dEsp.toFixed(2) + ' u</span></div>' +
+          '<div class="lab-calc-fila destaque"><span>Volumen (V):</span> <span class="m">V = A_B \\cdot h = ' + vPr.toFixed(2) + ' u^3</span></div>';
+      }
+      html += '</div></div>';
+      panelLab.innerHTML = html;
+
+      panelLab.querySelectorAll('[data-lab-slider]').forEach(function (inp) {
+        inp.addEventListener('input', function () {
+          var param = inp.getAttribute('data-lab-slider');
+          labEstado[param] = parseFloat(inp.value);
+          actualizarEscala3D();
+          renderLab();
+        });
+      });
+      panelLab.querySelectorAll('[data-lab-step]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var partes = btn.getAttribute('data-lab-step').split(',');
+          var param = partes[0], delta = parseFloat(partes[1]);
+          labEstado[param] = Math.max(1, Math.min(12, labEstado[param] + delta));
+          actualizarEscala3D();
+          renderLab();
+        });
+      });
+      var btnCerrar = panelLab.querySelector('[data-lab-cerrar]');
+      if (btnCerrar) btnCerrar.addEventListener('click', function () {
+        panelLab.hidden = true;
+        var t = barraSup.querySelector('[data-accion="laboratorio"]');
+        if (t) t.setAttribute('aria-pressed', 'false');
+      });
+      var btnReset = panelLab.querySelector('[data-lab-reset]');
+      if (btnReset) btnReset.addEventListener('click', function () {
+        labEstado.a = 2; labEstado.b = 3; labEstado.h = 6; labEstado.r = 3;
+        actualizarEscala3D();
+        renderLab();
+      });
+
+      if (global.Matematicas && global.Matematicas.render) {
+        global.Matematicas.render(panelLab);
+      }
+    }
+
+    function actualizarEscala3D() {
+      if (!estado.api || !estado.api.escalaDinamica) return;
+      var sx = 1, sy = 1, sz = 1;
+      if (labEstado.r != null) {
+        sx = labEstado.r / 3; sz = labEstado.r / 3; sy = labEstado.h / 6;
+      } else {
+        sx = labEstado.a / 2; sz = (labEstado.b != null ? labEstado.b : labEstado.a) / 3; sy = labEstado.h / 6;
+      }
+      estado.api.escalaDinamica(sx, sy, sz);
+    }
 
     /* Barra de capas + medidas debajo del lienzo */
     var capasBar = document.createElement('div');
@@ -583,6 +755,25 @@
       }
     });
 
+    var bFrente = barraSup.querySelector('[data-accion="vista-frente"]');
+    if (bFrente) bFrente.addEventListener('click', function () {
+      if (estado.tipo === '3d' && estado.api && estado.api.vistaFrente) estado.api.vistaFrente();
+    });
+    var bArriba = barraSup.querySelector('[data-accion="vista-arriba"]');
+    if (bArriba) bArriba.addEventListener('click', function () {
+      if (estado.tipo === '3d' && estado.api && estado.api.vistaArriba) estado.api.vistaArriba();
+    });
+    var bIso = barraSup.querySelector('[data-accion="vista-iso"]');
+    if (bIso) bIso.addEventListener('click', function () {
+      if (estado.tipo === '3d' && estado.api && estado.api.vistaIsometrica) estado.api.vistaIsometrica();
+    });
+    var bLab = barraSup.querySelector('[data-accion="laboratorio"]');
+    if (bLab) bLab.addEventListener('click', function () {
+      panelLab.hidden = !panelLab.hidden;
+      bLab.setAttribute('aria-pressed', panelLab.hidden ? 'false' : 'true');
+      if (!panelLab.hidden) renderLab();
+    });
+
     barraSup.querySelector('[data-accion="giro"]').addEventListener('click', function () {
       estado.giro = !estado.giro;
       this.setAttribute('aria-pressed', estado.giro ? 'true' : 'false');
@@ -708,6 +899,12 @@
 
     if (!enProyector && !focoEnFigura) return;
 
+    if ((e.key === 't' || e.key === 'T') && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+      if (global.UI && global.UI.alternarModoAulaTV) {
+        global.UI.alternarModoAulaTV();
+        return;
+      }
+    }
     if (e.key === 'PageDown' || (enProyector && (e.key === 'ArrowRight' || e.key === ' '))) {
       e.preventDefault();
       visorActivo.siguientePaso();

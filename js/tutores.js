@@ -24,20 +24,20 @@
   try { var estiloGuardado=localStorage.getItem('geo3d.voz.estilo.v1');if(['natural','anime'].indexOf(estiloGuardado)!==-1)estiloVoz=estiloGuardado; } catch(e) {}
   var vocesSelectores = [];
   var PERFILES = {
-    dragon: {pitch:0.72,rate:0.93,descripcion:'Grave y aventurera'},
-    capibara: {pitch:0.9,rate:0.91,descripcion:'Cálida y tranquila'},
-    aguila: {pitch:0.86,rate:1.02,descripcion:'Firme y clara'},
-    pikachu: {pitch:1.48,rate:1.06,descripcion:'Aguda y alegre'},
-    charizard: {pitch:0.75,rate:0.98,descripcion:'Grave y enérgica'},
-    eevee: {pitch:1.22,rate:1.02,descripcion:'Suave y curiosa'},
-    dragonite: {pitch:0.88,rate:0.96,descripcion:'Amable y aventurera'},
-    vertiz: {pitch:1.04,rate:1,descripcion:'Natural de profesor'}
-    ,zorro:{pitch:1.13,rate:1.04,descripcion:'Ágil y curiosa'}
-    ,gato:{pitch:1.16,rate:0.98,descripcion:'Suave y expresiva'}
-    ,panda:{pitch:0.92,rate:0.92,descripcion:'Cálida y serena'}
-    ,conejo:{pitch:1.3,rate:1.05,descripcion:'Alegre y ligera'}
-    ,lobo:{pitch:0.79,rate:0.98,descripcion:'Grave y segura'}
-    ,'dragon-alado':{pitch:0.72,rate:0.93,descripcion:'Grave y aventurera'}
+    dragon: {pitch:0.72,rate:0.93,descripcion:'Grave y aventurera',genero:'masculino',jingle:'dragon',saludo:'¡Saludos! Te guiaré a través de los sólidos del espacio con paso firme.'},
+    capibara: {pitch:0.9,rate:0.91,descripcion:'Cálida y tranquila',genero:'calido',jingle:'capibara',saludo:'Tranquilo, paso a paso entenderás cada figura y su fórmula.'},
+    aguila: {pitch:0.86,rate:1.02,descripcion:'Firme y clara',genero:'neutro',jingle:'aguila',saludo:'Desde las alturas, la geometría del espacio se ve clara y precisa.'},
+    pikachu: {pitch:1.48,rate:1.06,descripcion:'Aguda y alegre',genero:'femenino',jingle:'pikachu',saludo:'¡Pika! ¡Hola! Vamos a descubrir juntos los secretos en tres dimensiones.'},
+    charizard: {pitch:0.75,rate:0.98,descripcion:'Grave y enérgica',genero:'masculino',jingle:'charizard',saludo:'¡Con fuerza y energía dominaremos cualquier reto geométrico!'},
+    eevee: {pitch:1.22,rate:1.02,descripcion:'Suave y curiosa',genero:'femenino',jingle:'eevee',saludo:'¡Hola! Exploremos cada vértice, arista y cara con curiosidad.'},
+    dragonite: {pitch:0.88,rate:0.96,descripcion:'Amable y aventurera',genero:'masculino',jingle:'dragonite',saludo:'¡Saludos amigos! Vamos a calcular áreas y volúmenes con una gran sonrisa.'},
+    vertiz: {pitch:1.04,rate:1,descripcion:'Natural de profesor',genero:'masculino',jingle:'vertiz',saludo:'¡Bienvenidos a la clase de geometría del espacio! Piensa en tres dimensiones.'},
+    zorro:{pitch:1.13,rate:1.04,descripcion:'Ágil y curiosa',genero:'neutro',jingle:'zorro',saludo:'¡Atentos y despiertos para encontrar la relación métrica correcta!'},
+    gato:{pitch:1.16,rate:0.98,descripcion:'Suave y expresiva',genero:'femenino',jingle:'gato',saludo:'Con observación detallada, cualquier sólido se vuelve fácil de entender.'},
+    panda:{pitch:0.92,rate:0.92,descripcion:'Cálida y serena',genero:'calido',jingle:'panda',saludo:'Con calma y serenidad, cada teorema tiene una demostración lógica.'},
+    conejo:{pitch:1.3,rate:1.05,descripcion:'Alegre y ligera',genero:'femenino',jingle:'conejo',saludo:'¡A dar un salto directo hacia la solución de este problema!'},
+    lobo:{pitch:0.79,rate:0.98,descripcion:'Grave y segura',genero:'masculino',jingle:'lobo',saludo:'Seguridad, orden y rigor en cada cálculo del espacio.'},
+    'dragon-alado':{pitch:0.72,rate:0.93,descripcion:'Grave y aventurera',genero:'masculino',jingle:'dragon',saludo:'¡Despeguemos hacia la comprensión total de los poliedros y cuerpos redondos!'}
   };
   var elegido = 'dragon';
   try { var valor = localStorage.getItem(clave); if (buscar(valor)) elegido = valor; } catch (e) {}
@@ -99,7 +99,20 @@
     vozSelect.value=estiloVoz;vocesSelectores.push(vozSelect);
     vozSelect.addEventListener('change',function(){estiloVoz=vozSelect.value;try{localStorage.setItem('geo3d.voz.estilo.v1',estiloVoz);}catch(e){}if(global.Avatar)global.Avatar.detenerVoz();actualizarNombres();});
     vozLabel.appendChild(vozSelect);panel.appendChild(vozLabel);
-    var descripcion=document.createElement('small');descripcion.setAttribute('data-tutor-voz','');descripcion.textContent=perfilVoz().descripcion+' · español';panel.appendChild(descripcion);
+    var filaAccion=document.createElement('div');filaAccion.className='tutor-voz-fila-probar';
+    var descripcion=document.createElement('small');descripcion.setAttribute('data-tutor-voz','');descripcion.textContent=perfilVoz().descripcion+' · español';filaAccion.appendChild(descripcion);
+    var btnProbar=document.createElement('button');btnProbar.type='button';btnProbar.className='btn-probar-tutor-voz';btnProbar.innerHTML='<span>🔊 Probar</span>';btnProbar.title='Escuchar saludo y voz de este tutor';
+    btnProbar.addEventListener('click',function(e){
+      e.preventDefault();
+      tocarFirmaTutor(elegido);
+      var p=PERFILES[elegido]||PERFILES.dragon;
+      var saludo=p.saludo||'¡Hola! Soy tu tutor de geometría del espacio.';
+      if(global.Avatar && global.Avatar.hablarVoz){
+        global.Avatar.hablarVoz(saludo, null, {tipoAcorde: p.jingle});
+      }
+    });
+    filaAccion.appendChild(btnProbar);
+    panel.appendChild(filaAccion);
     return panel;
   }
   function perfilVoz() {
@@ -344,5 +357,81 @@
   document.addEventListener('avatar-hablando',function(e){hablando=!!(e.detail&&e.detail.activo);despertar();});
   document.addEventListener('movimiento-cambiado',function(){if(buscar(elegido).pokemon)vistas.forEach(pintar);despertar();});
   document.addEventListener('visibilitychange',despertar);
-  global.Tutores={catalogo:CATALOGO,actual:function(){return elegido;},elegir:elegir,montar:montar,selector:selector,perfilVoz:perfilVoz,enfocar:enfocar,orientar:orientar,suspender:suspender};
+  
+  function tocarFirmaTutor(id) {
+    id = id || elegido;
+    var perf = PERFILES[id] || PERFILES.dragon;
+    try {
+      var AudioCtx = global.AudioContext || global.webkitAudioContext;
+      if (!AudioCtx) return;
+      if (!global._tutorAudioCtx) global._tutorAudioCtx = new AudioCtx();
+      var ctx = global._tutorAudioCtx;
+      if (ctx.state === 'suspended') ctx.resume();
+      var t0 = ctx.currentTime;
+      var jingle = perf.jingle || 'vertiz';
+
+      if (jingle === 'pikachu') {
+        [659.25, 880, 1046.5, 1318.51].forEach(function (f, i) {
+          var t = t0 + i * 0.055;
+          var osc = ctx.createOscillator(), g = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(f, t);
+          g.gain.setValueAtTime(0.0001, t);
+          g.gain.linearRampToValueAtTime(0.06, t + 0.015);
+          g.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);
+          osc.connect(g); g.connect(ctx.destination);
+          osc.start(t); osc.stop(t + 0.13);
+        });
+      } else if (jingle === 'dragon' || jingle === 'charizard') {
+        var acordes = jingle === 'charizard' ? [146.83, 220, 293.66, 369.99] : [130.81, 196, 261.63, 329.63];
+        acordes.forEach(function (f, i) {
+          var t = t0 + i * 0.06;
+          var osc = ctx.createOscillator(), g = ctx.createGain(), flt = ctx.createBiquadFilter();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(f, t);
+          flt.type = 'lowpass'; flt.frequency.setValueAtTime(800, t);
+          g.gain.setValueAtTime(0.0001, t);
+          g.gain.linearRampToValueAtTime(0.045, t + 0.03);
+          g.gain.exponentialRampToValueAtTime(0.0001, t + 0.35);
+          osc.connect(flt); flt.connect(g); g.connect(ctx.destination);
+          osc.start(t); osc.stop(t + 0.36);
+        });
+      } else if (jingle === 'capibara' || jingle === 'panda') {
+        [329.63, 392, 440, 523.25].forEach(function (f, i) {
+          var t = t0 + i * 0.08;
+          var osc = ctx.createOscillator(), g = ctx.createGain();
+          osc.type = 'sine'; osc.frequency.setValueAtTime(f, t);
+          g.gain.setValueAtTime(0.0001, t);
+          g.gain.linearRampToValueAtTime(0.04, t + 0.02);
+          g.gain.exponentialRampToValueAtTime(0.0001, t + 0.28);
+          osc.connect(g); g.connect(ctx.destination);
+          osc.start(t); osc.stop(t + 0.3);
+        });
+      } else if (jingle === 'eevee' || jingle === 'conejo') {
+        [392, 523.25, 659.25, 783.99].forEach(function (f, i) {
+          var t = t0 + i * 0.065;
+          var osc = ctx.createOscillator(), g = ctx.createGain();
+          osc.type = 'sine'; osc.frequency.setValueAtTime(f, t);
+          g.gain.setValueAtTime(0.0001, t);
+          g.gain.linearRampToValueAtTime(0.05, t + 0.02);
+          g.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
+          osc.connect(g); g.connect(ctx.destination);
+          osc.start(t); osc.stop(t + 0.24);
+        });
+      } else {
+        [349.23, 440, 523.25].forEach(function (f, i) {
+          var t = t0 + i * 0.07;
+          var osc = ctx.createOscillator(), g = ctx.createGain();
+          osc.type = 'sine'; osc.frequency.setValueAtTime(f, t);
+          g.gain.setValueAtTime(0.0001, t);
+          g.gain.linearRampToValueAtTime(0.04, t + 0.02);
+          g.gain.exponentialRampToValueAtTime(0.0001, t + 0.2);
+          osc.connect(g); g.connect(ctx.destination);
+          osc.start(t); osc.stop(t + 0.22);
+        });
+      }
+    } catch (e) {}
+  }
+
+  global.Tutores={catalogo:CATALOGO,actual:function(){return elegido;},elegir:elegir,montar:montar,selector:selector,perfilVoz:perfilVoz,tocarFirmaTutor:tocarFirmaTutor,enfocar:enfocar,orientar:orientar,suspender:suspender};
 })(window);

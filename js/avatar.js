@@ -159,13 +159,17 @@
   function emitirAcordePaso(tipo) {
     if (!vozHabilitada) return;
     try {
+      if (tipo !== 'celebra' && window.Tutores && window.Tutores.tocarFirmaTutor) {
+        window.Tutores.tocarFirmaTutor();
+        return;
+      }
       var AudioCtx = window.AudioContext || window.webkitAudioContext;
       if (!AudioCtx) return;
       if (!window._avatarAudioCtx) window._avatarAudioCtx = new AudioCtx();
       var ctx = window._avatarAudioCtx;
       if (ctx.state === 'suspended') ctx.resume();
 
-      var notas = tipo === 'celebra' ? [523.25, 659.25, 783.99] : [440, 554.37];
+      var notas = tipo === 'celebra' ? [523.25, 659.25, 783.99, 1046.5] : [440, 554.37];
       var now = ctx.currentTime;
       notas.forEach(function (frec, idx) {
         var t = now + idx * 0.075;
@@ -186,7 +190,7 @@
 
   /* Selección priorizada de voz en español */
   var vozEspanol = null;
-  function elegirMejorVozEspanol() {
+  function elegirMejorVozEspanol(perfil) {
     if (!('speechSynthesis' in window)) return null;
     var voces = window.speechSynthesis.getVoices() || [];
     if (!voces.length) return null;
@@ -198,17 +202,42 @@
 
     if (!candidatas.length) return null;
 
-    // Priorizar voces naturales / Microsoft / Google en español latino o España
+    var genero = perfil && perfil.genero;
+
     candidatas.sort(function (a, b) {
       var na = (a.name || '').toLowerCase();
       var nb = (b.name || '').toLowerCase();
-      var pa = (na.indexOf('natural') !== -1 || na.indexOf('neural') !== -1 ? 4 : 0) +
-               (na.indexOf('google') !== -1 || na.indexOf('sabina') !== -1 || na.indexOf('helena') !== -1 || na.indexOf('elvira') !== -1 || na.indexOf('dalia') !== -1 ? 2 : 0) +
-               (a.localService ? 1 : 0);
-      var pb = (nb.indexOf('natural') !== -1 || nb.indexOf('neural') !== -1 ? 4 : 0) +
-               (nb.indexOf('google') !== -1 || nb.indexOf('sabina') !== -1 || nb.indexOf('helena') !== -1 || nb.indexOf('elvira') !== -1 || nb.indexOf('dalia') !== -1 ? 2 : 0) +
-               (b.localService ? 1 : 0);
-      return pb - pa;
+
+      var scoreA = 0, scoreB = 0;
+      if (na.indexOf('natural') !== -1 || na.indexOf('neural') !== -1) scoreA += 8;
+      if (nb.indexOf('natural') !== -1 || nb.indexOf('neural') !== -1) scoreB += 8;
+      if (na.indexOf('google') !== -1) scoreA += 4;
+      if (nb.indexOf('google') !== -1) scoreB += 4;
+
+      var masc = ['alvaro', 'raul', 'jorge', 'juan', 'diego', 'pablo', 'enrique', 'carlos'];
+      var fem = ['sabina', 'helena', 'dalia', 'laura', 'monica', 'paulina', 'lucia', 'maria', 'elvira'];
+
+      var aMasc = masc.some(function (n) { return na.indexOf(n) !== -1; });
+      var bMasc = masc.some(function (n) { return nb.indexOf(n) !== -1; });
+      var aFem = fem.some(function (n) { return na.indexOf(n) !== -1; });
+      var bFem = fem.some(function (n) { return nb.indexOf(n) !== -1; });
+
+      if (genero === 'masculino') {
+        if (aMasc) scoreA += 6;
+        if (bMasc) scoreB += 6;
+        if (aFem) scoreA -= 3;
+        if (bFem) scoreB -= 3;
+      } else if (genero === 'femenino') {
+        if (aFem) scoreA += 6;
+        if (bFem) scoreB += 6;
+        if (aMasc) scoreA -= 3;
+        if (bMasc) scoreB -= 3;
+      }
+
+      if (a.localService) scoreA += 1;
+      if (b.localService) scoreB += 1;
+
+      return scoreB - scoreA;
     });
 
     return candidatas[0];
@@ -232,7 +261,9 @@
       .replace(/B₁/g, 'B sub 1')
       .replace(/C₁/g, 'C sub 1')
       .replace(/D₁/g, 'D sub 1')
-      .replace(/√\(([^)]+)\)/g, 'raíz cuadrada de $1')
+      .replace(/∛\(([^)]+)\)/g, 'raíz cúbica de ')
+      .replace(/∛/g, 'raíz cúbica de ')
+      .replace(/√\(([^)]+)\)/g, 'raíz cuadrada de ')
       .replace(/√/g, 'raíz cuadrada de ')
       .replace(/²/g, ' al cuadrado ')
       .replace(/³/g, ' al cubo ')
@@ -240,6 +271,19 @@
       .replace(/\^3\b/g, ' al cubo ')
       .replace(/\bb(?= al cuadrado)/g, 'be')
       .replace(/\bc(?= al cuadrado)/g, 'ce')
+      .replace(/\bcm³\b/gi, 'centímetros cúbicos')
+      .replace(/\bm³\b/gi, 'metros cúbicos')
+      .replace(/\bcm²\b/gi, 'centímetros cuadrados')
+      .replace(/\bm²\b/gi, 'metros cuadrados')
+      .replace(/\bu³\b/gi, 'unidades cúbicas')
+      .replace(/\bu²\b/gi, 'unidades cuadradas')
+      .replace(/\bA_L\b/g, 'área lateral')
+      .replace(/\bA_T\b/g, 'área total')
+      .replace(/\bA_B\b/g, 'área de la base')
+      .replace(/\bAL\b/g, 'área lateral')
+      .replace(/\bAT\b/g, 'área total')
+      .replace(/\bAB\b(?=\s*=)/g, 'área de la base')
+      .replace(/\bV\s*=\s*/g, 'el volumen es igual a ')
       .replace(/\+/g, ' más ')
       .replace(/=/g, ' igual a ')
       .replace(/[×·]/g, ' por ')
@@ -301,14 +345,14 @@
             var u = new SpeechSynthesisUtterance(limpio);
             window._activeSpeechUtterance = u;
 
-            if (!vozEspanol) vozEspanol = elegirMejorVozEspanol();
-            if (vozEspanol) {
-              u.voice = vozEspanol;
-              u.lang = vozEspanol.lang;
+            var perfil = global.Tutores ? global.Tutores.perfilVoz() : {rate:1,pitch:1.04};
+            var vozTutor = elegirMejorVozEspanol(perfil) || vozEspanol;
+            if (vozTutor) {
+              u.voice = vozTutor;
+              u.lang = vozTutor.lang;
             } else {
               u.lang = 'es-ES';
             }
-            var perfil = global.Tutores ? global.Tutores.perfilVoz() : {rate:1,pitch:1.04};
             u.rate = Math.max(0.75, Math.min(1.35, velocidadVoz * perfil.rate));
             u.pitch = perfil.pitch;
 
