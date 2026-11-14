@@ -25,8 +25,8 @@ const server = http.createServer((req, res) => {
   }
   if (reqPath === '/' || reqPath === '') reqPath = '/index.html';
   // No permitir que una URL lea ficheros fuera de la carpeta del proyecto.
-  const filePath = path.resolve(__dirname, reqPath.replace(/^\\/+/, ''));
-  if (!filePath.startsWith(__dirname + path.sep) || reqPath.includes('\\0')) {
+  const filePath = path.resolve(__dirname, reqPath.replace(/^[/]+/, ''));
+  if (!filePath.startsWith(__dirname + path.sep) || reqPath.indexOf(String.fromCharCode(0)) !== -1) {
     res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });
     res.end('Acceso denegado');
     return;
