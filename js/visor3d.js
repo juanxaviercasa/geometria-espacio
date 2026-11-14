@@ -81,9 +81,10 @@
     this.renderer = new T.WebGLRenderer({
       antialias: true,
       alpha: true,
-      powerPreference: 'high-performance'
+      powerPreference: (typeof navigator !== 'undefined' && navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ? 'low-power' : 'high-performance'
     });
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    var limitado = typeof navigator !== 'undefined' && ((navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 2);
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, limitado ? 1.25 : 1.75));
     this.renderer.domElement.style.display = 'block';
     this.renderer.domElement.setAttribute('aria-hidden', 'true');
     this.contenedor.appendChild(this.renderer.domElement);
@@ -124,7 +125,7 @@
     this._resize();
 
     this.animando = true;
-    requestAnimationFrame(this._loop);
+    this._raf = requestAnimationFrame(this._loop);
   }
 
   /* ---------- medidas de la figura ---------- */
@@ -757,6 +758,48 @@
   };
 
   /* ---------- capas ---------- */
+
+  /* Actualización in situ: un solo contexto WebGL para toda la sesión del laboratorio. */
+  Visor3D.prototype.actualizarSpec = function (nuevoSpec) {
+    if (!nuevoSpec || !this.renderer) return;
+    if (this._animCamaraId) {
+      cancelAnimationFrame(this._animCamaraId);
+      this._animCamaraId = null;
+    }
+    this.quitarResalte();
+    var shared = [this._geoCil, this._geoEsf];
+    var geometrias = new Set(), materiales = new Set(), texturas = new Set();
+    function liberarMaterial(m) {
+      if (!m || materiales.has(m)) return;
+      materiales.add(m);
+      if (m.map && !texturas.has(m.map)) { texturas.add(m.map); m.map.dispose(); }
+      m.dispose();
+    }
+    this.grupo.traverse(function(o){
+      if (o.geometry && shared.indexOf(o.geometry) === -1) geometrias.add(o.geometry);
+      if (Array.isArray(o.material)) o.material.forEach(liberarMaterial);
+      else liberarMaterial(o.material);
+    });
+    geometrias.forEach(function(g){g.dispose();});
+    while (this.grupo.children.length) this.grupo.remove(this.grupo.children[0]);
+    if (this._plano) {
+      this.escena.remove(this._plano);
+      this._plano.geometry.dispose();
+      liberarMaterial(this._plano.material);
+      this._plano = null;
+    }
+    var vista = this.vista();
+    this.spec = nuevoSpec;
+    this._medir();
+    this._construir();
+    this._sombra();
+    this._encuadrar(vista);
+    this._resize();
+    this._sucio = true;
+    // El bucle puede estar pausado por visibilidad; aún debe actualizar el dibujo.
+    this.renderer.render(this.escena, this.camara);
+  };
+
   Visor3D.prototype.setCapa = function (id, visible) {
     this.capasOcultas[id] = !visible;
     var lista = this.objetosCapa[id] || [];
@@ -787,11 +830,13 @@
       this.renderer.render(this.escena, this.camara);
       this._sucio = false;
     }
-    requestAnimationFrame(this._loop);
+    this._raf = requestAnimationFrame(this._loop);
   };
 
   Visor3D.prototype.pausar = function () {
     this.animando = false;
+    if (this._raf) cancelAnimationFrame(this._raf);
+    this._raf = null;
     this.renderer.render(this.escena, this.camara);
   };
 
@@ -800,11 +845,13 @@
     this.animando = true;
     this._sucio = true;
     this._ultimo = performance.now();
-    requestAnimationFrame(this._loop);
+    this._raf = requestAnimationFrame(this._loop);
   };
 
   Visor3D.prototype.destruir = function () {
     this.animando = false;
+    if (this._raf) cancelAnimationFrame(this._raf);
+    this._raf = null;
     if (this._animCamaraId) cancelAnimationFrame(this._animCamaraId);
     if (this._ro) this._ro.disconnect();
     else window.removeEventListener('resize', this._resize);
