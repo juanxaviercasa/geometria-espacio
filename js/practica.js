@@ -69,24 +69,20 @@
 
   function pintarFiltros() {
     var cont = document.getElementById('filtros');
-    var opciones = [{ id: 'todos', nombre: 'Todos' }].concat(
-      Contenido.MODULOS.map(function (m) {
+    var opciones = [{ id: 'todos', nombre: 'Todos los módulos' }].concat(
+      Contenido.MODULOS.map(function(m) {
         return { id: m.id, nombre: m.numero + '. ' + m.titulo };
       })
     );
-    cont.innerHTML = opciones.map(function (o) {
-      return '<button type="button" class="chip" data-filtro="' + o.id + '" aria-pressed="' +
-        (o.id === filtro ? 'true' : 'false') + '">' + o.nombre + '</button>';
-    }).join('');
-
-    cont.querySelectorAll('[data-filtro]').forEach(function (b) {
-      b.addEventListener('click', function () {
-        filtro = b.getAttribute('data-filtro');
-        cont.querySelectorAll('[data-filtro]').forEach(function (x) {
-          x.setAttribute('aria-pressed', x === b ? 'true' : 'false');
-        });
-        pintarBanco();
-      });
+    cont.innerHTML = '<label for="filtro-modulo">Selecciona un módulo</label>' +
+      '<select id="filtro-modulo" aria-controls="banco">' +
+      opciones.map(function(o) {
+        return '<option value="' + o.id + '"' + (o.id === filtro ? ' selected' : '') + '>' + o.nombre + '</option>';
+      }).join('') + '</select>' +
+      '<a class="enlace-retos" href="#retos">Ir a los retos ↓</a>';
+    cont.querySelector('select').addEventListener('change', function() {
+      filtro = this.value;
+      pintarBanco();
     });
   }
 
@@ -96,6 +92,8 @@
       banco = banco.filter(function (e) { return e.modulo === filtro; });
     }
     var cont = document.getElementById('banco');
+    var resumen = document.getElementById('banco-resumen');
+    if (resumen) resumen.textContent = banco.length + ' ejercicios disponibles' + (filtro === 'todos' ? ' en toda la ruta' : ' en el módulo seleccionado') + '.';
 
     if (!banco.length) {
       cont.innerHTML = '<p class="vacio-aviso">No hay ejercicios en este módulo.</p>';
@@ -144,7 +142,7 @@
     banco.forEach(function (e) {
       var reg = (P.resumenLeccion(e.leccionId) || { ejercicios: {} }).ejercicios[e.id];
       if (reg) {
-        intentados++;
+        if ((reg.intentos || 0) > 0) intentados++;
         if (reg.ok) resueltos++;
       }
     });
