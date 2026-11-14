@@ -19,15 +19,16 @@
   }
 
   function aNumero(txt) {
-    var limpio = String(txt).replace(/\s/g, '').replace(',', '.');
-    // Admite fracciones del tipo "7/2" y raíces escritas como "2,5"
-    if (/^-?\d+(\.\d+)?\/-?\d+(\.\d+)?$/.test(limpio)) {
-      var partes = limpio.split('/');
-      var a = parseFloat(partes[0]), b = parseFloat(partes[1]);
-      if (b !== 0) return a / b;
-    }
-    var n = parseFloat(limpio.replace(/[^\d.\-]/g, ''));
-    return isNaN(n) ? NaN : n;
+    // Validación estricta: letras, unidades, expresiones incompletas o divisiones por cero no son respuestas numéricas.
+    var limpio = String(txt == null ? '' : txt).trim().replace(/\s+/g, '').replace(/,/g, '.');
+    var patronNumero = '[+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][+-]?\\d+)?';
+    if (!(new RegExp('^' + patronNumero + '(?:/' + patronNumero + ')?$')).test(limpio)) return NaN;
+    var partes = limpio.split('/');
+    var numerador = Number(partes[0]);
+    var denominador = partes.length === 2 ? Number(partes[1]) : 1;
+    if (!Number.isFinite(numerador) || !Number.isFinite(denominador) || denominador === 0) return NaN;
+    var valor = numerador / denominador;
+    return Number.isFinite(valor) ? valor : NaN;
   }
 
   /* ---------------------------------------------------------
@@ -112,7 +113,7 @@
         pistas[pistasUsadas];
       caja.appendChild(d);
       pistasUsadas++;
-      P.registrarEjercicio(idLeccion, ej.id, false, pistasUsadas - 1);
+      P.registrarEjercicio(idLeccion, ej.id, false, pistasUsadas, false);
       if (global.AvatarMensaje) global.AvatarMensaje('pista');
       if (pistasUsadas >= pistas.length) {
         btnPista.disabled = true;
@@ -143,10 +144,10 @@
         });
       } else {
         var v = entrada ? aNumero(entrada.value) : NaN;
-        if (!entrada || entrada.value.trim() === '' || isNaN(v)) {
+        if (!entrada || entrada.value.trim() === '' || !Number.isFinite(v)) {
           zona.innerHTML = '';
-          retro('no', 'Falta la respuesta',
-            '<p>Escribe un valor numérico antes de comprobar. Puedes usar coma o punto decimal y fracciones como <span class="m">7/2</span>.</p>');
+          retro('no', 'Revisa tu respuesta',
+            '<p>Introduce un número válido, sin letras ni unidades. Puedes usar coma o punto decimal y fracciones como <span class="m">7/2</span>.</p>');
           return;
         }
         var tol = typeof ej.tolerancia === 'number' ? ej.tolerancia : 0.005;
@@ -264,7 +265,7 @@
       art.querySelectorAll('[data-fase]').forEach(function (b) {
         if (parseInt(b.getAttribute('data-fase'), 10) <= fase) b.disabled = true;
       });
-      P.registrarReto(idLeccion, r.id, fase, fase >= 3);
+      P.registrarReto(idLeccion, r.id, fase, false);
       if (global.AvatarMensaje && fase >= 2) global.AvatarMensaje('pista');
       if (alCambiar) alCambiar();
     }
