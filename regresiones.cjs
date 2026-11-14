@@ -236,3 +236,24 @@ test('Fase 2: entradas inválidas no producen puntos no finitos',()=>{
  assert.equal(p.angulo,-35);
  assert.ok(Object.values(p).every(Number.isFinite));
 });
+
+test('Fase 2: las 16 escenas curriculares tienen vértices, capas y guías válidas',()=>{
+  const window={};
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/figuras.js'),'utf8'),{window});
+  const F=window.Figuras;
+  assert.equal(Object.keys(F.spec).length,16);
+  for(const id of Object.keys(F.spec)){
+    const s=F.obtener(id),vs=s.vertices||{},layers=new Set((s.capas||[]).map(c=>c.id));
+    Object.keys(vs).forEach(k=>assert.ok(vs[k].p.every(Number.isFinite),id+' vértice '+k));
+    (s.caras||[]).forEach(c=>{c.v.forEach(k=>assert.ok(vs[k],id+' cara '+k));if(c.capa)assert.ok(layers.has(c.capa),id+' capa '+c.capa);});
+    (s.aristas||[]).forEach(ar=>{assert.ok(vs[ar.a]&&vs[ar.b],id+' arista inválida');if(ar.capa)assert.ok(layers.has(ar.capa));});
+    (s.lineas||[]).forEach(l=>{
+      if(l.v)l.v.forEach(k=>assert.ok(vs[k],id+' línea '+k));
+      if(l.capa)assert.ok(layers.has(l.capa),id+' capa '+l.capa);
+    });
+    (s.pasosGuia||[]).forEach(p=>{
+      if(p.capaResaltada)assert.ok(layers.has(p.capaResaltada),id+' guía '+p.capaResaltada);
+      (p.capasVisibles||[]).forEach(c=>assert.ok(layers.has(c),id+' capa guía '+c));
+    });
+  }
+});
