@@ -164,3 +164,75 @@ test('consultar pistas no incrementa intentos ni puntos', () => {
   P.registrarReto('m6l1', 'reto1', 3, true);
   assert.equal(P.puntos(), 35);
 });
+
+/* Fase 2 — batería de propiedades matemáticas para el laboratorio. */
+function parametricasLab() {
+  const win={};
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/parametricas.js'),'utf8'),{window:win});
+  return win.Parametricas;
+}
+function cercanos(a,b,eps=1e-9){assert.ok(Math.abs(a-b)<eps, 'Valores diferentes: '+a+' y '+b);}
+
+test('Fase 2: prisma, superficies y diagonales por Pitágoras',()=>{
+ const P=parametricasLab(), m=P.generar('prisma',{a:3,b:2,h:4});
+ assert.equal(m.formulas[0].valor,24);
+ assert.equal(m.formulas[1].valor,52);
+ cercanos(m.formulas[2].valor,Math.sqrt(29));
+ cercanos(m.formulas[3].valor,Math.sqrt(13));
+});
+
+test('Fase 2: pirámide correcta en bases rectangulares no cuadradas',()=>{
+ const P=parametricasLab(), m=P.generar('piramide',{a:3,b:2,h:4});
+ assert.equal(m.formulas[0].valor,8);
+ cercanos(m.formulas[1].valor,3*Math.hypot(4,1)+2*Math.hypot(4,1.5));
+ cercanos(m.formulas[2].valor,Math.hypot(4,1.5,1));
+});
+
+test('Fase 2: volumen y áreas de cilindro, cono y esfera',()=>{
+ const P=parametricasLab();
+ const c=P.generar('cilindro',{r:2,h:4}),k=P.generar('cono',{r:2,h:4});
+ cercanos(c.formulas[0].valor,16*Math.PI);
+ cercanos(c.formulas[1].valor,16*Math.PI);
+ cercanos(k.formulas[0].valor,c.formulas[0].valor/3);
+ cercanos(k.formulas[3].valor,Math.sqrt(20));
+ const a=P.generar('esfera',{r:2}),b=P.generar('esfera',{r:4});
+ cercanos(b.formulas[0].valor,8*a.formulas[0].valor);
+ cercanos(b.formulas[1].valor,4*a.formulas[1].valor);
+});
+
+test('Fase 2: el corte oblicuo nunca atraviesa fuera del prisma',()=>{
+ const P=parametricasLab();
+ for(const a of [1,3,10])for(const h of [1,3,10])for(const angulo of [-35,0,35]){
+   const m=P.generar('seccion',{a,b:2,h,nivel:.15,angulo});
+   const v=['S0','S1','S2','S3'].map(id=>m.spec.vertices[id].p);
+   assert.ok(v.every(x=>x[1]>=-1e-10&&x[1]<=h+1e-10));
+   const q=v[1].map((x,i)=>x-v[0][i]),t=v[3].map((x,i)=>x-v[0][i]);
+   const cross=[q[1]*t[2]-q[2]*t[1],q[2]*t[0]-q[0]*t[2],q[0]*t[1]-q[1]*t[0]];
+   cercanos(Math.hypot(...cross),m.formulas[0].valor);
+ }
+});
+
+test('Fase 2: vértices y capas compartidos entre motores',()=>{
+ const P=parametricasLab();
+ for(const type of Object.keys(P.MODELOS)){
+   for(const vals of [{a:1,b:1,h:1,r:.5,nivel:.15,angulo:-35},{a:10,b:10,h:10,r:6,nivel:.85,angulo:35}]){
+     const m=P.generar(type,vals),spec=m.spec, ids=Object.keys(spec.vertices);
+     ids.forEach(k=>assert.ok(spec.vertices[k].p.every(Number.isFinite)));
+     spec.caras.forEach(c=>c.v.forEach(k=>assert.ok(ids.includes(k),type+': '+k)));
+     spec.aristas.forEach(e=>{assert.ok(ids.includes(e.a));assert.ok(ids.includes(e.b));});
+     spec.lineas.forEach(l=>(l.v||[]).forEach(k=>assert.ok(ids.includes(k))));
+     m.formulas.forEach(f=>assert.ok(Number.isFinite(f.valor)));
+     assert.ok(spec.capas.length>0);
+   }
+ }
+});
+
+test('Fase 2: entradas inválidas no producen puntos no finitos',()=>{
+ const P=parametricasLab();
+ const p=P.normalizar({a:-12,b:Infinity,h:'?',r:null,nivel:99,angulo:-999});
+ assert.equal(p.a,1);
+ assert.equal(p.h,4);
+ assert.equal(p.nivel,.85);
+ assert.equal(p.angulo,-35);
+ assert.ok(Object.values(p).every(Number.isFinite));
+});
