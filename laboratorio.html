@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Laboratorio interactivo de geometría del espacio: cambia aristas, alturas y radios, explora secciones planas y comprueba cómo se calculan áreas, diagonales y volúmenes en 2D y 3D.">
+<meta name="theme-color" content="#4338ca">
+<title>Laboratorio 3D · Geometría del espacio · Sistema Zénit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/estilos.css?v=20261114-6">
+<link rel="stylesheet" href="css/fase1.css?v=20261114-2">
+<link rel="stylesheet" href="css/laboratorio.css?v=20261114-1">
+<link rel="stylesheet" href="vendor/katex.min.css">
+<script defer src="vendor/katex.min.js"></script>
+</head>
+<body data-pagina="laboratorio">
+<a class="salto-contenido" href="#lab-controles">Saltar a los controles del laboratorio</a>
+<header class="sitio-head">
+  <noscript><nav class="wrap"><a href="index.html">Inicio</a> · <a href="practica.html">Práctica</a> · <a href="leccion.html?id=m6l1">Lección de prismas</a></nav></noscript>
+</header>
+<main class="wrap lab-main">
+  <nav class="migas" aria-label="Ruta de navegación"><a href="index.html">Inicio</a><span aria-hidden="true">/</span><span>Laboratorio 2D y 3D</span></nav>
+  <section class="lab-intro" aria-labelledby="lab-titulo">
+    <span class="eyebrow">Experimentación geométrica · 6 modelos</span>
+    <h1 id="lab-titulo">Transforma un sólido. <em>Descubre las matemáticas.</em></h1>
+    <p>Modifica sus dimensiones, gira el modelo y observa cómo cambian las fórmulas en tiempo real. También puedes estudiar con la vista 2D o explorar cortes de prismas.</p>
+    <a class="enlace-lab" href="leccion.html?id=m6l1">¿Prefieres una explicación guiada? Entra al Modo Maestro ↗</a>
+  </section>
+
+  <div class="lab-selector-wrap">
+    <label for="lab-modelo">Sólido geométrico</label>
+    <select id="lab-modelo" aria-controls="lab-lienzo lab-controles lab-formulas">
+      <option value="prisma">Prisma rectangular</option>
+      <option value="piramide">Pirámide recta</option>
+      <option value="cilindro">Cilindro</option>
+      <option value="cono">Cono</option>
+      <option value="esfera">Esfera</option>
+      <option value="seccion">Sección oblicua de un prisma</option>
+    </select>
+    <span class="lab-selector-info" id="lab-modelo-descripcion">Explora la relación entre las dimensiones de un prisma.</span>
+  </div>
+
+  <div class="lab-distribucion">
+    <section class="lab-escena" aria-labelledby="lab-lienzo-titulo">
+      <div class="lab-escena-top">
+        <div><p class="lab-supra">LABORATORIO EN VIVO</p><h2 id="lab-lienzo-titulo">Prisma rectangular</h2></div>
+        <div class="lab-modos" role="group" aria-label="Representación geométrica">
+          <button type="button" class="lab-modo" data-lab-vista="3d" aria-pressed="true">Vista 3D</button>
+          <button type="button" class="lab-modo" data-lab-vista="2d" aria-pressed="false">Vista 2D</button>
+        </div>
+      </div>
+      <div class="lab-stage-wrap">
+        <div id="lab-lienzo" class="lab-lienzo" role="group" aria-label="Modelo geométrico interactivo"></div>
+        <p class="lab-estado" id="lab-estado" role="status" aria-live="polite">Preparando la figura…</p>
+      </div>
+      <div class="lab-visor-actions">
+        <div class="lab-acciones">
+          <button type="button" class="lab-btn" id="lab-recentrar">Recentrar figura</button>
+          <button type="button" class="lab-btn" id="lab-giro" aria-pressed="false">Giro automático: no</button>
+        </div>
+        <p id="lab-instrucciones">Arrastra para girar y usa la rueda o pellizca para acercar.</p>
+      </div>
+      <fieldset class="lab-capas" id="lab-capas"><legend>Elementos visibles</legend></fieldset>
+      <div class="lab-rotacion" id="lab-rotacion" hidden aria-label="Controles de orientación de la vista 2D">
+        <button type="button" data-lab-rotar="izquierda" aria-label="Girar a la izquierda">←</button>
+        <button type="button" data-lab-rotar="arriba" aria-label="Girar hacia arriba">↑</button>
+        <button type="button" data-lab-rotar="abajo" aria-label="Girar hacia abajo">↓</button>
+        <button type="button" data-lab-rotar="derecha" aria-label="Girar a la derecha">→</button>
+      </div>
+    </section>
+
+    <aside class="lab-panel" id="lab-controles" aria-labelledby="lab-panel-titulo">
+      <div class="lab-panel-head">
+        <p class="lab-supra">EXPERIMENTA</p>
+        <h2 id="lab-panel-titulo">Cambia las medidas</h2>
+        <p>Mueve los controles y observa el efecto sobre el sólido y sus cálculos.</p>
+      </div>
+      <div class="lab-sliders" id="lab-sliders"></div>
+      <div class="lab-panel-footer">
+        <button type="button" id="lab-restablecer" class="btn secundario">Restablecer valores</button>
+        <p>Las modificaciones no alteran el avance ni las respuestas de tus lecciones.</p>
+      </div>
+    </aside>
+  </div>
+
+  <section class="lab-resultados" aria-labelledby="lab-formulas-titulo">
+    <div class="seccion-cabeza"><h2 id="lab-formulas-titulo">Las fórmulas responden a tus cambios</h2><p>Las mismas dimensiones alimentan la figura 2D/3D y los cálculos. Resultados aproximados a dos decimales.</p></div>
+    <div id="lab-formulas" class="lab-formulas" aria-live="off"></div>
+    <p class="lab-principio" id="lab-principio"></p>
+  </section>
+
+  <section class="lab-puentes" aria-labelledby="lab-puentes-titulo">
+    <div><span class="eyebrow">Del modelo al razonamiento</span><h2 id="lab-puentes-titulo">Observa, explica y aplica.</h2><p>Experimentar te ayuda a formular conjeturas. En una lección guiada encontrarás los fundamentos y, en práctica, problemas para demostrar que los comprendes.</p></div>
+    <div class="lab-puentes-links"><a class="btn" href="leccion.html?id=m6l1">Estudiar una lección</a><a class="btn secundario" href="practica.html">Resolver ejercicios</a></div>
+  </section>
+</main>
+<footer class="sitio-pie"></footer>
+<script src="js/progreso.js"></script>
+<script src="js/contenido.js"></script>
+<script src="js/contenido-a.js"></script><script src="js/contenido-b.js"></script><script src="js/contenido-c.js"></script><script src="js/contenido-d.js"></script>
+<script src="js/figuras.js?v=20261114"></script>
+<script src="js/visor2d.js?v=20261114"></script>
+<script src="js/visor3d.js?v=20261114-2"></script>
+<script src="js/parametricas.js?v=20261114"></script>
+<script src="js/avatar.js"></script>
+<script src="js/ui.js?v=20261114"></script>
+<script src="js/laboratorio.js?v=20261114"></script>
+</body>
+</html>
