@@ -23,9 +23,14 @@
     return global.Progreso ? global.Progreso.prefiereMovimientoReducido() : false;
   }
 
+  function equipoLimitado() {
+    var n = global.navigator || {};
+    return !!((n.deviceMemory && n.deviceMemory <= 2) || (n.hardwareConcurrency && n.hardwareConcurrency <= 2));
+  }
+
   function vistaPreferida() {
     var p = global.Progreso ? global.Progreso.leerPrefs() : {};
-    return p.vistaPreferida === '2d' ? '2d' : '3d';
+    return p.vistaPreferida === '2d' || (!p.vistaPreferida && equipoLimitado()) ? '2d' : '3d';
   }
 
   function fijarVistaPreferida(v) {
@@ -128,6 +133,12 @@
     });
 
     var pasos = (spec.pasosGuia && spec.pasosGuia.length) ? spec.pasosGuia : generarPasosPorDefecto(spec);
+    var laboratorios = {
+      'prisma-elementos':'prisma','prisma-diagonales':'prisma','piramide-elementos':'piramide',
+      'cilindro':'cilindro','cono':'cono','esfera':'esfera',
+      'seccion-prisma':'seccion','cubo-seccion':'seccion','paralelepipedo-oblicuo':'prisma'
+    };
+    var tipoLaboratorio = laboratorios[idFigura] || null;
 
     var figura = document.createElement('figure');
     figura.className = 'figura' + (esHero ? ' figura-hero-modo' : '');
@@ -142,6 +153,7 @@
         '<h3 class="hud-fig-titulo">' + spec.titulo + '</h3>' +
       '</div>' +
       '<div class="acciones-fig">' +
+        (tipoLaboratorio ? '<a class="btn-fig btn-fig-hud" href="laboratorio.html?modelo=' + tipoLaboratorio + '" title="Experimentar con las dimensiones de este tipo de sólido">Modificar medidas ↗</a>' : '') +
         '<button type="button" class="btn-fig btn-fig-hud" data-accion="vista" aria-pressed="false" title="Alternar entre vista 3D y dibujo 2D">' +
           '<span data-vista-texto>Vista 2D</span>' +
         '</button>' +
