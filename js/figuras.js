@@ -947,7 +947,7 @@
         titulo: 'El tetraedro regular',
         texto: 'Sólido platónico formado por cuatro caras que son triángulos equiláteros congruentes.',
         camara: { theta: -0.65, phi: 0.3 },
-        capaResaltada: 'caras'
+        capaResaltada: 'laterales'
       },
       {
         titulo: 'Altura y simetría',
@@ -959,7 +959,7 @@
         titulo: 'Volumen del tetraedro',
         texto: 'Su volumen es arista al cubo por la raíz de 2, dividido entre 12.',
         camara: { theta: -0.65, phi: 0.3 },
-        capaResaltada: 'caras'
+        capaResaltada: 'base'
       }
     ],
     'octaedro': [
