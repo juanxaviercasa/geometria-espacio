@@ -16,7 +16,7 @@
 
 ## Comprobaciones efectivamente realizadas
 - Cloudflare Pages: dominio y proyecto confirmados; rama de producción cambiada de la rama de tutores a `main`. Se observaron despliegues de producción exitosos desde la conexión.
-- Navegador renderizado: portada de `390 × 844`, práctica de `390 × 844` y lección `m6l1` de `390 × 844` inspeccionadas visualmente. El encabezado, el texto principal, los accesos de la práctica y la lección se mostraron dentro de la pantalla; no se observaron recortes en las capturas capturadas.
+- Navegador renderizado: portada de `390 × 844` y `1440 × 900`, práctica de `390 × 844` y lección `m6l1` de `390 × 844` inspeccionadas visualmente. El encabezado, el texto principal, los accesos de la práctica y la lección se mostraron dentro de la pantalla; no se observaron recortes en las capturas inspeccionadas; en escritorio se ajustó el titular para evitar que «3D» quedara aislado en una tercera línea.
 - El HTML publicado de la portada contenía la nueva hoja CSS, nuevo titular, menú compartido y sección tutor reorganizada.
 - JavaScript: comprobación de sintaxis mediante motor JS para `js/ui.js`, `js/practica.js`, `js/inicio.js`, `js/actividades.js`, `js/progreso.js` y `regresiones.cjs`, sin errores de parseo detectados.
 - Validador de números: 10 entradas positivas y negativas comprobadas directamente (fracciones, coma decimal, notación científica, letras, espacios internos, divisiones por cero y entradas vacías).
