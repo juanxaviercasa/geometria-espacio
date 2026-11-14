@@ -20,7 +20,7 @@
 
   function aNumero(txt) {
     // Validación estricta: letras, unidades, expresiones incompletas o divisiones por cero no son respuestas numéricas.
-    var limpio = String(txt == null ? '' : txt).trim().replace(/\s+/g, '').replace(/,/g, '.');
+    var limpio = String(txt == null ? '' : txt).trim().replace(/\s*\/\s*/g, '/').replace(/,/g, '.');
     var patronNumero = '[+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][+-]?\\d+)?';
     if (!(new RegExp('^' + patronNumero + '(?:/' + patronNumero + ')?$')).test(limpio)) return NaN;
     var partes = limpio.split('/');
