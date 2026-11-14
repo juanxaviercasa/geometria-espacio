@@ -4,7 +4,7 @@ Ruta educativa en español de **geometría del espacio** para estudiantes de sec
 preparan exámenes de admisión exigentes (tipo UNI). Sitio estático en HTML, CSS y JavaScript,
 sin cuentas y con el progreso guardado en el propio dispositivo.
 
- > Estado de producción: Cloudflare Pages conectado a GitHub. Se está integrando la Fase 1 desde la rama productiva y las correcciones de `main`. Véase [PLAN-MEJORA-2026-11-14.md](PLAN-MEJORA-2026-11-14.md).
+> **Producción (14/11/2026):** [geometriaespacio.sistemazenit.com](https://geometriaespacio.sistemazenit.com/), desplegada en Cloudflare Pages desde `main`. Código y seguimiento en [PLAN-MEJORA-2026-11-14.md](PLAN-MEJORA-2026-11-14.md).
 
 ---
 
@@ -179,52 +179,26 @@ altura 6.
 
 ---
 
-## 9. Exportación y despliegue
+## 9. Publicación y mantenimiento
 
-Este proyecto está **listo para subir a GitHub y publicar con GitHub Pages**. El paso a paso,
-el manifiesto exacto de los 32 archivos y la lista de comprobaciones posteriores
-al despliegue están en **`SUBIR-A-GITHUB.md`**. Para obtener el paquete sin subir
-archivo por archivo, abre **`descarga.html`**: el botón arma un
-`geometria-espacio.zip` con todo, con la estructura de carpetas ya correcta.
+- **Sitio público:** https://geometriaespacio.sistemazenit.com/
+- **Cloudflare Pages:** proyecto `geometria-espacio`, repositorio `juanxaviercasa/geometria-espacio`, rama de producción `main`.
+- **Verificación de despliegue:** confirmados proyectos, dominio y despliegues desde la conexión Cloudflare el 14/11/2026. La portada se comprobó con navegador renderizado.
+- **Edición:** guardar cambios en `main` y verificar el nuevo despliegue en Cloudflare. No es necesario cambiar de plataforma.
+- **Compilación opcional:** `npm run build` produce `dist/`; el proyecto de Cloudflare actual publica directamente la raíz sin comando de compilación.
+- **Exportación:** `descarga.html` empaqueta archivos de desarrollo. La lista del ZIP debe mantenerse sincronizada si se añaden archivos. Está disponible por compatibilidad, no es la acción principal de los estudiantes.
 
-Archivos de soporte incluidos:
+## 10. Pendientes posteriores al rediseño
 
-| Archivo | Para qué |
-|---|---|
-| `SUBIR-A-GITHUB.md` | Guía de subida y publicación, manifiesto y diagnóstico de fallos típicos |
-| `.nojekyll` | Evita que GitHub Pages procese el sitio con Jekyll |
-| `.gitignore` | Excluye solo basura del sistema; no ignora nada del sitio |
-
-Estructura que debe conservarse al subir: los 5 `.html` en la raíz más `css/`, `js/` y `vendor/`.
-Las rutas del HTML son relativas: si se aplana la estructura, el sitio queda sin estilos ni lógica.
-
-**No se ha publicado ningún despliegue desde esta sesión** y no hay URL pública. Mis herramientas
-solo editan archivos y descargan con `GET`; no hay shell ni escritura en GitHub, así que no puedo
-aportar un hash de commit de `juanxaviercasa/geometria-espacio`. Comprobado por API pública el
-2026-10-27: el repositorio existe, es público y **está vacío** (`/branches` → `[]`,
-`/contents/` → 404), por lo que este será su primer commit y no hay nada que sobrescribir.
+1. Completar pruebas integrales `npm test`, `npm run build` y `verificacion.html` para todas las lecciones y geometrías; las comprobaciones puntuales no sustituyen esa certificación.
+2. Auditar contraste WCAG AA, teclado, lectores de pantalla y dispositivos de 360, 390, 768, 1024 y 1440 px; conservar capturas y resultados.
+3. Optimizar memoria del visor 3D, fallback y carga de bibliotecas (Fase 2 / Fase 5).
+4. Profundizar el currículo de distancias, secciones y ejercicios tipo UNI (Fase 3).
+5. Conservar el avatar clásico en SVG y las alternativas de tutores 3D/2D; verificar voz, licencias y recursos propios.
+6. La página de práctica muestra 12 ejercicios inicialmente y permite cargar más; el avance sigue guardado localmente.
 
 ---
 
-## 10. Trabajo pendiente (honesto)
-
-1. **Despliegue**: el sitio funciona como estático (incluido GitHub Pages), pero **no se ha
-   publicado**. No hay URL pública y no se afirma que la haya. Sigue `SUBIR-A-GITHUB.md`.
-2. **Repositorio de destino**: los requisitos pedían
-   `https://github.com/juanxaviercasa/geometria-espacio.git`. El proyecto está completo y listo
-   para ese remoto, pero el envío debe hacerlo el propietario: esta sesión no tiene shell ni
-   credenciales de escritura. No se ha verificado ningún push allí.
-3. **Vista 3D autónoma**: Three.js está empaquetado de forma autónoma tanto en UMD (`vendor/three.min.js`) como en módulo (`vendor/three.module.min.js`), funcionando de inmediato tanto localmente con doble clic (`file://`) como en GitHub Pages o cualquier servidor web. Se inicia directamente en 3D con aceleración por hardware.
-4. **Validación formal**: las comprobaciones son de contenido y de render en navegador. No se ha
-   ejecutado un validador HTML ni un auditor automático de contraste WCAG.
-5. **Ampliación de contenido**: solo `m6l1` es una lección exhaustiva. Las demás son sólidas pero
-   más breves; el siguiente paso natural es desarrollar `m10l1` (secciones) y `m4l2` (distancias)
-   con el mismo nivel de detalle.
-6. **Avatar**: es un sprite 2D en SVG animado con CSS, no un modelo 3D con esqueleto. Si se quiere
-   un personaje 3D con rig, hace falta un modelo propio (glTF/GLB o VRM) con licencia clara. La
-   estructura actual (`js/avatar.js` + estados) permitiría sustituirlo conservando la API.
-
-
 ## Fase 1 — Interfaz unificada (2026-11-14)
 
-Se ha agregado `css/fase1.css` para conservar estilos y funcionalidades de tutores, junto con `js/ui.js` como única cabecera y pie compartidos para las páginas. El inicio prioriza la ruta y el visor, las lecciones ofrecen accesos rápidos y el banco permite elegir módulo en un selector accesible. Se conservan KaTeX, tutores y motores 2D/3D. Verificar despliegue de Cloudflare y QA de móvil antes de declarar la fase certificada.
+Se ha agregado `css/fase1.css` para conservar estilos y funcionalidades de tutores, junto con `js/ui.js` como única cabecera y pie compartidos para las páginas. El inicio prioriza la ruta y el visor, las lecciones ofrecen accesos rápidos y el banco permite elegir módulo en un selector accesible. Se conservan KaTeX, tutores y motores 2D/3D. Se comprobó el despliegue en Cloudflare y se inspeccionaron capturas móviles de portada, lección y práctica; la auditoría WCAG y la matriz completa de navegadores forman parte del cierre de calidad.
