@@ -26,6 +26,58 @@
     return d.textContent || '';
   }
 
+
+  /* Cabecera y pie compartidos: todas las páginas usan la misma navegación. */
+  function montarEstructura() {
+    var cabecera = document.querySelector('.sitio-head');
+    if (cabecera) {
+      cabecera.innerHTML =
+        '<div class="wrap sitio-head-inner">' +
+          '<a class="marca" href="index.html" aria-label="Geometría del espacio, ir al inicio">' +
+            '<svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="logo-geo" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#4338ca"/><stop offset="1" stop-color="#7c3aed"/></linearGradient></defs><rect width="40" height="40" rx="12" fill="url(#logo-geo)"/><path d="M20 7 32 14v13L20 34 8 27V14Z M20 20l12-6M20 20 8 14M20 20v14" fill="none" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/><circle cx="20" cy="20" r="2.6" fill="#f4c76b"/></svg>' +
+            '<span><small>SISTEMA ZÉNIT · LABORATORIO</small><b>Geometría del espacio</b></span></a>' +
+          '<button type="button" class="nav-toggle" aria-controls="nav-geo" aria-expanded="false" aria-label="Abrir menú de navegación"><span aria-hidden="true">☰</span><span>Menú</span></button>' +
+          '<nav class="nav-principal" id="nav-geo" aria-label="Navegación principal">' +
+            '<a href="index.html#ruta" data-nav="inicio">Módulos</a>' +
+            '<a href="practica.html" data-nav="practica">Práctica</a>' +
+            '<a href="leccion.html?id=m6l1" data-nav="laboratorio">Laboratorio 3D</a>' +
+            '<a href="acerca.html" data-nav="acerca">Cómo aprender</a>' +
+          '</nav>' +
+          '<a class="insignia-progreso" href="index.html#ruta"><span class="anillo" id="anillo-progreso" style="--p:0"><span>0%</span></span><span data-progreso-texto>0/17 lecciones</span></a>' +
+          '<button type="button" class="btn-movimiento" id="btn-movimiento" aria-pressed="false" title="Activar o desactivar animaciones"><span aria-hidden="true">◉</span><span data-etiqueta>Animaciones</span></button>' +
+        '</div>';
+      var toggle = cabecera.querySelector('.nav-toggle');
+      var nav = cabecera.querySelector('.nav-principal');
+      toggle.addEventListener('click', function () {
+        var abierto = toggle.getAttribute('aria-expanded') !== 'true';
+        toggle.setAttribute('aria-expanded', abierto ? 'true' : 'false');
+        toggle.setAttribute('aria-label', abierto ? 'Cerrar menú de navegación' : 'Abrir menú de navegación');
+        nav.classList.toggle('nav-abierta', abierto);
+      });
+      nav.querySelectorAll('a').forEach(function(a) {
+        a.addEventListener('click', function() {
+          nav.classList.remove('nav-abierta');
+          toggle.setAttribute('aria-expanded','false');
+        });
+      });
+      document.addEventListener('keydown', function(e) {
+        if(e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+          nav.classList.remove('nav-abierta');
+          toggle.setAttribute('aria-expanded','false');
+          toggle.focus();
+        }
+      });
+    }
+    var pie = document.querySelector('.sitio-pie');
+    if (pie) pie.innerHTML =
+      '<div class="wrap pie-grid">' +
+        '<div class="pie-identidad"><p class="pie-marca">Geometría del espacio <span>· Piensa en 3D</span></p><p>Aprende a ver, razonar y resolver problemas del espacio con una ruta guiada y modelos interactivos.</p></div>' +
+        '<div><h2>Aprender</h2><a href="index.html#ruta">Ruta de módulos</a><a href="leccion.html?id=m6l1">Explorar un prisma</a><a href="practica.html">Práctica y retos</a></div>' +
+        '<div><h2>Tu experiencia</h2><a href="acerca.html">Método de estudio</a><a href="acerca.html#datos">Gestionar mi progreso</a><a href="verificacion.html">Verificación matemática</a></div>' +
+        '<div class="legal"><span>© <span id="anio">2026</span> Geometría del espacio · Sistema Zénit</span><span>Tu progreso se conserva en este dispositivo · Sin registro</span></div>' +
+      '</div>';
+  }
+
   /* ---------- cabecera: anillo + datos ---------- */
   function pintarCabecera() {
     var g = global.Contenido ? Contenido.progresoGlobal() : { pct: 0, hechas: 0, total: 0 };
@@ -108,13 +160,14 @@
     var pag = document.body.getAttribute('data-pagina');
     if (!pag) return;
     document.querySelectorAll('.nav-principal a').forEach(function (a) {
-      if (a.getAttribute('data-nav') === pag) a.setAttribute('aria-current', 'page');
+      if (a.getAttribute('data-nav') === pag || (pag === 'leccion' && a.getAttribute('data-nav') === 'inicio')) a.setAttribute('aria-current', 'page');
     });
   }
 
   /* ---------- arranque común ---------- */
   function iniciar(opciones) {
     opciones = opciones || {};
+    montarEstructura();
     marcarNav();
     pintarCabecera();
     montarBotonMovimiento();
