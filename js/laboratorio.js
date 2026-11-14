@@ -97,10 +97,16 @@ function pintarFormulas(m) {
  nota.textContent=m.mensaje+(figura==='seccion'?' El ángulo se restringe para conservar cuatro vértices de corte.':'');
 }
 function vista2d(){return {theta:cam2d.theta,phi:cam2d.phi};}
+function liberar3d(){
+ if(!api)return;
+ var old=api;api=null;
+ if(old.renderer&&old.renderer.domElement) old.renderer.domElement.dataset.labCerrado='1';
+ try{old.destruir();}catch(err){console.warn('Al liberar el visor 3D:',err);}
+}
 function render2d(){
  if(!ultimoModelo)return;
  var m=ultimoModelo; 
- if(api){api.destruir();api=null;}
+ if(api)liberar3d();
  var result=w.Visor2D.render(lienzo,m.spec,{capasOcultas:capasOcultas,camara:vista2d()});
  if(result){lienzo.setAttribute('aria-label',m.spec.alt);estado.hidden=true;}
 }
@@ -146,10 +152,11 @@ function render3d() {
     api.setAutoGiro(false);
     var canvas=api.renderer && api.renderer.domElement;
     if(canvas) canvas.addEventListener('webglcontextlost',function(ev) {
+      if(canvas.dataset.labCerrado==='1')return;
       ev.preventDefault();
       if(modo!=='3d')return;
       solicitud++;
-      try { if(api){api.destruir();api=null;} } catch(err){api=null;}
+      liberar3d();
       modo='2d';actualizarBotones();render2d();
       mostrarError('Se interrumpió el contexto gráfico. Conservamos tu modelo en la vista 2D.');
     },{once:true});
@@ -162,7 +169,7 @@ function render3d() {
  }).catch(function(err){
   if(ticket!==solicitud)return;
   console.warn('Laboratorio: fallback a SVG',err);
-  if(api){api.destruir();api=null;}
+  if(api)liberar3d();
   modo='2d';actualizarBotones();render2d();
   mostrarError('No se pudo iniciar la vista 3D; puedes seguir trabajando en 2D.');
  });
@@ -195,7 +202,7 @@ function cambiarModelo(tipo){
 }
 function cambiarVista(next,usuario){
  if(next!=='2d'&&next!=='3d')return;
- if(modo==='3d'&&api&&next==='2d'){cam2d=api.vista();api.destruir();api=null;}
+ if(modo==='3d'&&api&&next==='2d'){cam2d=api.vista();liberar3d();}
  modo=next;actualizarBotones();
  if(usuario)guardarVista();
  dibujar();
@@ -248,7 +255,7 @@ function iniciar() {
  }else w.addEventListener('resize',function(){if(modo==='2d')render2d();});
  w.addEventListener('pagehide',function(){
   solicitud++;if(raf)clearTimeout(raf);if(obs)obs.disconnect();
-  if(api){api.destruir();api=null;}
+  if(api)liberar3d();
  });
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',iniciar);
