@@ -20,6 +20,7 @@
   var ARCHIVOS = [
     // Páginas
     'index.html',
+    'laboratorio.html',
     'leccion.html',
     'practica.html',
     'acerca.html',
@@ -30,10 +31,15 @@
     'SUBIR-A-GITHUB.md',
     'TODO.md',
     'TUTORES-2026-10-28.md',
+    'PLAN-MEJORA-2026-11-14.md',
+    'FASE1-REPORTE-2026-11-14.md',
+    'FASE2-REPORTE-2026-11-14.md',
     '.gitignore',
     '.nojekyll',
     // Estilos
     'css/estilos.css',
+    'css/fase1.css',
+    'css/laboratorio.css',
     // Lógica
     'js/progreso.js',
     'js/contenido.js',
@@ -42,6 +48,8 @@
     'js/contenido-c.js',
     'js/contenido-d.js',
     'js/figuras.js',
+    'js/parametricas.js',
+    'js/laboratorio.js',
     'js/visor2d.js',
     'js/visor3d.js',
     'js/visor.js',
