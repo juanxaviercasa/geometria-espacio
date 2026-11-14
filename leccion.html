@@ -12,6 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/estilos.css?v=20261028-6">
+<link rel="stylesheet" href="css/fase1.css?v=20261114">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232c3c9e'/%3E%3Cpath d='M16 6l9 5v10l-9 5-9-5V11z' fill='none' stroke='%23fff' stroke-width='1.8'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="vendor/katex.min.css">
 <script defer src="vendor/katex.min.js"></script>
@@ -41,7 +42,7 @@
 
     <a class="insignia-progreso" href="index.html#ruta" aria-label="Progreso de la ruta">
       <span class="anillo" id="anillo-progreso" style="--p:0"><span>0%</span></span>
-      <span data-progreso-texto>0/14 lecciones</span>
+      <span data-progreso-texto>0/17 lecciones</span>
     </a>
 
     <button type="button" class="btn-movimiento" id="btn-movimiento" aria-pressed="false">
@@ -59,10 +60,11 @@
     <h1>Cargando lección…</h1>
   </header>
 
+  <nav class="atajos-leccion" aria-label="Accesos rápidos"><a href="index.html#ruta">← Ruta de módulos</a><a href="practica.html">Banco de práctica ↗</a></nav>
   <div class="leccion-layout">
-    <div class="contenido" id="cuerpo-leccion">
+    <article class="contenido" id="cuerpo-leccion">
       <p class="vacio-aviso">Cargando el contenido de la lección.</p>
-    </div>
+    </article>
 
     <aside class="aside-leccion" aria-label="Ayuda y navegación de la lección">
       <div class="tarjeta-aside" id="avatar-guia" aria-label="Vértiz, el personaje guía"></div>
@@ -81,7 +83,7 @@
           <p id="progreso-leccion-texto" style="margin:.2rem 0 0">0 de 0 actividades resueltas</p>
         </div>
         <div id="avance-leccion" style="margin-top:.6rem;display:grid;gap:.45rem"></div>
-        <style>.fila-progreso{display:flex;align-items:center;gap:.5rem}.fila-progreso .barra{flex:1}.fila-progreso .meta-texto{flex:0 0 auto}</style>
+        
       </div>
     </aside>
   </div>
@@ -135,7 +137,7 @@
 <script src="js/visor2d.js?v=20261028-4"></script>
 <script src="js/tutores.js?v=20261028-4"></script>
 <script src="js/avatar.js?v=20261028-3"></script>
-<script src="js/ui.js"></script>
+<script src="js/ui.js?v=20261114"></script>
 <script src="js/visor.js?v=20261028-5"></script>
 <script src="js/actividades.js"></script>
 <script src="js/leccion.js"></script>
