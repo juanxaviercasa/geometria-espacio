@@ -12,7 +12,7 @@ Se ha añadido [laboratorio.html](https://geometriaespacio.sistemazenit.com/labo
 | Sólido | Parámetros | Relaciones calculadas |
 |---|---|---|
 | Prisma rectangular | Largo `a`, ancho `b`, altura `h` | Volumen, área total, diagonal espacial y diagonal de base |
-| Pirámide recta (base rectangular) | `a`, `b`, `h` | Volumen, área lateral, área total y arista lateral |
+| Pirámide recta (base rectangular) | `a`, `b`, `h` | Volumen, áreas, arista lateral y los dos apotemas de sus caras |
 | Cilindro circular recto | Radio `r`, altura `h` | Volumen, área lateral y total |
 | Cono circular recto | `r`, `h` | Volumen, área lateral, total y generatriz |
 | Esfera | `r` | Volumen, superficie y circunferencia máxima |
@@ -24,7 +24,7 @@ Se ha añadido [laboratorio.html](https://geometriaespacio.sistemazenit.com/labo
 - `js/parametricas.js`: modelo matemático declarativo puro; usa estructura `vertices/caras/aristas/lineas/capas/camara` compatible con las especificaciones curriculares de `js/figuras.js`.
 - `js/laboratorio.js`: UI de sliders, controles de modo, capas, giro, orientación 2D, guardado local independiente, estado accesible y presentación dinámica de fórmulas con KaTeX local.
 - `css/laboratorio.css`: controles táctiles, jerarquías, mobile-first y respuesta a anchos de 390 px y escritorio.
-- `js/visor3d.js`: añade `actualizarSpec` con un solo contexto GPU, liberación de geometrías/materiales/texturas al cambiar dimensiones, limpieza de mallas temporales, DPR acotado para equipos modestos y cancelación de rAF al pausar/destruir.
+- `js/visor3d.js`: añade `actualizarSpec` con un solo contexto GPU, liberación de geometrías/materiales/texturas al cambiar dimensiones, limpieza de mallas temporales, protección contra eventos de pérdida de contexto durante destrucciones voluntarias, DPR acotado para equipos modestos y cancelación de rAF al pausar/destruir.
 - `js/visor2d.js`: dibuja las mismas especificaciones en SVG sin WebGL. Corrección de contorno de esfera que no debe cambiar de radio aparente por orientar la cámara y permite ocultar la superficie.
 - `js/visor.js`: mantiene Modo Maestro existente; enlaces contextuales a la nueva experimentación para nueve escenas compatibles. En ausencia de preferencia y hardware de ≤2 núcleos o ≤2 GB se sugiere 2D automáticamente.
 - **Carga diferida:** el nuevo laboratorio no carga Three.js si se queda en 2D; intenta el módulo ES local y usa la distribución clásica como respaldo. La migración de todas las páginas antiguas al formato ES no se hizo para no afectar el sistema de tutores, el Modo Maestro ni los ejercicios actuales.
@@ -36,7 +36,8 @@ Se inspeccionaron programáticamente las **16 escenas** de `js/figuras.js`, incl
 ## 4. Comprobaciones realizadas
 - **Matemática:** comprobación directa de **9.258 condiciones** en combinaciones de dimensiones de seis modelos. Cero fallos detectados. Incluye coordenadas finitas, referencias geométricas, evaluación de fórmulas y área real (producto vectorial) de la sección oblicua.
 - **Interacción navegador:** mover el largo de prisma de 3 a 6 unidades actualizó el volumen de **24 a 48 u³**. Seleccionar cono con `r=2`, `h=4` produjo **16,76 u³**. Al pasar a SVG 2D, la representación se dibujó y los controles de orientación modificaron el gráfico.
-- **Capturas renderizadas:** escritorio **1320×900** en laboratorio y móvil **390×844**, incluyendo el visor, el corte y los controles completos de la sección oblicua.
+- **Capturas renderizadas:** escritorio **1320×900** y móvil **390×844**, incluyendo el visor, el corte y los controles completos de la sección oblicua. La presentación de fórmulas de cono fue inspeccionada con KaTeX.
+- **Anchos adicionales:** pruebas DOM a **360 px** sin desbordamiento (scrollWidth=clientWidth=360; esfera en 2D con un control) y **768 px** sin desbordamiento (scrollWidth=clientWidth=768; pirámide con seis fórmulas y seis capas).
 - **Producción:** el laboratorio se sirvió desde el dominio en Cloudflare. La rama de producción continúa siendo `main`; los commits activan despliegues de Pages.
 - **Regresiones añadidas:** seis pruebas matemáticas y de límites para el motor paramétrico, y una prueba para todas las escenas curriculares; quedan incorporadas a `regresiones.cjs`.
 
@@ -52,4 +53,4 @@ La ejecución integral `npm test`, `npm run build`, medición de FPS/GPU y prueb
 - Sincronización de voz y guía virtual (Fase 4).
 - Certificación transversal de Safari/Firefox/Chrome, WebGL, WCAG y rendimiento (Fases 5–6).
 
-**Estado:** Fase 2 implementada, desplegada y comprobada a nivel matemático, interfaz y alternativa 2D. Certificación transversal de GPU y navegadores pendiente.
+**Estado:** Fase 2 implementada, desplegada y comprobada a nivel matemático, interfaz y alternativa 2D; los controles de pirámides distinguen apotemas de caras de tamaños diferentes. Certificación transversal de GPU y navegadores pendiente.
