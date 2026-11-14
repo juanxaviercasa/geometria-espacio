@@ -11,8 +11,8 @@ var CFG={
 };
 var LIMITES={a:[1,10],b:[1,10],h:[1,10],r:[.5,6],nivel:[.15,.85],angulo:[-35,35]};
 var DEFAULTS={a:3,b:2,h:4,r:1.8,nivel:.5,angulo:18};
-var COL={bases:'#9992e7',caras:'#6166d9',lateral:'#6166d9',aristas:'#26304f',bordes:'#26304f',etiquetas:'#46516e',altura:'#cb4b67',radio:'#07877f',diagonal:'#7045ca',baseDiagonal:'#c68a18',generatriz:'#bd831b',corte:'#079bb5',superficie:'#6166d9',meridianos:'#697491'};
-var LABELS={bases:'Bases',caras:'Caras',lateral:'Superficie lateral',aristas:'Aristas',bordes:'Contornos',etiquetas:'Nombres',altura:'Altura',radio:'Radio',diagonal:'Diagonal espacial',baseDiagonal:'Diagonal de base',generatriz:'Generatriz',corte:'Plano de corte',superficie:'Superficie',meridianos:'Meridianos'};
+var COL={bases:'#9992e7',caras:'#6166d9',lateral:'#6166d9',aristas:'#26304f',bordes:'#26304f',etiquetas:'#46516e',altura:'#cb4b67',radio:'#07877f',diagonal:'#7045ca',baseDiagonal:'#c68a18',generatriz:'#bd831b',apotema:'#bd831b',corte:'#079bb5',superficie:'#6166d9',meridianos:'#697491'};
+var LABELS={bases:'Bases',caras:'Caras',lateral:'Superficie lateral',aristas:'Aristas',bordes:'Contornos',etiquetas:'Nombres',altura:'Altura',radio:'Radio',diagonal:'Diagonal espacial',baseDiagonal:'Diagonal de base',generatriz:'Generatriz',apotema:'Apotema de cara',corte:'Plano de corte',superficie:'Superficie',meridianos:'Meridianos'};
 function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
 function param(input){input=input||{};var p={};Object.keys(DEFAULTS).forEach(function(k){var x=Number(input[k]);p[k]=clamp(Number.isFinite(x)?x:DEFAULTS[k],LIMITES[k][0],LIMITES[k][1]);});return p;}
 function fmt(x,dp){return String(Number(x.toFixed(dp===undefined?2:dp))).replace('.',',');}
@@ -76,12 +76,14 @@ function generar(tipo,entrada){
    msg='Al modificar la inclinación, el plano atraviesa las cuatro caras laterales; la sección es un rectángulo.';
   }
  }else if(tipo==='piramide'){
-  s=punta(a,b,h);s.capas=capas(['bases','caras','aristas','altura','generatriz','etiquetas']);
+  s=punta(a,b,h);s.capas=capas(['bases','caras','aristas','altura','apotema','etiquetas']);s.lineas[1].capa='apotema';
   var aa=Math.hypot(h,b/2),ab=Math.hypot(h,a/2),later=a*aa+b*ab,g=Math.hypot(h,a/2,b/2);
   f=[item('Volumen',a*b*h/3,'u³','V=\\frac{abh}{3}','Un tercio del prisma de igual base y altura.'),
      item('Área lateral',later,'u²','A_L=a\\sqrt{h^2+(b/2)^2}+b\\sqrt{h^2+(a/2)^2}','Dos pares de triángulos con apotemas diferentes.'),
      item('Arista lateral',g,'u','g=\\sqrt{h^2+(a/2)^2+(b/2)^2}','Distancia del vértice a una esquina de la base.'),
-     item('Área total',a*b+later,'u²','A_T=ab+A_L','Suma de base y caras laterales.')];
+     item('Área total',a*b+later,'u²','A_T=ab+A_L','Suma de base y caras laterales.'),
+     item('Apotema cara a',aa,'u','m_a=\\sqrt{h^2+(b/2)^2}','Altura inclinada del triángulo cuya base mide a.'),
+     item('Apotema cara b',ab,'u','m_b=\\sqrt{h^2+(a/2)^2}','Altura inclinada del triángulo cuya base mide b.')];
   msg='La altura es perpendicular a la base y no es la arista lateral.';
  }else if(tipo==='cilindro'||tipo==='cono'){
   var cone=tipo==='cono',g2=Math.hypot(r,h);s=redondo(r,h,cone);s.capas=capas(['bases','lateral','bordes','altura','radio','generatriz','etiquetas']);cam={theta:-.58,phi:.28};
