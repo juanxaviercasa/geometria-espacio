@@ -14,6 +14,7 @@ sin cuentas y con el progreso guardado en el propio dispositivo.
 |---|---|---|
 | `index.html` | `/` | Portada con el título «Geometría del espacio: piensa en 3D», bloque *continuar donde lo dejaste*, ruta de los 12 módulos con barras de progreso y lecciones desplegables. |
 | `leccion.html` | `leccion.html?id=<leccionId>` | Lección completa: bloques didácticos, figuras interactivas, práctica guiada, retos, índice lateral, navegación anterior/siguiente y marcado como completada. Sin `?id` redirige a la primera lección pendiente. Respaldo: atributo `data-leccion` en `<body>`. |
+| `laboratorio.html` | `/laboratorio.html?modelo=prisma` | Laboratorio paramétrico: 6 modelos, sliders y controles 2D/3D, capas, cálculos con KaTeX, vista adaptativa y modo de secciones oblicuas. |
 | `practica.html` | `/practica.html` | Banco con todos los ejercicios de la ruta, filtrable por módulo, más todos los retos. Marcador de sesión y puntos. |
 | `acerca.html` | `/acerca.html` | Método pedagógico, dependencias integradas con estrellas y fecha de consulta, herramientas evaluadas y descartadas, accesibilidad, gestión de datos locales. |
 | `verificacion.html` | `/verificacion.html` | Autocomprobaciones **ejecutadas en el navegador**: fórmulas por doble vía, respuestas del contenido, coherencia estructural y validación de las especificaciones de figuras. |
@@ -92,17 +93,20 @@ descargar una copia en JSON.
 
 ## 5. Figuras: una sola fuente de verdad
 
-`js/figuras.js` declara cada figura (15 registradas: triedro, planos que se cortan, recta-plano,
+`js/figuras.js` declara cada figura (16 registradas: triedro, planos que se cortan, recta-plano,
 perpendicular, proyección, prisma de elementos, prisma 2·3·6 con diagonales, cubo con sección
 hexagonal, paralelepípedo oblicuo, pirámide, cilindro, cono, esfera, tetraedro, octaedro,
 sección de prisma). El visor 3D y el 2D **leen el mismo objeto**, así que no pueden mostrar cosas
 distintas.
 
-- 3D: Three.js como módulo ES desde `vendor/`, carga diferida con `import()`, controles de órbita
-  propios (arrastre, rueda, pellizco, flechas del teclado, `R` para recentrar), pausa del bucle
-  cuando la figura sale de pantalla.
-- 2D: SVG con la misma cámara y ocultación por sondeo. Se activa si falla WebGL, si el equipo
-  declara ≤2 núcleos o ≤2 GB, en pantallas pequeñas, o al pulsar «Vista 2D». La elección se recuerda.
+- 3D curricular: usa el visor Three.js clásico incluido en `vendor/`, controles de órbita
+  (arrastre, rueda, pellizco y teclado), modo proyector, resaltado y pausa fuera de pantalla.
+  El motor se adaptó para liberar recursos y permitir actualizaciones de geometría sin crear nuevos contextos.
+- 3D paramétrico (`laboratorio.html`): carga diferida: primero intenta el módulo ES local y, si no está
+  disponible, carga la distribución clásica; evita descargar la biblioteca si el visitante elige 2D.
+- 2D: SVG alimentado por la misma especificación y capas. Se activa cuando falta WebGL,
+  el estudiante lo selecciona o el dispositivo declara ≤2 núcleos o ≤2 GB sin preferencia previa.
+  La vista del laboratorio se guarda separadamente de la preferencia de las lecciones.
 - Capas conmutables por figura (caras, aristas, vértices, nombres, alturas, diagonales, secciones…).
 
 ---
@@ -202,3 +206,10 @@ altura 6.
 ## Fase 1 — Interfaz unificada (2026-11-14)
 
 Se ha agregado `css/fase1.css` para conservar estilos y funcionalidades de tutores, junto con `js/ui.js` como única cabecera y pie compartidos para las páginas. El inicio prioriza la ruta y el visor, las lecciones ofrecen accesos rápidos y el banco permite elegir módulo en un selector accesible. Se conservan KaTeX, tutores y motores 2D/3D. Se comprobó el despliegue en Cloudflare y se inspeccionaron capturas móviles de portada, lección y práctica; la auditoría WCAG y la matriz completa de navegadores forman parte del cierre de calidad.
+
+
+## Fase 2 — Laboratorio geométrico paramétrico (2026-11-14)
+
+El nuevo laboratorio utiliza `js/parametricas.js` (única fuente geométrica para prisma rectangular, pirámide recta, cilindro, cono, esfera y sección oblicua), `js/laboratorio.js` (estado, accesibilidad, carga diferida y sincronización visual), `css/laboratorio.css` y una página independiente. Los modelos comparten el mismo esquema de `js/figuras.js` para 2D/3D. Los controles de clase de `js/visor3d.js` aceptan `actualizarSpec` sin crear otro contexto WebGL, liberan texturas y geometrías, limitan DPR en equipos modestos y gestionan pausa/reanudación con RAF cancelable. `js/visor2d.js` corrige la silueta de la esfera y el apagado de la superficie. `js/visor.js` añade enlaces contextuales al laboratorio y un fallback por hardware de baja capacidad. Se corrigieron las capas pedagógicas del tetraedro y se sumaron tests en `regresiones.cjs`.
+
+Informe de implementación y QA: [FASE2-REPORTE-2026-11-14.md](FASE2-REPORTE-2026-11-14.md). Se validaron 9.258 condiciones geométricas en un ejecutor JS y pruebas DOM de controles; la batería completa de Node y la certificación 3D/WebGL en dispositivos físicos siguen siendo tareas de QA.
