@@ -4,8 +4,7 @@ Ruta educativa en español de **geometría del espacio** para estudiantes de sec
 preparan exámenes de admisión exigentes (tipo UNI). Sitio estático en HTML, CSS y JavaScript,
 sin cuentas y con el progreso guardado en el propio dispositivo.
 
-> Estado: **código completo y listo para exportar**. No se ha publicado ningún despliegue: no hay
-> URL pública todavía. Guía de subida en `SUBIR-A-GITHUB.md`; pendientes en la sección 10.
+ > Estado de producción: Cloudflare Pages conectado a GitHub. Se está integrando la Fase 1 desde la rama productiva y las correcciones de `main`. Véase [PLAN-MEJORA-2026-11-14.md](PLAN-MEJORA-2026-11-14.md).
 
 ---
 
@@ -224,3 +223,8 @@ aportar un hash de commit de `juanxaviercasa/geometria-espacio`. Comprobado por 
 6. **Avatar**: es un sprite 2D en SVG animado con CSS, no un modelo 3D con esqueleto. Si se quiere
    un personaje 3D con rig, hace falta un modelo propio (glTF/GLB o VRM) con licencia clara. La
    estructura actual (`js/avatar.js` + estados) permitiría sustituirlo conservando la API.
+
+
+## Fase 1 — Interfaz unificada (2026-11-14)
+
+Se ha agregado `css/fase1.css` para conservar estilos y funcionalidades de tutores, junto con `js/ui.js` como única cabecera y pie compartidos para las páginas. El inicio prioriza la ruta y el visor, las lecciones ofrecen accesos rápidos y el banco permite elegir módulo en un selector accesible. Se conservan KaTeX, tutores y motores 2D/3D. Verificar despliegue de Cloudflare y QA de móvil antes de declarar la fase certificada.

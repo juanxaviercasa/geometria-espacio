@@ -89,11 +89,11 @@
 
         return '<a class="leccion-fila" href="leccion.html?id=' + id + '">' +
           marca +
-          '<span>' +
+          '<div class="leccion-info">' +
           '<h4>' + l.titulo +
           (l.destacada ? '<span class="insignia-mini">Completa</span>' : '') + '</h4>' +
           '<p>' + l.resumen + '</p>' +
-          '</span>' +
+          '</div>' +
           '<span class="meta-texto" aria-label="' + etiquetaEstado(est) + '">' +
           (c.hechos + retosOk > 0 ? (c.hechos + retosOk) + ' resueltas' : l.duracion) +
           '</span>' +
@@ -104,8 +104,8 @@
         '<button type="button" class="modulo-cabeza" aria-expanded="false" aria-controls="cuerpo-' + m.id + '">' +
         '<span class="modulo-num" aria-hidden="true">' + m.numero + '</span>' +
         '<span>' +
-        '<h3 class="modulo-titulo">' + m.titulo + '</h3>' +
-        '<p class="modulo-desc">' + m.desc + '</p>' +
+        '<span class="modulo-titulo" role="heading" aria-level="3">' + m.titulo + '</span>' +
+        '<span class="modulo-desc">' + m.desc + '</span>' +
         '</span>' +
         '<span class="modulo-meta">' +
         '<span class="meta-texto">' + prog.hechas + '/' + prog.total + '</span>' +

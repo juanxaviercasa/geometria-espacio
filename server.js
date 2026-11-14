@@ -15,9 +15,22 @@ const MIME = {
 };
 
 const server = http.createServer((req, res) => {
-  let reqPath = decodeURI(req.url.split('?')[0]);
+  let reqPath;
+  try {
+    reqPath = decodeURIComponent((req.url || '/').split('?')[0]);
+  } catch {
+    res.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8' });
+    res.end('Ruta inválida');
+    return;
+  }
   if (reqPath === '/' || reqPath === '') reqPath = '/index.html';
-  const filePath = path.join(__dirname, reqPath);
+  // No permitir que una URL lea ficheros fuera de la carpeta del proyecto.
+  const filePath = path.resolve(__dirname, reqPath.replace(/^[/]+/, ''));
+  if (!filePath.startsWith(__dirname + path.sep) || reqPath.indexOf(String.fromCharCode(0)) !== -1) {
+    res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });
+    res.end('Acceso denegado');
+    return;
+  }
 
   fs.stat(filePath, (err, stats) => {
     if (err || !stats.isFile()) {
