@@ -194,9 +194,10 @@ function iniciar() {
  selec=$('lab-modelo');lienzo=$('lab-lienzo');estado=$('lab-estado');
  sliders=$('lab-sliders');capasBox=$('lab-capas');formulas=$('lab-formulas');nota=$('lab-principio');
  if(!P||!selec||!w.Visor2D)return;
- leer();w.UI.iniciar({});
+ leer();
+ try { var pedido = new URLSearchParams(w.location.search).get('modelo'); if (P.MODELOS[pedido]) figura=pedido; } catch(e) {}
+ w.UI.iniciar({avatar:false});
  cambiarModelo(figura);actualizarBotones();
- if(modo==='3d')dibujar();
  selec.addEventListener('change',function(){cambiarModelo(this.value);});
  document.querySelectorAll('[data-lab-vista]').forEach(function(b){
   b.addEventListener('click',function(){cambiarVista(this.getAttribute('data-lab-vista'),true);});
