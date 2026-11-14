@@ -40,16 +40,18 @@
 **Criterios de aceptación:** navegación desde teclado, contraste AA en texto normal, interacción táctil cómoda, sin encabezados inválidos ni enlaces prioritarios a herramientas técnicas.
 
 ## Fase 2 — Laboratorio 3D y alternativa 2D
-- [ ] Definir una API declarativa de escenas: `geometry/specs`, `layers`, `camera`, `steps`, `annotations`.
-- [ ] Revisar cada figura registrada, su geometría, normales, diagonales, etiquetas, transparencias, capas y encuadre.
-- [ ] Incorporar controles paramétricos donde aporten comprensión real: arista, altura, radio, apotema, ángulos y cortes.
-- [ ] Vincular variables, medidas, fórmulas y representaciones: al variar un parámetro se recalculan el sólido y los resultados.
-- [ ] Ajustar tamaños de figuras y etiquetas a 360, 390, 768, 1024 y 1440 px; mantener espacio pedagógico útil.
-- [ ] Detectar dispositivos modestos, dar elección explícita entre 2D/3D y respetar la preferencia guardada; **hoy el fallback automático no implementa todos los umbrales de hardware que afirma el README**.
-- [ ] Controlar ciclo de vida: carga asíncrona, destrucción de escenas, listeners, contextos WebGL y pausa al salir de pantalla.
-- [ ] Migrar progresivamente a Three.js por módulos ES y carga realmente diferida, sin introducir otro motor 3D paralelo.
-- [ ] Consolidar test de paridad: mismo conjunto de vértices/capas/etiquetas en 2D y 3D.
+- [x] Especificaciones declarativas compartidas: `js/figuras.js` y `js/parametricas.js` con vértices, caras, capas, cámara y métricas.
+- [x] Auditar programáticamente 16 escenas curriculares y corregir dos referencias de capas inexistentes del tetraedro; el QA visual de cada una se valida transversalmente en Fase 6.
+- [x] Controles paramétricos en seis modelos: aristas, altura, radio, secciones oblicuas e inclinación; generatrices y apotemas derivados matemáticamente.
+- [x] Vincular parámetros, medidas y KaTeX en tiempo real; verificación de prisma 24→48 u³, cono 16,76 u³ y actualización de SVG.
+- [ ] Verificación integral de los cinco anchos y del giro horizontal en todos los visores (Fase 6). El laboratorio tiene CSS responsive y capturas revisadas a 390 y 1320 px.
+- [x] Detectar hardware limitado cuando el navegador informa núcleos/memoria, ofrecer botón 2D/3D, persistir preferencia y fallback cuando WebGL no está disponible.
+- [x] Carga diferida, actualización de geometría sin recrear WebGL, liberación GPU, ResizeObserver, IntersectionObserver, pagehide y cancelación de rAF.
+- [x] Migración progresiva en el nuevo laboratorio: intentar ES module local y fallback a UMD. Migración del visor curricular completo aplazada por compatibilidad de tutores.
+- [x] Añadir pruebas de consistencia de referencias, escenas y secciones; validar visualmente que la vista 2D responde a cambios. Paridad renderizada 3D real pendiente de Fase 6.
 **Criterios:** sin pérdidas de contexto al cambiar 2D/3D, cámara estable, diagonales no confundibles con aristas, WebGL ausente → vista 2D comprensible.
+
+**Cierre de implementación:** [FASE2-REPORTE-2026-11-14.md](FASE2-REPORTE-2026-11-14.md), con resultados matemáticos, capturas y limitaciones explícitas.
 
 ## Fase 3 — Rigor matemático y didáctico
 - [ ] Inventariar todas las definiciones, teoremas, fórmulas, ejemplos, ejercicios y distractores de las 17 lecciones.
