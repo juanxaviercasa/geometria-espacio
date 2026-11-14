@@ -53,3 +53,48 @@ test('el prisma contiene una diagonal de base y una espacial con longitudes corr
   });
 });
 
+function actividades() {
+  const window = {};
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname, 'js/actividades.js'), 'utf8'), { window });
+  return window.Actividades;
+}
+
+test('validación numérica estricta: decimales, fracciones y notación científica', () => {
+  const parse = actividades().aNumero;
+  assert.equal(parse('7/2'), 3.5);
+  assert.equal(parse('1 / 4'), 0.25);
+  assert.equal(parse('-2,5'), -2.5);
+  assert.equal(parse('.75'), 0.75);
+  assert.equal(parse('1e3'), 1000);
+  assert.equal(parse(' 12 '), 12);
+});
+
+test('validación numérica estricta: rechaza respuestas mal formadas', () => {
+  const parse = actividades().aNumero;
+  for (const valor of ['12abc', '2m', '1 2', '1+1', '12/0', '2/0.0', '5/3/2', '--2', '1.2.3', 'Infinity', '', '1e9999']) {
+    assert.ok(Number.isNaN(parse(valor)), 'Debe rechazarse: ' + valor);
+  }
+});
+
+test('consultar pistas no incrementa intentos ni puntos', () => {
+  const store = new Map();
+  const window = { localStorage: {
+    setItem(k, v) { store.set(k, String(v)); },
+    getItem(k) { return store.has(k) ? store.get(k) : null; },
+    removeItem(k) { store.delete(k); }
+  }};
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname, 'js/progreso.js'), 'utf8'), { window, console, Date });
+  const P = window.Progreso;
+  P.registrarEjercicio('m6l1', 'ej1', false, 1, false);
+  const primera = P.resumenLeccion('m6l1').ejercicios.ej1;
+  assert.equal(primera.intentos, 0);
+  assert.equal(primera.pistas, 1);
+  assert.equal(P.puntos(), 0);
+  P.registrarEjercicio('m6l1', 'ej1', true, 1);
+  assert.equal(P.resumenLeccion('m6l1').ejercicios.ej1.intentos, 1);
+  assert.equal(P.puntos(), 10);
+  P.registrarReto('m6l1', 'reto1', 3, false);
+  assert.equal(P.puntos(), 10);
+  P.registrarReto('m6l1', 'reto1', 3, true);
+  assert.equal(P.puntos(), 35);
+});
