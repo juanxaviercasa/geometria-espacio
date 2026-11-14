@@ -73,7 +73,7 @@
       '<div class="wrap pie-grid">' +
         '<div class="pie-identidad"><p class="pie-marca">Geometría del espacio <span>· Piensa en 3D</span></p><p>Aprende a ver, razonar y resolver problemas del espacio con una ruta guiada y modelos interactivos.</p></div>' +
         '<div><h2>Aprender</h2><a href="index.html#ruta">Ruta de módulos</a><a href="leccion.html?id=m6l1">Explorar un prisma</a><a href="practica.html">Práctica y retos</a></div>' +
-        '<div><h2>Tu experiencia</h2><a href="acerca.html">Método de estudio</a><a href="acerca.html#datos">Gestionar mi progreso</a><a href="verificacion.html">Verificación matemática</a></div>' +
+        '<div><h2>Tu experiencia</h2><a href="acerca.html">Método de estudio</a><a href="acerca.html#datos">Gestionar mi progreso</a><a href="leccion.html?id=m12l1">Simulacro tipo UNI</a></div>' +
         '<div class="legal"><span>© <span id="anio">2026</span> Geometría del espacio · Sistema Zénit</span><span>Tu progreso se conserva en este dispositivo · Sin registro</span></div>' +
       '</div>';
   }
