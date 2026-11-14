@@ -421,8 +421,8 @@ strong { font-weight: 600; }
   box-shadow: 0 25px 50px -12px rgba(79, 70, 229, 0.18), 0 0 0 1px rgba(99, 102, 241, 0.2);
 }
 .hero-figura svg { display: block; width: 100%; height: auto; }
-.hero-figura figcaption {
-  font-size: .74rem;
+.hero-figura .figura-pie-referencia {
+  font-size: .86rem;
   color: var(--ink-3);
   text-align: center;
   padding: .5rem .8rem;
@@ -541,6 +541,7 @@ strong { font-weight: 600; }
 }
 
 .modulo-titulo {
+  display: block;
   font-weight: 600;
   font-size: 1.02rem;
   margin: 0 0 .1rem;
@@ -548,7 +549,8 @@ strong { font-weight: 600; }
   transition: color var(--trans);
 }
 .modulo-desc {
-  font-size: .84rem;
+  display: block;
+  font-size: .9rem;
   color: var(--ink-3);
   margin: 0;
 }
@@ -575,7 +577,7 @@ strong { font-weight: 600; }
   transition: width 400ms cubic-bezier(.2, .7, .3, 1);
 }
 .barra.verde > i { background: var(--teal); }
-.meta-texto { font-size: .74rem; color: var(--ink-3); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.meta-texto { font-size: .82rem; color: var(--ink-3); font-variant-numeric: tabular-nums; white-space: nowrap; }
 
 .modulo-cuerpo {
   border-top: 1px solid var(--line);
@@ -625,7 +627,7 @@ strong { font-weight: 600; }
 }
 
 .leccion-fila h4 { margin: 0; font-size: .92rem; font-weight: 500; }
-.leccion-fila p { margin: 0; font-size: .76rem; color: var(--ink-3); }
+.leccion-fila p { margin: 0; font-size: .85rem; color: var(--ink-3); }
 .leccion-fila .insignia-mini {
   font-size: .64rem;
   letter-spacing: .07em;
@@ -755,10 +757,11 @@ p.parrafo { margin-bottom: 1.05rem; }
 /* matemática en línea */
 .m {
   font-family: var(--mono);
-  font-size: .93em;
+  font-size: 1em;
   letter-spacing: -.01em;
   color: var(--ink);
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 .m var, var {
   font-family: var(--serif);
@@ -840,7 +843,7 @@ sub, sup { font-size: .72em; line-height: 0; }
 }
 .fml dd {
   margin: .15rem 0 0;
-  font-size: .84rem;
+  font-size: .9rem;
   color: #b9c0d8;
   line-height: 1.45;
 }
@@ -2490,3 +2493,19 @@ body.movimiento-reducido .avatar-escenario.fiesta .avatar-confeti { opacity: 0; 
   a { color: #000; text-decoration: none; }
 }
 
+
+/* Seguridad de tamaño en los paneles y expresiones de geometría. */
+.hero .wrap > *,
+.leccion-layout > *,
+.figura-escenario-clase > *,
+.modulo-cabeza > *,
+.leccion-fila > * { min-width: 0; }
+.fml dt, .fml dd, .bloque .enunciado, .bloque .justifica { overflow-wrap: anywhere; }
+.leccion-info { min-width: 0; }
+@media (max-width: 680px) {
+  .hero h1 em { white-space: normal; }
+  .figura-escenario-clase { min-width: 0; }
+  .fml { padding: 1rem; }
+  .modulo-cabeza { gap: .7rem; }
+  .leccion-fila { gap: .55rem; }
+}
