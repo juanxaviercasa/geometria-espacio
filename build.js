@@ -8,6 +8,7 @@ const DIST = path.join(ROOT, 'dist');
 
 const ITEMS = [
   'index.html',
+  'laboratorio.html',
   'leccion.html',
   'practica.html',
   'acerca.html',
@@ -19,6 +20,9 @@ const ITEMS = [
   'SUBIR-A-GITHUB.md',
   'TODO.md',
   'TUTORES-2026-10-28.md',
+  'PLAN-MEJORA-2026-11-14.md',
+  'FASE1-REPORTE-2026-11-14.md',
+  'FASE2-REPORTE-2026-11-14.md',
   'css',
   'js',
   'vendor'
