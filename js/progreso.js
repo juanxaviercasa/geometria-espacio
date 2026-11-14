@@ -118,11 +118,11 @@
     return d;
   }
 
-  function registrarEjercicio(idLeccion, idEjercicio, correcto, pistasUsadas) {
+  function registrarEjercicio(idLeccion, idEjercicio, correcto, pistasUsadas, contabilizarIntento) {
     var d = leer();
     var e = entrada(d, idLeccion);
     var prev = e.ejercicios[idEjercicio] || { ok: false, intentos: 0, pistas: 0 };
-    prev.intentos = (prev.intentos || 0) + 1;
+    if (contabilizarIntento !== false) prev.intentos = (prev.intentos || 0) + 1;
     if (typeof pistasUsadas === 'number') prev.pistas = Math.max(prev.pistas || 0, pistasUsadas);
     if (correcto) prev.ok = true;
     e.ejercicios[idEjercicio] = prev;
