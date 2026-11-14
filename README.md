@@ -4,8 +4,9 @@ Ruta educativa en español de **geometría del espacio** para estudiantes de sec
 preparan exámenes de admisión exigentes (tipo UNI). Sitio estático en HTML, CSS y JavaScript,
 sin cuentas y con el progreso guardado en el propio dispositivo.
 
-> Estado: **código completo y listo para exportar**. No se ha publicado ningún despliegue: no hay
-> URL pública todavía. Guía de subida en `SUBIR-A-GITHUB.md`; pendientes en la sección 10.
+> Estado (2026-11-14): código público en GitHub, con mejoras guardadas en `main`.
+> La URL y el estado de un despliegue activo **no están verificados** en esta revisión.
+> Véase [PLAN-MEJORA-2026-11-14.md](PLAN-MEJORA-2026-11-14.md) para auditoría actual y pendientes.
 
 ---
 
@@ -93,17 +94,18 @@ descargar una copia en JSON.
 
 ## 5. Figuras: una sola fuente de verdad
 
-`js/figuras.js` declara cada figura (15 registradas: triedro, planos que se cortan, recta-plano,
+`js/figuras.js` declara cada figura (16 registradas: triedro, planos que se cortan, recta-plano,
 perpendicular, proyección, prisma de elementos, prisma 2·3·6 con diagonales, cubo con sección
 hexagonal, paralelepípedo oblicuo, pirámide, cilindro, cono, esfera, tetraedro, octaedro,
 sección de prisma). El visor 3D y el 2D **leen el mismo objeto**, así que no pueden mostrar cosas
 distintas.
 
-- 3D: Three.js como módulo ES desde `vendor/`, carga diferida con `import()`, controles de órbita
-  propios (arrastre, rueda, pellizco, flechas del teclado, `R` para recentrar), pausa del bucle
-  cuando la figura sale de pantalla.
-- 2D: SVG con la misma cámara y ocultación por sondeo. Se activa si falla WebGL, si el equipo
-  declara ≤2 núcleos o ≤2 GB, en pantallas pequeñas, o al pulsar «Vista 2D». La elección se recuerda.
+- 3D: Three.js UMD (`vendor/three.min.js`) cargado actualmente desde las páginas que usan figuras;
+  controles propios de órbita (arrastre, rueda, pellizco, flechas del teclado, `R` para recentrar).
+  La carga realmente diferida y la migración a módulos ES quedan pendientes.
+- 2D: SVG con la misma cámara y ocultación por sondeo. Se activa si falla WebGL o el estudiante
+  elige «Vista 2D»; su preferencia queda guardada. **Todavía no se comprueban automáticamente**
+  umbrales de núcleos, memoria o pantalla para elegir 2D.
 - Capas conmutables por figura (caras, aristas, vértices, nombres, alturas, diagonales, secciones…).
 
 ---
@@ -163,14 +165,12 @@ El motor 3D funciona tanto en local haciendo doble clic en el archivo HTML (`fil
 
 ---
 
-## 8. Comprobaciones realizadas
+## 8. Comprobaciones históricas (octubre de 2026; pendientes de repetir)
 
-- Consola sin errores en `index.html`, `leccion.html` (con `?id=m6l1`), `practica.html`, `acerca.html` y `verificacion.html`.
+- El informe de 28/10/2026 registró consola sin errores en `index.html`, `leccion.html` (`?id=m6l1`), `practica.html`, `acerca.html` y `verificacion.html`. Ese resultado no equivale a una ejecución actual.
 - Render verificado con capturas en escritorio y móvil: portada con las 12 tarjetas, banda de
   Vértiz completa, avatar visible y sin recortes en la columna lateral, sin código crudo a la vista.
-- `verificacion.html` ejecuta **74 comprobaciones** en el navegador (fórmulas por doble vía,
-  respuestas recalculadas, coherencia estructural, validez de las figuras). Resultado actual:
-  **74/74 (100 %)**. Es la prueba reproducible del contenido: ábrela para ver el informe.
+- `verificacion.html` contiene autocomprobaciones del navegador. En el informe histórico se registraron **74/74**, pero deben ejecutarse nuevamente después de cada cambio significativo.
 
 Correcciones matemáticas aplicadas tras revisión: sección `MNC₁` de un cubo (trapecio isósceles
 `M N C₁ A₁`, no un cuadrilátero inventado), perpendicularidad `AC₁ ⟂ (A₁BD)` por producto escalar,
@@ -199,22 +199,21 @@ Archivos de soporte incluidos:
 Estructura que debe conservarse al subir: los 5 `.html` en la raíz más `css/`, `js/` y `vendor/`.
 Las rutas del HTML son relativas: si se aplana la estructura, el sitio queda sin estilos ni lógica.
 
-**No se ha publicado ningún despliegue desde esta sesión** y no hay URL pública. Mis herramientas
-solo editan archivos y descargan con `GET`; no hay shell ni escritura en GitHub, así que no puedo
-aportar un hash de commit de `juanxaviercasa/geometria-espacio`. Comprobado por API pública el
-2026-10-27: el repositorio existe, es público y **está vacío** (`/branches` → `[]`,
-`/contents/` → 404), por lo que este será su primer commit y no hay nada que sobrescribir.
+El repositorio de destino ya contiene archivos y commits reales. El estado de GitHub Pages o
+de un dominio externo se debe verificar directamente antes de anunciar un despliegue. Para
+comprobar el código localmente: `npm test` y `npm run build` (salida `dist/`).
+
+**Advertencia del ZIP:** `descarga.html` intenta leer además documentación y archivos de
+proyecto. `build.js` actualmente solo copia las páginas, `css/`, `js/`, `vendor/` y
+`.nojekyll`. Por tanto, el ZIP puede fallar en un despliegue que solo publique `dist/`.
+La descarga pública debe repararse o excluirse del sitio estudiantil antes de promocionarla.
 
 ---
 
 ## 10. Trabajo pendiente (honesto)
 
-1. **Despliegue**: el sitio funciona como estático (incluido GitHub Pages), pero **no se ha
-   publicado**. No hay URL pública y no se afirma que la haya. Sigue `SUBIR-A-GITHUB.md`.
-2. **Repositorio de destino**: los requisitos pedían
-   `https://github.com/juanxaviercasa/geometria-espacio.git`. El proyecto está completo y listo
-   para ese remoto, pero el envío debe hacerlo el propietario: esta sesión no tiene shell ni
-   credenciales de escritura. No se ha verificado ningún push allí.
+1. **Despliegue**: compilar con `npm run build` y verificar URL/servidor antes de considerar la versión publicada.
+2. **Repositorio de destino**: el proyecto ya existe en `juanxaviercasa/geometria-espacio` y acepta commits en `main`. Las siguientes fases deben seguir el plan actualizado.
 3. **Vista 3D autónoma**: Three.js está empaquetado de forma autónoma tanto en UMD (`vendor/three.min.js`) como en módulo (`vendor/three.module.min.js`), funcionando de inmediato tanto localmente con doble clic (`file://`) como en GitHub Pages o cualquier servidor web. Se inicia directamente en 3D con aceleración por hardware.
 4. **Validación formal**: las comprobaciones son de contenido y de render en navegador. No se ha
    ejecutado un validador HTML ni un auditor automático de contraste WCAG.
