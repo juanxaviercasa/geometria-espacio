@@ -37,7 +37,7 @@ Se inspeccionaron programáticamente las **16 escenas** de `js/figuras.js`, incl
 - **Matemática:** comprobación directa de **9.258 condiciones** en combinaciones de dimensiones de seis modelos. Cero fallos detectados. Incluye coordenadas finitas, referencias geométricas, evaluación de fórmulas y área real (producto vectorial) de la sección oblicua.
 - **Interacción navegador:** mover el largo de prisma de 3 a 6 unidades actualizó el volumen de **24 a 48 u³**. Seleccionar cono con `r=2`, `h=4` produjo **16,76 u³**. Al pasar a SVG 2D, la representación se dibujó y los controles de orientación modificaron el gráfico.
 - **Capturas renderizadas:** escritorio **1320×900** y móvil **390×844**, incluyendo el visor, el corte y los controles completos de la sección oblicua. La presentación de fórmulas de cono fue inspeccionada con KaTeX.
-- **Anchos adicionales:** pruebas DOM a **360 px** sin desbordamiento (scrollWidth=clientWidth=360; esfera en 2D con un control) y **768 px** sin desbordamiento (scrollWidth=clientWidth=768; pirámide con seis fórmulas y seis capas).
+- **Anchos adicionales:** pruebas DOM a **360 px** sin desbordamiento (scrollWidth=clientWidth=360; esfera en 2D con un control) y **768 px** sin desbordamiento (scrollWidth=clientWidth=768; pirámide con seis fórmulas y seis capas). Comprobaciones DOM adicionales a **1024 px** y **1440 px** confirmaron `scrollWidth=clientWidth` en el laboratorio.
 - **Producción:** el laboratorio se sirvió desde el dominio en Cloudflare. La rama de producción continúa siendo `main`; los commits activan despliegues de Pages.
 - **Regresiones añadidas:** seis pruebas matemáticas y de límites para el motor paramétrico, y una prueba para todas las escenas curriculares; quedan incorporadas a `regresiones.cjs`.
 
