@@ -112,13 +112,32 @@
       ' · Las respuestas se comparan con tolerancia numérica y admiten fracciones.</p>';
 
     var contenedor = document.createElement('div');
+    contenedor.className = 'lista-ejercicios';
     cont.appendChild(contenedor);
-    banco.forEach(function (e, i) {
-      contenedor.appendChild(Actividades.crearEjercicio(e, i, e.leccionId, actualizarMarcador, {
-        mostrarModulo: e.moduloNum,
-        tituloLeccion: e.leccionTitulo
-      }));
-    });
+
+    // Renderizar progresivamente para evitar 90 tarjetas simultáneas.
+    var cursor = 0;
+    var porPagina = 12;
+    var btnMas = document.createElement('button');
+    btnMas.type = 'button';
+    btnMas.className = 'btn secundario btn-mostrar-mas';
+    function mostrarSiguientes() {
+      var hasta = Math.min(cursor + porPagina, banco.length);
+      for (var i = cursor; i < hasta; i++) {
+        var e = banco[i];
+        contenedor.appendChild(Actividades.crearEjercicio(e, i, e.leccionId, actualizarMarcador, {
+          mostrarModulo: e.moduloNum,
+          tituloLeccion: e.leccionTitulo
+        }));
+      }
+      cursor = hasta;
+      btnMas.hidden = cursor >= banco.length;
+      btnMas.textContent = 'Mostrar más ejercicios (' + cursor + ' de ' + banco.length + ')';
+      btnMas.setAttribute('aria-label', 'Mostrar más ejercicios. Visibles ' + cursor + ' de ' + banco.length);
+    }
+    btnMas.addEventListener('click', mostrarSiguientes);
+    cont.appendChild(btnMas);
+    mostrarSiguientes();
   }
 
   function pintarRetos() {
