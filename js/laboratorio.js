@@ -144,8 +144,18 @@ function render3d() {
     lienzo.innerHTML='';
     api=new w.Visor3D(lienzo,ultimoModelo.spec,{capasOcultas:capasOcultas,reducido:!!(w.Progreso&&w.Progreso.prefiereMovimientoReducido()),vista:cam2d});
     api.setAutoGiro(false);
+    var canvas=api.renderer && api.renderer.domElement;
+    if(canvas) canvas.addEventListener('webglcontextlost',function(ev) {
+      ev.preventDefault();
+      if(modo!=='3d')return;
+      solicitud++;
+      try { if(api){api.destruir();api=null;} } catch(err){api=null;}
+      modo='2d';actualizarBotones();render2d();
+      mostrarError('Se interrumpió el contexto gráfico. Conservamos tu modelo en la vista 2D.');
+    },{once:true});
     if(!visible||document.hidden)api.pausar();
   }else if(api.spec!==ultimoModelo.spec){
+    api.capasOcultas=capasOcultas;
     api.actualizarSpec(ultimoModelo.spec);
   }
   lienzo.setAttribute('aria-label',ultimoModelo.spec.alt);estado.hidden=true;
