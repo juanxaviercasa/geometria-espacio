@@ -336,8 +336,11 @@
     this.grupo.add(esf);
     this._registrar('superficie', esf);
 
+    var temporal = new T.SphereGeometry(R * 1.001, 22, 14);
+    var alambre = new T.WireframeGeometry(temporal);
+    temporal.dispose();
     var wire = new T.LineSegments(
-      new T.WireframeGeometry(new T.SphereGeometry(R * 1.001, 22, 14)),
+      alambre,
       new T.LineBasicMaterial({ color: 0x8f96b0, transparent: true, opacity: 0.22 })
     );
     this.grupo.add(wire);
