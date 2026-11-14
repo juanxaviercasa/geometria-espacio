@@ -12,6 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/estilos.css?v=20261028-6">
+<link rel="stylesheet" href="css/fase1.css?v=20261114">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232c3c9e'/%3E%3Cpath d='M16 6l9 5v10l-9 5-9-5V11z' fill='none' stroke='%23fff' stroke-width='1.8'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="vendor/katex.min.css">
 <script defer src="vendor/katex.min.js"></script>
@@ -41,7 +42,7 @@
 
     <a class="insignia-progreso" href="index.html#ruta" aria-label="Progreso de la ruta">
       <span class="anillo" id="anillo-progreso" style="--p:0"><span>0%</span></span>
-      <span data-progreso-texto>0/14 lecciones</span>
+      <span data-progreso-texto>0/17 lecciones</span>
     </a>
 
     <button type="button" class="btn-movimiento" id="btn-movimiento" aria-pressed="false">
@@ -61,20 +62,19 @@
       <span class="pildora mod">Modo práctica</span>
       <span class="pildora">Pistas graduadas</span>
     </div>
-    <h1>Practica y resuelve retos</h1>
+    <h1>Practica con propósito</h1>
     <p class="objetivo">
-      Todos los ejercicios de la ruta en un solo lugar. Filtra por módulo, pide pistas si te
-      trabas y lee la explicación incluso cuando aciertes: ahí está el razonamiento que sirve
-      en el examen. Abajo encontrarás los retos de nivel admisión con revelado progresivo.
+      Elige un módulo y resuelve a tu ritmo. Recibe pistas progresivas, revisa el razonamiento y pon a prueba lo aprendido con retos de nivel admisión.
     </p>
   </header>
 
   <div class="practica-layout">
     <div>
       <div class="filtros" id="filtros" role="group" aria-label="Filtrar ejercicios por módulo"></div>
-      <div id="banco" aria-live="polite"></div>
+      <p class="banco-resumen" id="banco-resumen" role="status" aria-live="polite"></p>
+      <div id="banco"></div>
 
-      <section id="retos" style="margin-top:2.6rem" aria-labelledby="titulo-retos-banco">
+      <section id="retos" class="seccion-retos" aria-labelledby="titulo-retos-banco">
         <h2 id="titulo-retos-banco">Retos de nivel admisión</h2>
         <p class="parrafo" style="max-width:70ch">
           Problemas largos, del tipo que aparece al final de un examen de admisión. Cada uno tiene
@@ -101,7 +101,7 @@
 
       <div class="tarjeta-aside">
         <h3>Retos</h3>
-        <div class="marcador" style="grid-template-columns:1fr">
+        <div class="marcador marcador-simple">
           <div><strong data-puntos>0</strong><span>puntos acumulados</span></div>
         </div>
         <p style="font-size:.8rem;color:var(--ink-3);margin:.6rem 0 0">
@@ -154,8 +154,8 @@
 <script src="js/visor2d.js?v=20261028-4"></script>
 <script src="js/tutores.js?v=20261028-4"></script>
 <script src="js/avatar.js?v=20261028-3"></script>
-<script src="js/ui.js"></script>
+<script src="js/ui.js?v=20261114"></script>
 <script src="js/actividades.js"></script>
-<script src="js/practica.js"></script>
+<script src="js/practica.js?v=20261114"></script>
 </body>
 </html>
