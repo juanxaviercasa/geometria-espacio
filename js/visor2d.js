@@ -307,13 +307,15 @@
     /* ---------- esfera ---------- */
     if (spec.tipo === 'esfera') {
       var c = aPantalla([0, 0, 0]);
-      var borde = aPantalla([spec.radio, 0, 0]);
-      var r = Math.abs(borde.x - c.x);
-      svg.insertBefore(el('circle', {
-        cx: c.x.toFixed(1), cy: c.y.toFixed(1), r: r.toFixed(1),
-        fill: capa('superficie').color, 'fill-opacity': capa('superficie').opacidad || 0.1,
-        stroke: '#131829', 'stroke-width': 1.6, 'stroke-opacity': .55
-      }), gLineas);
+      // Silueta circular: el radio proyectado no depende de la orientación de cámara.
+      var r = spec.radio * (focal / eye.dist) * esc;
+      if (activa('superficie')) {
+        svg.insertBefore(el('circle', {
+          cx: c.x.toFixed(1), cy: c.y.toFixed(1), r: r.toFixed(1),
+          fill: capa('superficie').color, 'fill-opacity': capa('superficie').opacidad || 0.1,
+          stroke: '#131829', 'stroke-width': 1.6, 'stroke-opacity': .55
+        }), gLineas);
+      }
 
       // Círculos en tres planos para dar volumen
       [[1, 0, 0], [0, 1, 0], [0, 0, 1]].forEach(function (eje, idx) {
