@@ -143,6 +143,18 @@
     '</svg>'
   ].join('');
 
+  /* Cada SVG tiene IDs de gradiente únicos; varias figuras en una
+     lección no comparten referencias ni duplican identificadores DOM. */
+  var numeroSVG = 0;
+  function svgUnico() {
+    var prefijo = 'vertiz-' + (++numeroSVG) + '-';
+    return SVG
+      .replace(/id="(vCabello|vChaqueta|vDorado|vPedestal)"/g,
+        function(_,id){return 'id="' + prefijo + id + '"';})
+      .replace(/url\(#(vCabello|vChaqueta|vDorado|vPedestal)\)/g,
+        function(_,id){return 'url(#' + prefijo + id + ')';});
+  }
+
   /* ---------- Estado y preferencias de voz ---------- */
   var vozHabilitada = true;
   var velocidadVoz = 1.0;
@@ -404,7 +416,7 @@
         '<div class="avatar-escenario pos-centro">' +
           '<span class="avatar-suelo" aria-hidden="true"></span>' +
           '<span class="avatar-confeti" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>' +
-          '<div class="avatar-escena estado-' + estado + '">' + SVG + '</div>' +
+          '<div class="avatar-escena estado-' + estado + '">' + svgUnico() + '</div>' +
         '</div>' +
         '<div class="avatar-controles-fila">' +
           '<button type="button" class="btn-avatar-control btn-probar-voz" data-avatar-probar title="Escuchar voz de Vértiz">' +
@@ -583,7 +595,7 @@
       '<div class="avatar-escenario mini-escenario pos-centro">' +
         '<span class="avatar-suelo" aria-hidden="true"></span>' +
         '<span class="avatar-confeti" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>' +
-        '<div class="avatar-escena estado-senala">' + SVG + '</div>' +
+        '<div class="avatar-escena estado-senala">' + svgUnico() + '</div>' +
       '</div>';
 
     var escenario = wrap.querySelector('.avatar-escenario');
@@ -627,7 +639,7 @@
     TIPS: TIPS,
     ESTADOS: ESTADOS,
     POSICIONES: POSICIONES,
-    svg: function () { return SVG; },
+    svg: svgUnico,
     hablarVoz: hablarVoz,
     limpiarTextoParaVoz: limpiarTextoParaVoz,
     detenerVoz: detenerVoz,
