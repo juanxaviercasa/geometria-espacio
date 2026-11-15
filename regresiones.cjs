@@ -451,6 +451,7 @@ test('Fase 5: la vista 3D estática no conserva un bucle RAF permanente',()=>{
     renderer:{render(){renders++;}},escena:{},camara:{},
     capasOcultas:{},objetosCapa:{aristas:[{visible:true}]}
   });
+  visor._loop=proto._loop.bind(visor);
   visor._loop(110);
   assert.equal(renders,1);
   assert.equal(callbacks.length,0,'sin giro ni cambios no debe programar RAF');
