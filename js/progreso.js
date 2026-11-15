@@ -118,12 +118,13 @@
     return d;
   }
 
-  function registrarEjercicio(idLeccion, idEjercicio, correcto, pistasUsadas, contabilizarIntento) {
+  function registrarEjercicio(idLeccion, idEjercicio, correcto, pistasUsadas, contabilizarIntento, consultoSolucion) {
     var d = leer();
     var e = entrada(d, idLeccion);
     var prev = e.ejercicios[idEjercicio] || { ok: false, intentos: 0, pistas: 0 };
     if (contabilizarIntento !== false) prev.intentos = (prev.intentos || 0) + 1;
     if (typeof pistasUsadas === 'number') prev.pistas = Math.max(prev.pistas || 0, pistasUsadas);
+    if (consultoSolucion === true) prev.consultoSolucion = true;
     if (correcto) prev.ok = true;
     e.ejercicios[idEjercicio] = prev;
     e.actualizado = Date.now();
@@ -137,8 +138,13 @@
     var d = leer();
     var e = entrada(d, idLeccion);
     var prev = e.retos[idReto] || { revelado: 0, resuelto: false };
+    // Registrar 'lo resolví' solo antes de consultar el desarrollo completo (fase 2).
+    if (resuelto && (prev.revelado || 0) < 2 && revelado < 2) {
+      prev.resuelto = true;
+      prev.resueltoAntesDeConsulta = true;
+    }
     if (typeof revelado === 'number') prev.revelado = Math.max(prev.revelado || 0, revelado);
-    if (resuelto) prev.resuelto = true;
+    if (prev.revelado >= 2) prev.consultoSolucion = true;
     e.retos[idReto] = prev;
     e.actualizado = Date.now();
     recalculaPuntos(d);
@@ -151,10 +157,10 @@
     Object.keys(d.lecciones).forEach(function (k) {
       var l = d.lecciones[k];
       Object.keys(l.ejercicios || {}).forEach(function (ej) {
-        if (l.ejercicios[ej].ok) total += 10;
+        if (l.ejercicios[ej].ok) total += l.ejercicios[ej].consultoSolucion ? 5 : 10;
       });
       Object.keys(l.retos || {}).forEach(function (r) {
-        if (l.retos[r].resuelto) total += 25;
+        if (l.retos[r].resuelto && (l.retos[r].resueltoAntesDeConsulta || !l.retos[r].consultoSolucion)) total += 25;
       });
       if (l.estado === 'hecho') total += 15;
     });
@@ -182,7 +188,7 @@
     var ids = Object.keys(ejs);
     return {
       hechos: ids.filter(function (k) { return ejs[k].ok; }).length,
-      intentados: ids.length
+      intentados: ids.filter(function (k) { return (ejs[k].intentos || 0) > 0; }).length
     };
   }
 
