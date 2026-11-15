@@ -496,3 +496,18 @@ test('Fase 5: servidor local expone solo recursos publicados, no secretos',()=>{
   assert.ok(build.includes("'_headers'"));
   assert.ok(fs.readFileSync(path.join(__dirname,'_headers'),'utf8').includes('X-Content-Type-Options: nosniff'));
 });
+
+test('Fase 6: dos Vértiz no comparten los ID ni los gradientes del SVG',()=>{
+ const window={},context={window,localStorage:{getItem(){return null;},setItem(){}},document:{dispatchEvent(){}},CustomEvent:function(){}};
+ vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/avatar.js'),'utf8'),context);
+ const primero=window.Avatar.svg(),segundo=window.Avatar.svg();
+ const ids=[...primero.matchAll(/id="(vertiz-[^"]+)"/g)].map(m=>m[1]);
+ const ids2=[...segundo.matchAll(/id="(vertiz-[^"]+)"/g)].map(m=>m[1]);
+ assert.equal(ids.length,4);
+ assert.equal(ids2.length,4);
+ assert.equal(new Set(ids.concat(ids2)).size,8,'cada gradiente tiene nombre único');
+ for(const svg of [primero,segundo]){
+  const defs=new Set([...svg.matchAll(/id="([^"]+)"/g)].map(m=>m[1]));
+  for(const match of svg.matchAll(/url\\(#([^)]*)\\)/g))assert.ok(defs.has(match[1]),'referencia a gradiente existente');
+ }
+});
