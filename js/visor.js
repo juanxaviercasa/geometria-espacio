@@ -43,40 +43,21 @@
     } catch (e) {}
   }
 
-  /* Carga del visor 3D */
+  /* Carga real bajo demanda: Three.js no forma parte del HTML inicial. */
   function cargar3d() {
     if (modulo3d) return Promise.resolve(modulo3d);
-
-    if (global.Visor3D) {
-      if (global.soportaWebGL && !global.soportaWebGL()) {
-        fallo3d = true;
-        return Promise.reject(new Error('WebGL no disponible'));
-      }
-      modulo3d = global.Visor3D;
-      return Promise.resolve(modulo3d);
-    }
-
-    if (fallo3d) return Promise.reject(new Error('3D no disponible'));
+    if (fallo3d) return Promise.reject(new Error('WebGL no disponible'));
     if (cargando) return cargando;
-
-    cargando = Promise.resolve().then(function () {
-      return (typeof importScripts === 'function')
-        ? null
-        : import('./visor3d.js');
-    }).then(function (mod) {
-      var V = (mod && mod.Visor3D) || global.Visor3D;
-      var s = (mod && mod.soportaWebGL) || global.soportaWebGL;
-      if (!s || !s()) {
+    if (!global.Cargador3D || !global.Cargador3D.cargar)
+      return Promise.reject(new Error('Cargador 3D no disponible'));
+    cargando=global.Cargador3D.cargar().then(function(Clase){
+      if (!global.soportaWebGL || !global.soportaWebGL()) {
+        fallo3d=true;
         throw new Error('WebGL no disponible');
       }
-      modulo3d = V;
-      return modulo3d;
-    }).catch(function (err) {
-      fallo3d = true;
-      cargando = null;
-      throw err;
-    });
-
+      modulo3d=Clase;
+      return Clase;
+    }).catch(function(err){cargando=null;throw err;});
     return cargando;
   }
 
