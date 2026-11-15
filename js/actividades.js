@@ -137,6 +137,7 @@
         }
         var i = parseInt(elegida.value, 10);
         ok = !!ej.opciones[i].correcta;
+        if (!ok && ej.opciones[i].motivo) detalle = '<p class="retro-diagnostico"><strong>Qué revisar de esta alternativa:</strong> ' + ej.opciones[i].motivo + '</p>';
         art.querySelectorAll('.opcion').forEach(function (lab, k) {
           lab.classList.remove('incorrecta');
           if (ok) {
