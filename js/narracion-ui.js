@@ -14,15 +14,25 @@
    var estado=panel.querySelector('[data-mm-estado-voz]');
    if(!elegir||!velocidad||!btnPausa||!transcripcion||!estado)return null;
    var texto='',n=0,indiceActual=-1;
-   function voces() {
-     if(!avatar||!avatar.vocesDisponibles)return;
-     var lista=avatar.vocesDisponibles(),actual=avatar.getVozElegida?avatar.getVozElegida():'';
+   function voces(){
+     if(!avatar)return;
+     var motor=avatar.getMotorVoz?avatar.getMotorVoz():'nativa';
+     var preferida=avatar.getVozNeural?avatar.getVozNeural():'javier';
+     var lista=avatar.vocesDisponibles?avatar.vocesDisponibles():[];
      elegir.textContent='';
-     var auto=document.createElement('option');auto.value='';auto.textContent='Automática del navegador';elegir.appendChild(auto);
-     lista.forEach(function(v){
-       var opt=document.createElement('option');opt.value=v.id;opt.textContent=v.nombre+' ('+v.idioma+')';elegir.appendChild(opt);
+     if(global.VozNeural)global.VozNeural.voces.forEach(function(v){
+       var opt=document.createElement('option');
+       opt.value='neural:'+v.id;opt.textContent='Neural · '+v.nombre;elegir.appendChild(opt);
      });
-     elegir.value=lista.some(function(v){return v.id===actual;})?actual:'';
+     var auto=document.createElement('option');
+     auto.value='nativa:auto';auto.textContent='Voz del dispositivo (alternativa)';
+     elegir.appendChild(auto);
+     lista.forEach(function(v){
+       var o=document.createElement('option');o.value='nativa:'+v.id;
+       o.textContent='Dispositivo · '+v.nombre+' ('+v.idioma+')';elegir.appendChild(o);
+     });
+     var sel=motor==='neural'?'neural:'+preferida:'nativa:'+(avatar.getVozElegida?avatar.getVozElegida()||'auto':'auto');
+     elegir.value=[].some.call(elegir.options,function(o){return o.value===sel;})?sel:'nativa:auto';
    }
    function pintarPalabras(t) {
      texto=String(t||'');n++;indiceActual=-1;
@@ -57,7 +67,7 @@
      btnPausa.setAttribute('aria-label',propio && d.estado==='pausado'?'Reanudar narración':'Pausar narración');
    }
    var mensajes={
-     preparando:'Preparando locución…',
+     preparando:'Preparando la voz de la lección…',
      hablando:'Narrando este paso; el texto y la figura permanecen visibles.',
      pausado:'Locución pausada. Puedes leer el paso o reanudar.',
      finalizado:'Narración terminada. El texto y la figura siguen disponibles.',
@@ -78,8 +88,16 @@
      var d=ev.detail||{};if(d.origen===origen && d.texto===texto)seleccionarEn(d.charIndex);
    }
    elegir.addEventListener('change',function(){
-     if(avatar&&avatar.elegirVoz)avatar.elegirVoz(elegir.value);
-     estado.textContent='Voz elegida. Pulsa Repetir para escuchar el cambio.';
+     if(!avatar)return;
+     var valor=elegir.value;
+     if(valor.indexOf('neural:')===0){
+       if(avatar.setMotorVoz)avatar.setMotorVoz('neural');
+       if(avatar.setVozNeural)avatar.setVozNeural(valor.slice(7));
+     }else{
+       if(avatar.setMotorVoz)avatar.setMotorVoz('nativa');
+       if(avatar.elegirVoz)avatar.elegirVoz(valor==='nativa:auto'?'':valor.slice(7));
+     }
+     estado.textContent='Voz seleccionada. Pulsa Repetir para escucharla.';
    });
    velocidad.addEventListener('change',function(){
      if(avatar&&avatar.setVelocidadVoz)avatar.setVelocidadVoz(Number(velocidad.value));
