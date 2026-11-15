@@ -532,7 +532,7 @@ test('Fase 6: sitemap con 23 URL canónicas y todas las lecciones',()=>{
 });
 test('Fase 6: el ZIP y el build incluyen recursos y evidencias del cierre',()=>{
  const window={};
- vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/descarga.js'),'utf8'),{window,document:{readyState:'loading',addEventListener(){}}});
+ vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/descarga.js'),'utf8'),{window,TextEncoder,document:{readyState:'loading',addEventListener(){}}});
  const archivos=window.Descarga.ARCHIVOS;
  assert.equal(new Set(archivos).size,archivos.length,'no duplicar rutas en ZIP');
  ['robots.txt','sitemap.xml','FASE6-REPORTE-2026-11-14.md',
