@@ -1,0 +1,32 @@
+/* Fase 3 — jerarquía editorial y aprendizaje guiado */
+.guia-razonamiento{margin:1rem 0 2.2rem;padding:clamp(1rem,2vw,1.5rem);border:1px solid #d6d7f8;border-radius:18px;background:linear-gradient(145deg,#f4f3ff,#fff);box-shadow:0 10px 30px -27px #5443c2;scroll-margin-top:105px}
+.guia-razonamiento-cab h2{font-size:clamp(1.24rem,2vw,1.65rem);line-height:1.32;color:#272451;margin:.45rem 0}
+.guia-razonamiento-cab p{color:#4b5773;font-size:.95rem;line-height:1.65;margin:0}
+.guia-razonamiento-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.85rem;margin-top:1.2rem}
+.guia-razonamiento-grid>div{min-width:0;padding:1rem 1.05rem;border:1px solid #dfe2f4;border-radius:13px;background:#fff}
+.guia-orden{display:block;font-size:.77rem;text-transform:uppercase;letter-spacing:.07em;font-weight:800;color:#4f41b9;margin-bottom:.4rem}
+.guia-razonamiento-grid p{font-size:.92rem;color:#343c5b;line-height:1.6;margin:0;overflow-wrap:anywhere}
+.contenido .bloque h3{line-height:1.4}
+.contenido .bloque.teo .justifica{border-left:3px solid #7c79e7;padding-left:1rem}
+.contenido .bloque.teo .justifica>strong{display:block;font-size:.82rem;letter-spacing:.03em;margin-bottom:.5rem;color:#463ba6}
+.contenido .ejm-pasos li{padding-inline-start:.3rem}
+.contenido .ejm-respuesta{font-size:1.05rem}
+.contenido .m{min-width:0;max-width:100%;overflow-wrap:anywhere}
+.contenido .katex-display,.ejercicio .katex-display,.reto .katex-display{max-width:100%;overflow-x:auto;overflow-y:hidden;padding:.5rem .3rem;scrollbar-width:thin}
+.contenido .fml dl>div{min-width:0}
+.contenido .fml dt{min-width:0;white-space:normal;overflow-wrap:anywhere}
+.contenido .fml dd{min-width:0;overflow-wrap:break-word}
+.ejercicio .retro.no{background:#fff9f3;border-color:#ead8bc;color:#42382d}
+.ejercicio .retro.no .titulo-retro{font-weight:750}
+.ejercicio .retro.ok .titulo-retro{font-weight:750}
+.ejercicio .pistas{display:grid;gap:.6rem}
+.ejercicio .pista{line-height:1.65}
+.ejercicio .solucion-detalle{border-left:4px solid #8b83d7;background:#f7f7ff;border-radius:0 12px 12px 0;padding:1rem;max-width:100%;overflow-wrap:anywhere}
+.ejercicio .solucion-detalle>p{line-height:1.65}
+.reto .botones-reto button[disabled]{opacity:.7;cursor:not-allowed}
+.reto .respuesta-final{overflow-wrap:anywhere}
+.ejercicio .campo-respuesta>input{max-width:100%}
+.ejercicio .enunciado-ej{line-height:1.75}
+.bloque,.ejercicio,.reto{min-width:0}
+@media(max-width:900px){.guia-razonamiento-grid{grid-template-columns:1fr}.guia-razonamiento-grid>div{padding:.8rem .95rem}.contenido .katex-display{font-size:.93em}}
+@media(max-width:640px){.guia-razonamiento{margin:.75rem 0 1.5rem}.guia-razonamiento-cab h2{font-size:1.28rem}.guia-razonamiento-grid{gap:.6rem;margin-top:.85rem}.guia-razonamiento-grid p{font-size:.94rem}.contenido .fml dt{font-size:.91rem}.ejercicio .acciones-ej{flex-wrap:wrap}.ejercicio .acciones-ej .btn{min-height:44px}.contenido .katex-display{font-size:.88em}}
