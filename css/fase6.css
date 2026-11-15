@@ -1,0 +1,23 @@
+/* Fase 6 — correcciones medidas de accesibilidad y responsive. */
+body[data-pagina="verificacion"] main {
+  /* El contenido ancho permanece desplazable dentro de .tabla-envoltura. */
+  overflow-x: clip;
+}
+body[data-pagina="verificacion"] .tabla-envoltura {
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  -webkit-overflow-scrolling: touch;
+}
+.pildora { color: #343a59; font-size: .76rem; }
+.pildora.insignia { color: #6b4c08; }
+.ejm-cabeza .et,
+.err .bien .et { color: #125a50; font-size: .75rem; }
+.err .mal .et { color: #8b2935; font-size: .75rem; }
+.nota.ojo .icono-nota { color: #81410c; }
+.nota.dato .icono-nota { color: #125a50; }
+.migas a { display: inline-flex; align-items: center; min-height: 28px; }
+@media (max-width: 360px) {
+  .tabla-envoltura:focus-visible { outline: 3px solid #5747dd; outline-offset: 2px; }
+}
