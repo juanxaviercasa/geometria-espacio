@@ -86,13 +86,15 @@
 **Informe técnico:** [FASE5-REPORTE-2026-11-14.md](FASE5-REPORTE-2026-11-14.md). **Nota:** no se consideran certificados aún el build Node, los Core Web Vitals de campo ni la matriz de navegadores.
 
 ## Fase 6 — Matriz de QA y cierre
-- [ ] Desktop: 1440/1280 px; tablet 1024/768 px; móviles 390/360 px, orientación vertical y horizontal.
-- [ ] Chrome, Firefox y Safari compatibles; WebGL con y sin soporte y modo 2D.
-- [ ] Keyboard-only, zoom 200%, lector de pantalla, movimiento reducido y voz desactivada.
-- [ ] Recorrido completo: portada → 12 módulos → 17 lecciones → ejercicios → pistas → retos → progreso → regreso al siguiente estudio.
-- [ ] Validación geométrica de todos los identificadores y cálculo de cada opción correcta.
-- [ ] Revisión antes/después con capturas, lista de incidencias con gravedad y pruebas de corrección.
-- [ ] Cierre solo al documentar qué se probó realmente, con commit, resultado y limitaciones.
+- [x] Probar siete páginas a 1440/1280/1024/768/390/360/320 px y 17 lecciones a 320/390/768; corregir único desbordamiento. Orientación física horizontal queda fuera del navegador remoto.
+- [x] Verificar DOM en Chromium con WebGL real, fallos simulados WebGL y fallback SVG 2D. Firefox y Safari en hardware real requieren validación externa.
+- [x] Comprobar menú móvil, foco y PageDown, transcripción con voz desactivada, atributos ARIA y CSS de movimiento reducido. Zoom físico 200%, NVDA, VoiceOver y TalkBack permanecen como certificación externa.
+- [x] Verificar portada (12 módulos/17 enlaces), todas las lecciones, 107 ejercicios y 18 retos por DOM; probar respuestas errónea/correcta, pistas, progreso y controles de reto; se preservó navegación.
+- [x] Confirmar 174/174 verificaciones del curso, 64 recálculos numéricos, 18 comprobadores de retos y diagnóstico de 129 distractores; 17 lecciones sin duplicados ni errores KaTeX.
+- [x] Guardar dos capturas reales a 320 px de la tabla y registro de incidencias clasificado con valores antes/después.
+- [x] Publicar informe de Fase 6 y matriz JSON, distinguir Chromium y pruebas aisladas de certificación física externa; activar pruebas y build en Cloudflare.
+
+**Informe de cierre:** [FASE6-REPORTE-2026-11-14.md](FASE6-REPORTE-2026-11-14.md) y [matriz QA](QA-FASE6/matriz.json). No atribuir certificación física Safari/Firefox/lectores de pantalla sin dispositivos reales.
 
 ## Registro de ejecución (esta intervención)
 Cambios guardados directamente en `main` en una serie de commits pequeños: validación numérica, puntuación de ejercicios y retos, seguridad básica del servidor local, semántica del catálogo, estructura del hero, mejoras CSS, contador inicial y pruebas Node ampliadas. **No se afirma que el despliegue se haya actualizado ni que las pruebas se hayan ejecutado automáticamente.** Se requiere `npm test`, `npm run build` y auditoría visual del sitio desplegado antes de dar por cerrada la fase.

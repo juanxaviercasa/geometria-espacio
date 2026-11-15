@@ -1,0 +1,399 @@
+{
+  "fecha": "2026-11-14",
+  "motor": "Cloudflare Browser Rendering, motor Chromium",
+  "caracter": "Pruebas automatizadas de DOM y comportamiento; no reemplazan dispositivos físicos",
+  "paginas": [
+    {
+      "ruta": "/",
+      "anchosProbadosPx": [
+        320,
+        360,
+        390,
+        768,
+        1024,
+        1280,
+        1440
+      ],
+      "desbordamientoHorizontal": false
+    },
+    {
+      "ruta": "/leccion?id=m6l1",
+      "anchosProbadosPx": [
+        320,
+        360,
+        390,
+        768,
+        1024,
+        1280,
+        1440
+      ],
+      "desbordamientoHorizontal": false
+    },
+    {
+      "ruta": "/practica",
+      "anchosProbadosPx": [
+        320,
+        360,
+        390,
+        768,
+        1024,
+        1280,
+        1440
+      ],
+      "desbordamientoHorizontal": false
+    },
+    {
+      "ruta": "/laboratorio",
+      "anchosProbadosPx": [
+        320,
+        360,
+        390,
+        768,
+        1024,
+        1280,
+        1440
+      ],
+      "desbordamientoHorizontal": false
+    },
+    {
+      "ruta": "/acerca",
+      "anchosProbadosPx": [
+        320,
+        360,
+        390,
+        768,
+        1024,
+        1280,
+        1440
+      ],
+      "desbordamientoHorizontal": false
+    },
+    {
+      "ruta": "/descarga",
+      "anchosProbadosPx": [
+        320,
+        360,
+        390,
+        768,
+        1024,
+        1280,
+        1440
+      ],
+      "desbordamientoHorizontal": false
+    },
+    {
+      "ruta": "/verificacion",
+      "anchosProbadosPx": [
+        320,
+        360,
+        390,
+        768,
+        1024,
+        1280,
+        1440
+      ],
+      "desbordamientoHorizontal": false
+    }
+  ],
+  "excepcionesCorregidas": [
+    {
+      "ruta": "/verificacion",
+      "anchoPx": 320,
+      "desbordamientoAnteriorPx": 329,
+      "desbordamientoPosteriorPx": 320,
+      "tablaConScrollPropio": true
+    }
+  ],
+  "lecciones": [
+    {
+      "id": "m1l1",
+      "ejercicios": 6,
+      "retos": 1,
+      "figuras": 1,
+      "katexRenderizados": 2,
+      "erroresKatex": 0,
+      "idsDuplicados": 0,
+      "referenciasAriaInvalidas": 0,
+      "overflowPx": [],
+      "anchosProbadosPx": [
+        320,
+        390,
+        768
+      ]
+    },
+    {
+      "id": "m1l2",
+      "ejercicios": 6,
+      "retos": 1,
+      "figuras": 1,
+      "katexRenderizados": 53,
+      "erroresKatex": 0,
+      "idsDuplicados": 0,
+      "referenciasAriaInvalidas": 0,
+      "overflowPx": [],
+      "anchosProbadosPx": [
+        320,
+        390,
+        768
+      ]
+    },
+    {
+      "id": "m2l1",
+      "ejercicios": 6,
+      "retos": 1,
+      "figuras": 1,
+      "katexRenderizados": 38,
+      "erroresKatex": 0,
+      "idsDuplicados": 0,
+      "referenciasAriaInvalidas": 0,
+      "overflowPx": [],
+      "anchosProbadosPx": [
+        320,
+        390,
+        768
+      ]
+    },
+    {
+      "id": "m2l2",
+      "ejercicios": 6,
+      "retos": 1,
+      "figuras": 1,
+      "katexRenderizados": 66,
+      "erroresKatex": 0,
+      "idsDuplicados": 0,
+      "referenciasAriaInvalidas": 0,
+      "overflowPx": [],
+      "anchosProbadosPx": [
+        320,
+        390,
+        768
+      ]
+    },
+    {
+      "id": "m3l1",
+      "ejercicios": 6,
+      "retos": 1,
+      "figuras": 1,
+      "katexRenderizados": 46,
+      "erroresKatex": 0,
+      "idsDuplicados": 0,
+      "referenciasAriaInvalidas": 0,
+      "overflowPx": [],
+      "anchosProbadosPx": [
+        320,
+        390,
+        768
+      ]
+    },
+    {
+      "id": "m3l2",
+      "ejercicios": 6,
+      "retos": 1,
+      "figuras": 1,
+      "katexRenderizados": 30,
+      "erroresKatex": 0,
+      "idsDuplicados": 0,
+      "referenciasAriaInvalidas": 0,
+      "overflowPx": [],
+      "anchosProbadosPx": [
+        320,
+        390,
+        768
+      ]
+    },
+    {
+      "id": "m4l1",
+      "ejercicios": 6,
+      "retos": 1,
+      "figuras": 1,
+      "katexRenderizados": 31,
+      "erroresKatex": 0,
+      "idsDuplicados": 0,
+      "referenciasAriaInvalidas": 0,
+      "overflowPx": [],
+      "anchosProbadosPx": [
+        320,
+        390,
+        768
+      ]
+    },
+    {
+      "id": "m4l2",
+      "ejercicios": 6,
+      "retos": 1,
+      "figuras": 1,
+      "katexRenderizados": 40,
+      "erroresKatex": 0,
+      "idsDuplicados": 0,
+      "referenciasAriaInvalidas": 0,
+      "overflowPx": [],
+      "anchosProbadosPx": [
+        320,
+        390,
+        768
+      ]
+    },
+    {
+      "id": "m5l1",
+      "ejercicios": 6,
+      "retos": 1,
+      "figuras": 1,
+      "katexRenderizados": 25,
+      "erroresKatex": 0,
+      "idsDuplicados": 0,
+      "referenciasAriaInvalidas": 0,
+      "overflowPx": [],
+      "anchosProbadosPx": [
+        320,
+        390,
+        768
+      ]
+    },
+    {
+      "id": "m6l1",
+      "ejercicios": 9,
+      "retos": 2,
+      "figuras": 3,
+      "katexRenderizados": 127,
+      "erroresKatex": 0,
+      "idsDuplicados": 0,
+      "referenciasAriaInvalidas": 0,
+      "overflowPx": [],
+      "anchosProbadosPx": [
+        320,
+        390,
+        768
+      ]
+    },
+    {
+      "id": "m6l2",
+      "ejercicios": 6,
+      "retos": 1,
+      "figuras": 1,
+      "katexRenderizados": 29,
+      "erroresKatex": 0,
+      "idsDuplicados": 0,
+      "referenciasAriaInvalidas": 0,
+      "overflowPx": [],
+      "anchosProbadosPx": [
+        320,
+        390,
+        768
+      ]
+    },
+    {
+      "id": "m7l1",
+      "ejercicios": 7,
+      "retos": 1,
+      "figuras": 1,
+      "katexRenderizados": 79,
+      "erroresKatex": 0,
+      "idsDuplicados": 0,
+      "referenciasAriaInvalidas": 0,
+      "overflowPx": [],
+      "anchosProbadosPx": [
+        320,
+        390,
+        768
+      ]
+    },
+    {
+      "id": "m8l1",
+      "ejercicios": 7,
+      "retos": 1,
+      "figuras": 3,
+      "katexRenderizados": 58,
+      "erroresKatex": 0,
+      "idsDuplicados": 0,
+      "referenciasAriaInvalidas": 0,
+      "overflowPx": [],
+      "anchosProbadosPx": [
+        320,
+        390,
+        768
+      ]
+    },
+    {
+      "id": "m9l1",
+      "ejercicios": 6,
+      "retos": 1,
+      "figuras": 2,
+      "katexRenderizados": 51,
+      "erroresKatex": 0,
+      "idsDuplicados": 0,
+      "referenciasAriaInvalidas": 0,
+      "overflowPx": [],
+      "anchosProbadosPx": [
+        320,
+        390,
+        768
+      ]
+    },
+    {
+      "id": "m10l1",
+      "ejercicios": 6,
+      "retos": 1,
+      "figuras": 2,
+      "katexRenderizados": 50,
+      "erroresKatex": 0,
+      "idsDuplicados": 0,
+      "referenciasAriaInvalidas": 0,
+      "overflowPx": [],
+      "anchosProbadosPx": [
+        320,
+        390,
+        768
+      ]
+    },
+    {
+      "id": "m11l1",
+      "ejercicios": 6,
+      "retos": 1,
+      "figuras": 0,
+      "katexRenderizados": 31,
+      "erroresKatex": 0,
+      "idsDuplicados": 0,
+      "referenciasAriaInvalidas": 0,
+      "overflowPx": [],
+      "anchosProbadosPx": [
+        320,
+        390,
+        768
+      ]
+    },
+    {
+      "id": "m12l1",
+      "ejercicios": 6,
+      "retos": 1,
+      "figuras": 0,
+      "katexRenderizados": 16,
+      "erroresKatex": 0,
+      "idsDuplicados": 0,
+      "referenciasAriaInvalidas": 0,
+      "overflowPx": [],
+      "anchosProbadosPx": [
+        320,
+        390,
+        768
+      ]
+    }
+  ],
+  "validaciones": {
+    "paginas": 7,
+    "combinacionesPaginas": 49,
+    "lecciones": 17,
+    "combinacionesLecciones": 51,
+    "ejercicios": 107,
+    "retos": 18,
+    "figurasEnLecciones": 21,
+    "autocomprobacionesPasadas": 174,
+    "autocomprobacionesTotales": 174,
+    "headZipOkAntesDeUltimosArchivos": 77
+  },
+  "notas": [
+    "La primera matriz de 49 combinaciones detectó un desbordamiento en /verificacion a 320 px; se corrigió y se volvió a verificar el ancho exacto.",
+    "Los contadores de KaTeX se observaron tras dos ciclos de renderizado para evitar falsos ceros por MutationObserver.",
+    "El motor Chromium del navegador remoto no certifica Safari, Firefox, lectores de pantalla ni hardware móvil real.",
+    "No se atribuyen puntuaciones Core Web Vitals de campo a estas pruebas sintéticas."
+  ]
+}

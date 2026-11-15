@@ -508,6 +508,42 @@ test('Fase 6: dos Vértiz no comparten los ID ni los gradientes del SVG',()=>{
  assert.equal(new Set(ids.concat(ids2)).size,8,'cada gradiente tiene nombre único');
  for(const svg of [primero,segundo]){
   const defs=new Set([...svg.matchAll(/id="([^"]+)"/g)].map(m=>m[1]));
-  for(const match of svg.matchAll(/url\\(#([^)]*)\\)/g))assert.ok(defs.has(match[1]),'referencia a gradiente existente');
+  for(const match of svg.matchAll(/url\(#([^)]+)\)/g))assert.ok(defs.has(match[1]),'referencia a gradiente existente');
  }
+});
+
+test('Fase 6: sitemap con 23 URL canónicas y todas las lecciones',()=>{
+ const xml=fs.readFileSync(path.join(__dirname,'sitemap.xml'),'utf8');
+ const urls=[...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(x=>x[1]);
+ assert.equal(urls.length,23);
+ assert.equal(new Set(urls).size,23);
+ assert.ok(urls.includes('https://geometriaespacio.sistemazenit.com/'));
+ const datos=JSON.parse(fs.readFileSync(path.join(__dirname,'QA-FASE6/matriz.json'),'utf8'));
+ assert.equal(datos.lecciones.length,17);
+ datos.lecciones.forEach(leccion=>{
+  assert.ok(urls.includes('https://geometriaespacio.sistemazenit.com/leccion?id='+leccion.id));
+  assert.equal(leccion.erroresKatex,0);
+  assert.equal(leccion.idsDuplicados,0);
+ });
+ assert.equal(datos.lecciones.reduce((s,x)=>s+x.ejercicios,0),107);
+ assert.equal(datos.lecciones.reduce((s,x)=>s+x.retos,0),18);
+ assert.equal(datos.paginas.length,7);
+ assert.equal(datos.validaciones.combinacionesPaginas,49);
+});
+test('Fase 6: el ZIP y el build incluyen recursos y evidencias del cierre',()=>{
+ const window={};
+ vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/descarga.js'),'utf8'),{window});
+ const archivos=window.Descarga.ARCHIVOS;
+ assert.equal(new Set(archivos).size,archivos.length,'no duplicar rutas en ZIP');
+ ['robots.txt','sitemap.xml','FASE6-REPORTE-2026-11-14.md',
+  'css/fase6.css','QA-FASE6/matriz.json','QA-FASE6/registro-incidencias.md',
+  'QA-FASE6/verificacion-320-antes.jpg','QA-FASE6/verificacion-320-despues.jpg']
+  .forEach(p=>assert.ok(archivos.includes(p),'falta recurso '+p));
+ const mini=window.Descarga.construirZip([{nombre:'prueba.txt',datos:Uint8Array.from([65,66,67])}]);
+ assert.equal(mini.entradas,1);
+ assert.equal(mini.bytes[0],0x50);assert.equal(mini.bytes[1],0x4b);
+ assert.equal(mini.bytes[2],3);assert.equal(mini.bytes[3],4);
+ assert.equal(window.Descarga.crc32(Uint8Array.from([65,66,67])),2743272264);
+ const build=fs.readFileSync(path.join(__dirname,'build.js'),'utf8');
+ ['QA-FASE6','sitemap.xml','robots.txt','FASE6-REPORTE-2026-11-14.md'].forEach(x=>assert.ok(build.includes("'"+x+"'")));
 });

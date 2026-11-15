@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://geometriaespacio.sistemazenit.com/sitemap.xml
