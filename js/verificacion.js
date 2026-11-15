@@ -599,6 +599,21 @@
       return {ok:!!d&&d.total===43&&d.esperados===43&&conMotivo===129,
         detalle:conMotivo+' de 129 alternativas incorrectas con diagnóstico específico'};
     });
+    var retoAud=window.AuditoriaRetos;
+    var retosInforme=retoAud&&retoAud.verificar(Contenido);
+    comprobar('Retos verificados', 'Cobertura de los 18 problemas tipo UNI', function(){
+      return {ok:!!retosInforme && retosInforme.correcto && retosInforme.total===18 && retosInforme.comprobados===18,
+        detalle:retosInforme ? retosInforme.comprobados+' retos verificados · '+retosInforme.errores.length+' incidencias' : 'Motor de retos no disponible'};
+    });
+    if(retoAud){
+      Object.keys(retoAud.casos).forEach(function(id){
+        comprobar('Retos verificados', id+' — relación geométrica contrastada', function(){
+          var ok=false,detalle='Verificación matemática independiente';
+          try{ok=!!retoAud.casos[id]();}catch(e){detalle=String(e);}
+          return{ok:ok,detalle:detalle};
+        });
+      });
+    }
     var banco=Contenido.bancoPractica(), mapa={};
     banco.forEach(function(e){mapa[e.id]=e;});
     Object.keys(aud.claves).forEach(function(id){
