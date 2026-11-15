@@ -32,7 +32,7 @@
         return '<div class="bloque" id="' + slug(b.texto) + '"><h2>' + b.texto + '</h2></div>';
 
       case 'parrafo':
-        return '<p class="parrafo">' + b.texto + '</p>';
+        return '<p class="parrafo"' + (b.indice ? ' id="' + slug(b.indice) + '"' : '') + '>' + b.texto + '</p>';
 
       case 'definicion':
         return '<div class="bloque def" id="' + slug(b.indice || b.titulo) + '">' +
@@ -57,7 +57,7 @@
 
       case 'nota':
         var icono = b.variante === 'ojo' ? '!' : b.variante === 'dato' ? 'i' : '·';
-        return '<div class="bloque nota ' + (b.variante || '') + '">' +
+        return '<div class="bloque nota ' + (b.variante || '') + '"' + (b.indice ? ' id="' + slug(b.indice) + '"' : '') + '>' +
           '<span class="icono-nota" aria-hidden="true">' + icono + '</span>' +
           '<div>' + b.html + '</div></div>';
 
@@ -270,7 +270,21 @@
       return bloqueHTML(b);
     }).join('');
 
-    contenido.innerHTML = '<div id="sec-inicio"></div>' + HTML;
+    // Andamiaje formativo: qué afirmar, cómo verificar y dónde deja de aplicar.
+    var notas = global.GuiaAcademica && global.GuiaAcademica.obtener(leccion.id);
+    var secGuia = notas
+      ? '<section class="guia-razonamiento" id="sec-ruta-razonamiento" aria-labelledby="titulo-ruta-razonamiento">' +
+          '<div class="guia-razonamiento-cab"><span class="eyebrow">MÉTODO ZÉNIT</span>' +
+          '<h2 id="titulo-ruta-razonamiento">Antes de resolver: tres preguntas esenciales</h2>' +
+          '<p>Identifica las hipótesis, demuestra lo que afirmas y comprueba el alcance del resultado.</p></div>' +
+          '<div class="guia-razonamiento-grid">' +
+          '<div><span class="guia-orden">1 · Principio</span><p>' + esc(notas.principio) + '</p></div>' +
+          '<div><span class="guia-orden">2 · Comprobación</span><p>' + esc(notas.verificacion) + '</p></div>' +
+          '<div><span class="guia-orden">3 · Cuándo no aplicar</span><p>' + esc(notas.limite) + '</p></div>' +
+          '</div></section>'
+      : '';
+    if (notas) indice.unshift({ id: 'sec-ruta-razonamiento', texto: 'Ruta de razonamiento' });
+    contenido.innerHTML = '<div id="sec-inicio"></div>' + secGuia + HTML;
 
     /* figuras */
     contenido.querySelectorAll('[data-figura]').forEach(function (c) {
@@ -289,7 +303,7 @@
       sec.className = 'bloque';
       sec.id = 'sec-practica';
       sec.innerHTML = '<h2>Práctica guiada</h2>' +
-        '<p class="parrafo" style="max-width:none">Cada ejercicio valida tu cálculo o tu elección. Si no sale, pide una pista: la primera orienta el planteamiento y la segunda da el paso intermedio. La retroalimentación explica por qué la opción incorrecta falla.</p>';
+        '<p class="parrafo" style="max-width:none">Cada ejercicio valida tu cálculo o tu elección. Si no sale, pide una pista: la primera orienta el planteamiento y la segunda da el paso intermedio. Si te equivocas, podrás intentar de nuevo sin que aparezca inmediatamente la solución. Consultarla se registra como ayuda.</p>';
       contenido.appendChild(sec);
       ejercicios.forEach(function (ej, i) {
         contenido.appendChild(
@@ -305,7 +319,7 @@
       sec2.className = 'bloque';
       sec2.id = 'sec-retos';
       sec2.innerHTML = '<h2>Retos de nivel admisión</h2>' +
-        '<p class="parrafo" style="max-width:none">Primero la estrategia (sin cálculos), después el desarrollo completo y al final la respuesta. Intenta cada fase por tu cuenta antes de revelar la siguiente.</p>';
+        '<p class="parrafo" style="max-width:none">Primero intenta resolver sin ayuda. Puedes consultar la estrategia y después el desarrollo; ver el desarrollo completo impide registrar ese reto como resuelto de forma independiente.</p>';
       contenido.appendChild(sec2);
       retos.forEach(function (r, i) {
         contenido.appendChild(Actividades.crearReto(r, i, leccion.id, actualizarAvance));
