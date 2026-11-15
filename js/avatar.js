@@ -545,6 +545,7 @@
     function actualizarBotonVoz() {
       if (!botonVoz) return;
       botonVoz.className = 'btn-avatar-control btn-toggle-voz ' + (vozHabilitada ? 'voz-on' : 'voz-off');
+      botonVoz.setAttribute('aria-pressed',vozHabilitada?'true':'false');
       var ico = botonVoz.querySelector('.voz-ico');
       if (ico) ico.textContent = vozHabilitada ? '🎙️ Voz ON' : '🔇 Silencio';
     }
