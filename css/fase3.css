@@ -30,3 +30,6 @@
 .bloque,.ejercicio,.reto{min-width:0}
 @media(max-width:900px){.guia-razonamiento-grid{grid-template-columns:1fr}.guia-razonamiento-grid>div{padding:.8rem .95rem}.contenido .katex-display{font-size:.93em}}
 @media(max-width:640px){.guia-razonamiento{margin:.75rem 0 1.5rem}.guia-razonamiento-cab h2{font-size:1.28rem}.guia-razonamiento-grid{gap:.6rem;margin-top:.85rem}.guia-razonamiento-grid p{font-size:.94rem}.contenido .fml dt{font-size:.91rem}.ejercicio .acciones-ej{flex-wrap:wrap}.ejercicio .acciones-ej .btn{min-height:44px}.contenido .katex-display{font-size:.88em}}
+
+.ejercicio .retro-diagnostico{padding:.72rem .85rem;border-left:3px solid #bb7a33;background:#fff9ef;border-radius:0 9px 9px 0;color:#473c30;line-height:1.6}
+.ejercicio .retro-diagnostico strong{color:#714718}
