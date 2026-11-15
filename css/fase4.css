@@ -1,0 +1,62 @@
+/* Fase 4: Vértiz, lecturas matemáticas y accesibilidad.
+   Los controles nunca invaden el lienzo ni cubren fórmulas. */
+.figura-col-maestro .mm-preferencias-voz{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.65rem;margin-top:.75rem;
+}
+.figura-col-maestro .mm-preferencias-voz label{
+  display:grid;gap:.26rem;min-width:0;font-size:.78rem;font-weight:720;line-height:1.4;color:#34385f;
+}
+.figura-col-maestro .mm-preferencias-voz select{
+  display:block;width:100%;min-width:0;max-width:100%;
+  padding:.54rem .5rem;border:1px solid #b6bed9;border-radius:9px;
+  background:#fff;color:#242647;font:inherit;font-size:.83rem;min-height:43px;
+}
+.figura-col-maestro .mm-controles-audio{flex-wrap:wrap;gap:.45rem}
+.figura-col-maestro .btn-mm-chip-voz{min-height:44px;padding:.55rem .7rem}
+.figura-col-maestro .btn-mm-chip-voz:disabled{opacity:.65;cursor:not-allowed}
+.figura-col-maestro .mm-dialogo-texto{
+  font-size:clamp(.94rem,1vw,1.03rem);line-height:1.76;overflow-wrap:anywhere;
+}
+.figura-col-maestro .mm-dialogo-texto .katex{max-width:100%}
+.figura-col-maestro .mm-transcripcion{
+  margin:.9rem 0 .3rem;padding:.7rem .8rem;
+  background:#f6f7ff;border:1px solid #dce1f6;border-radius:11px;
+  color:#394366;font-size:.87rem;line-height:1.8;
+  overflow-wrap:anywhere;hyphens:auto;
+}
+.figura-col-maestro .mm-transcripcion:empty{display:none}
+.figura-col-maestro .mm-transcripcion span{border-radius:4px;padding:.08rem .02rem}
+.figura-col-maestro .mm-transcripcion .mm-palabra-actual{
+  color:#24224a;background:#f9dc86;box-shadow:0 0 0 3px #f9dc86;font-weight:750;
+}
+.figura-col-maestro .mm-estado-narracion{
+  margin:.65rem 0 0;padding:.55rem .7rem;
+  font-size:.81rem;line-height:1.5;border-radius:9px;
+  color:#37465d;background:#eef3fc;border-left:3px solid #5e6fca;overflow-wrap:anywhere;
+}
+.figura-col-maestro .mm-punto-paso[aria-current="step"],
+.figura-col-maestro .mm-guion-item[aria-current="step"]{
+  outline:2px solid #4f46ae;outline-offset:2px;
+}
+.figura-col-maestro .mm-dialogo-header{
+  align-items:flex-start;flex-wrap:wrap;gap:.55rem;
+}
+.figura-col-maestro .mm-capa-foco{max-width:100%;overflow-wrap:anywhere;white-space:normal}
+.figura-col-maestro .mm-acciones-fila button{min-height:45px}
+.figura-col-maestro :is(button,select):focus-visible{
+  outline:3px solid #5747dd;outline-offset:3px;
+}
+.figura .guia-foco{pointer-events:none}
+.figura .guia-foco-etiqueta{max-width:min(250px,62vw);overflow-wrap:anywhere}
+@media (max-width:600px){
+  .figura-col-maestro .mm-preferencias-voz{grid-template-columns:1fr}
+  .figura-col-maestro .mm-controles-audio{display:flex}
+  .figura-col-maestro .mm-controles-audio .btn-mm-chip-voz{flex:1 1 30%;font-size:.83rem}
+  .figura-col-maestro .mm-estado-narracion{font-size:.84rem}
+}
+@media (prefers-reduced-motion:reduce) {
+  .figura-col-maestro .mm-transcripcion span,
+  .figura-col-maestro .mm-guion-item,
+  .figura-col-maestro .mm-punto-paso{transition:none!important;animation:none!important}
+  .figura .guia-foco-punto{animation:none!important}
+}
