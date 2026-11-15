@@ -1,3 +1,325 @@
+/*
+ * Rediseño visual transversal — Geometría del espacio
+ * Capa de presentación: no cambia IDs, estados ni contratos JavaScript.
+ */
+:root {
+  --paper:#f6f7fb; --surface:#fff; --surface-2:#f0f2fb; --surface-3:#e4e8f4;
+  --ink:#17203b; --ink-2:#45516f; --ink-3:#6d7894; --line:#dce2f0; --line-2:#b9c4dc;
+  --primary:#4a43c7; --primary-2:#665fe2; --primary-soft:#efefff; --primary-ink:#302a88;
+  --accent:#087f9b; --accent-soft:#e8f8fb; --teal:#13846f; --teal-soft:#e9f8f3;
+  --gold:#ad6a17; --max:1380px; --radius:16px; --radius-sm:11px;
+  --shadow-1:0 8px 24px rgba(31,38,78,.06); --shadow-2:0 24px 60px rgba(40,45,106,.13);
+}
+body { background:var(--paper); color:var(--ink); }
+body::before { background-image:radial-gradient(circle at 5% 0%,rgba(98,91,226,.09),transparent 32%),radial-gradient(circle at 96% 12%,rgba(12,162,184,.08),transparent 28%),linear-gradient(135deg,rgba(255,255,255,.35),transparent 55%); }
+.wrap { width:min(calc(100% - 3rem),var(--max)); }
+.sitio-head { background:rgba(250,251,255,.9); border-bottom-color:rgba(185,196,220,.7); }
+.sitio-head .wrap.sitio-head-inner,.sitio-head .wrap:not(.sitio-head-inner) { min-height:78px; padding-block:.7rem; }
+.marca { gap:.75rem; } .marca svg { width:42px; height:42px; }
+.marca span small { color:var(--ink-3); letter-spacing:.12em; } .marca span b { color:var(--ink); font-size:1.04rem; }
+.nav-principal a { color:var(--ink-2); border-radius:10px; }
+.nav-principal a:hover,.nav-principal a[aria-current="page"] { background:var(--primary-soft); color:var(--primary-ink); }
+.insignia-progreso { box-shadow:0 2px 8px rgba(49,42,136,.06); }
+h1,h2,h3,h4 { color:var(--ink); } .seccion-cabeza { max-width:70ch; }
+.seccion-cabeza h2 { letter-spacing:-.04em; } .seccion-cabeza p,.contenido,.prosa { color:var(--ink-2); }
+.hero { padding:clamp(2.4rem,5vw,5.5rem) 0 clamp(2.3rem,4vw,4.5rem); background:linear-gradient(180deg,rgba(255,255,255,.42),rgba(239,241,252,.2)); }
+.hero .wrap { grid-template-columns:minmax(360px,.78fr) minmax(0,1.22fr); gap:clamp(2rem,4vw,5rem); align-items:center; }
+.hero h1 { font-size:clamp(2.8rem,5vw,5rem); line-height:1.02; max-width:12ch; }
+.hero .entradilla { font-size:clamp(1.08rem,1.55vw,1.24rem); max-width:48ch; line-height:1.7; }
+.eyebrow { color:var(--primary-ink); background:var(--primary-soft); border-color:#d4d1ff; }
+.hero-acciones { margin-top:1.75rem; gap:.8rem; } .hero-acciones .btn { min-height:50px; }
+.hero-datos { grid-template-columns:repeat(4,minmax(0,1fr)); gap:.6rem; margin-top:2.1rem; padding-top:1.4rem; }
+.hero-datos div { min-height:82px; padding:.75rem .8rem; background:rgba(255,255,255,.68); }
+.hero-datos strong { font-size:1.6rem; }
+.hero-figura { border-radius:22px; box-shadow:var(--shadow-2); background:rgba(255,255,255,.92); }
+.hero-figura > svg { min-height:390px; object-fit:contain; padding:1.2rem; }
+.hero-figura .figura-pie-referencia { font-size:.9rem; padding:.8rem 1.15rem; }
+.seccion { padding-block:clamp(3rem,6vw,6rem); } .seccion:nth-of-type(even) { background:rgba(255,255,255,.52); }
+.continuar { border:1px solid #d7d4fc; box-shadow:var(--shadow-1); padding:1.35rem 1.5rem; }
+.ruta { gap:1rem; } .modulo { border-radius:var(--radius); box-shadow:var(--shadow-1); }
+.modulo-cabeza { padding:1.25rem 1.35rem; } .modulo-titulo { font-size:1.1rem; } .modulo-desc { font-size:.93rem; }
+.modulo-cuerpo { padding:.55rem .9rem .9rem; background:#fcfcff; } .leccion-fila { padding:1rem .75rem; }
+.leccion-fila:hover { background:var(--primary-soft); }
+.banda-vertiz { background:linear-gradient(135deg,#eceeff 0%,#f7fbff 55%,#e9f8f7 100%); }
+.vertiz-marco { border-radius:24px; box-shadow:var(--shadow-1); padding:clamp(1.5rem,3vw,2.5rem); }
+.vertiz-marco .avatar-escenario { max-width:220px; height:270px; }
+.vertiz-marco .avatar-escena { width:208px; height:260px; margin-left:-104px; }
+.vertiz-texto { max-width:58ch; } .vertiz-texto h3 { font-size:clamp(1.7rem,3vw,2.5rem); } .vertiz-texto p { font-size:1.05rem; }
+.figura { border-radius:20px; box-shadow:var(--shadow-2); } .figura-barra-sup { padding:.85rem 1.15rem; background:#fbfcff; }
+.hud-fig-titulo { font-size:1rem; } .btn-fig-hud,.btn-pildora-capa { min-height:34px; }
+.figura-escenario-clase { grid-template-columns:minmax(0,1.72fr) minmax(340px,.94fr); min-height:610px; }
+.figura-stage-wrap { background:radial-gradient(circle at 50% 43%,#fff 0%,#f2f5fc 70%,#e5eaf5 100%); }
+.figura-lienzo,.figura-lienzo.lienzo-hero { height:clamp(450px,42vw,610px); }
+.figura-col-maestro { padding:1.25rem; gap:1rem; background:linear-gradient(180deg,#f8f9ff 0%,#fff 100%); }
+.mm-profesor-cabecera { grid-template-columns:142px minmax(0,1fr); gap:1rem; padding-bottom:.9rem; }
+.mm-avatar-slot,.vertiz-stage-mini .mini-escenario,.vertiz-stage-mini .avatar-escena.tutor-personalizado { width:142px; height:176px; }
+.vertiz-stage-mini .avatar-escena { width:142px; height:176px; margin-left:-71px; }
+.figura-col-maestro .tutor-pokemon { padding:3%; }
+.mm-profesor-nombre { font-size:1rem; } .mm-rol-tag { font-size:.68rem; }
+.mm-dialogo-titulo { font-size:1rem; } .mm-dialogo-texto { font-size:.94rem; line-height:1.62; }
+.mm-caja-dialogo { padding:1rem 1.05rem; border-left-width:5px; } .mm-guion-lista { gap:6px; }
+.mm-guion-item { font-size:.82rem; padding:.55rem .65rem; } .mm-acciones-fila { gap:.65rem; }
+.btn-mm-nav { min-height:42px; font-size:.86rem; } .figura-capas { padding:.8rem 1rem; gap:.5rem; }
+.chip-medida { font-size:.77rem; }
+.leccion-cabeza { padding:1.25rem 0 1.8rem; } .leccion-cabeza h1 { font-size:clamp(2.1rem,4vw,3.4rem); }
+.leccion-layout { grid-template-columns:minmax(0,1fr) 320px; gap:clamp(2rem,4vw,4rem); }
+.contenido { font-size:1.08rem; line-height:1.78; } .tarjeta-aside { box-shadow:var(--shadow-1); }
+.fml { box-shadow:0 18px 35px rgba(20,25,52,.16); } .bloque { margin-bottom:2.5rem; }
+.practica-layout { grid-template-columns:minmax(0,1fr) 320px; gap:clamp(2rem,4vw,4rem); }
+.ejercicio,.reto,.doc-seccion { border-radius:var(--radius); } .filtros { border-radius:var(--radius); box-shadow:var(--shadow-1); }
+.sitio-pie { background:#171d3d; color:#edf0ff; padding-block:3.5rem 1.6rem; }
+.sitio-pie h4 { color:#bfc8f2; } .sitio-pie p,.sitio-pie a { color:#dbe0fa; }
+.aside-leccion #avatar-guia .avatar-escenario,.panel-practica #avatar-guia .avatar-escenario { max-width:176px; height:218px; }
+.aside-leccion #avatar-guia .avatar-escena,.panel-practica #avatar-guia .avatar-escena { width:168px; height:210px; margin-left:-84px; }
+.aside-leccion #avatar-guia .tutor-personalizado,.panel-practica #avatar-guia .tutor-personalizado { width:100%; height:100%; margin-left:0; }
+@media (max-width:1180px) {
+  .hero .wrap { grid-template-columns:minmax(0,1fr); max-width:980px; gap:2rem; } .hero h1 { max-width:20ch; }
+  .hero-figura { width:100%; } .figura-escenario-clase { grid-template-columns:minmax(0,1.5fr) minmax(300px,.9fr); }
+  .figura-lienzo,.figura-lienzo.lienzo-hero { height:clamp(430px,52vw,560px); }
+}
+@media (max-width:900px) {
+  .wrap { width:min(calc(100% - 2rem),var(--max)); } .hero-datos { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .figura-escenario-clase { grid-template-columns:minmax(0,1fr); min-height:0; } .figura-col-maestro { border-left:0; border-top:1px solid var(--line); }
+  .figura-lienzo,.figura-lienzo.lienzo-hero { height:clamp(390px,70vw,560px); }
+  .mm-profesor-cabecera { grid-template-columns:128px minmax(0,1fr); } .mm-avatar-slot,.vertiz-stage-mini .mini-escenario,.vertiz-stage-mini .avatar-escena.tutor-personalizado { width:128px; height:158px; }
+  .vertiz-stage-mini .avatar-escena { width:128px; height:158px; margin-left:-64px; }
+}
+@media (max-width:680px) {
+  .wrap { width:calc(100% - 1.25rem); } .sitio-head .wrap.sitio-head-inner,.sitio-head .wrap:not(.sitio-head-inner) { min-height:68px; }
+  .hero { padding-top:2rem; } .hero h1 { font-size:clamp(2.5rem,12vw,3.5rem); } .hero .entradilla { font-size:1rem; }
+  .hero-datos div { min-height:74px; font-size:.76rem; } .hero-datos strong { font-size:1.35rem; }
+  .hero-figura > svg { min-height:300px; padding:.7rem; } .seccion { padding-block:2.5rem; }
+  .figura-barra-sup { align-items:flex-start; } .figura-barra-sup .acciones-fig { width:100%; }
+  .figura-lienzo,.figura-lienzo.lienzo-hero { height:min(92vw,430px); min-height:300px; } .figura-col-maestro { padding:.9rem; }
+  .mm-profesor-cabecera { grid-template-columns:104px minmax(0,1fr); gap:.75rem; } .mm-avatar-slot,.vertiz-stage-mini .mini-escenario,.vertiz-stage-mini .avatar-escena.tutor-personalizado { width:104px; height:132px; }
+  .vertiz-stage-mini .avatar-escena { width:104px; height:132px; margin-left:-52px; } .mm-profesor-nombre { font-size:.92rem; }
+  .mm-dialogo-texto { font-size:.9rem; } .vertiz-marco .avatar-escenario { max-width:170px; height:210px; }
+  .vertiz-marco .avatar-escena { width:160px; height:200px; margin-left:-80px; }
+  .aside-leccion #avatar-guia .avatar-escenario,.panel-practica #avatar-guia .avatar-escenario { max-width:150px; height:188px; }
+  .aside-leccion #avatar-guia .avatar-escena,.panel-practica #avatar-guia .avatar-escena { width:142px; height:178px; margin-left:-71px; }
+}
+@media (max-width:420px) {
+  .hero-acciones .btn { width:100%; } .hero-datos { gap:.45rem; } .hero-datos div { padding:.6rem; }
+  .mm-profesor-cabecera { grid-template-columns:88px minmax(0,1fr); } .mm-avatar-slot,.vertiz-stage-mini .mini-escenario,.vertiz-stage-mini .avatar-escena.tutor-personalizado { width:88px; height:114px; }
+  .vertiz-stage-mini .avatar-escena { width:88px; height:114px; margin-left:-44px; } .mm-rol-tag { display:inline-block; }
+  .mm-acciones-fila { grid-template-columns:1fr; } .btn-mm-nav { width:100%; }
+}
+@media (prefers-reduced-motion:reduce) { .hero-figura,.modulo,.leccion-fila { transition:none; } }
+
+/* ================================================================
+   Rediseño visual 2 — estudio-laboratorio: contraste, escala y ritmo
+   Esta capa final prioriza una experiencia de estudio visible y no decorativa.
+   ================================================================ */
+:root {
+  --studio-ink:#111936;
+  --studio-navy:#121a42;
+  --studio-violet:#5b4ee8;
+  --studio-cyan:#28b9c9;
+  --studio-paper:#f4f6fc;
+}
+body { background:var(--studio-paper); }
+.sitio-head { background:#fff; box-shadow:0 1px 0 rgba(17,25,54,.08); position:relative; z-index:5; }
+.sitio-head .wrap.sitio-head-inner,.sitio-head .wrap:not(.sitio-head-inner) { min-height:84px; }
+.marca span b { font-weight:800; letter-spacing:-.025em; }
+.nav-principal a { font-weight:700; }
+
+/* Portada: entrada editorial + aula protagonista. */
+.hero {
+  color:#fff;
+  background:
+    radial-gradient(circle at 85% 20%,rgba(40,185,201,.22),transparent 24rem),
+    radial-gradient(circle at 18% 115%,rgba(120,97,255,.28),transparent 28rem),
+    linear-gradient(128deg,#101735 0%,#1b2250 52%,#272472 100%);
+  padding:clamp(3.5rem,7vw,7rem) 0 clamp(3.5rem,6vw,6rem);
+  overflow:hidden;
+  position:relative;
+}
+.hero::after { content:""; position:absolute; inset:auto -8% -45% 35%; height:28rem; border:1px solid rgba(255,255,255,.11); border-radius:50%; transform:rotate(-12deg); pointer-events:none; }
+.hero .wrap { position:relative; z-index:1; grid-template-columns:minmax(380px,.78fr) minmax(0,1.22fr); gap:clamp(2rem,5vw,6rem); }
+.hero h1 { color:#fff; font-size:clamp(3.4rem,6.8vw,6.8rem); line-height:.94; letter-spacing:-.075em; max-width:9ch; margin-block:.8rem 1.5rem; }
+.hero h1 em { color:#8eeaf0; background:none; font-style:normal; }
+.hero .entradilla { color:#dbe3ff; font-size:clamp(1.08rem,1.6vw,1.3rem); max-width:45ch; line-height:1.65; }
+.hero .eyebrow { color:#b8f5f4; background:rgba(37,195,202,.13); border-color:rgba(142,234,240,.35); }
+.hero-acciones { align-items:center; margin-top:2.1rem; }
+.hero-acciones .btn { border:0; box-shadow:0 12px 24px rgba(0,0,0,.22); }
+.hero-acciones .btn:not(.secundario) { background:#79edf0; color:#102047; }
+.hero-acciones .btn.secundario { background:rgba(255,255,255,.1); color:#fff; border:1px solid rgba(255,255,255,.35); }
+.hero .enlace-lab { color:#a9b7ff; }
+.hero-datos { border-color:rgba(255,255,255,.2); }
+.hero-datos div { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); color:#cbd5f4; border-radius:12px; }
+.hero-datos strong { color:#fff; }
+.hero-figura { min-height:650px; background:#fff; border:1px solid rgba(255,255,255,.6); border-radius:28px; box-shadow:0 35px 90px rgba(3,8,35,.4); transform:translateY(-.5rem); }
+.hero-figura > svg { min-height:570px; padding:2.2rem; }
+.hero-figura .figura-pie-referencia { color:#53607c; background:#f3f6ff; border-top:1px solid #e2e7f6; border-radius:0 0 28px 28px; padding:1rem 1.4rem; }
+
+/* Ruta: menos vacío, más señal de progreso. */
+.seccion#ruta { background:#f7f8fd; }
+.continuar { background:linear-gradient(110deg,#24205f,#4b3ec4); color:#fff; border:0; border-radius:20px; padding:1.6rem 1.8rem; box-shadow:0 18px 42px rgba(57,47,152,.2); }
+.continuar h2,.continuar p { color:#fff; } .continuar p { opacity:.8; }
+.continuar .btn { background:#8df0ee; color:#152044; }
+.seccion-cabeza { margin-bottom:2rem; } .seccion-cabeza h2 { font-size:clamp(2rem,4vw,3.4rem); letter-spacing:-.06em; }
+.seccion-cabeza p { font-size:1.08rem; max-width:62ch; }
+.ruta { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1rem; }
+.modulo { background:#fff; border:1px solid #e1e5f2; box-shadow:0 8px 24px rgba(31,38,78,.07); overflow:hidden; }
+.modulo:hover { border-color:#aaa3ff; box-shadow:0 16px 34px rgba(66,58,178,.14); transform:translateY(-2px); }
+.modulo-cabeza { min-height:92px; align-items:center; } .modulo-titulo { font-size:1.17rem; font-weight:800; }
+.modulo-desc { color:#62708d; } .modulo-num { background:#eeedff; color:#4d42c8; }
+.modulo-cuerpo { border-top:1px solid #edf0f7; }
+.leccion-fila { border-radius:10px; } .leccion-fila strong { color:#252b48; }
+
+/* Tutor: convertirlo en una sección protagonista, no en un pie decorativo. */
+.banda-vertiz { background:linear-gradient(135deg,#dceff3 0%,#e8e7ff 48%,#f8f3ff 100%); border-block:1px solid #d8e2f4; }
+.vertiz-marco { min-height:360px; grid-template-columns:minmax(260px,.7fr) minmax(0,1.3fr); align-items:center; background:#fff; border:1px solid rgba(105,102,190,.18); border-radius:30px; box-shadow:0 20px 60px rgba(58,57,130,.12); }
+.vertiz-marco #avatar-guia { min-height:300px; display:flex; align-items:center; justify-content:center; }
+.vertiz-marco .avatar-escenario { max-width:260px; height:310px; }
+.vertiz-marco .avatar-escena { width:240px; height:300px; margin-left:-120px; }
+.vertiz-texto { padding:1rem 1.5rem 1rem 0; } .vertiz-texto h3 { font-size:clamp(2rem,4vw,3.5rem); letter-spacing:-.06em; }
+.vertiz-texto p { font-size:1.08rem; line-height:1.75; color:#4d5a77; }
+
+/* Aula y páginas internas: superficies más contrastadas y controles agrupados. */
+.figura { border:1px solid #d8dff0; box-shadow:0 24px 65px rgba(26,35,83,.17); }
+.figura-barra-sup { background:#17204a; color:#fff; border-bottom:0; padding:1rem 1.25rem; }
+.figura-barra-sup * { color:inherit; } .hud-fig-titulo { font-weight:800; }
+.figura-lienzo,.figura-lienzo.lienzo-hero { height:clamp(500px,48vw,700px); }
+.figura-stage-wrap { background:radial-gradient(circle at 50% 42%,#fff 0%,#edf2ff 65%,#dae2f4 100%); }
+.figura-col-maestro { background:linear-gradient(180deg,#f9faff 0%,#fff 100%); padding:1.5rem; }
+.mm-caja-dialogo { background:#fff; border:1px solid #e0e4f1; box-shadow:0 8px 20px rgba(32,43,93,.06); }
+.mm-profesor-nombre,.mm-dialogo-titulo { font-weight:800; color:#20284d; }
+.mm-avatar-slot { background:linear-gradient(145deg,#edf0ff,#fff); border-radius:18px; }
+
+.leccion-cabeza h1 { font-size:clamp(2.6rem,5vw,4.6rem); letter-spacing:-.07em; }
+.leccion-layout,.practica-layout { gap:clamp(2.5rem,5vw,5rem); }
+.contenido { font-size:1.1rem; line-height:1.85; } .contenido h2 { font-size:2rem; letter-spacing:-.04em; }
+.tarjeta-aside,.ejercicio,.reto,.doc-seccion { border:1px solid #dde3f1; box-shadow:0 12px 30px rgba(31,38,78,.07); }
+.filtros { background:#182149; color:#fff; border:0; } .filtros label { color:#dbe2ff; }
+.sitio-pie { background:#101735; }
+
+@media (max-width:900px) {
+  .hero { padding-block:3rem; } .hero h1 { font-size:clamp(3.2rem,11vw,5.4rem); }
+  .hero-figura { min-height:520px; transform:none; } .hero-figura > svg { min-height:440px; }
+  .ruta { grid-template-columns:1fr; }
+  .vertiz-marco { grid-template-columns:1fr; text-align:center; } .vertiz-texto { padding:0 1rem 1rem; max-width:62ch; margin:auto; }
+  .figura-lienzo,.figura-lienzo.lienzo-hero { height:clamp(410px,70vw,600px); }
+}
+@media (max-width:680px) {
+  .hero { padding-block:2.5rem 3rem; } .hero h1 { font-size:clamp(3rem,15vw,4.4rem); }
+  .hero-figura { min-height:410px; border-radius:20px; } .hero-figura > svg { min-height:330px; padding:1rem; }
+  .hero-figura .figura-pie-referencia { border-radius:0 0 20px 20px; }
+  .hero-datos { grid-template-columns:repeat(2,1fr); }
+  .vertiz-marco { border-radius:22px; } .vertiz-marco #avatar-guia { min-height:230px; }
+  .vertiz-marco .avatar-escenario { max-width:190px; height:230px; } .vertiz-marco .avatar-escena { width:178px; height:220px; margin-left:-89px; }
+  .figura-barra-sup { padding:.75rem; } .figura-col-maestro { padding:.85rem; }
+}
+
+/* Portada v4: el aula es la pantalla principal, no una columna secundaria. */
+.hero {
+  min-height:calc(100svh - 84px);
+  height:calc(100svh - 84px);
+  padding:1rem clamp(1rem,2.4vw,2.75rem) 1.25rem;
+  display:flex;
+  align-items:stretch;
+}
+.hero::before {
+  content:"AULA 3D · GEOMETRÍA DEL ESPACIO";
+  position:absolute;
+  top:1.1rem;
+  left:clamp(1rem,2.4vw,2.75rem);
+  z-index:3;
+  color:#b9f7f4;
+  font-size:.72rem;
+  font-weight:800;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  pointer-events:none;
+}
+.hero .wrap {
+  width:100%;
+  max-width:none;
+  padding:2.2rem 0 0;
+  display:block;
+}
+.hero .wrap > div:first-child { display:none; }
+.hero-figura {
+  width:100%;
+  height:100%;
+  min-height:0;
+  margin:0;
+  transform:none;
+  border-radius:24px;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+.hero-figura > svg,
+.hero-figura > canvas {
+  flex:1 1 auto;
+  width:100%;
+  height:100%;
+  min-height:0;
+  object-fit:contain;
+  padding:clamp(1rem,3vw,3.5rem);
+}
+.hero-figura .figura-pie-referencia { flex:0 0 auto; }
+@media (max-width:900px) {
+  .hero { min-height:calc(100svh - 132px); height:auto; padding:1rem; }
+  .hero .wrap { padding-top:2rem; }
+  .hero-figura { min-height:calc(100svh - 190px); }
+}
+@media (max-width:680px) {
+  .hero { min-height:calc(100svh - 68px); padding:.65rem; }
+  .hero::before { top:.8rem; left:.9rem; font-size:.58rem; }
+  .hero .wrap { padding-top:1.8rem; }
+  .hero-figura { min-height:calc(100svh - 116px); border-radius:18px; }
+  .hero-figura > svg,.hero-figura > canvas { padding:.5rem; }
+}
+
+/* Portada v5: controles legibles, tutor protagonista y objeto completo. */
+.figura-barra-sup .btn-fig-hud,
+.figura-barra-sup .btn-pildora-capa {
+  color:#17204a;
+  background:#fff;
+  border:1px solid #b9c4df;
+  box-shadow:0 2px 8px rgba(11,20,61,.12);
+  font-weight:800;
+  min-height:38px;
+  padding-inline:14px;
+}
+.figura-barra-sup .btn-fig-hud:hover,
+.figura-barra-sup .btn-pildora-capa:hover { color:#fff; background:#6356e8; border-color:#6356e8; }
+.figura-barra-sup .btn-fig-hud[aria-pressed="true"],
+.figura-barra-sup .btn-pildora-capa[aria-pressed="true"] { color:#fff; background:#6356e8; border-color:#8d86ff; }
+.figura-barra-sup .btn-proyectar { color:#1f2a62; background:#a9f1ee; border-color:#7edbdc; }
+
+/* El maestro se presenta arriba del panel con espacio suficiente para el personaje. */
+.figura-col-maestro .mm-profesor-cabecera { grid-template-columns:1fr; text-align:center; gap:.7rem; }
+.figura-col-maestro .mm-avatar-slot {
+  width:100%; height:220px; min-height:220px; border-radius:18px;
+  background:radial-gradient(circle at 50% 65%,#e2e7ff 0%,#f8f9ff 66%,transparent 75%);
+}
+.figura-col-maestro .vertiz-stage-mini .mini-escenario { width:210px; height:220px; margin-inline:auto; }
+.figura-col-maestro .vertiz-stage-mini .avatar-escena { width:210px; height:220px; margin-left:-105px; }
+.figura-col-maestro .mm-profesor-info { align-items:center; }
+.figura-col-maestro .mm-profesor-nombre { font-size:1.25rem; }
+.figura-col-maestro .tutor-visual { object-fit:contain; }
+
+/* Mantener el laboratorio completo dentro de la primera pantalla. */
+.hero-figura .figura-escenario-clase { min-height:0; height:100%; }
+.hero-figura .figura-lienzo,
+.hero-figura .figura-lienzo.lienzo-hero { height:clamp(420px,64vh,620px); }
+.hero-figura .figura-stage-wrap { min-height:0; }
+@media (max-width:900px) {
+  .figura-col-maestro .mm-avatar-slot { height:190px; min-height:190px; }
+  .figura-col-maestro .vertiz-stage-mini .mini-escenario { width:180px; height:190px; }
+  .figura-col-maestro .vertiz-stage-mini .avatar-escena { width:180px; height:190px; margin-left:-90px; }
+  .hero-figura .figura-lienzo,.hero-figura .figura-lienzo.lienzo-hero { height:clamp(360px,58vh,520px); }
+}
+@media (max-width:680px) {
+  .figura-barra-sup .btn-fig-hud,.figura-barra-sup .btn-pildora-capa { min-height:34px; padding-inline:9px; font-size:.7rem; }
+  .figura-col-maestro .mm-avatar-slot { height:170px; min-height:170px; }
+  .figura-col-maestro .vertiz-stage-mini .mini-escenario { width:160px; height:170px; }
+  .figura-col-maestro .vertiz-stage-mini .avatar-escena { width:160px; height:170px; margin-left:-80px; }
+  .hero-figura .figura-lienzo,.hero-figura .figura-lienzo.lienzo-hero { height:clamp(300px,52vh,430px); }
+}
 
 /* El modelo 3D se renderiza dentro de un canvas cuadrado: ampliar su contenido visible. */
 .figura-col-maestro .tutor-canvas {
