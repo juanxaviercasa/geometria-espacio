@@ -165,6 +165,7 @@
 
       zona.innerHTML = '';
       if (ok) {
+        resuelto = true;
         retro('ok', consultoSolucion ? 'Correcto con ayuda' : 'Correcto',
           detalle + '<p>' + ej.explicacion + '</p>' +
           (consultoSolucion ? '<p>Has aprendido revisando el procedimiento. Se registra como resolución con solución consultada.</p>' : ''));
@@ -188,12 +189,15 @@
     art.querySelector('[data-accion="explicacion"]').addEventListener('click', function () {
       var existente = zona.querySelector('.solucion-detalle');
       if (existente) { existente.remove(); return; }
-      consultoSolucion = true;
-      P.registrarEjercicio(idLeccion, ej.id, false, pistasUsadas, false, true);
-      if (alCambiar) alCambiar();
+      // Tras una respuesta correcta, revisar la explicación no resta mérito ni puntos.
+      if (!resuelto) {
+        consultoSolucion = true;
+        P.registrarEjercicio(idLeccion, ej.id, false, pistasUsadas, false, true);
+        if (alCambiar) alCambiar();
+      }
       var d = document.createElement('div');
       d.className = 'solucion-detalle';
-      d.innerHTML = '<p><strong>Razonamiento completo · solución consultada</strong></p><p>' + ej.explicacion + '</p>' +
+      d.innerHTML = '<p><strong>' + (consultoSolucion ? 'Razonamiento completo · solución consultada' : 'Razonamiento completo') + '</strong></p><p>' + ej.explicacion + '</p>' +
         ((ej.pistas || []).length
           ? '<p style="font-size:.84rem;color:var(--ink-3)">Hay ' + ej.pistas.length +
             ' pista(s) disponibles si prefieres llegar por tu cuenta.</p>'
