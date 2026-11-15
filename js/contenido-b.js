@@ -85,7 +85,7 @@
       },
       {
         id: 'm4l1e4', tipo: 'numerico', dificultad: 'Avanzado',
-        pregunta: 'En un cubo de arista 4, ¿cuál es el área de la proyección ortogonal de la diagonal espacial <span class="m">AC₁</span> sobre la base? (Es un segmento; da su longitud.)',
+        pregunta: "En un cubo de arista 4, ¿cuál es la <strong>longitud</strong> de la proyección ortogonal de la diagonal espacial <span class=\"m\">AC₁</span> sobre el plano de la base? (La proyección es un segmento, no una región con área.)",
         unidad: 'u', respuesta: 5.657, tolerancia: 0.01,
         explicacion: 'La proyección de <span class="m">AC₁</span> sobre la base es la diagonal <span class="m">AC</span>, de longitud <span class="m">4√2 ≈ 5,657</span>. Comprobación con el coseno: el ángulo entre la diagonal y la base es <span class="m">θ</span> con <span class="m">cos θ = AC/AC₁ = 4√2/(4√3) = √(2/3) ≈ 0,8165</span>; entonces <span class="m">AC₁·cos θ = 4√3·0,8165 = 5,657</span>.',
         pistas: ['¿Qué sombra deja la diagonal del cubo sobre la base?', 'Es la diagonal de la base.']
@@ -107,14 +107,8 @@
       {
         id: 'm4l1r1', titulo: 'Sección de un cubo y su área', nivel: 'UNI', puntos: 25,
         enunciado: 'En un cubo de arista <var>a</var>, el plano <var>π</var> contiene la diagonal <span class="m">BD</span> de la base y el vértice <span class="m">A₁</span>. Halla el área de la sección que produce.',
-        estrategia: ['Determina la sección completa antes de calcular áreas.', 'Usa coordenadas y corta con cada arista.', 'Verifica el tipo de cuadrilátero obtenido.'],
-        desarrollo: [
-          'Coordenadas: <span class="m">A(0,0,0)</span>, <span class="m">B(a,0,0)</span>, <span class="m">D(0,a,0)</span>, <span class="m">A₁(0,0,a)</span>. El plano por <span class="m">B</span>, <span class="m">D</span> y <span class="m">A₁</span> es <span class="m">x + y − z = a</span> (comprobar: <span class="m">B</span>: <span class="m">a + 0 − 0 = a</span> ✓; <span class="m">D</span>: <span class="m">0 + a − 0 = a</span> ✓; <span class="m">A₁</span>: <span class="m">0 + 0 − a = −a</span> ✗). Corrige: el plano es <span class="m">x + y + z = a</span> para <span class="m">B(a,0,0)</span>, <span class="m">D(0,a,0)</span>, <span class="m">A₁(0,0,a)</span>.',
-          'Intersección con la arista <span class="m">CC₁</span>: <span class="m">(a, a, z)</span> → <span class="m">a + a + z = a</span> → <span class="m">z = −a</span>, fuera. Con <span class="m">B₁C₁</span>: <span class="m">(x, a, a)</span> → <span class="m">x + 2a = a</span> → <span class="m">x = −a</span>, fuera. La sección es solo el triángulo <span class="m">BDA₁</span>.',
-          'Lados: <span class="m">BD = a√2</span>, <span class="m">BA₁ = √(a² + a²) = a√2</span>, <span class="m">DA₁ = a√2</span>. Triángulo equilátero de lado <span class="m">a√2</span>.',
-          'Área: <span class="m">(√3/4)(a√2)² = (√3/4)(2a²) = a²√3/2</span>.',
-          'Comprobación por área proyectiva: el triángulo <span class="m">BDA₁</span> se proyecta sobre la base en el triángulo <span class="m">BDA</span>, de área <span class="m">a²/2</span>. El ángulo entre el plano <span class="m">(BDA₁)</span> y la base tiene <span class="m">cos θ = (a²/2)/(a²√3/2) = 1/√3</span>. Y efectivamente el plano <span class="m">x+y+z=a</span> tiene normal <span class="m">(1,1,1)</span> que forma con <span class="m">(0,0,1)</span> un ángulo de <span class="m">arccos(1/√3) ≈ 54,7°</span>. Coherente.'
-        ],
+        estrategia: ["Fija las coordenadas de B, D y A₁ y calcula primero la ecuación exacta del plano.","Interseca el plano con las aristas y comprueba que la sección es el triángulo BDA₁.","Verifica el área usando lados y como comprobación el área de la proyección sobre la base."],
+        desarrollo: ["Con <span class=\"m\">A(0,0,0), B(a,0,0), D(0,a,0), A₁(0,0,a)</span>, el plano que contiene B, D y A₁ es <span class=\"m\">x+y+z=a</span>. Sustituir las coordenadas de los tres puntos confirma exactamente la ecuación.","El plano encuentra el cubo en los tres vértices <var>B</var>, <var>D</var> y <span class=\"m\">A₁</span>. En <span class=\"m\">CC₁</span> requeriría <span class=\"m\">z=-a</span>, fuera del segmento; las restantes aristas tampoco añaden cortes interiores. La sección es <span class=\"m\">BDA₁</span>.","Las distancias <span class=\"m\">BD</span>, <span class=\"m\">BA₁</span> y <span class=\"m\">DA₁</span> valen <span class=\"m\">a√2</span>. Es un triángulo equilátero.","El área es <span class=\"m\">(√3/4)(a√2)²=a²√3/2</span>.","Verificación: su proyección sobre la base es <span class=\"m\">BDA</span>, área <span class=\"m\">a²/2</span>. Como <span class=\"m\">cos θ=1/√3</span> entre ambos planos, el área original es <span class=\"m\">(a²/2)/(1/√3)=a²√3/2</span>."],
         respuesta: 'Triángulo equilátero de lado <span class="m">a√2</span> y área <span class="m">a²√3/2</span>. La comprobación cruzada con áreas proyectadas es la mejor forma de detectar errores.'
       }
     ]
@@ -151,14 +145,8 @@
       {
         tipo: 'ejemplo', indice: 'Ejemplo resuelto',
         titulo: 'Distancia entre dos aristas opuestas de un cubo',
-        enunciado: 'En un cubo de arista <var>a</var>, halla la distancia entre las aristas <span class="m">AB</span> y <span class="m">C₁D₁</span> (son alabeadas).',
-        pasos: [
-          { titulo: 'Coordenadas', html: '<span class="m">A(0,0,0)</span>, <span class="m">B(a,0,0)</span>, <span class="m">C₁(a,a,a)</span>, <span class="m">D₁(0,a,a)</span>.' },
-          { titulo: 'Vectores directores', html: '<span class="m">u₁ = AB = (a,0,0)</span>, <span class="m">u₂ = D₁C₁ = (a,0,0)</span>. ¡Son paralelos! En efecto, <span class="m">AB ∥ D₁C₁</span>: estas dos aristas no son alabeadas, son paralelas.' },
-          { titulo: 'Corrección del caso', html: 'Rectas paralelas: la distancia se calcula como punto-recta. Toma <span class="m">A(0,0,0)</span> y la recta por <span class="m">D₁</span> con dirección <span class="m">(1,0,0)</span>. El vector <span class="m">AD₁ = (0,a,a)</span>; su componente perpendicular a <span class="m">(1,0,0)</span> es <span class="m">(0,a,a)</span>, de módulo <span class="m">a√2</span>.' },
-          { titulo: 'Caso realmente alabeado', html: 'Tomemos <span class="m">AB</span> y <span class="m">CC₁</span>. <span class="m">u₁ = (1,0,0)</span>, <span class="m">u₂ = (0,0,1)</span>. <span class="m">n = u₁ × u₂ = (0·1 − 0·0, 0·0 − 1·1, 0) = (0,−1,0)</span>. Vector entre puntos: <span class="m">C − A = (a,a,0)</span>. Producto escalar con <span class="m">n</span>: <span class="m">−a</span>. Módulo de <span class="m">n</span>: 1. Distancia <span class="m">= a</span>.', cuenta: 'd = |(a,a,0)·(0,−1,0)| / 1 = a' },
-          { titulo: 'Interpretación', html: 'La distancia entre la arista inferior y una arista vertical no adyacente es exactamente la arista del cubo. Geométricamente: el segmento perpendicular común es <span class="m">BC</span>.' }
-        ],
+        enunciado: "En un cubo de arista <var>a</var>, calcula la distancia entre las aristas <span class=\"m\">AB</span> y <span class=\"m\">C₁D₁</span> (son <strong>paralelas</strong>). Después, compara con la distancia entre las rectas alabeadas <span class=\"m\">AB</span> y <span class=\"m\">CC₁</span>.",
+        pasos: [{"titulo":"Ubicar las aristas","html":"En el cubo <span class=\"m\">A(0,0,0), B(a,0,0), C₁(a,a,a), D₁(0,a,a)</span>."},{"titulo":"Clasificar las paralelas","html":"Los vectores directores <span class=\"m\">AB=(a,0,0)</span> y <span class=\"m\">D₁C₁=(a,0,0)</span> son paralelos. Por tanto estas aristas no son alabeadas."},{"titulo":"Calcular distancia entre paralelas","html":"El vector <span class=\"m\">AD₁=(0,a,a)</span> es perpendicular al vector director común <span class=\"m\">(1,0,0)</span>. Su longitud es <span class=\"m\">a√2</span>."},{"titulo":"Calcular distancia entre alabeadas","html":"Para <span class=\"m\">AB</span> y <span class=\"m\">CC₁</span>, los vectores directores son <span class=\"m\">(1,0,0)</span> y <span class=\"m\">(0,0,1)</span>. La perpendicular común está en la dirección del eje Y; el segmento <span class=\"m\">BC</span> mide <span class=\"m\">a</span>.","cuenta":"d(AB,C₁D₁) = a√2; d(AB,CC₁)=a"},{"titulo":"Interpretar","html":"La primera pareja es paralela; la segunda, alabeada. Antes de aplicar fórmulas, clasifica las rectas y comprueba cuál es su perpendicular común."}],
         respuesta: 'Entre aristas opuestas y paralelas: <span class="m">a√2</span>. Entre aristas alabeadas como <span class="m">AB</span> y <span class="m">CC₁</span>: <span class="m">a</span>. Este ejemplo muestra por qué es imprescindible clasificar primero la posición relativa.'
       },
       {
@@ -312,7 +300,7 @@
         id: 'm5l1e3', tipo: 'numerico', dificultad: 'Básico',
         pregunta: '¿Cuántos diedros tiene un triedro?',
         unidad: 'diedros', respuesta: 3, tolerancia: 0,
-        explicacion: 'Tres caras tomadas de dos en dos: C(3,2) = 3 diedros. Igualmente, tres ángulos de cara. En un ángulo poliedro de <span class="m">n</span> caras hay <span class="m">C(n,2)</span> diedros.',
+        explicacion: "Un triedro tiene tres caras consecutivas, por tanto <span class=\"m\">3</span> diedros (uno por cada arista). En un ángulo poliedro convexo de <span class=\"m\">n</span> caras, hay <strong>n diedros entre caras consecutivas</strong>, no <span class=\"m\">C(n,2)</span> en general; contar todos los pares incluiría caras no adyacentes.",
         pistas: ['Cuenta pares de caras.', 'Con 3 caras, ¿cuántos pares se pueden formar?']
       },
       {
@@ -342,8 +330,8 @@
     ],
     retos: [
       {
-        id: 'm5l1r1', titulo: 'Diedro a partir de ángulos de cara', nivel: 'UNI', puntos: 25,
-        enunciado: 'En un triedro trirrectángulo con aristas de longitudes <span class="m">OA = 3</span>, <span class="m">OB = 4</span>, <span class="m">OC = 12</span> mutuamente perpendiculares, halla el ángulo entre la recta <span class="m">OM</span> (donde <var>M</var> es el punto medio de <span class="m">BC</span>) y el plano <span class="m">OBC</span>, y la distancia de <var>A</var> al plano <span class="m">OBC</span>.',
+        id: 'm5l1r1', titulo: "Ángulo entre una recta y un plano en un triedro", nivel: 'UNI', puntos: 25,
+        enunciado: "En un triedro trirrectángulo de aristas mutuamente perpendiculares <span class=\"m\">OA=3</span>, <span class=\"m\">OB=4</span> y <span class=\"m\">OC=12</span>, sea <var>M</var> el punto medio de <span class=\"m\">BC</span>. Calcula el ángulo entre la recta <strong><span class=\"m\">AM</span></strong> y el plano <span class=\"m\">OBC</span>, y la distancia de <var>A</var> a ese plano.",
         estrategia: ['Coloca el triedro como sistema de ejes: es su ventaja principal.', 'La distancia al plano <span class="m">OBC</span> es inmediata porque es un plano coordenado.', 'Para el ángulo, proyecta y usa trigonometría.'],
         desarrollo: [
           'Toma <span class="m">O(0,0,0)</span>, <span class="m">A(3,0,0)</span>, <span class="m">B(0,4,0)</span>, <span class="m">C(0,0,12)</span>.',
@@ -496,15 +484,9 @@
       {
         tipo: 'ejemplo', indice: 'Ejemplo 4 (tipo UNI)',
         titulo: 'Arista lateral y altura en un prisma oblicuo',
-        enunciado: 'Un paralelepípedo tiene base rectangular de 4 × 3 cm y arista lateral de 5 cm, inclinada 37° respecto del plano de la base. Halla su volumen y su área total, sabiendo que la proyección de la arista lateral cae sobre el centro de la base.',
-        pasos: [
-          { titulo: 'Distinguir arista lateral y altura', html: 'La arista lateral mide <span class="m">L = 5</span>. Su ángulo con la base es <span class="m">φ = 37°</span>. La altura es la componente perpendicular:', cuenta: 'h = L·sen φ = 5·sen 37° ≈ 5·0,6018 = 3,009 cm' },
-          { titulo: 'Volumen', html: '<span class="m">V = B·h</span> con <span class="m">B = 4·3 = 12 cm²</span>:', cuenta: 'V = 12 · 3,009 ≈ 36,1 cm³' },
-          { titulo: 'Comparar con el error típico', html: 'Si se usara la arista lateral en lugar de la altura: <span class="m">V = 12·5 = 60 cm³</span>. El error es del 66 %. Este es exactamente el distractor que suele aparecer en las opciones.' },
-          { titulo: 'Área lateral en el oblicuo', html: 'Necesitamos el perímetro de la <strong>sección recta</strong> (perpendicular a las aristas laterales), no el de la base. Para este paralelepípedo, la sección recta es un paralelogramo de lados <span class="m">4</span> y <span class="m">3</span> con altura… el cálculo completo exige la geometría del ángulo diedro. Un camino más simple: descomponer el área lateral en las cuatro caras.', cuenta: 'A_lat = 2·(4·5) + 2·(3·5) = 40 + 30 = 70 cm²  (solo si las caras fueran rectángulos)' },
-          { titulo: 'Corrección', html: 'Las caras laterales de un paralelepípedo oblicuo son paralelogramos, no rectángulos. El área de un paralelogramo es <span class="m">base × altura</span>, y la altura de cada cara lateral es <span class="m">h′ = L·sen ψ</span>, donde <span class="m">ψ</span> es el ángulo entre la arista lateral y la arista básica <em>dentro de la cara</em>. En este problema falta ese dato, y por eso el enunciado pide solo el volumen: es un ejercicio de interpretación.' }
-        ],
-        respuesta: '<span class="m">V ≈ 36,1 cm³</span>. Moraleja: cuando falten datos para el área, revisa si el problema realmente los pide. En un prisma oblicuo, <span class="m">V = B·h</span> con <span class="m">h = L·sen φ</span>; nunca <span class="m">B·L</span>.'
+        enunciado: "Un paralelepípedo oblicuo tiene base rectangular de 4 × 3 cm y arista lateral de 5 cm, que forma 37° con el plano de la base. Halla su volumen. ¿Basta esa información para conocer el área lateral y el área total?",
+        pasos: [{"titulo":"Identificar la altura perpendicular","html":"La arista lateral mide <span class=\"m\">L=5</span> y forma con la base <span class=\"m\">φ=37°</span>. La altura del prisma es la componente perpendicular a la base.","cuenta":"h=5·sen 37°≈3,009 cm"},{"titulo":"Calcular el volumen","html":"El área de la base es <span class=\"m\">B=4·3=12 cm²</span>. En todo prisma, sea recto u oblicuo, el volumen es <span class=\"m\">V=B·h</span>.","cuenta":"V=12·5·sen 37°≈36,1 cm³"},{"titulo":"Interpretar el dato insuficiente","html":"El ángulo con la base determina la altura, pero no la dirección de la proyección horizontal de la arista lateral. Esa dirección afecta las inclinaciones de las cuatro caras laterales, que son paralelogramos."},{"titulo":"Conclusión","html":"Por ello <strong>no</strong> se pueden deducir de manera única las áreas laterales de esas caras ni el área total sin información adicional sobre la orientación de la arista lateral. No se debe usar <span class=\"m\">P_b·L</span> salvo en casos justificados."}],
+        respuesta: "<strong><span class=\"m\">V=60 sen 37°≈36,1 cm³</span></strong>. El área lateral y el área total no quedan determinados con los datos, porque falta la dirección horizontal de la arista oblicua."
       },
       {
         tipo: 'teorema', titulo: 'Relación entre arista lateral y altura', indice: 'Relación métrica',
@@ -603,14 +585,14 @@
         id: 'm6l1e8', tipo: 'numerico', dificultad: 'Avanzado',
         pregunta: 'En un cubo de arista 6, ¿cuál es el ángulo, en grados, entre una diagonal espacial y una arista que no corta? Aproxima a un decimal.',
         unidad: 'grados', respuesta: 54.7, tolerancia: 0.2,
-        explicacion: '<span class="m">cos θ = a/(a√3) = 1/√3 ≈ 0,5774</span>, luego <span class="m">θ ≈ 54,7°</span>. No depende de <span class="m">a</span>. El mismo ángulo aparece entre la diagonal espacial y cada una de las tres caras.',
+        explicacion: "<span class=\"m\">cos θ=a/(a√3)=1/√3≈0,5774</span>, por lo que el ángulo entre la diagonal espacial y una dirección de arista es <span class=\"m\">θ≈54,7°</span>. En cambio, el ángulo entre la diagonal espacial y el plano de una cara que contiene su proyección mide <span class=\"m\">≈35,26°</span>; son complementarios, no iguales.",
         pistas: ['Elige un vértice y escribe los dos vectores.', 'La arista mide <span class="m">a</span> y la diagonal <span class="m">a√3</span>.']
       }
     ],
     retos: [
       {
         id: 'm6l1r1', titulo: 'Caja con diagonal entera', nivel: 'UNI', puntos: 25,
-        enunciado: 'Un ortoedro tiene diagonal espacial de 7 cm y su volumen es 48 cm³. Sus tres dimensiones son números enteros. Hállalas y calcula el área total.',
+        enunciado: "Un ortoedro tiene diagonal espacial de 7 cm y volumen de 48 cm³. Sus tres dimensiones serían números enteros positivos. <strong>Determina si tal ortoedro existe</strong> y justifica tu conclusión con una búsqueda completa de ternas. Si no existe, explica por qué no es posible calcular un área total para ese supuesto sólido.",
         estrategia: ['Plantea el sistema con las tres incógnitas.', 'Busca ternas enteras que cumplan <span class="m">a² + b² + c² = 49</span>.', 'Verifica el volumen como filtro final.'],
         desarrollo: [
           'Condiciones: <span class="m">a² + b² + c² = 49</span> y <span class="m">abc = 48</span>, con <span class="m">a, b, c</span> enteros positivos.',
