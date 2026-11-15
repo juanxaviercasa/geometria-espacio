@@ -146,6 +146,7 @@
     figura.className = 'figura' + (esHero ? ' figura-hero-modo' : '');
     figura.setAttribute('tabindex', '-1');
     figura.setAttribute('aria-label', 'Visor didáctico: ' + (spec.titulo || idFigura));
+    figura.setAttribute('data-narracion-origen',origenNarracion);
 
     /* 1. Barra superior dedicada (fuera del lienzo, nunca tapa la figura) */
     var barraSup = document.createElement('div');
@@ -450,6 +451,7 @@
       if (ico) ico.textContent = activa ? '🔊' : '🔇';
       if (txt) txt.textContent = activa ? 'Voz ON' : 'Silencio';
       btnVoz.classList.toggle('voz-activa', activa);
+      btnVoz.setAttribute('aria-pressed',activa?'true':'false');
     }
 
     function irAPaso(idx, conAudio) {
@@ -542,6 +544,8 @@
       }
     }
 
+    btnSig.setAttribute('aria-keyshortcuts','PageDown');
+    btnAnt.setAttribute('aria-keyshortcuts','PageUp');
     btnSig.addEventListener('click', function () {
       if (!estado.iniciado) {
         irAPaso(0, true);
