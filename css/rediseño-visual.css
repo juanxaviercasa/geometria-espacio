@@ -210,3 +210,65 @@ body { background:var(--studio-paper); }
   .vertiz-marco .avatar-escenario { max-width:190px; height:230px; } .vertiz-marco .avatar-escena { width:178px; height:220px; margin-left:-89px; }
   .figura-barra-sup { padding:.75rem; } .figura-col-maestro { padding:.85rem; }
 }
+
+/* Portada v4: el aula es la pantalla principal, no una columna secundaria. */
+.hero {
+  min-height:calc(100svh - 84px);
+  height:calc(100svh - 84px);
+  padding:1rem clamp(1rem,2.4vw,2.75rem) 1.25rem;
+  display:flex;
+  align-items:stretch;
+}
+.hero::before {
+  content:"AULA 3D · GEOMETRÍA DEL ESPACIO";
+  position:absolute;
+  top:1.1rem;
+  left:clamp(1rem,2.4vw,2.75rem);
+  z-index:3;
+  color:#b9f7f4;
+  font-size:.72rem;
+  font-weight:800;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  pointer-events:none;
+}
+.hero .wrap {
+  width:100%;
+  max-width:none;
+  padding:2.2rem 0 0;
+  display:block;
+}
+.hero .wrap > div:first-child { display:none; }
+.hero-figura {
+  width:100%;
+  height:100%;
+  min-height:0;
+  margin:0;
+  transform:none;
+  border-radius:24px;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+.hero-figura > svg,
+.hero-figura > canvas {
+  flex:1 1 auto;
+  width:100%;
+  height:100%;
+  min-height:0;
+  object-fit:contain;
+  padding:clamp(1rem,3vw,3.5rem);
+}
+.hero-figura .figura-pie-referencia { flex:0 0 auto; }
+@media (max-width:900px) {
+  .hero { min-height:calc(100svh - 132px); height:auto; padding:1rem; }
+  .hero .wrap { padding-top:2rem; }
+  .hero-figura { min-height:calc(100svh - 190px); }
+}
+@media (max-width:680px) {
+  .hero { min-height:calc(100svh - 68px); padding:.65rem; }
+  .hero::before { top:.8rem; left:.9rem; font-size:.58rem; }
+  .hero .wrap { padding-top:1.8rem; }
+  .hero-figura { min-height:calc(100svh - 116px); border-radius:18px; }
+  .hero-figura > svg,.hero-figura > canvas { padding:.5rem; }
+}
