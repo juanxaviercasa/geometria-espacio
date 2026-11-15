@@ -1,0 +1,21 @@
+/* Fase 5 — métricas locales, carga diferida y estabilidad visual. */
+.perf-panel{margin:2.2rem 0;padding:clamp(1rem,2vw,1.6rem);background:#fff;
+ border:1px solid #dfe4f0;border-radius:18px;box-shadow:0 12px 38px -30px #32386b;}
+.perf-intro{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+.perf-intro h2{font-size:clamp(1.25rem,2.1vw,1.65rem);margin:.3rem 0;line-height:1.35}
+.perf-panel>p{font-size:.91rem;color:#47516b;line-height:1.6;max-width:85ch}
+.perf-metricas{margin:1.05rem 0 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,225px),1fr));gap:.65rem}
+.perf-item{background:#f5f6fd;border:1px solid #e3e6f6;border-radius:11px;padding:.85rem;min-width:0}
+.perf-item dt{font-size:.76rem;font-weight:700;letter-spacing:.01em;color:#4b5371;line-height:1.5}
+.perf-item dd{font-size:clamp(.96rem,1.4vw,1.1rem);font-weight:720;color:#222849;margin:.4rem 0 0;overflow-wrap:anywhere;line-height:1.45}
+.figura-lienzo{min-width:0;max-width:100%}
+.figura-aviso{pointer-events:none}
+@media(max-width:600px){
+ .perf-intro{align-items:flex-start}
+ .perf-intro .btn{min-height:44px}
+ .perf-metricas{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .perf-item{padding:.72rem}
+ .perf-item dd{font-size:.91rem}
+}
+@media(max-width:350px){.perf-metricas{grid-template-columns:minmax(0,1fr)}}
+@media(prefers-reduced-motion:reduce){.figura-lienzo *{scroll-behavior:auto}}
