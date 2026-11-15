@@ -567,3 +567,56 @@ test('Portada de sólidos: ocho opciones, sin franja Aula 3D ni sección de drag
   assert.ok(!html.includes('id="btn-continuar-hero"'), 'sin bloque promocional oculto');
   assert.ok(!fs.readFileSync(path.join(__dirname,'js/visor.js'),'utf8').includes('✨ AULA 3D'), 'sin franja de Aula 3D ni en el DOM');
 });
+
+
+test('Aula premium: barra externa, avatar protagonista y controles separados',()=>{
+ const html=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
+ const visor=fs.readFileSync(path.join(__dirname,'js/visor.js'),'utf8');
+ const css=fs.readFileSync(path.join(__dirname,'css/aula-premium.css'),'utf8');
+ assert.ok(html.includes('id="hero-aula-controles"'));
+ assert.ok(html.includes('css/aula-premium.css'));
+ assert.ok(visor.includes('controlesExternos.appendChild(barraSup)'));
+ assert.ok(visor.includes('controlesExternos.appendChild(controlesVoz)'));
+ assert.ok(visor.includes('panelAjustes.appendChild(preferencias)'));
+ assert.ok(css.includes('grid-template-columns:clamp(126px,12vw,174px)'));
+ assert.ok(css.includes('.hero .hero-toolbar .figura-ajustes[hidden]'));
+ assert.ok(css.includes('.hero .hero-toolbar{flex-wrap:wrap'));
+});
+test('Servicio de voz neural: catálogo cerrado, estado y audio sin exponer texto libre',async()=>{
+ const js=fs.readFileSync(path.join(__dirname,'functions/api/tts.js'),'utf8');
+ const ctx={Response,Request,URL,URLSearchParams,console};
+ vm.createContext(ctx);
+ vm.runInContext(js.replace('export async function onRequestGet','async function onRequestGet')+
+   '\nthis.onRequestGet=onRequestGet;',ctx);
+ const fn=ctx.onRequestGet;
+ let res=await fn({request:new Request('https://example.com/api/tts?estado=1'),env:{}});
+ let health=await res.json();assert.equal(res.status,200);assert.equal(health.pasos,45);
+ assert.equal(health.habilitado,false);
+ res=await fn({request:new Request('https://example.com/api/tts?figura=inexistente&paso=0'),env:{}});
+ assert.equal(res.status,400);
+ res=await fn({request:new Request('https://example.com/api/tts?figura=prisma-elementos&paso=0'),env:{}});
+ assert.equal(res.status,503);
+ let entrada=null;
+ res=await fn({request:new Request('https://example.com/api/tts?figura=prisma-elementos&paso=0&voz=javier'),
+   env:{AI:{run:async(model,payload)=>{entrada={model,payload};return new Uint8Array([73,68,51,3,4,5])}}}});
+ assert.equal(res.status,200);assert.equal(res.headers.get('content-type'),'audio/mpeg');
+ assert.equal(entrada.model,'@cf/deepgram/aura-2-es');
+ assert.equal(entrada.payload.speaker,'javier');
+ assert.ok(entrada.payload.text.startsWith('Un prisma recto'));
+ res=await fn({request:new Request('https://example.com/api/tts?figura=prisma-elementos&paso=0&voz=invalid'),
+   env:{AI:{run:async()=>{throw Error('no debe ejecutarse')}}}});
+ assert.equal(res.status,400);
+});
+test('Vértiz tiene como opción principal la voz neural masculina',()=>{
+ const {api}=voz();
+ assert.equal(api.getMotorVoz(),'neural');
+ assert.equal(api.getVozNeural(),'javier');
+ assert.equal(api.setVozNeural('alvaro'),true);
+ assert.equal(api.getVozNeural(),'alvaro');
+ assert.equal(api.setVozNeural('voz-invalida'),false);
+ assert.equal(api.setMotorVoz('nativa'),true);
+ assert.equal(api.getMotorVoz(),'nativa');
+ assert.equal(api.setMotorVoz('neural'),true);
+ const html=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
+ assert.ok(html.indexOf('js/voz-neural.js') < html.indexOf('js/avatar.js'));
+});
