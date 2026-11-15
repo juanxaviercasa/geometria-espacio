@@ -1,0 +1,85 @@
+
+/* Portada de sólidos — una experiencia de aprendizaje sin franjas ni tutores gigantes. */
+.hero { padding:clamp(.6rem,1.2vw,1rem) clamp(.6rem,1.5vw,1.3rem); }
+.hero::before { content:none; display:none; }
+.hero .wrap { padding-top:0; min-height:0; }
+.hero-explorador { display:flex; flex-direction:column; gap:.6rem; height:100%; min-height:0; }
+.hero-solidos-nav { display:flex; align-items:center; gap:1rem; flex:0 0 auto; min-width:0; padding:.1rem .1rem; }
+.hero-solidos-etiqueta { flex:0 0 auto; color:#cee5ff; font-size:.82rem; font-weight:750; letter-spacing:.015em; }
+.hero-solidos-links { display:flex; flex:1 1 auto; gap:.42rem; align-items:center; min-width:0; overflow-x:auto; overflow-y:hidden; padding:.2rem .2rem .45rem; scrollbar-width:thin; scroll-snap-type:x proximity; }
+.hero-solidos-links a { flex:0 0 auto; min-height:40px; display:inline-flex; align-items:center; justify-content:center; padding:.45rem .8rem; border-radius:11px; border:1px solid rgba(210,222,255,.3); color:#e3eaff; background:rgba(255,255,255,.075); font-size:.85rem; font-weight:700; text-decoration:none; white-space:nowrap; scroll-snap-align:start; }
+.hero-solidos-links a:hover { background:rgba(255,255,255,.17); border-color:#bfd8ff; }
+.hero-solidos-links a[aria-current="true"] { background:#a8f2ef; border-color:#a8f2ef; color:#14214a; box-shadow:0 2px 12px rgba(32,217,208,.2); }
+.hero-solidos-links a:focus-visible { outline:3px solid #fff; outline-offset:2px; }
+.hero .hero-figura { flex:1 1 auto; min-height:0; height:auto; transform:none; overflow:hidden; border-radius:18px; }
+.hero .figura-hero-modo { display:flex; flex-direction:column; height:100%; min-height:0; border:0; border-radius:inherit; box-shadow:none; }
+/* La banda «Aula 3D» se sustituye por un botón de ajustes sin barra. */
+.hero .figura-hero-modo > .figura-barra-sup { position:absolute; top:.6rem; right:.6rem; z-index:22; width:auto; min-height:0; padding:0; margin:0; background:transparent; border:0; box-shadow:none; }
+.hero .figura-hero-modo .hud-titulo-wrap { display:none; }
+.hero .figura-hero-modo .figura-barra-sup .acciones-fig { width:auto; justify-content:flex-end; }
+.hero .figura-hero-modo .figura-barra-sup .btn-ajustes { min-height:42px; padding:.55rem .8rem; border-radius:11px; background:#fff; color:#252c57; border:1px solid #b6c2e1; box-shadow:0 4px 16px rgba(22,33,83,.18); }
+.hero .figura-hero-modo .figura-ajustes { top:3.8rem; right:.6rem; max-width:min(430px,calc(100% - 1.2rem)); }
+.hero .figura-hero-modo .figura-escenario-clase { flex:1 1 auto; min-height:0!important; height:auto; overflow:hidden; grid-template-columns:minmax(0,1.67fr) minmax(320px,.83fr); }
+.hero .figura-hero-modo .figura-col-lienzo { min-height:0; height:100%; overflow:hidden; }
+.hero .figura-hero-modo .figura-stage-wrap { flex:1 1 0; min-height:0; }
+.hero .figura-hero-modo .figura-lienzo,
+.hero .figura-hero-modo .figura-lienzo.lienzo-hero { position:absolute; inset:0; height:100%!important; min-height:0!important; width:100%; }
+.hero .figura-hero-modo .figura-capas { flex:0 0 auto; max-height:32%; overflow-y:auto; padding:.5rem .7rem; }
+.hero .figura-hero-modo .figura-col-maestro { min-height:0; min-width:0; overflow-y:auto; overscroll-behavior:contain; padding:clamp(.7rem,1.4vw,1.05rem); gap:.55rem; justify-content:flex-start; }
+.hero .figura-hero-modo .mm-profesor-cabecera { display:grid; grid-template-columns:70px minmax(0,1fr)!important; text-align:left; align-items:center; gap:.65rem; padding:0 0 .6rem; flex:0 0 auto; }
+.hero .figura-hero-modo .mm-avatar-slot { width:70px!important; height:80px!important; min-height:0!important; border-radius:12px; overflow:hidden; background:linear-gradient(160deg,#edf1ff,#fff); }
+.hero .figura-hero-modo .vertiz-stage-mini .mini-escenario { width:70px!important; height:80px!important; margin:0!important; }
+.hero .figura-hero-modo .vertiz-stage-mini .avatar-escena { width:68px!important; height:78px!important; left:50%; margin-left:-34px!important; bottom:0; }
+.hero .figura-hero-modo .tutor-canvas { transform:none!important; }
+.hero .figura-hero-modo .mm-profesor-info { width:100%; min-width:0; align-items:flex-start; gap:.35rem; }
+.hero .figura-hero-modo .mm-profesor-top { display:none; }
+.hero .figura-hero-modo .mm-profesor-nombre { font-size:.93rem; line-height:1.35; text-align:left; }
+.hero .figura-hero-modo .mm-controles-audio { justify-content:flex-start; flex-wrap:wrap; gap:.35rem; }
+.hero .figura-hero-modo .btn-mm-chip-voz { min-height:36px; padding:.35rem .55rem; font-size:.77rem; border-radius:9px; }
+.hero .figura-hero-modo .mm-progreso-fila { justify-content:flex-start; gap:.65rem; flex:0 0 auto; }
+.hero .figura-hero-modo .mm-num-tag { padding:.36rem .55rem; font-size:.78rem; }
+.hero .figura-hero-modo .mm-puntos-lista { gap:.25rem; flex-wrap:wrap; min-width:0; }
+.hero .figura-hero-modo .mm-punto-paso { width:28px; height:28px; font-size:.78rem; }
+.hero .figura-hero-modo .mm-caja-dialogo { display:block; flex:0 0 auto; min-width:0; min-height:0; max-height:none; overflow:visible; padding:.85rem .95rem; border:1px solid #d7ddf2; border-left:4px solid #5750d9; box-shadow:0 6px 20px rgba(37,46,94,.06); }
+.hero .figura-hero-modo .mm-dialogo-header { gap:.4rem; margin:0 0 .5rem; }
+.hero .figura-hero-modo .mm-dialogo-titulo { font-size:clamp(1rem,1.3vw,1.1rem); line-height:1.35; white-space:normal; overflow-wrap:anywhere; }
+.hero .figura-hero-modo .mm-capa-foco { white-space:normal; overflow-wrap:anywhere; max-width:100%; }
+.hero .figura-hero-modo .mm-dialogo-texto { font-size:clamp(.96rem,1.15vw,1.06rem); line-height:1.66; color:#303b5d; white-space:normal; overflow-wrap:anywhere; word-break:normal; max-height:none; margin:0; }
+.hero .figura-hero-modo .mm-transcripcion { display:none; }
+.hero .figura-hero-modo .mm-narrando .mm-transcripcion { display:block; font-size:.83rem; margin:.6rem 0 0; padding:.5rem .6rem; }
+.hero .figura-hero-modo .mm-estado-narracion { position:absolute; width:1px; height:1px; padding:0; margin:0; overflow:hidden; clip-path:inset(50%); border:0; white-space:nowrap; }
+.hero .figura-hero-modo .mm-guion-lista { display:none; }
+.hero .figura-hero-modo .mm-acciones-fila { margin-top:auto; flex:0 0 auto; position:sticky; bottom:0; padding:.4rem 0 0; background:#fff; grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr); z-index:3; }
+.hero .figura-hero-modo .btn-mm-nav { min-height:44px; padding:.6rem .6rem; font-size:.9rem; line-height:1.3; white-space:normal; }
+.hero .figura-hero-modo .tutor-consigna { display:none; }
+@media(max-width:920px) {
+  .hero { height:auto; min-height:0; display:block; padding:.75rem; }
+  .hero .wrap { padding-top:0; height:auto; }
+  .hero-explorador { height:auto; }
+  .hero .hero-figura { height:auto; min-height:0; overflow:visible; }
+  .hero .figura-hero-modo { height:auto; min-height:0; }
+  .hero .figura-hero-modo .figura-escenario-clase { display:grid; grid-template-columns:minmax(0,1fr); height:auto; overflow:visible; }
+  .hero .figura-hero-modo .figura-col-lienzo { height:auto; overflow:visible; }
+  .hero .figura-hero-modo .figura-stage-wrap { flex:none; height:clamp(310px,54vw,460px); }
+  .hero .figura-hero-modo .figura-col-maestro { height:auto; max-height:none; overflow:visible; }
+  .hero .figura-hero-modo .figura-capas { max-height:none; overflow:visible; }
+  .hero .figura-hero-modo .mm-acciones-fila { position:static; }
+}
+@media(max-width:600px) {
+  .hero { padding:.55rem; }
+  .hero-solidos-nav { display:block; padding:0; }
+  .hero-solidos-etiqueta { display:block; font-size:.77rem; margin:0 0 .25rem .15rem; }
+  .hero-solidos-links { gap:.35rem; padding:.18rem .1rem .35rem; }
+  .hero-solidos-links a { min-height:40px; padding:.46rem .7rem; font-size:.81rem; }
+  .hero .hero-figura { border-radius:14px; }
+  .hero .figura-hero-modo .figura-stage-wrap { height:clamp(265px,80vw,370px); }
+  .hero .figura-hero-modo .figura-col-maestro { padding:.8rem; gap:.65rem; }
+  .hero .figura-hero-modo .mm-profesor-cabecera { grid-template-columns:62px minmax(0,1fr)!important; gap:.6rem; }
+  .hero .figura-hero-modo .mm-avatar-slot { width:62px!important; height:76px!important; }
+  .hero .figura-hero-modo .vertiz-stage-mini .mini-escenario { width:62px!important; height:76px!important; }
+  .hero .figura-hero-modo .vertiz-stage-mini .avatar-escena { width:60px!important; height:74px!important; margin-left:-30px!important; }
+  .hero .figura-hero-modo .mm-caja-dialogo { padding:.8rem .85rem; }
+  .hero .figura-hero-modo .mm-dialogo-texto { font-size:1rem; line-height:1.6; }
+  .hero .figura-hero-modo .mm-acciones-fila { grid-template-columns:minmax(0,1fr) minmax(0,1.2fr); }
+}
+@media(prefers-reduced-motion:reduce){.hero-solidos-links{scroll-behavior:auto}}

@@ -135,9 +135,12 @@ function tutores(guardado) {
   vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/tutores.js'),'utf8'),{window,document,URL,localStorage:{getItem:k=>datos[k],setItem:(k,v)=>{datos[k]=v;}},CustomEvent:function(){}});
   return {api:window.Tutores,datos};
 }
-test('preferencia desconocida usa el dragón y rechaza opciones inválidas',()=>{
-  const {api}=tutores('desconocido');assert.equal(api.actual(),'dragon');
-  assert.equal(api.elegir('inexistente'),false);assert.equal(api.actual(),'dragon');
+test('tutor predeterminado es Vértiz y no se ofrecen dragones como emoji',()=>{
+  const {api}=tutores('desconocido');assert.equal(api.actual(),'vertiz');
+  assert.equal(api.elegir('dragon'),false);
+  assert.equal(api.elegir('dragon-alado'),false);
+  assert.equal(api.elegir('inexistente'),false);assert.equal(api.actual(),'vertiz');
+  assert.ok(!api.catalogo.some(p=>p.id==='dragon'||p.id==='dragon-alado'));
 });
 test('elegir Pokémon recuerda el tutor y proporciona una voz humana diferenciada',()=>{
   const {api,datos}=tutores('vertiz');
@@ -146,7 +149,7 @@ test('elegir Pokémon recuerda el tutor y proporciona una voz humana diferenciad
 });
 test('los recursos del dragón y Pokémon están incluidos localmente',()=>{
   const {api}=tutores('dragon');
-  assert.equal(api.catalogo.filter(p=>p.tipo==='3D').length,9);
+  assert.equal(api.catalogo.filter(p=>p.tipo==='3D').length,7);
   api.catalogo.filter(p=>p.pokemon).forEach(p=>['gif','png'].forEach(ext=>assert.ok(fs.statSync(path.join(__dirname,'vendor/pokemon-'+p.pokemon+'.'+ext)).size>0)));
   const glb=fs.readFileSync(path.join(__dirname,'vendor/tutor-dragon.glb'));
   assert.equal(glb.readUInt32LE(0),0x46546c67);
@@ -546,4 +549,19 @@ test('Fase 6: el ZIP y el build incluyen recursos y evidencias del cierre',()=>{
  assert.equal(window.Descarga.crc32(Uint8Array.from([65,66,67])),2743272264);
  const build=fs.readFileSync(path.join(__dirname,'build.js'),'utf8');
  ['QA-FASE6','sitemap.xml','robots.txt','FASE6-REPORTE-2026-11-14.md'].forEach(x=>assert.ok(build.includes("'"+x+"'")));
+});
+
+
+test('Portada de sólidos: ocho opciones, sin franja Aula 3D ni sección de dragón',()=>{
+  const html=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
+  const js=fs.readFileSync(path.join(__dirname,'js/inicio.js'),'utf8');
+  const css=fs.readFileSync(path.join(__dirname,'css/portada-limpia.css'),'utf8');
+  assert.equal((html.match(/data-solido="/g)||[]).length,8);
+  assert.ok(html.includes('aria-label="Elegir sólido geométrico"'));
+  assert.ok(!html.includes('class="seccion banda-vertiz"'));
+  assert.ok(js.includes("prisma:'prisma-elementos'"));
+  assert.ok(js.includes("esfera:'esfera'"));
+  assert.ok(css.includes('.hero::before'));
+  assert.ok(css.includes('content:none'));
+  assert.ok(css.includes('.mm-dialogo-texto'));
 });

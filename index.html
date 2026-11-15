@@ -28,6 +28,7 @@
 <script defer src="vendor/katex-auto-render.min.js"></script>
 <script defer src="js/matematicas.js?v=20261028-1"></script>
   <link rel="stylesheet" href="css/rediseño-visual.css?v=20261114-8">
+  <link rel="stylesheet" href="css/portada-limpia.css?v=20261115-1">
 </head>
 <body data-pagina="inicio">
 <a class="salto-contenido" href="#ruta">Saltar a la ruta de módulos</a>
@@ -89,7 +90,21 @@
         </div>
       </div>
 
-      <div class="hero-figura" id="hero-figura-contenedor" role="group" aria-label="Laboratorio geométrico: prisma interactivo 3D o 2D">
+      <div class="hero-explorador">
+        <nav class="hero-solidos-nav" aria-label="Elegir sólido geométrico">
+          <span class="hero-solidos-etiqueta">Explora un sólido</span>
+          <div class="hero-solidos-links">
+            <a href="?solido=prisma" data-solido="prisma">Prisma</a>
+            <a href="?solido=piramide" data-solido="piramide">Pirámide</a>
+            <a href="?solido=cilindro" data-solido="cilindro">Cilindro</a>
+            <a href="?solido=cono" data-solido="cono">Cono</a>
+            <a href="?solido=esfera" data-solido="esfera">Esfera</a>
+            <a href="?solido=tetraedro" data-solido="tetraedro">Tetraedro</a>
+            <a href="?solido=octaedro" data-solido="octaedro">Octaedro</a>
+            <a href="?solido=cubo" data-solido="cubo">Cubo</a>
+          </div>
+        </nav>
+        <div class="hero-figura" id="hero-figura-contenedor" role="group" aria-label="Laboratorio geométrico: prisma interactivo 3D o 2D">
         <svg viewBox="0 0 380 320" role="img" aria-label="Prisma recto de base rectangular con su diagonal espacial, una diagonal de cara y la altura marcadas.">
           <defs>
             <linearGradient id="gCara" x1="0" y1="0" x2="1" y2="1">
@@ -137,6 +152,7 @@
           Prisma recto: la altura coincide con la arista lateral, la diagonal de cara usa dos
           dimensiones y la diagonal espacial, las tres.
         </p>
+        </div>
       </div>
     </div>
   </section>
@@ -186,25 +202,6 @@
       </div>
     </div>
   </section>
-
-  <!-- Vértiz, el personaje guía -->
-  <section class="seccion banda-vertiz" aria-labelledby="titulo-vertiz">
-    <div class="wrap">
-      <h2 id="titulo-vertiz" class="visualmente-oculto">Vértiz, el personaje que te acompaña</h2>
-      <div class="vertiz-marco">
-        <div id="avatar-guia" aria-label="Vértiz, el personaje guía"></div>
-        <div class="vertiz-texto">
-          <span class="pildora">Profesor Virtual y Guía 3D</span>
-          <h3>Tu guía, a tu ritmo</h3>
-          <p>Selecciona un tutor y una voz desde el panel de las figuras. Controla cada paso, repite las explicaciones cuando lo necesites y continúa a tu propio ritmo. Tu elección queda guardada en este dispositivo.</p>
-          <p class="vertiz-nota">
-            <strong>Aprendizaje accesible:</strong> Puedes seguir toda la explicación por escrito, con la voz activada o silenciada.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
 
   <!-- Por qué funciona -->
   <section class="seccion" aria-labelledby="titulo-enfoque">
@@ -294,6 +291,6 @@
 <script src="js/ui.js?v=20261114-2"></script>
 <script src="js/narracion-ui.js?v=20261114-4"></script>
 <script src="js/visor.js?v=20261115-1"></script>
-<script src="js/inicio.js?v=20261114"></script>
+<script src="js/inicio.js?v=20261115-1"></script>
 </body>
 </html>

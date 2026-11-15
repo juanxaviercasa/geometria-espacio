@@ -10,13 +10,8 @@
     pintarDatosHero();
     pintarRuta();
     pintarContinuar();
-    UI.iniciar({
-      avatar: {
-        estado: 'camina',
-        mensaje: Avatar.MENSAJES.inicio
-      }
-    });
-    montarConsejosPortada();
+    // La portada es un aula de sólidos, no un escaparate de personajes.
+    UI.iniciar({avatar:false});
     montarHero3D();
     document.getElementById('bloque-continuar').hidden = false;
   }
@@ -25,29 +20,25 @@
     var cont = document.getElementById('hero-figura-contenedor');
     if (!cont || !window.Visor) return;
     try {
-      cont.innerHTML = '';
-      window.Visor.montar(cont, 'prisma-diagonales', { modoHero: true, sinAviso: true });
+      var modelos = {
+        prisma:'prisma-elementos',
+        piramide:'piramide-elementos',
+        cilindro:'cilindro',
+        cono:'cono',
+        esfera:'esfera',
+        tetraedro:'tetraedro',
+        octaedro:'octaedro',
+        cubo:'cubo-seccion'
+      };
+      var elegido = new URLSearchParams(window.location.search).get('solido') || 'prisma';
+      if (!Object.prototype.hasOwnProperty.call(modelos,elegido)) elegido='prisma';
+      document.querySelectorAll('.hero-solidos-links [data-solido]').forEach(function(a){
+        if (a.dataset.solido===elegido) a.setAttribute('aria-current','true');
+      });
+      window.Visor.montar(cont, modelos[elegido], { modoHero: true, sinAviso: true });
     } catch (e) {
       console.warn('Error al montar figura hero 3D:', e);
     }
-  }
-
-  /* El botón «Otro consejo» recorre los consejos y hace caminar a Vértiz */
-  function montarConsejosPortada() {
-    var guia = window.AvatarGuia;
-    var T = Avatar.TIPS || {};
-    var consejos = ['inicio', 'puntos', 'posiciones', 'paralelismo', 'perpendicularidad',
-      'angulos', 'proyecciones', 'triedro', 'prismas', 'piramides', 'redondos',
-      'regulares', 'secciones', 'integrador']
-      .map(function (k) { return T[k]; }).filter(Boolean);
-    var i = 0;
-    var caja = document.querySelector('#avatar-guia .avatar-caja');
-    if (!caja || !consejos.length) return;
-    caja.addEventListener('avatar-otro', function () {
-      i = (i + 1) % consejos.length;
-      if (!guia) return;
-      guia.caminaA(i % 3 === 0 ? 'centro' : i % 3 === 1 ? 'izq' : 'der', consejos[i], 'habla', 2600);
-    });
   }
 
   function pintarDatosHero() {

@@ -4,7 +4,6 @@
 (function (global) {
   'use strict';
   var CATALOGO = [
-    { id: 'dragon', nombre: 'Dragón', tipo: '3D', emoji: '🐉' },
     { id: 'capibara', nombre: 'Capibara', tipo: '3D', emoji: '🦫' },
     { id: 'aguila', nombre: 'Águila', tipo: '3D', emoji: '🦅' },
     { id: 'zorro', nombre: 'Zorro', tipo: '3D', emoji: '🦊' },
@@ -12,7 +11,6 @@
     { id: 'panda', nombre: 'Panda', tipo: '3D', emoji: '🐼' },
     { id: 'conejo', nombre: 'Conejo', tipo: '3D', emoji: '🐰' },
     { id: 'lobo', nombre: 'Lobo', tipo: '3D', emoji: '🐺' },
-    { id: 'dragon-alado', nombre: 'Dragón alado (animado)', tipo: '3D', emoji: '🐉' },
     { id: 'pikachu', nombre: 'Pikachu', tipo: 'Pokémon 2D', pokemon: 25 },
     { id: 'charizard', nombre: 'Charizard', tipo: 'Pokémon 2D', pokemon: 6 },
     { id: 'eevee', nombre: 'Eevee', tipo: 'Pokémon 2D', pokemon: 133 },
@@ -20,7 +18,7 @@
     { id: 'vertiz', nombre: 'Vértiz clásico', tipo: 'Ilustración' }
   ];
   var clave = 'geo3d.tutor.v1';
-  var estiloVoz = 'personaje';
+  var estiloVoz = 'natural';
   try { var estiloGuardado=localStorage.getItem('geo3d.voz.estilo.v1');if(['natural','anime'].indexOf(estiloGuardado)!==-1)estiloVoz=estiloGuardado; } catch(e) {}
   var vocesSelectores = [];
   var PERFILES = {
@@ -39,7 +37,7 @@
     ,lobo:{pitch:0.79,rate:0.98,descripcion:'Grave y segura'}
     ,'dragon-alado':{pitch:0.72,rate:0.93,descripcion:'Grave y aventurera'}
   };
-  var elegido = 'dragon';
+  var elegido = 'vertiz';
   try { var valor = localStorage.getItem(clave); if (buscar(valor)) elegido = valor; } catch (e) {}
   var vistas = [], selectores = [], cargas = {}, T, renderer, scene, camera, modelo, mixer, alas = [], cabeza;
   var revision = 0, animacion = 0, ultimo = 0, hablando = false, giro = 0.35, arrastrando = false;
