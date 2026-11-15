@@ -105,3 +105,108 @@ h1,h2,h3,h4 { color:var(--ink); } .seccion-cabeza { max-width:70ch; }
   .mm-acciones-fila { grid-template-columns:1fr; } .btn-mm-nav { width:100%; }
 }
 @media (prefers-reduced-motion:reduce) { .hero-figura,.modulo,.leccion-fila { transition:none; } }
+
+/* ================================================================
+   Rediseño visual 2 — estudio-laboratorio: contraste, escala y ritmo
+   Esta capa final prioriza una experiencia de estudio visible y no decorativa.
+   ================================================================ */
+:root {
+  --studio-ink:#111936;
+  --studio-navy:#121a42;
+  --studio-violet:#5b4ee8;
+  --studio-cyan:#28b9c9;
+  --studio-paper:#f4f6fc;
+}
+body { background:var(--studio-paper); }
+.sitio-head { background:#fff; box-shadow:0 1px 0 rgba(17,25,54,.08); position:relative; z-index:5; }
+.sitio-head .wrap.sitio-head-inner,.sitio-head .wrap:not(.sitio-head-inner) { min-height:84px; }
+.marca span b { font-weight:800; letter-spacing:-.025em; }
+.nav-principal a { font-weight:700; }
+
+/* Portada: entrada editorial + aula protagonista. */
+.hero {
+  color:#fff;
+  background:
+    radial-gradient(circle at 85% 20%,rgba(40,185,201,.22),transparent 24rem),
+    radial-gradient(circle at 18% 115%,rgba(120,97,255,.28),transparent 28rem),
+    linear-gradient(128deg,#101735 0%,#1b2250 52%,#272472 100%);
+  padding:clamp(3.5rem,7vw,7rem) 0 clamp(3.5rem,6vw,6rem);
+  overflow:hidden;
+  position:relative;
+}
+.hero::after { content:""; position:absolute; inset:auto -8% -45% 35%; height:28rem; border:1px solid rgba(255,255,255,.11); border-radius:50%; transform:rotate(-12deg); pointer-events:none; }
+.hero .wrap { position:relative; z-index:1; grid-template-columns:minmax(380px,.78fr) minmax(0,1.22fr); gap:clamp(2rem,5vw,6rem); }
+.hero h1 { color:#fff; font-size:clamp(3.4rem,6.8vw,6.8rem); line-height:.94; letter-spacing:-.075em; max-width:9ch; margin-block:.8rem 1.5rem; }
+.hero h1 em { color:#8eeaf0; background:none; font-style:normal; }
+.hero .entradilla { color:#dbe3ff; font-size:clamp(1.08rem,1.6vw,1.3rem); max-width:45ch; line-height:1.65; }
+.hero .eyebrow { color:#b8f5f4; background:rgba(37,195,202,.13); border-color:rgba(142,234,240,.35); }
+.hero-acciones { align-items:center; margin-top:2.1rem; }
+.hero-acciones .btn { border:0; box-shadow:0 12px 24px rgba(0,0,0,.22); }
+.hero-acciones .btn:not(.secundario) { background:#79edf0; color:#102047; }
+.hero-acciones .btn.secundario { background:rgba(255,255,255,.1); color:#fff; border:1px solid rgba(255,255,255,.35); }
+.hero .enlace-lab { color:#a9b7ff; }
+.hero-datos { border-color:rgba(255,255,255,.2); }
+.hero-datos div { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); color:#cbd5f4; border-radius:12px; }
+.hero-datos strong { color:#fff; }
+.hero-figura { min-height:650px; background:#fff; border:1px solid rgba(255,255,255,.6); border-radius:28px; box-shadow:0 35px 90px rgba(3,8,35,.4); transform:translateY(-.5rem); }
+.hero-figura > svg { min-height:570px; padding:2.2rem; }
+.hero-figura .figura-pie-referencia { color:#53607c; background:#f3f6ff; border-top:1px solid #e2e7f6; border-radius:0 0 28px 28px; padding:1rem 1.4rem; }
+
+/* Ruta: menos vacío, más señal de progreso. */
+.seccion#ruta { background:#f7f8fd; }
+.continuar { background:linear-gradient(110deg,#24205f,#4b3ec4); color:#fff; border:0; border-radius:20px; padding:1.6rem 1.8rem; box-shadow:0 18px 42px rgba(57,47,152,.2); }
+.continuar h2,.continuar p { color:#fff; } .continuar p { opacity:.8; }
+.continuar .btn { background:#8df0ee; color:#152044; }
+.seccion-cabeza { margin-bottom:2rem; } .seccion-cabeza h2 { font-size:clamp(2rem,4vw,3.4rem); letter-spacing:-.06em; }
+.seccion-cabeza p { font-size:1.08rem; max-width:62ch; }
+.ruta { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1rem; }
+.modulo { background:#fff; border:1px solid #e1e5f2; box-shadow:0 8px 24px rgba(31,38,78,.07); overflow:hidden; }
+.modulo:hover { border-color:#aaa3ff; box-shadow:0 16px 34px rgba(66,58,178,.14); transform:translateY(-2px); }
+.modulo-cabeza { min-height:92px; align-items:center; } .modulo-titulo { font-size:1.17rem; font-weight:800; }
+.modulo-desc { color:#62708d; } .modulo-num { background:#eeedff; color:#4d42c8; }
+.modulo-cuerpo { border-top:1px solid #edf0f7; }
+.leccion-fila { border-radius:10px; } .leccion-fila strong { color:#252b48; }
+
+/* Tutor: convertirlo en una sección protagonista, no en un pie decorativo. */
+.banda-vertiz { background:linear-gradient(135deg,#dceff3 0%,#e8e7ff 48%,#f8f3ff 100%); border-block:1px solid #d8e2f4; }
+.vertiz-marco { min-height:360px; grid-template-columns:minmax(260px,.7fr) minmax(0,1.3fr); align-items:center; background:#fff; border:1px solid rgba(105,102,190,.18); border-radius:30px; box-shadow:0 20px 60px rgba(58,57,130,.12); }
+.vertiz-marco #avatar-guia { min-height:300px; display:flex; align-items:center; justify-content:center; }
+.vertiz-marco .avatar-escenario { max-width:260px; height:310px; }
+.vertiz-marco .avatar-escena { width:240px; height:300px; margin-left:-120px; }
+.vertiz-texto { padding:1rem 1.5rem 1rem 0; } .vertiz-texto h3 { font-size:clamp(2rem,4vw,3.5rem); letter-spacing:-.06em; }
+.vertiz-texto p { font-size:1.08rem; line-height:1.75; color:#4d5a77; }
+
+/* Aula y páginas internas: superficies más contrastadas y controles agrupados. */
+.figura { border:1px solid #d8dff0; box-shadow:0 24px 65px rgba(26,35,83,.17); }
+.figura-barra-sup { background:#17204a; color:#fff; border-bottom:0; padding:1rem 1.25rem; }
+.figura-barra-sup * { color:inherit; } .hud-fig-titulo { font-weight:800; }
+.figura-lienzo,.figura-lienzo.lienzo-hero { height:clamp(500px,48vw,700px); }
+.figura-stage-wrap { background:radial-gradient(circle at 50% 42%,#fff 0%,#edf2ff 65%,#dae2f4 100%); }
+.figura-col-maestro { background:linear-gradient(180deg,#f9faff 0%,#fff 100%); padding:1.5rem; }
+.mm-caja-dialogo { background:#fff; border:1px solid #e0e4f1; box-shadow:0 8px 20px rgba(32,43,93,.06); }
+.mm-profesor-nombre,.mm-dialogo-titulo { font-weight:800; color:#20284d; }
+.mm-avatar-slot { background:linear-gradient(145deg,#edf0ff,#fff); border-radius:18px; }
+
+.leccion-cabeza h1 { font-size:clamp(2.6rem,5vw,4.6rem); letter-spacing:-.07em; }
+.leccion-layout,.practica-layout { gap:clamp(2.5rem,5vw,5rem); }
+.contenido { font-size:1.1rem; line-height:1.85; } .contenido h2 { font-size:2rem; letter-spacing:-.04em; }
+.tarjeta-aside,.ejercicio,.reto,.doc-seccion { border:1px solid #dde3f1; box-shadow:0 12px 30px rgba(31,38,78,.07); }
+.filtros { background:#182149; color:#fff; border:0; } .filtros label { color:#dbe2ff; }
+.sitio-pie { background:#101735; }
+
+@media (max-width:900px) {
+  .hero { padding-block:3rem; } .hero h1 { font-size:clamp(3.2rem,11vw,5.4rem); }
+  .hero-figura { min-height:520px; transform:none; } .hero-figura > svg { min-height:440px; }
+  .ruta { grid-template-columns:1fr; }
+  .vertiz-marco { grid-template-columns:1fr; text-align:center; } .vertiz-texto { padding:0 1rem 1rem; max-width:62ch; margin:auto; }
+  .figura-lienzo,.figura-lienzo.lienzo-hero { height:clamp(410px,70vw,600px); }
+}
+@media (max-width:680px) {
+  .hero { padding-block:2.5rem 3rem; } .hero h1 { font-size:clamp(3rem,15vw,4.4rem); }
+  .hero-figura { min-height:410px; border-radius:20px; } .hero-figura > svg { min-height:330px; padding:1rem; }
+  .hero-figura .figura-pie-referencia { border-radius:0 0 20px 20px; }
+  .hero-datos { grid-template-columns:repeat(2,1fr); }
+  .vertiz-marco { border-radius:22px; } .vertiz-marco #avatar-guia { min-height:230px; }
+  .vertiz-marco .avatar-escenario { max-width:190px; height:230px; } .vertiz-marco .avatar-escena { width:178px; height:220px; margin-left:-89px; }
+  .figura-barra-sup { padding:.75rem; } .figura-col-maestro { padding:.85rem; }
+}
