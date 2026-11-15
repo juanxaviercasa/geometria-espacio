@@ -92,9 +92,9 @@
 - [x] Verificar portada (12 módulos/17 enlaces), todas las lecciones, 107 ejercicios y 18 retos por DOM; probar respuestas errónea/correcta, pistas, progreso y controles de reto; se preservó navegación.
 - [x] Confirmar 174/174 verificaciones del curso, 64 recálculos numéricos, 18 comprobadores de retos y diagnóstico de 129 distractores; 17 lecciones sin duplicados ni errores KaTeX.
 - [x] Guardar dos capturas reales a 320 px de la tabla y registro de incidencias clasificado con valores antes/después.
-- [x] Publicar informe de Fase 6 y matriz JSON, distinguir Chromium y pruebas aisladas de certificación física externa; activar pruebas y build en Cloudflare.
+- [x] Publicar informe de Fase 6 y matriz JSON, distinguir Chromium y pruebas aisladas de certificación física externa; activar pruebas y build en Cloudflare: ejecución verificada, **40/40 tests y build exitoso**, despliegue `5828e1f`.
 
 **Informe de cierre:** [FASE6-REPORTE-2026-11-14.md](FASE6-REPORTE-2026-11-14.md) y [matriz QA](QA-FASE6/matriz.json). No atribuir certificación física Safari/Firefox/lectores de pantalla sin dispositivos reales.
 
 ## Registro de ejecución (esta intervención)
-Cambios guardados directamente en `main` en una serie de commits pequeños: validación numérica, puntuación de ejercicios y retos, seguridad básica del servidor local, semántica del catálogo, estructura del hero, mejoras CSS, contador inicial y pruebas Node ampliadas. **No se afirma que el despliegue se haya actualizado ni que las pruebas se hayan ejecutado automáticamente.** Se requiere `npm test`, `npm run build` y auditoría visual del sitio desplegado antes de dar por cerrada la fase.
+Cambios guardados directamente en `main` en una serie de commits pequeños: validación numérica, puntuación de ejercicios y retos, seguridad básica del servidor local, semántica del catálogo, estructura del hero, mejoras CSS, contador inicial y pruebas Node ampliadas. **No se afirma que el despliegue se haya actualizado ni que las pruebas se hayan ejecutado automáticamente.** Comprobación posterior: el despliegue de Cloudflare Pages ejecutó efectivamente `npm test && npm run build` con 40/40 pruebas y publicación exitosa. La auditoría visual en Chromium está documentada en Fase 6; siguen pendientes dispositivos físicos.

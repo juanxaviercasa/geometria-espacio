@@ -48,3 +48,16 @@ Esta auditoría se ejecutó en Chromium remoto y mediante pruebas de contenido v
 **Estado:** cierre de implementación de Fase 6 y correcciones auditadas en el navegador conectado; las pruebas físicas externas se informan por separado, no se declaran superadas sin ejecutarlas.
 
 No se modificaron los identificadores de lecciones ni las claves de progreso. Se preservan las Fases 1–5.
+
+
+## 6. Certificación técnica confirmada posteriormente — 14/11/2026 (PET)
+
+Se verificó directamente el registro del despliegue de Cloudflare Pages **`f5084602-d02c-41f9-a02a-1fc91f4d822a`**, asociado al commit `5828e1f41fc80775d3b70156eef390ee42973bfc` en producción.
+
+- Configuración efectiva: `npm test && npm run build`, directorio `dist`.
+- Resultado Node TAP: **40 pruebas, 40 superadas, 0 fallidas, 0 omitidas**; duración del runner ~868 ms.
+- Ejecución del build: `node build.js` → **«Build completado en ./dist (28 recursos copiados)»**.
+- Pages informó **85/85 activos procesados**, las dos reglas `_headers` analizadas y **«Success: Your site was deployed!»**.
+- La página pública `/verificacion.html` a **320 px** fue inspeccionada después: ancho del documento **320/320 px**, **174/174 autocomprobaciones**, marcador «Todo correcto», panel de rendimiento disponible y cero elementos de error detectados en esa visita.
+
+Esta verificación sustituye el carácter *pendiente* del punto de pruebas de build del apartado 4. La certificación física transversal (Safari, Firefox, NVDA, VoiceOver, TalkBack y rendimiento de usuarios reales) **sigue sin realizarse**; no debe presentarse como superada.
