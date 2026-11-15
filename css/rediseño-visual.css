@@ -329,3 +329,21 @@ body { background:var(--studio-paper); }
 @media (max-width:680px) {
   .figura-col-maestro .tutor-canvas { transform:scale(1.45); }
 }
+
+/* Tutor protagonista v7: escala visible para el personaje 3D. */
+.figura-col-maestro .mm-avatar-slot { height:260px; min-height:260px; }
+.figura-col-maestro .vertiz-stage-mini .mini-escenario { height:260px; }
+.figura-col-maestro .vertiz-stage-mini .avatar-escena { height:260px; }
+.figura-col-maestro .tutor-canvas { transform:scale(2.45); }
+@media (max-width:900px) {
+  .figura-col-maestro .mm-avatar-slot { height:230px; min-height:230px; }
+  .figura-col-maestro .vertiz-stage-mini .mini-escenario { height:230px; }
+  .figura-col-maestro .vertiz-stage-mini .avatar-escena { height:230px; }
+  .figura-col-maestro .tutor-canvas { transform:scale(2.15); }
+}
+@media (max-width:680px) {
+  .figura-col-maestro .mm-avatar-slot { height:200px; min-height:200px; }
+  .figura-col-maestro .vertiz-stage-mini .mini-escenario { height:200px; }
+  .figura-col-maestro .vertiz-stage-mini .avatar-escena { height:200px; }
+  .figura-col-maestro .tutor-canvas { transform:scale(1.85); }
+}
