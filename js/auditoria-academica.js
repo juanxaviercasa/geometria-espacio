@@ -50,7 +50,24 @@ var claves={
   m11l1e5:function(){return Math.PI*4/3*(6*6+3*3+6*3);},
   m12l1e2:function(){return Math.hypot(1,1);},
   m12l1e3:function(){return Math.pow(8*Math.SQRT2,2)*6/3;},
-  m12l1e5:function(){return Math.pow(6/12,3);}
+  m12l1e5:function(){return Math.pow(6/12,3);},
+  m1l1u1:function(){return 6*5*4/(3*2);},
+  m1l2u1:function(){return 3*6+8*3;},
+  m2l1u1:function(){return (3*Math.sqrt(3)/2)*Math.pow(6/Math.sqrt(2),2);},
+  m2l2u1:function(){return 3/Math.sqrt(3);},
+  m3l1u1:function(){return Math.atan2(1,Math.sqrt(2))*180/Math.PI;},
+  m3l2u1:function(){return Math.acos(Math.abs(-2+2+4)/(3*3))*180/Math.PI;},
+  m4l1u1:function(){return 6*6*Math.cos(Math.PI/3);},
+  m4l2u1:function(){return Math.abs(2*2-3+2*4-10)/Math.sqrt(4+1+4);},
+  m5l1u1:function(){return 70+80-1;},
+  m6l1u1:function(){return Math.hypot(4,9,12);},
+  m6l2u1:function(){return 12*(2+4+6+8)/4;},
+  m7l1u1:function(){return 8*8*Math.sqrt(6*6-Math.pow(8/Math.sqrt(2),2))/3;},
+  m8l1u1:function(){return Math.PI*5*5*12*(1-1/3);},
+  m9l1u1:function(){return (6*4+8*3)/2-(6+8)+2;},
+  m10l1u1:function(){return Math.PI*(13*13-5*5);},
+  m11l1u1:function(){return 6*(100+25+Math.sqrt(100*25))/3;},
+  m12l1u1:function(){return 1-(Math.sqrt(2)**3*Math.sqrt(2)/12); }
 };
 function auditar(contenido) {
   var fallos=[],avisos=[],lista=contenido.listaOrdenada(),banco=contenido.bancoPractica(),retos=contenido.bancoRetos();
@@ -58,7 +75,7 @@ function auditar(contenido) {
   var opciones=banco.filter(function(e){return e.tipo==='opcion';});
   function fallo(id,m){fallos.push({id:id,motivo:m});}
   if(lista.length!==17)fallo('catalogo','Se esperaban 17 lecciones; se encontraron '+lista.length);
-  if(banco.length!==90)fallo('banco','Se esperaban 90 ejercicios; se encontraron '+banco.length);
+  if(banco.length!==107)fallo('banco','Se esperaban 107 ejercicios; se encontraron '+banco.length);
   if(retos.length!==18)fallo('retos','Se esperaban 18 retos; se encontraron '+retos.length);
   lista.forEach(function(e){
     var l=e.leccion;
