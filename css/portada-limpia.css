@@ -83,3 +83,6 @@
   .hero .figura-hero-modo .mm-acciones-fila { grid-template-columns:minmax(0,1fr) minmax(0,1.2fr); }
 }
 @media(prefers-reduced-motion:reduce){.hero-solidos-links{scroll-behavior:auto}}
+
+/* No existe una columna promocional oculta; el explorador es el primer hijo real. */
+.hero .wrap > div:first-child { display:flex; }

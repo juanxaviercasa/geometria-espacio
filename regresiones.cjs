@@ -564,4 +564,6 @@ test('Portada de sólidos: ocho opciones, sin franja Aula 3D ni sección de drag
   assert.ok(css.includes('.hero::before'));
   assert.ok(css.includes('content:none'));
   assert.ok(css.includes('.mm-dialogo-texto'));
+  assert.ok(!html.includes('id="btn-continuar-hero"'), 'sin bloque promocional oculto');
+  assert.ok(!fs.readFileSync(path.join(__dirname,'js/visor.js'),'utf8').includes('✨ AULA 3D'), 'sin franja de Aula 3D ni en el DOM');
 });

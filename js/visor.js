@@ -133,10 +133,11 @@
     var barraSup = document.createElement('div');
     barraSup.className = 'figura-barra-sup';
     barraSup.innerHTML =
-      '<div class="hud-titulo-wrap">' +
-        '<span class="hud-badge">' + (esHero ? '✨ AULA 3D' : '📐 VISOR 3D') + '</span>' +
-        '<p class="hud-fig-titulo">' + spec.titulo + '</p>' +
-      '</div>' +
+      (esHero ? '' :
+        '<div class="hud-titulo-wrap">' +
+          '<span class="hud-badge">📐 VISOR 3D</span>' +
+          '<p class="hud-fig-titulo">' + spec.titulo + '</p>' +
+        '</div>') +
       '<div class="acciones-fig">' +
         (tipoLaboratorio ? '<a class="btn-fig btn-fig-hud" href="laboratorio.html?modelo=' + tipoLaboratorio + '" title="Experimentar con las dimensiones de este tipo de sólido">Modificar medidas ↗</a>' : '') +
         '<button type="button" class="btn-fig btn-fig-hud" data-accion="vista" aria-pressed="false" title="Alternar entre vista 3D y dibujo 2D">' +

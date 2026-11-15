@@ -7,7 +7,6 @@
   var P = window.Progreso;
 
   function iniciar() {
-    pintarDatosHero();
     pintarRuta();
     pintarContinuar();
     // La portada es un aula de sólidos, no un escaparate de personajes.
@@ -39,13 +38,6 @@
     } catch (e) {
       console.warn('Error al montar figura hero 3D:', e);
     }
-  }
-
-  function pintarDatosHero() {
-    var ej = document.getElementById('dato-ejercicios');
-    var re = document.getElementById('dato-retos');
-    if (ej) ej.textContent = Contenido.totalEjercicios();
-    if (re) re.textContent = Contenido.totalRetos();
   }
 
   function etiquetaEstado(est) {
