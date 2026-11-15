@@ -13,6 +13,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/estilos.css?v=20261028-6">
 <link rel="stylesheet" href="css/fase1.css?v=20261114">
+<link rel="stylesheet" href="css/fase5.css?v=20261114-5">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232c3c9e'/%3E%3Cpath d='M16 6l9 5v10l-9 5-9-5V11z' fill='none' stroke='%23fff' stroke-width='1.8'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="vendor/katex.min.css">
 <script defer src="vendor/katex.min.js"></script>
@@ -88,6 +89,17 @@
     <p class="vacio-aviso">Ejecutando…</p>
   </div>
 
+  <section class="doc-seccion perf-panel" id="rendimiento" aria-labelledby="titulo-rendimiento">
+    <div class="perf-intro">
+      <div><span class="eyebrow">CONTROL LOCAL</span><h2 id="titulo-rendimiento">Rendimiento de este dispositivo</h2></div>
+      <button type="button" class="btn secundario pequeno" id="btn-perf-actualizar">Actualizar medición</button>
+    </div>
+    <p>Los valores provienen de tu navegador y no se envían a ningún servicio.
+       LCP, CLS, memoria e INP pueden no estar disponibles; INP requiere interacción real y aquí se muestra
+       una estimación, no un informe certificado de Core Web Vitals. Los recursos pueden salir de caché.</p>
+    <dl id="metricas-rendimiento" class="perf-metricas" aria-label="Métricas locales de la página"></dl>
+  </section>
+
   <section class="doc-seccion" style="margin-top:2.4rem">
     <h2>Cómo se comprueba cada cosa</h2>
     <div class="prosa">
@@ -161,5 +173,6 @@
 <script src="js/auditoria-academica.js?v=20261114"></script>
 <script src="js/auditoria-retos.js?v=20261114"></script>
 <script src="js/verificacion.js?v=20261114-4"></script>
+<script src="js/metricas-rendimiento.js?v=20261114-5"></script>
 </body>
 </html>
