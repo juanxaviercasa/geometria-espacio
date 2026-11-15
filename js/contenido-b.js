@@ -658,7 +658,7 @@
         justifica: 'Toda fórmula de área es una suma de productos de dos longitudes, y toda fórmula de volumen, de tres. Al escalar todas las longitudes por <span class="m">k</span>, cada término de área gana un factor <span class="m">k²</span> y cada término de volumen, <span class="m">k³</span>.'
       },
       {
-        tipo: 'ejemplo', indice: 'Ejemplo resuelto',
+        tipo: 'ejemplo', indice: 'Ejemplo de semejanza',
         titulo: 'Duplicar el volumen',
         enunciado: 'Si se duplica el volumen de un cubo, ¿en qué factor se multiplica su arista? ¿Y su área total?',
         pasos: [
@@ -688,9 +688,9 @@
       },
       {
         id: 'm6l2e2', tipo: 'numerico', dificultad: 'Intermedio',
-        pregunta: 'Un prisma truncado tiene base de 10 m² y alturas de 2, 3, 4 y 5 m en sus cuatro vértices. ¿Cuál es su volumen?',
+        pregunta: 'Un prisma recto truncado por un <strong>plano</strong> tiene base rectangular de 10 m² y alturas de 2, 3, 5 y 4 m medidas <strong>en ese orden alrededor de la base</strong> (vértices opuestos: 2 y 5, 3 y 4). ¿Cuál es su volumen?',
         unidad: 'm³', respuesta: 35, tolerancia: 0,
-        explicacion: 'Media de alturas: <span class="m">(2 + 3 + 4 + 5)/4 = 14/4 = 3,5</span>. Volumen: <span class="m">10 · 3,5 = 35 m³</span>.',
+        explicacion: 'Al ser un corte plano sobre base rectangular, las alturas opuestas deben tener igual suma: <span class="m">2+5=3+4=7</span>. Altura media: <span class="m">(2+3+5+4)/4=3,5</span>. Volumen: <span class="m">10·3,5=35 m³</span>. Si las alturas no fueran compatibles con un plano, no podría aplicarse directamente este promedio.',
         pistas: ['Usa la media de las cuatro alturas.', '<span class="m">V = B · h̄</span>.']
       },
       {
