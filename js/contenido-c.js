@@ -81,7 +81,7 @@
           { titulo: '¿Existe?', html: 'Sí. El vértice está a altura <span class="m">a/√2 ≈ 0,707a</span>, positiva. La pirámide es «baja» comparada con su base, y por eso las caras pueden ser equiláteras sin que el vértice quede en el plano de la base.' },
           { titulo: 'Volumen', html: '<span class="m">V = (1/3)·a²·(a/√2) = a³/(3√2) = a³√2/6 ≈ 0,2357a³</span>.' }
         ],
-        respuesta: '<span class="m">h = a√2/2</span> y <span class="m">V = a³√2/6</span>. Dato curioso: el ángulo entre una cara lateral y la base en esta pirámide es 45°.'
+        respuesta: "<span class=\"m\">h=a√2/2</span> y <span class=\"m\">V=a³√2/6</span>. El diedro entre cada cara lateral y la base es <span class=\"m\">arctan(√2)≈54,74°</span>, no 45°. Se comprueba con <span class=\"m\">cos θ=1/√3</span>."
       },
       {
         tipo: 'errores', indice: 'Errores frecuentes',
@@ -141,26 +141,19 @@
       },
       {
         id: 'm7l1e6', tipo: 'numerico', dificultad: 'Avanzado',
-        pregunta: 'Una pirámide triangular regular tiene arista básica 6 y arista lateral 5. ¿Cuánto mide su altura? Redondea a dos decimales.',
-        unidad: 'u', respuesta: 4.12, tolerancia: 0.02,
-        explicacion: 'Radio de la base (triángulo equilátero de lado 6): <span class="m">R = 6√3/3 = 2√3 ≈ 3,464</span>. Altura: <span class="m">h = √(25 − 12) = √13 ≈ 3,606</span>.',
+        pregunta: "Una pirámide triangular regular tiene lado de base 6 y arista lateral 5. ¿Cuánto mide su altura? Redondea a dos decimales. Distingue la altura perpendicular de la apotema de las caras.",
+        unidad: 'u', respuesta: 3.61, tolerancia: 0.02,
+        explicacion: "En la base equilátera de lado 6, el radio circunscrito es <span class=\"m\">R=6√3/3=2√3</span>. La arista lateral y la altura forman un triángulo rectángulo con catetos R y h, por tanto <span class=\"m\">h=√(5²-(2√3)²)=√13≈3,60555</span>. Redondeando a dos decimales: <strong>3,61</strong> (no debe confundirse con la apotema lateral).",
         pistas: ['El radio de un triángulo equilátero de lado <span class="m">l</span> es <span class="m">l√3/3</span>.', '<span class="m">h² = L² − R²</span>.']
       }
     ],
     retos: [
       {
         id: 'm7l1r1', titulo: 'Pirámide inscrita en un cubo', nivel: 'UNI', puntos: 25,
-        enunciado: 'En un cubo de arista <var>a</var>, se forma una pirámide con vértice en un vértice del cubo y base en la cara opuesta. Halla el volumen de la pirámide y la razón entre ese volumen y el del cubo. Después, calcula el ángulo entre una arista lateral y la base.',
-        estrategia: ['Identifica la base y la altura: la altura es la arista del cubo.', 'La base es la cara opuesta completa.', 'Para el ángulo, usa el radio de la base.'],
-        desarrollo: [
-          'Base: la cara opuesta, un cuadrado de lado <span class="m">a</span>, área <span class="m">a²</span>.',
-          'Altura: la distancia del vértice a esa cara es <span class="m">a</span>, porque las aristas del cubo son perpendiculares a las caras.',
-          'Volumen: <span class="m">V = (1/3)·a²·a = a³/3</span>. Es exactamente un tercio del cubo.',
-          'Ángulo entre una arista lateral y la base: la arista lateral une el vértice con un vértice de la cara opuesta, es una diagonal espacial del cubo, longitud <span class="m">a√3</span>. El radio de la base es <span class="m">R = a√2/2</span> (semidiagonal del cuadrado).',
-          '<span class="m">sen θ = h/L = a/(a√3) = 1/√3</span>, luego <span class="m">θ ≈ 35,26°</span>. Comprobación con el coseno: <span class="m">cos θ = R/L = (a√2/2)/(a√3) = √(2/6) = 1/√3</span>. ¡Ambos dan lo mismo!',
-          'Revisión: si <span class="m">sen θ = cos θ</span>, entonces <span class="m">θ = 45°</span>. Hay un error. Lo correcto: <span class="m">sen θ = h/L = a/(a√3) = 1/√3 ≈ 0,5774</span> → <span class="m">θ ≈ 35,26°</span>. Y <span class="m">cos θ = R/L = (a√2/2)/(a√3) = √2/(2√3) = √6/6 ≈ 0,4082</span> → <span class="m">θ ≈ 65,9°</span>. La suma de ambos ángulos es 90°, como debe ser en un triángulo rectángulo.'
-        ],
-        respuesta: '<span class="m">V = a³/3</span>: la pirámide ocupa un tercio del cubo. El ángulo entre arista lateral y base cumple <span class="m">sen θ = 1/√3</span>, es decir <span class="m">θ ≈ 35,26°</span>.'
+        enunciado: "En un cubo de arista <var>a</var>, se forma una pirámide con vértice en <var>A</var> y base en la cara superior <span class=\"m\">A₁B₁C₁D₁</span>. Calcula su volumen y la fracción del cubo que ocupa. Después, calcula el ángulo entre la arista lateral <strong><span class=\"m\">AC₁</span></strong> (diagonal espacial del cubo) y el plano de la base.",
+        estrategia: ["Esta pirámide no es regular: el pie de su altura es A₁, un vértice de la base, no el centro.","Su base es un cuadrado de lado a; la distancia entre el vértice A y el plano superior es a.","La arista especificada AC₁ es una diagonal espacial; proyecta AC₁ sobre A₁C₁ para hallar su ángulo con la base."],
+        desarrollo: ["La base <span class=\"m\">A₁B₁C₁D₁</span> tiene área <span class=\"m\">B=a²</span>.","Como <span class=\"m\">AA₁</span> es perpendicular a la cara superior, la altura es <span class=\"m\">h=AA₁=a</span>; su pie <var>A₁</var> no es el centro de la base.","El volumen vale <span class=\"m\">V=(1/3)a²·a=a³/3</span>, así que representa exactamente <span class=\"m\">1/3</span> del volumen del cubo.","La arista lateral elegida, <span class=\"m\">AC₁</span>, mide <span class=\"m\">a√3</span>. Su proyección ortogonal sobre el plano de la base es la diagonal <span class=\"m\">A₁C₁</span> de longitud <span class=\"m\">a√2</span>, no una semidiagonal.","En el triángulo rectángulo <span class=\"m\">AA₁C₁</span>, <span class=\"m\">sen θ=AA₁/AC₁=1/√3</span> y <span class=\"m\">cos θ=A₁C₁/AC₁=√(2/3)</span>. Por ello <span class=\"m\">θ≈35,26°</span>.","Comprueba el alcance: otras aristas laterales de esta pirámide tienen ángulos diferentes. <span class=\"m\">AA₁</span> forma 90° y <span class=\"m\">AB₁</span> forma 45° con la base; por eso el enunciado especifica <span class=\"m\">AC₁</span>."],
+        respuesta: "<span class=\"m\">V=a³/3</span> (un tercio del cubo) y, para la arista <strong><span class=\"m\">AC₁</span></strong>, <span class=\"m\">sen θ=1/√3</span>, <span class=\"m\">cos θ=√(2/3)</span> y <span class=\"m\">θ≈35,26°</span>. Es una pirámide oblicua respecto al centro de su base."
       }
     ]
   });
@@ -392,7 +385,7 @@
         pasos: [
           { titulo: 'Contar aristas a partir de las caras', html: 'Cada cara triangular aporta 3 aristas y cada cuadrangular 4, pero cada arista se cuenta dos veces (pertenece a dos caras).', cuenta: 'A = (4·3 + 4·4)/2 = (12 + 16)/2 = 28/2 = 14' },
           { titulo: 'Aplicar Euler', html: '<span class="m">C + V − A = 2</span> → <span class="m">8 + V − 14 = 2</span> → <span class="m">V = 8</span>.' },
-          { titulo: 'Verificar', html: 'Es la pirámide cuadrangular: 1 base cuadrada + 4 caras triangulares + … tendría 5 caras, no 8. En realidad esta combinación corresponde a un prisma cuadrangular truncado; la verificación importante es la coherencia numérica: <span class="m">8 + 8 − 14 = 2</span> ✓.' },
+          { titulo: 'Verificar', html: 'Es la pirámide cuadrangular: 1 base cuadrada + 4 caras triangulares + … tendría 5 caras, no 8. No hemos identificado un sólido concreto con esos datos; la comprobación aritmética necesaria es: <span class="m">8 + 8 − 14 = 2</span> ✓.' },
           { titulo: 'Comprobación adicional', html: 'En cada vértice debe concurrir un número entero de caras. Con 8 vértices y 14 aristas, el grado medio es <span class="m">2·14/8 = 3,5</span>: hay vértices de grado 3 y 4. Es compatible con un poliedro convexo.' }
         ],
         respuesta: '<span class="m">A = 14</span> y <span class="m">V = 8</span>. El truco del doble conteo de aristas es la herramienta fundamental en estos problemas.'
@@ -466,7 +459,7 @@
           'Razón: <span class="m">V_cubo / V_octaedro = a³/(a³/6) = 6</span>.',
           'Comprobación alternativa: el octaedro se descompone en 8 tetraedros con vértice en el centro del cubo; cada uno tiene volumen <span class="m">a³/48</span>, y <span class="m">8·a³/48 = a³/6</span> ✓.'
         ],
-        respuesta: 'Arista del octaedro <span class="m">a√2/2</span>, volumen <span class="m">a³/6</span>, y el cubo es 6 veces mayor. Curiosamente, el octaedro ocupa exactamente el mismo volumen que la pirámide del reto del módulo 7.'
+        respuesta: "El octaedro inscrito tiene arista <span class=\"m\">a√2/2</span> y volumen <span class=\"m\">a³/6</span>. El cubo ocupa seis veces ese volumen. La pirámide del reto del módulo 7 tiene volumen <span class=\"m\">a³/3</span>, es decir <strong>el doble</strong> del octaedro, no el mismo."
       }
     ]
   });
