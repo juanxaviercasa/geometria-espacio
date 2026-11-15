@@ -238,6 +238,12 @@
     var retos = leccion.retos || [];
 
     document.title = leccion.titulo + ' · Geometría del espacio';
+    // Cada una de las 17 lecciones conserva su URL indexable específica.
+    var canon=document.head.querySelector('link[rel="canonical"]');
+    if(!canon){canon=document.createElement('link');canon.rel='canonical';document.head.appendChild(canon);}
+    canon.href='https://geometriaespacio.sistemazenit.com/leccion.html?id='+encodeURIComponent(leccion.id);
+    var desc=document.head.querySelector('meta[name="description"]');
+    if(desc && leccion.objetivo)desc.setAttribute('content',(String(leccion.objetivo).replace(/<[^>]*>/g,' ').replace(/\\s+/g,' ').trim()+' · Geometría del espacio interactiva').slice(0,165));
 
     /* migas */
     document.getElementById('migas-leccion').innerHTML =
