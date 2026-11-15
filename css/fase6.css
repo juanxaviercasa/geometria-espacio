@@ -21,3 +21,11 @@ body[data-pagina="verificacion"] .tabla-envoltura {
 @media (max-width: 360px) {
   .tabla-envoltura:focus-visible { outline: 3px solid #5747dd; outline-offset: 2px; }
 }
+
+.verif-estado-ok { color: #125a50; background: var(--teal-soft); }
+.verif-estado-error { color: #8b2935; background: var(--danger-soft); }
+.tabla-envoltura[role="region"]:focus-visible {
+  outline: 3px solid #5747dd;
+  outline-offset: 2px;
+}
+.hud-fig-titulo { margin-block: 0; font-weight: 750; }
