@@ -1,0 +1,12 @@
+
+/* El avatar SVG del modo maestro usa una clase adicional distinta al tutor elegido. */
+.vertiz-stage-mini .avatar-escena { width: 142px; height: 176px; margin-left: -71px; }
+@media (max-width: 900px) {
+  .vertiz-stage-mini .avatar-escena { width: 128px; height: 158px; margin-left: -64px; }
+}
+@media (max-width: 680px) {
+  .vertiz-stage-mini .avatar-escena { width: 104px; height: 132px; margin-left: -52px; }
+}
+@media (max-width: 420px) {
+  .vertiz-stage-mini .avatar-escena { width: 88px; height: 114px; margin-left: -44px; }
+}
