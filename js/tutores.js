@@ -140,6 +140,7 @@
     var visual;
     if (p.pokemon) {
       visual = document.createElement('img');
+      visual.loading='lazy';visual.decoding='async';
       visual.src = url('vendor/pokemon-' + p.pokemon + (reducido() ? '.png' : '.gif'));
       visual.alt = p.nombre + ', tutor Pokémon animado en 2D'; visual.className = 'tutor-visual tutor-pokemon';
       visual.addEventListener('error', function () { visual.alt = p.nombre + ' no pudo cargarse. Puedes elegir otro tutor.'; });
@@ -164,10 +165,14 @@
   }
   function copiar(v) { if(!v.canvas)return;var ctx=v.canvas.getContext('2d');if(ctx){ctx.clearRect(0,0,420,420);ctx.drawImage(renderer.domElement,0,0);} }
   function montar(nodo) {
-    var v = { nodo: nodo, visible: true, canvas: null };
+    var v = { nodo: nodo, visible: !('IntersectionObserver' in global), canvas: null };
     vistas.push(v); pintar(v);
     if ('IntersectionObserver' in global) {
-      v.observer = new IntersectionObserver(function (entries) { v.visible=entries[0].isIntersecting; despertar(); }, {rootMargin:'60px'});
+      v.observer = new IntersectionObserver(function (entries) {
+        v.visible=entries[0].isIntersecting;
+        if(v.visible)cargarModelo();
+        despertar();
+      }, {rootMargin:'80px'});
       v.observer.observe(nodo);
     }
     actualizarNombres(); cargarModelo();
@@ -243,7 +248,7 @@
   function iniciarMotor() {
     if(renderer) return;
     T=global.THREE;
-    renderer=new T.WebGLRenderer({alpha:true,antialias:true,preserveDrawingBuffer:true});
+    renderer=new T.WebGLRenderer({alpha:true,antialias:!reducido(),preserveDrawingBuffer:false,powerPreference:'low-power'});
     renderer.setSize(420,420); renderer.setPixelRatio(1); renderer.outputColorSpace=T.SRGBColorSpace;
     renderer.toneMapping=T.ACESFilmicToneMapping; renderer.toneMappingExposure=1.2;
     scene=new T.Scene(); camera=new T.PerspectiveCamera(32,1,0.1,100); camera.position.set(0,1.15,4.8); camera.lookAt(0,0.96,0);
@@ -255,13 +260,15 @@
   function motor() {
     if(renderer)return Promise.resolve();
     if(preparando)return preparando;
-    preparando=(global.THREE?Promise.resolve():script('vendor/three.min.js')).then(function(){iniciarMotor();}).catch(function(e){preparando=null;throw e;});
+    preparando=(global.THREE?Promise.resolve():(global.Cargador3D?global.Cargador3D.cargarThree():script('vendor/three.min.js'))).then(function(){iniciarMotor();}).catch(function(e){preparando=null;throw e;});
     return preparando;
   }
   var cargadoId=null, pendienteId=null;
   function cargarModelo() {
     var p=buscar(elegido);
     if(p.tipo!=='3D') { revision++; pendienteId=null; if(scene)liberarModelo(); cargadoId=null; return; }
+    vistas=vistas.filter(function(v){return v.nodo.isConnected;});
+    if(!vistas.some(function(v){return v.visible;}))return;
     if(cargadoId===p.id || pendienteId===p.id) { despertar(); return; }
     var token=++revision; pendienteId=p.id; vistas.forEach(function(v){v.nodo.dataset.carga="motor";});
     motor().then(function () {
@@ -335,7 +342,7 @@
     var visibles=vistas.filter(function(v){return v.canvas && v.visible && v.nodo.isConnected;});
     if(!visibles.length || !modelo || document.hidden)return;
     var dt=ultimo?Math.min((now-ultimo)/1000,0.06):0.016;
-    if(now-ultimo<66 && !reducido()) { despertar(); return; } ultimo=now;
+    if(now-ultimo<(hablando?66:110) && !reducido()) { despertar(); return; } ultimo=now;
     var t=now/1000, quieto=reducido();
     if(mixer) { mixer.update(quieto?0:dt*(hablando?1:0.65)); }
     dibujarVistas(visibles,t,quieto);
@@ -344,5 +351,17 @@
   document.addEventListener('avatar-hablando',function(e){hablando=!!(e.detail&&e.detail.activo);despertar();});
   document.addEventListener('movimiento-cambiado',function(){if(buscar(elegido).pokemon)vistas.forEach(pintar);despertar();});
   document.addEventListener('visibilitychange',despertar);
+  global.addEventListener('pagehide',function(){
+    revision++;pendienteId=null;
+    if(animacion)cancelAnimationFrame(animacion);
+    animacion=0;
+    vistas.forEach(function(v){if(v.observer)v.observer.disconnect();});
+    if(renderer){
+      liberarModelo();
+      renderer.dispose();
+      if(renderer.forceContextLoss)try{renderer.forceContextLoss();}catch(e){}
+      renderer=null;scene=null;camera=null;T=null;preparando=null;
+    }
+  });
   global.Tutores={catalogo:CATALOGO,actual:function(){return elegido;},elegir:elegir,montar:montar,selector:selector,perfilVoz:perfilVoz,enfocar:enfocar,orientar:orientar,suspender:suspender};
 })(window);
