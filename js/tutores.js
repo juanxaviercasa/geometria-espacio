@@ -15,7 +15,7 @@
     { id: 'charizard', nombre: 'Charizard', tipo: 'Pokémon 2D', pokemon: 6 },
     { id: 'eevee', nombre: 'Eevee', tipo: 'Pokémon 2D', pokemon: 133 },
     { id: 'dragonite', nombre: 'Dragonite', tipo: 'Pokémon 2D', pokemon: 149 },
-    { id: 'vertiz', nombre: 'Vértiz clásico', tipo: 'Ilustración' }
+    { id: 'vertiz', nombre: 'Vértiz', tipo: 'Ilustración' }
   ];
   var clave = 'geo3d.tutor.v1';
   var estiloVoz = 'natural';
