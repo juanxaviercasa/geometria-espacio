@@ -67,8 +67,8 @@
     s = s.replace(/(\d+(?:[.,]\d+)?)\s*%/g, '$1 por ciento');
     s = s.replace(/\bkm\/h\b/gi, 'kilómetros por hora')
       .replace(/cm³/g, 'centímetros cúbicos').replace(/cm²/g, 'centímetros cuadrados')
-      .replace(/m³/g, 'metros cúbicos').replace(/m²/g, 'metros cuadrados')
       .replace(/mm²/g, 'milímetros cuadrados')
+      .replace(/m³/g, 'metros cúbicos').replace(/m²/g, 'metros cuadrados')
       .replace(/\bcm\b/g, 'centímetros').replace(/\bmm\b/g, 'milímetros')
       .replace(/\bkg\b/g, 'kilogramos');
     // Separar nombres de vértices (AC₁ -> A C₁), sin fragmentar números (12 -> 12).
@@ -99,7 +99,8 @@
       return sep + (letra.toLowerCase()==='b' ? 'be' : 'uve');
     });
     s = s.replace(/(\d)([a-zA-Z])\b/g, '$1 $2')
-      .replace(/(^|[=+\s])-(?=\d)/g, '$1 menos ');
+      .replace(/(^|[=+\s])-(?=\d)/g, '$1 menos ')
+      .replace(/(\d)\s*x\b/gi, '$1 equis');
     s = s.replace(/θ/g,' teta ').replace(/α/g,' alfa ').replace(/β/g,' beta ')
       .replace(/γ/g,' gamma ').replace(/φ/g,' fi ').replace(/π/g,' pi ')
       .replace(/∠/g,' ángulo ').replace(/°/g,' grados ')
