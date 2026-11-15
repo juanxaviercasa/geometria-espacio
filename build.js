@@ -24,6 +24,7 @@ const ITEMS = [
   'FASE1-REPORTE-2026-11-14.md',
   'FASE2-REPORTE-2026-11-14.md',
   'FASE3-REPORTE-2026-11-14.md',
+  'FASE4-REPORTE-2026-11-14.md',
   'css',
   'js',
   'vendor'
