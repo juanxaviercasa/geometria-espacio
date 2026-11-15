@@ -15,6 +15,7 @@ const ITEMS = [
   'descarga.html',
   'verificacion.html',
   '.nojekyll',
+  '_headers',
   '.gitignore',
   'README.md',
   'SUBIR-A-GITHUB.md',
@@ -25,6 +26,8 @@ const ITEMS = [
   'FASE2-REPORTE-2026-11-14.md',
   'FASE3-REPORTE-2026-11-14.md',
   'FASE4-REPORTE-2026-11-14.md',
+  'FASE5-REPORTE-2026-11-14.md',
+  'PRESUPUESTOS-RENDIMIENTO.json',
   'css',
   'js',
   'vendor'
