@@ -318,6 +318,17 @@
       iniciado: false,
       figura: figura
     };
+    var vistaDeseada=vistaPreferida();
+    var visibleFigura=!(typeof IntersectionObserver!=='undefined');
+    var solicitudVista=0;
+    var liberarSiFuera=null;
+    var observadorFigura=null;
+    function liberarVista3d(){
+      if(!estado.api)return;
+      var old=estado.api;estado.api=null;
+      try{old.destruir();}catch(e){console.warn('No se pudo liberar un visor 3D:',e);}
+      var j=instancias.indexOf(estado);if(j>=0)instancias.splice(j,1);
+    }
 
     function actualizarAtencion() {
       if(!estado.iniciado || !estado.atencionActiva || !estado.puntoAtencion || !estado.capaAtencion || estado.capasOcultas[estado.capaAtencion]) {
@@ -349,6 +360,8 @@
     }
 
     function usar2d(motivo) {
+      solicitudVista++;
+      liberarVista3d();
       estado.tipo = '2d';
       pintar2d();
       var b = barraSup.querySelector('[data-vista-texto]');
@@ -364,44 +377,43 @@
     }
 
     function usar3d() {
-      cargar3d().then(function (Clase) {
-        if (estado.api) {
-          estado.api.destruir();
-          estado.api = null;
-        }
-        lienzo.innerHTML = '';
-        try {
-          estado.api = new Clase(lienzo, spec, {
-            capasOcultas: estado.capasOcultas,
-            reducido: estado.reducido,
-            alMoverCamara: actualizarAtencion
+      var ticket=++solicitudVista;
+      aviso.hidden=false;
+      aviso.textContent='Preparando vista 3D…';
+      cargar3d().then(function(Clase) {
+        // El usuario pudo cambiar a 2D o salir de pantalla durante la descarga.
+        if(ticket!==solicitudVista || vistaDeseada!=='3d' || !figura.isConnected || !visibleFigura)return;
+        liberarVista3d();
+        lienzo.innerHTML='';
+        try{
+          estado.api=new Clase(lienzo,spec,{
+            capasOcultas:estado.capasOcultas,reducido:estado.reducido,
+            alMoverCamara:actualizarAtencion
           });
-          estado.tipo = '3d';
+          estado.tipo='3d';
           estado.api.setAutoGiro(estado.giro && !estado.reducido);
-          if (!opciones.sinAviso) aviso.hidden = false;
-          var btn = barraSup.querySelector('[data-accion="vista"]');
-          if (btn) btn.setAttribute('aria-pressed', 'false');
-          var vt = barraSup.querySelector('[data-vista-texto]');
-          if (vt) vt.textContent = 'Vista 2D';
-          var giroBtn = barraSup.querySelector('[data-accion="giro"]');
-          if (giroBtn) giroBtn.hidden = estado.reducido;
-          if (instancias.indexOf(estado) === -1) instancias.push(estado);
-          if (estado.iniciado) irAPaso(estado.pasoActual, false);
-        } catch (e) {
-          console.warn('Error inicializando Visor3D:', e);
-          usar2d('error');
-        }
-      }).catch(function (err) {
-        console.warn('Fallback 2D:', err);
+          aviso.hidden=!!opciones.sinAviso;
+          aviso.textContent='Arrastra para girar · rueda para zoom';
+          var btn=barraSup.querySelector('[data-accion="vista"]');
+          if(btn)btn.setAttribute('aria-pressed','false');
+          var vt=barraSup.querySelector('[data-vista-texto]');
+          if(vt)vt.textContent='Vista 2D';
+          var giroBtn=barraSup.querySelector('[data-accion="giro"]');
+          if(giroBtn)giroBtn.hidden=estado.reducido;
+          if(instancias.indexOf(estado)<0)instancias.push(estado);
+          if(estado.iniciado)irAPaso(estado.pasoActual,false);
+        }catch(err){console.warn('Vista 3D no disponible:',err);usar2d('error');}
+      }).catch(function(err){
+        if(ticket!==solicitudVista)return;
+        console.warn('Se conserva 2D:',err);
         usar2d('error');
       });
     }
 
-    if (vistaPreferida() === '2d') {
-      usar2d();
-    } else {
-      usar3d();
-    }
+    // SVG está disponible desde el primer fotograma. Three.js se solicita solo
+    // cuando el modelo entra en pantalla o se activa 3D explícitamente.
+    usar2d();
+    if(vistaDeseada==='3d' && !('IntersectionObserver' in window))usar3d();
 
     /* ---------- Lógica del Modo Maestro ---------- */
     var btnVoz = colMaestro.querySelector('[data-mm-accion="voz"]');
@@ -579,14 +591,15 @@
 
     /* ---------- Controles de la barra superior ---------- */
     barraSup.querySelector('[data-accion="vista"]').addEventListener('click', function () {
-      if (estado.tipo === '3d') {
-        if (estado.api) { estado.api.destruir(); estado.api = null; }
+      if(vistaDeseada==='3d') {
+        vistaDeseada='2d';
         usar2d();
-        fijarVistaPreferida('2d');
       } else {
+        vistaDeseada='3d';
+        visibleFigura=true;
         usar3d();
-        fijarVistaPreferida('3d');
       }
+      fijarVistaPreferida(vistaDeseada);
     });
 
     barraSup.querySelector('[data-accion="reset"]').addEventListener('click', function () {
@@ -663,21 +676,35 @@
       });
     });
 
-    /* ---------- Visibilidad en pantalla ---------- */
-    if ('IntersectionObserver' in window) {
-      var obs = new IntersectionObserver(function (entradas) {
-        entradas.forEach(function (e) {
-          if (!estado.api) return;
-          if (e.isIntersecting) {
-            estado.api.reanudar();
-            if (!visorActivo) visorActivo = instanciaPublica;
-          } else {
-            estado.api.pausar();
+    /* Visor bajo demanda: liberar memoria GPU cuando deja de utilizarse. */
+    if('IntersectionObserver' in window){
+      observadorFigura=new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          visibleFigura=!!e.isIntersecting;
+          if(liberarSiFuera){clearTimeout(liberarSiFuera);liberarSiFuera=null;}
+          if(visibleFigura){
+            if(vistaDeseada==='3d' && !estado.api)usar3d();
+            else if(estado.api)estado.api.reanudar();
+            if(!visorActivo)visorActivo=instanciaPublica;
+          }else{
+            if(estado.api)estado.api.pausar();
+            liberarSiFuera=setTimeout(function(){
+              liberarSiFuera=null;
+              if(!visibleFigura && estado.api)usar2d();
+            },6000);
           }
         });
-      }, { rootMargin: '140px' });
-      obs.observe(figura);
+      },{rootMargin:'160px'});
+      observadorFigura.observe(figura);
     }
+
+    window.addEventListener('pagehide',function(){
+      solicitudVista++;
+      if(liberarSiFuera)clearTimeout(liberarSiFuera);
+      if(observadorFigura)observadorFigura.disconnect();
+      liberarVista3d();
+      if(narrador)narrador.detenerSiPropio();
+    });
 
     figura.addEventListener('mouseenter', function () {
       visorActivo = instanciaPublica;
