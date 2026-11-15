@@ -1,0 +1,8 @@
+{
+  // Cloudflare Pages: mantener el mismo sitio y directorio de salida.
+  // Vinculación server-side de Workers AI para Aura-2 en español.
+  "name": "geometria-espacio",
+  "pages_build_output_dir": "./dist",
+  "compatibility_date": "2026-10-28",
+  "ai": { "binding": "AI" }
+}
