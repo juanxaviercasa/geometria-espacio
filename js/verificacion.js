@@ -575,6 +575,36 @@
     });
   }
 
+  /* Auditoría transversal de todas las claves y las 17 lecciones.
+     Cada clave se comprueba con un cálculo independiente del valor guardado. */
+  function auditoriaAcademica() {
+    if (!window.AuditoriaAcademica) {
+      comprobar('Auditoría académica', 'Motor independiente disponible', function () {
+        return { ok:false, detalle:'Falta js/auditoria-academica.js' };
+      });
+      return;
+    }
+    var aud = window.AuditoriaAcademica;
+    var informe = aud.auditar(Contenido);
+    comprobar('Auditoría académica', 'Integridad del catálogo y ejercicios nivel UNI', function () {
+      return { ok:informe.correcto && informe.lecciones===17 && informe.ejercicios===107 &&
+        informe.numericos===64 && informe.opciones===43 && informe.retos===18,
+        detalle:informe.lecciones+' lecciones · '+informe.ejercicios+' ejercicios · '+
+          informe.retos+' retos · '+informe.errores.length+' incidencias' };
+    });
+    var banco=Contenido.bancoPractica(), mapa={};
+    banco.forEach(function(e){mapa[e.id]=e;});
+    Object.keys(aud.claves).forEach(function(id){
+      comprobar('Auditoría académica','Clave independiente: '+id,function(){
+        var e=mapa[id],n=aud.claves[id]();
+        if(!e)return {ok:false,detalle:'Ejercicio ausente'};
+        var tol=typeof e.tolerancia==='number'?e.tolerancia:.005;
+        return {ok:Number.isFinite(n) && Number.isFinite(e.respuesta) && Math.abs(n-e.respuesta)<=tol+1e-9,
+          detalle:'Respuesta = '+e.respuesta+' · recálculo = '+n.toFixed(5)+' · tolerancia = '+tol};
+      });
+    });
+  }
+
   /* ==========================================================
      Render del informe
      ========================================================== */
@@ -636,6 +666,7 @@
     respuestas();
     estructura();
     figuras();
+    auditoriaAcademica();
     render();
   }
 
