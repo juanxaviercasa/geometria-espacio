@@ -275,6 +275,7 @@ function cargarCursoFase3(){
   vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/figuras.js'),'utf8'),{window});
   vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/distractores.js'),'utf8'),{Contenido:C,window});
   vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/auditoria-academica.js'),'utf8'),{window});
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/auditoria-retos.js'),'utf8'),{window});
   vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/guia-academica.js'),'utf8'),{window});
   return window;
 }
@@ -284,6 +285,9 @@ test('Fase 3: las 17 lecciones y las 107 preguntas tienen cobertura académica c
   assert.equal(r.lecciones,17);assert.equal(r.ejercicios,107);
   assert.equal(r.numericos,64);assert.equal(r.opciones,43);assert.equal(r.retos,18);
   assert.equal(r.recalculos,64);assert.equal(r.advertencias.length,0);
+  const retos=w.AuditoriaRetos.verificar(w.Contenido);
+  assert.equal(retos.correcto,true,JSON.stringify(retos.errores));
+  assert.equal(retos.total,18);assert.equal(retos.comprobados,18);
   assert.equal(w.DiagnosticoAcademico.total,43);assert.equal(w.DiagnosticoAcademico.esperados,43);
   assert.equal(w.Contenido.bancoPractica().filter(e=>e.tipo==='opcion').flatMap(e=>e.opciones.filter(o=>!o.correcta&&!o.motivo)).length,0);
   assert.equal(w.GuiaAcademica.ids.length,17);
