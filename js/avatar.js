@@ -205,6 +205,37 @@
   var estadoVoz = 'detenido';
   var origenVoz = '';
   var textoVoz = '';
+  var motorVoz='neural',vozNeural='javier';
+  try{var m=localStorage.getItem('geo3d.voz.motor.v2');
+    if(m==='neural'||m==='nativa')motorVoz=m;
+    var v=localStorage.getItem('geo3d.voz.neural.v1');
+    if(['javier','alvaro','nestor'].includes(v))vozNeural=v;
+  }catch(e){}
+  var audioNeural=null,abortNeural=null,urlNeural=null;
+  function liberarNeural(){
+    if(abortNeural){try{abortNeural.abort();}catch(e){}abortNeural=null;}
+    if(audioNeural){
+      var a=audioNeural;audioNeural=null;
+      a.onplaying=null;a.onended=null;a.onerror=null;a.onpause=null;
+      try{a.pause();}catch(e){}
+      try{a.removeAttribute('src');a.load();}catch(e){}
+    }
+    if(urlNeural){try{global.URL.revokeObjectURL(urlNeural);}catch(e){}urlNeural=null;}
+  }
+  function setMotorVoz(m){
+    if(m!=='neural'&&m!=='nativa')return false;
+    if(m!==motorVoz)detenerVoz();
+    motorVoz=m;
+    try{localStorage.setItem('geo3d.voz.motor.v2',m);}catch(e){}
+    document.dispatchEvent(new CustomEvent('avatar-voces-cambiadas',{detail:{motor:m}}));
+    return true;
+  }
+  function setVozNeural(v){
+    if(!['javier','alvaro','nestor'].includes(v))return false;
+    vozNeural=v;try{localStorage.setItem('geo3d.voz.neural.v1',v);}catch(e){}
+    document.dispatchEvent(new CustomEvent('avatar-voces-cambiadas',{detail:{voz:v}}));
+    return true;
+  }
   function vocesEsp() {
     if (!global.speechSynthesis || !global.speechSynthesis.getVoices) return [];
     try { return (global.speechSynthesis.getVoices() || []).filter(function(v){
@@ -270,6 +301,7 @@
   function detenerVoz() {
     vozSesion++;
     if (timerPendiente !== null) {clearTimeout(timerPendiente);timerPendiente=null;}
+    liberarNeural();
     try {if(global.speechSynthesis)global.speechSynthesis.cancel();}catch(e){}
     global._activeSpeechUtterance=null;
     textoVoz='';
@@ -288,11 +320,37 @@
       if(termino||sesion!==vozSesion)return;
       termino=true;
       global._activeSpeechUtterance=null;
+      liberarNeural();
       anunciarEstado(motivo||'finalizado',sesion,origen,error);
       if(typeof callbackFin==='function')callbackFin({estado:motivo||'finalizado',error:error||''});
     }
     if (!vozHabilitada || !limpio) {
       terminar(!vozHabilitada?'silenciado':'vacio');
+      return sesion;
+    }
+    // No se envía texto libre. El backend acepta únicamente el ID de figura y paso.
+    if(motorVoz==='neural'&&global.VozNeural&&opciones.figura&&Number.isInteger(opciones.paso)){
+      if(!global.Audio||!global.URL||typeof global.URL.createObjectURL!=='function'){
+        terminar('sin-voz','Este navegador no puede reproducir audio neural');return sesion;
+      }
+      anunciarEstado('preparando',sesion,origen);
+      var controller=new AbortController();abortNeural=controller;
+      global.VozNeural.generar({figura:opciones.figura,paso:opciones.paso,voz:vozNeural},controller.signal)
+      .then(function(blob){
+        if(sesion!==vozSesion||controller.signal.aborted)return;
+        urlNeural=global.URL.createObjectURL(blob);
+        var audio=new global.Audio(urlNeural);audioNeural=audio;
+        audio.preload='auto';audio.playbackRate=velocidadVoz;
+        audio.onplaying=function(){if(sesion===vozSesion)anunciarEstado('hablando',sesion,origen);};
+        audio.onpause=function(){if(sesion===vozSesion&&estadoVoz==='hablando')anunciarEstado('pausado',sesion,origen);};
+        audio.onended=function(){terminar('finalizado');};
+        audio.onerror=function(){terminar('error','No se pudo reproducir la voz neural');};
+        var play=audio.play();
+        if(play&&play.catch)play.catch(function(){terminar('error','El navegador bloqueó la reproducción. Pulsa Repetir.');});
+      }).catch(function(err){
+        if(sesion!==vozSesion||controller.signal.aborted)return;
+        terminar('sin-voz',err&&err.message||'Voz neural temporalmente no disponible');
+      });
       return sesion;
     }
     if (!global.speechSynthesis || typeof SpeechSynthesisUtterance==='undefined') {
@@ -341,11 +399,13 @@
   function pausarVoz() {
     if(estadoVoz!=='hablando' && estadoVoz!=='preparando')return false;
     if(estadoVoz==='preparando'){detenerVoz();return true;}
+    if(audioNeural){try{audioNeural.pause();anunciarEstado('pausado',vozSesion,origenVoz);return true;}catch(e){return false;}}
     try {global.speechSynthesis.pause();anunciarEstado('pausado',vozSesion,origenVoz);return true;}
     catch(e){return false;}
   }
   function reanudarVoz() {
     if(estadoVoz!=='pausado')return false;
+    if(audioNeural){try{var q=audioNeural.play();if(q&&q.catch)q.catch(function(){anunciarEstado('error',vozSesion,origenVoz,'Reproducción bloqueada');});anunciarEstado('hablando',vozSesion,origenVoz);return true;}catch(e){return false;}}
     try {global.speechSynthesis.resume();anunciarEstado('hablando',vozSesion,origenVoz);return true;}
     catch(e){return false;}
   }
@@ -359,6 +419,7 @@
     var v=Number(vel);
     if(!Number.isFinite(v))return;
     velocidadVoz=Math.max(.75,Math.min(1.35,v));
+    if(audioNeural)audioNeural.playbackRate=velocidadVoz;
     try {localStorage.setItem('geo3d.voz.vel.v1',String(velocidadVoz));}catch(e){}
   }
   if(typeof document!=='undefined'&&document.addEventListener) {
@@ -652,6 +713,10 @@
     reanudarVoz: reanudarVoz,
     vocesDisponibles: vocesDisponibles,
     elegirVoz: elegirVoz,
-    getVozElegida: function () { return vozPreferida; }
+    getVozElegida: function () { return vozPreferida; },
+    getMotorVoz:function(){return motorVoz;},
+    setMotorVoz:setMotorVoz,
+    getVozNeural:function(){return vozNeural;},
+    setVozNeural:setVozNeural
   };
 })(window);
