@@ -66,15 +66,16 @@
     var s = latex(plano(texto));
     s = s.replace(/(\d+(?:[.,]\d+)?)\s*%/g, '$1 por ciento');
     s = s.replace(/\bkm\/h\b/gi, 'kilómetros por hora')
-      .replace(/\bcm³\b/g, 'centímetros cúbicos').replace(/\bcm²\b/g, 'centímetros cuadrados')
-      .replace(/\bm³\b/g, 'metros cúbicos').replace(/\bm²\b/g, 'metros cuadrados')
-      .replace(/\bmm²\b/g, 'milímetros cuadrados')
+      .replace(/cm³/g, 'centímetros cúbicos').replace(/cm²/g, 'centímetros cuadrados')
+      .replace(/m³/g, 'metros cúbicos').replace(/m²/g, 'metros cuadrados')
+      .replace(/mm²/g, 'milímetros cuadrados')
       .replace(/\bcm\b/g, 'centímetros').replace(/\bmm\b/g, 'milímetros')
       .replace(/\bkg\b/g, 'kilogramos');
     // Separar nombres de vértices (AC₁ -> A C₁), sin fragmentar números (12 -> 12).
     s = s.replace(/\b([A-Z]{2,})(?=[₀₁₂₃₄₅₆₇₈₉]|[^a-zA-Z]|$)/g, function (w) {
       return /^(UNI|TTS|SVG|HTML|WebGL)$/.test(w) ? w : w.split('').join(' ');
     });
+    s = s.replace(/([₀₁₂₃₄₅₆₇₈₉])(?=[A-Z])/g, '$1 ');
     s = s.replace(/([A-Za-z])([₀₁₂₃₄₅₆₇₈₉]+)/g, function(_, letra, sub) {
       var digitos = '₀₁₂₃₄₅₆₇₈₉';
       return letra + ' sub ' + sub.split('').map(function(c) { return digitos.indexOf(c); }).join('');
@@ -97,6 +98,8 @@
     s = s.replace(/(^|[\s(=,+\-])([bBvV])(?=\s|$|[=,+\-):])/g, function(_,sep,letra) {
       return sep + (letra.toLowerCase()==='b' ? 'be' : 'uve');
     });
+    s = s.replace(/(\d)([a-zA-Z])\b/g, '$1 $2')
+      .replace(/(^|[=+\s])-(?=\d)/g, '$1 menos ');
     s = s.replace(/θ/g,' teta ').replace(/α/g,' alfa ').replace(/β/g,' beta ')
       .replace(/γ/g,' gamma ').replace(/φ/g,' fi ').replace(/π/g,' pi ')
       .replace(/∠/g,' ángulo ').replace(/°/g,' grados ')
