@@ -1,0 +1,139 @@
+/* Aula Premium: unificar controles externos y recuperar el docente como protagonista.
+   Aplica solo al hero; el visor de lecciones conserva su distribución. */
+.hero .hero-solidos-nav { display:flex; align-items:center; gap:.65rem; flex-wrap:nowrap; min-width:0; position:relative; }
+.hero .hero-solidos-etiqueta { flex:0 0 auto; }
+.hero .hero-solidos-links { flex:1 1 auto; min-width:0; }
+.hero .hero-toolbar {
+  flex:0 0 auto; display:flex; align-items:center; justify-content:flex-end; gap:.45rem;
+  min-width:0; isolation:isolate; position:relative; z-index:65;
+}
+.hero .hero-toolbar .figura-barra-sup {
+  position:static!important; width:auto!important; display:flex; flex:0 0 auto;
+  height:auto; min-height:0; padding:0; margin:0; border:0; box-shadow:none;
+  background:transparent; overflow:visible;
+}
+.hero .hero-toolbar .acciones-fig { display:flex; align-items:center; gap:.4rem; margin:0; }
+.hero .hero-toolbar .btn-fig-hud, .hero .hero-toolbar .btn-mm-chip-voz {
+  display:inline-flex; align-items:center; justify-content:center; min-height:42px;
+  border-radius:12px; white-space:nowrap; font-size:.82rem; font-weight:700;
+  padding:.5rem .78rem; line-height:1.25;
+}
+.hero .hero-toolbar .btn-ajustes {
+  border:1px solid rgba(231,237,255,.45); color:#f7fbff;
+  background:rgba(255,255,255,.1); box-shadow:none;
+}
+.hero .hero-toolbar .btn-proyectar { color:#14264b; background:#a9eeec; border:1px solid #9be7e4; }
+.hero .hero-toolbar .mm-controles-audio {
+  display:flex; align-items:center; gap:.4rem; flex-wrap:nowrap; margin:0;
+}
+.hero .hero-toolbar .btn-mm-chip-voz {
+  background:rgba(255,255,255,.09); border:1px solid rgba(225,232,255,.36);
+  color:#eff5ff; box-shadow:none;
+}
+.hero .hero-toolbar .btn-mm-chip-voz.voz-activa { color:#bafaf0; border-color:#77d9cd; background:rgba(14,173,162,.18); }
+.hero .hero-toolbar .btn-mm-chip-voz:disabled { opacity:.58; }
+.hero .hero-toolbar .btn-fig-hud:hover, .hero .hero-toolbar .btn-mm-chip-voz:hover:not(:disabled) {
+  background:rgba(246,250,255,.21); color:#fff;
+}
+.hero .hero-toolbar :is(button,select):focus-visible {outline:3px solid #f9d874;outline-offset:2px;}
+.hero .hero-toolbar .figura-ajustes {
+  position:absolute; top:calc(100% + .65rem); right:0; z-index:100;
+  width:min(440px,calc(100vw - 1.8rem)); max-height:min(72vh,550px);
+  overflow-y:auto; display:flex; flex-wrap:wrap; gap:.6rem;
+  padding:1rem; border-radius:16px; border:1px solid #cfdaed;
+  background:#fff; color:#24304e; box-shadow:0 16px 48px rgba(3,13,52,.34);
+}
+.hero .hero-toolbar .figura-ajustes[hidden] { display:none!important; }
+.hero .hero-toolbar .figura-ajustes :is(.mm-preferencias-voz,.tutor-preferencias) {
+  display:flex!important; flex:1 1 100%; flex-wrap:wrap; gap:.65rem; align-items:flex-start;
+  width:100%; max-width:100%;
+}
+.hero .hero-toolbar .figura-ajustes .mm-preferencias-voz label { flex:1 1 155px; min-width:0; }
+.hero .hero-toolbar .figura-ajustes .tutor-preferencias { flex-direction:column; align-items:stretch; }
+.hero .hero-toolbar .figura-ajustes :is(select,input) { max-width:100%; }
+/* No queda ninguna barra flotante sobre la figura o el profesor. */
+.hero .hero-figura .figura-hero-modo > .figura-barra-sup { display:none; }
+.hero .hero-figura .figura-hero-modo .figura-escenario-clase {
+  display:grid; grid-template-columns:minmax(0,1.6fr) minmax(350px,.95fr); min-height:0;
+}
+.hero .figura-hero-modo .figura-col-maestro {
+  padding:clamp(.85rem,1.25vw,1.25rem); gap:.85rem; min-width:0;
+}
+.hero .figura-hero-modo .mm-profesor-cabecera {
+  display:grid; grid-template-columns:clamp(126px,12vw,174px) minmax(0,1fr)!important;
+  align-items:center; gap:1rem; padding:0 0 .95rem; margin:0;
+  text-align:left; border-bottom:1px solid #dee4f5;
+}
+.hero .figura-hero-modo .mm-avatar-slot {
+  width:clamp(126px,12vw,174px)!important; height:clamp(150px,15vw,190px)!important;
+  min-height:0!important; border:1px solid #e0e5ff; border-radius:16px;
+  background:radial-gradient(circle at 50% 60%,#e6ebff 0%,#f6f8ff 72%,#fff 100%);
+  overflow:hidden;
+}
+.hero .figura-hero-modo .vertiz-stage-mini .mini-escenario {
+  width:100%!important; height:100%!important; margin:0!important;
+}
+.hero .figura-hero-modo .vertiz-stage-mini .avatar-escena {
+  width:100%!important; height:100%!important; left:0!important;
+  margin:0!important; bottom:0; transform:none!important;
+}
+.hero .figura-hero-modo .tutor-canvas {transform:scale(1)!important;}
+.hero .figura-hero-modo .mm-profesor-info {display:flex; align-items:flex-start; gap:.38rem; text-align:left; }
+.hero .figura-hero-modo .mm-profesor-nombre {
+  font-size:clamp(1.12rem,1.65vw,1.4rem); font-weight:800; line-height:1.2;
+  white-space:normal; overflow-wrap:break-word;
+}
+.hero .figura-hero-modo .mm-profesor-subtitulo {
+  color:#53617f; font-size:.93rem; line-height:1.5;
+}
+.hero .figura-hero-modo .mm-rol-tag {display:none;}
+.hero .figura-hero-modo .mm-caja-dialogo {
+  flex:0 0 auto; max-height:none; min-width:0; padding:1rem 1.05rem;
+  border-left:4px solid #5a50e0; overflow:visible;
+}
+.hero .figura-hero-modo .mm-dialogo-texto {
+  font-size:clamp(1.03rem,1.19vw,1.15rem); line-height:1.7;
+  font-weight:450; max-height:none; overflow:visible; white-space:normal;
+}
+.hero .figura-hero-modo .mm-dialogo-titulo {font-size:1.08rem; line-height:1.4;}
+.hero .figura-hero-modo .mm-acciones-fila {margin-top:auto;}
+.hero .figura-hero-modo .mm-preferencias-voz,
+.hero .figura-hero-modo .tutor-preferencias {display:none!important;}
+body.con-visor-proyectado .hero .hero-toolbar {
+  position:fixed; z-index:2147483000; top:12px; right:15px;
+  padding:.5rem; border-radius:14px; background:#182454;
+  box-shadow:0 6px 30px rgba(0,0,0,.28);
+}
+body.con-visor-proyectado .hero .figura.modo-proyector { z-index:2147482000; }
+@media(max-width:1300px){
+  .hero .hero-solidos-nav {flex-wrap:wrap; }
+  .hero .hero-solidos-etiqueta {display:none;}
+  .hero .hero-solidos-links {flex:1 1 100%; order:0;}
+  .hero .hero-toolbar {order:1; margin-left:auto; flex-wrap:wrap;}
+}
+@media(max-width:920px){
+  .hero .hero-figura .figura-hero-modo .figura-escenario-clase {
+    grid-template-columns:minmax(0,1fr); height:auto; overflow:visible;
+  }
+  .hero .hero-solidos-nav {display:flex; flex-wrap:wrap; gap:.35rem;}
+  .hero .hero-solidos-links {flex:1 1 100%;}
+  .hero .hero-toolbar {width:100%; gap:.36rem; justify-content:flex-end;}
+  .hero .hero-figura .figura-col-maestro {min-height:0;}
+}
+@media(max-width:600px){
+  .hero .hero-toolbar {justify-content:center;}
+  .hero .hero-toolbar .mm-controles-audio {gap:.3rem;}
+  .hero .hero-toolbar :is(.btn-mm-chip-voz,.btn-fig-hud) {font-size:.75rem; padding:.45rem .55rem; min-height:42px;}
+  .hero .figura-hero-modo .mm-profesor-cabecera {grid-template-columns:110px minmax(0,1fr)!important;gap:.85rem;padding-bottom:.75rem;}
+  .hero .figura-hero-modo .mm-avatar-slot {width:110px!important;height:142px!important;}
+  .hero .figura-hero-modo .mm-profesor-nombre {font-size:1.16rem;}
+  .hero .figura-hero-modo .mm-profesor-subtitulo {font-size:.89rem;}
+  .hero .figura-hero-modo .mm-dialogo-texto {font-size:1.04rem; line-height:1.65;}
+  .hero .figura-hero-modo .mm-caja-dialogo {padding:.9rem;}
+  .hero .hero-toolbar .figura-ajustes {left:0;right:auto;width:min(440px,calc(100vw - 1.4rem));}
+}
+@media(max-width:360px){
+  .hero .hero-toolbar {flex-wrap:wrap;}
+  .hero .figura-hero-modo .mm-profesor-cabecera {grid-template-columns:100px minmax(0,1fr)!important;}
+  .hero .figura-hero-modo .mm-avatar-slot {width:100px!important;height:130px!important;}
+}

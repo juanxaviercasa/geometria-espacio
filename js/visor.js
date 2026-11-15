@@ -177,6 +177,14 @@
       btnAjustes.setAttribute('aria-expanded', String(!abierto));
       figura.classList.toggle('ajustes-abiertos', !abierto);
     });
+    document.addEventListener('keydown',function(e){
+      if(e.key==='Escape'&&!panelAjustes.hidden){
+        panelAjustes.hidden=true;
+        figura.classList.remove('ajustes-abiertos');
+        btnAjustes.setAttribute('aria-expanded','false');
+        btnAjustes.focus();
+      }
+    });
 
     /* 2. Escenario de clase: Columna Lienzo 3D + Columna Profesor Vértiz */
     var escenarioClase = document.createElement('div');
@@ -255,7 +263,8 @@
               '<span class="onda-1"></span><span class="onda-2"></span><span class="onda-3"></span><span class="onda-4"></span>' +
             '</span>' +
           '</div>' +
-          '<strong class="mm-profesor-nombre">Vértiz explica este modelo</strong>' +
+          '<strong class="mm-profesor-nombre">Vértiz</strong>' +
+          '<span class="mm-profesor-subtitulo">Tu guía de geometría</span>' +
           '<div class="mm-controles-audio">' +
             '<button type="button" class="btn-mm-chip-voz" data-mm-accion="voz" title="Activar o silenciar voz">' +
               '<span class="mm-ico-voz">🔊</span> <span class="mm-txt-voz">Voz activa</span>' +
@@ -448,6 +457,21 @@
     var palabraActual = null;
     if(global.Avatar && global.Avatar.getVelocidadVoz) selectVelocidad.value=String(global.Avatar.getVelocidadVoz());
     var narrador=global.NarracionUI&&global.NarracionUI.montar({panel:colMaestro,origen:origenNarracion});
+    // En portada los controles de operación viven en la franja azul, no encima
+    // del nombre del profesor ni de la explicación. Las referencias/handlers
+    // ya creados continúan vinculados al mismo nodo después de moverlo.
+    var controlesExternos=esHero && document.getElementById('hero-aula-controles');
+    if (controlesExternos) {
+      controlesExternos.appendChild(barraSup);
+      var controlesVoz=colMaestro.querySelector('.mm-controles-audio');
+      if(controlesVoz)controlesExternos.appendChild(controlesVoz);
+      var preferencias=colMaestro.querySelector('.mm-preferencias-voz');
+      if(preferencias)panelAjustes.appendChild(preferencias);
+      var tutorPreferencias=colMaestro.querySelector('.tutor-preferencias');
+      if(tutorPreferencias)panelAjustes.appendChild(tutorPreferencias);
+      controlesExternos.appendChild(panelAjustes);
+      figura.classList.add('controles-externos');
+    }
     var btnAnt = colMaestro.querySelector('[data-mm-accion="ant"]');
     var btnSig = colMaestro.querySelector('[data-mm-accion="sig"]');
     var txtSig = colMaestro.querySelector('[data-mm-sig-txt]');
@@ -655,10 +679,12 @@
       if (txtProyectar) txtProyectar.textContent = proyectando ? '✕ Salir' : '⛶ Proyectar';
 
       if (proyectando) {
-        if (figura.requestFullscreen) {
+        // La portada conserva la barra de controles externa y no usa
+        // fullscreen nativo del subárbol del visor (la ocultaría).
+        if (!esHero && figura.requestFullscreen) {
           figura.requestFullscreen().catch(function () {});
         }
-        figura.focus();
+        if(!esHero)figura.focus();
       } else {
         if (document.fullscreenElement && document.exitFullscreen) {
           document.exitFullscreen().catch(function () {});

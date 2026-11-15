@@ -57,7 +57,9 @@
   }
   function actualizarNombres() {
     var p = buscar(elegido);
-    document.querySelectorAll('.mm-profesor-nombre').forEach(function (n) { n.textContent = p.nombre + ' explica este modelo'; });
+    document.querySelectorAll('.mm-profesor-nombre').forEach(function (n) {
+      n.textContent=n.closest('.figura-hero-modo')?p.nombre:p.nombre+' explica este modelo';
+    });
     document.querySelectorAll('.etiqueta-avatar').forEach(function (n) { n.textContent = p.nombre + ' explica'; });
     selectores = selectores.filter(function (s) { return s.isConnected; });
     selectores.forEach(function (s) { s.value = elegido; });
