@@ -18,6 +18,7 @@
   var fallo3d = false;
   var instancias = [];
   var visorActivo = null;
+  var contadorNarraciones = 0;
 
   function prefiereReducido() {
     return global.Progreso ? global.Progreso.prefiereMovimientoReducido() : false;
@@ -121,6 +122,7 @@
   function montarFigura(contenedor, idFigura, opciones) {
     opciones = opciones || {};
     var esHero = !!opciones.modoHero;
+    var origenNarracion = 'figura-' + idFigura + '-' + (++contadorNarraciones);
     var spec = global.Figuras && global.Figuras.obtener(idFigura);
     if (!spec) {
       contenedor.innerHTML = '<p class="vacio-aviso">Figura no disponible.</p>';
@@ -143,6 +145,7 @@
     var figura = document.createElement('figure');
     figura.className = 'figura' + (esHero ? ' figura-hero-modo' : '');
     figura.setAttribute('tabindex', '-1');
+    figura.setAttribute('aria-label', 'Visor didáctico: ' + (spec.titulo || idFigura));
 
     /* 1. Barra superior dedicada (fuera del lienzo, nunca tapa la figura) */
     var barraSup = document.createElement('div');
@@ -185,7 +188,7 @@
 
     var lienzo = document.createElement('div');
     lienzo.className = 'figura-lienzo' + (esHero ? ' lienzo-hero' : '');
-    lienzo.setAttribute('role', 'group');
+    lienzo.setAttribute('role', 'img');
     lienzo.setAttribute('aria-label', spec.alt || spec.titulo);
     lienzoWrap.appendChild(lienzo);
 
@@ -255,8 +258,13 @@
               '<span class="mm-ico-voz">🔊</span> <span class="mm-txt-voz">Voz activa</span>' +
             '</button>' +
             '<button type="button" class="btn-mm-chip-voz" data-mm-accion="repetir" title="Volver a escuchar este paso">' +
-              '🔄 Escuchar' +
+              '🔄 Repetir' +
             '</button>' +
+            '<button type="button" class="btn-mm-chip-voz" data-mm-accion="pausa" disabled title="Pausar o reanudar locución">⏸ Pausar</button>' +
+          '</div>' +
+          '<div class="mm-preferencias-voz">' +
+            '<label>Voz española <select data-mm-voz-select aria-label="Seleccionar voz española"><option value="">Automática del navegador</option></select></label>' +
+            '<label>Velocidad <select data-mm-velocidad aria-label="Velocidad de locución"><option value="0.8">0,8×</option><option value="1">Normal</option><option value="1.2">1,2×</option></select></label>' +
           '</div>' +
         '</div>' +
       '</div>' +
@@ -271,10 +279,12 @@
           '<strong class="mm-dialogo-titulo" data-mm-titulo>' + pasos[0].titulo + '</strong>' +
           badgeCapaHtml +
         '</div>' +
-        '<p class="mm-dialogo-texto" data-mm-texto>' + pasos[0].texto + '</p>' +
+        '<p class="mm-dialogo-texto" data-mm-texto aria-live="off">' + pasos[0].texto + '</p>' +
+        '<div class="mm-transcripcion" data-mm-transcripcion aria-hidden="true"></div>' +
+        '<p class="mm-estado-narracion" data-mm-estado-voz role="status" aria-live="polite">Explicación visible. Pulsa explicar para escuchar.</p>' +
       '</div>' +
 
-      '<div class="mm-guion-lista" aria-label="Índice de pasos de la figura">' +
+      '<div class="mm-guion-lista" role="group" aria-label="Índice de pasos de la figura">' +
         pasos.map(function (p, idx) {
           return '<button type="button" class="mm-guion-item' + (idx === 0 ? ' activo' : '') + '" data-mm-ir="' + idx + '">' +
             '<span class="mm-guion-idx">' + (idx + 1) + '</span>' +
@@ -311,7 +321,7 @@
     if (global.Tutores) colMaestro.querySelector('.mm-profesor-info').appendChild(global.Tutores.selector());
     var miniAvatar = null;
     if (slotAvatar && global.Avatar && global.Avatar.crearMini) {
-      miniAvatar = global.Avatar.crearMini();
+      miniAvatar = global.Avatar.crearMini({origen:origenNarracion});
       slotAvatar.appendChild(miniAvatar.nodo);
     }
 
@@ -414,6 +424,14 @@
     /* ---------- Lógica del Modo Maestro ---------- */
     var btnVoz = colMaestro.querySelector('[data-mm-accion="voz"]');
     var btnRepetir = colMaestro.querySelector('[data-mm-accion="repetir"]');
+    var btnPausar = colMaestro.querySelector('[data-mm-accion="pausa"]');
+    var selectVoz = colMaestro.querySelector('[data-mm-voz-select]');
+    var selectVelocidad = colMaestro.querySelector('[data-mm-velocidad]');
+    var transcripcion = colMaestro.querySelector('[data-mm-transcripcion]');
+    var estadoNarracion = colMaestro.querySelector('[data-mm-estado-voz]');
+    var textoNarracion = '';
+    var palabraActual = null;
+    if(global.Avatar && global.Avatar.getVelocidadVoz) selectVelocidad.value=String(global.Avatar.getVelocidadVoz());
     var btnAnt = colMaestro.querySelector('[data-mm-accion="ant"]');
     var btnSig = colMaestro.querySelector('[data-mm-accion="sig"]');
     var txtSig = colMaestro.querySelector('[data-mm-sig-txt]');
