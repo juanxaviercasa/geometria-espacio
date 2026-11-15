@@ -162,7 +162,12 @@ test('consultar pistas no incrementa intentos ni puntos', () => {
   P.registrarReto('m6l1', 'reto1', 3, false);
   assert.equal(P.puntos(), 10);
   P.registrarReto('m6l1', 'reto1', 3, true);
-  assert.equal(P.puntos(), 35);
+  assert.equal(P.puntos(), 10, 'revelar desarrollo no permite ganar puntos');
+  assert.equal(P.resumenLeccion('m6l1').retos.reto1.resuelto, false);
+  P.registrarReto('m6l1', 'reto2', 1, true);
+  assert.equal(P.puntos(), 35, 'declaración previa al desarrollo sí puntúa');
+  P.registrarReto('m6l1', 'reto2', 3, false);
+  assert.equal(P.puntos(), 35, 'consultar después no revoca una resolución anterior');
 });
 
 /* Fase 2 — batería de propiedades matemáticas para el laboratorio. */
@@ -256,4 +261,61 @@ test('Fase 2: las 16 escenas curriculares tienen vértices, capas y guías váli
       (p.capasVisibles||[]).forEach(c=>assert.ok(layers.has(c),id+' capa guía '+c));
     });
   }
+});
+
+/* Fase 3 — regresiones de correcciones y del banco completo. */
+function cargarCursoFase3(){
+  const window={};
+  const base={window,Contenido:null};
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/contenido.js'),'utf8'),base);
+  const C=window.Contenido;
+  for(const file of ['contenido-a.js','contenido-b.js','contenido-c.js','contenido-d.js','contenido-uni.js']){
+    vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js',file),'utf8'),{Contenido:C});
+  }
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/figuras.js'),'utf8'),{window});
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/auditoria-academica.js'),'utf8'),{window});
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/guia-academica.js'),'utf8'),{window});
+  return window;
+}
+test('Fase 3: las 17 lecciones y las 107 preguntas tienen cobertura académica completa',()=>{
+  const w=cargarCursoFase3(),r=w.AuditoriaAcademica.auditar(w.Contenido);
+  assert.equal(r.correcto,true,JSON.stringify(r.errores));
+  assert.equal(r.lecciones,17);assert.equal(r.ejercicios,107);
+  assert.equal(r.numericos,64);assert.equal(r.opciones,43);assert.equal(r.retos,18);
+  assert.equal(r.recalculos,64);assert.equal(r.advertencias.length,0);
+  assert.equal(w.GuiaAcademica.ids.length,17);
+  w.Contenido.listaOrdenada().forEach(l=>{
+    const a=w.GuiaAcademica.obtener(l.id);
+    assert.ok(a && a.principio && a.verificacion && a.limite,'guía '+l.id);
+    assert.equal(l.leccion.ejercicios.filter(e=>e.dificultad==='UNI').length,1,'problema UNI '+l.id);
+  });
+});
+test('Fase 3: correcciones de errores geométricos críticos verificables',()=>{
+  const w=cargarCursoFase3(),C=w.Contenido,near=(x,y)=>assert.ok(Math.abs(x-y)<1e-8);
+  near(C.bancoPractica().find(e=>e.id==='m7l1e6').respuesta,3.61);
+  assert.ok(C.obtenerLeccion('m2l2').retos[0].respuesta.includes('V(PA₁BD)=0'));
+  assert.ok(C.obtenerLeccion('m1l2').retos[0].respuesta.includes('√10+1/√2'));
+  assert.ok(C.obtenerLeccion('m12l1').retos[0].respuesta.includes('2a³/3'));
+  assert.ok(C.obtenerLeccion('m7l1').retos[0].enunciado.includes('AC₁'));
+  assert.ok(!C.obtenerLeccion('m10l1').retos[0].titulo.includes('pentagonal'));
+  near(Math.sqrt(5*5-(2*Math.sqrt(3))**2),Math.sqrt(13));
+});
+test('Fase 3: solución consultada recibe menos puntos; las pistas no cuentan como intentos',()=>{
+  const data=new Map(),window={localStorage:{
+    setItem(k,v){data.set(k,String(v));},getItem(k){return data.has(k)?data.get(k):null;},removeItem(k){data.delete(k);}
+  }};
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/progreso.js'),'utf8'),{window,Date,console});
+  const P=window.Progreso;
+  P.registrarEjercicio('m1l1','indep',true,0,true,false);
+  P.registrarEjercicio('m1l1','conayuda',false,2,false,true);
+  P.registrarEjercicio('m1l1','conayuda',true,2,true,true);
+  P.registrarEjercicio('m1l1','solo-pista',false,1,false);
+  assert.equal(P.puntos(),15);
+  assert.equal(P.cuentaEjercicios('m1l1').intentados,2);
+  assert.equal(P.cuentaEjercicios('m1l1').hechos,2);
+  P.registrarReto('m1l1','revelado',2,false);
+  P.registrarReto('m1l1','revelado',2,true);
+  assert.equal(P.puntos(),15);
+  P.registrarReto('m1l1','autonomo',1,true);
+  assert.equal(P.puntos(),40);
 });
