@@ -171,9 +171,10 @@ El motor 3D funciona tanto en local haciendo doble clic en el archivo HTML (`fil
 - Consola sin errores en `index.html`, `leccion.html` (con `?id=m6l1`), `practica.html`, `acerca.html` y `verificacion.html`.
 - Render verificado con capturas en escritorio y móvil: portada con las 12 tarjetas, banda de
   Vértiz completa, avatar visible y sin recortes en la columna lateral, sin código crudo a la vista.
-- `verificacion.html` ejecuta **74 comprobaciones** en el navegador (fórmulas por doble vía,
-  respuestas recalculadas, coherencia estructural, validez de las figuras). Resultado actual:
-  **74/74 (100 %)**. Es la prueba reproducible del contenido: ábrela para ver el informe.
+- `verificacion.html` reúne comprobaciones de estructura, fórmulas, escenas, **64 claves
+  numéricas independientes, 129 distractores y 18 retos**. Resultado observado tras Fase 3:
+  **159/159** superadas en el navegador conectado (14/11/2026). No sustituye las pruebas
+  completas `npm test`, `npm run build` y QA en navegadores físicos.
 
 Correcciones matemáticas aplicadas tras revisión: sección `MNC₁` de un cubo (trapecio isósceles
 `M N C₁ A₁`, no un cuadrilátero inventado), perpendicularidad `AC₁ ⟂ (A₁BD)` por producto escalar,
@@ -213,3 +214,8 @@ Se ha agregado `css/fase1.css` para conservar estilos y funcionalidades de tutor
 El nuevo laboratorio utiliza `js/parametricas.js` (única fuente geométrica para prisma rectangular, pirámide recta, cilindro, cono, esfera y sección oblicua), `js/laboratorio.js` (estado, accesibilidad, carga diferida y sincronización visual), `css/laboratorio.css` y una página independiente. Los modelos comparten el mismo esquema de `js/figuras.js` para 2D/3D. Los controles de clase de `js/visor3d.js` aceptan `actualizarSpec` sin crear otro contexto WebGL, liberan texturas y geometrías, limitan DPR en equipos modestos y gestionan pausa/reanudación con RAF cancelable. `js/visor2d.js` corrige la silueta de la esfera y el apagado de la superficie. `js/visor.js` añade enlaces contextuales al laboratorio y un fallback por hardware de baja capacidad. Se corrigieron las capas pedagógicas del tetraedro y se sumaron tests en `regresiones.cjs`.
 
 Informe de implementación y QA: [FASE2-REPORTE-2026-11-14.md](FASE2-REPORTE-2026-11-14.md). Se validaron 9.258 condiciones geométricas en un ejecutor JS y pruebas DOM de controles; la batería completa de Node y la certificación 3D/WebGL en dispositivos físicos siguen siendo tareas de QA.
+
+
+## Fase 3 — Rigor matemático y pedagógico (2026-11-14)
+
+Se auditaron las 17 lecciones del catálogo. Se corrigieron claves numéricas, demostraciones y enunciados ambiguos, incluidos el tetraedro de volumen cero, la altura √13 de una pirámide, la sección pentagonal del cubo, la orientación de prismas oblicuos y la inclusión octaedro–tetraedro. El banco se amplió de 90 a **107 ejercicios**, con 17 problemas avanzados tipo UNI, **43 preguntas de opción**, **64 numéricas**, **18 retos** y **129 diagnósticos específicos de distractores**. Cada lección dispone de una guía de principios, comprobación y límites de aplicación. La práctica diferencia reintentos, consulta explícita de soluciones y resolución independiente. Ver [FASE3-REPORTE-2026-11-14.md](FASE3-REPORTE-2026-11-14.md).
