@@ -1,0 +1,42 @@
+{
+  "version": "2026-11-14",
+  "origen": "Proyecto Geometría del Espacio 3D",
+  "politica": "Presupuestos orientativos, no métricas medidas; ajustar con dispositivos y conexión representativos.",
+  "valoresObjetivo": {
+    "LCP_ms": 2500,
+    "CLS": 0.1,
+    "INP_ms": 200,
+    "FCP_ms": 1800,
+    "JSHeapMiB_telefono": 100
+  },
+  "recursos": {
+    "paginasSinLecciones": {
+      "maximoScriptsEstaticos": 9,
+      "nota": "Acerca, Descarga y Laboratorio usan catálogo ligero; verificación carga el curso para auditarlo."
+    },
+    "threeClasico": {
+      "maximoBytesFuente": 700000,
+      "tamanoFuenteReferencia": 669884,
+      "carga": "únicamente con 3D solicitado o visible"
+    },
+    "threeModulo": {
+      "tamanoFuenteReferencia": 1272972,
+      "politica": "no descargar en flujo ordinario"
+    },
+    "glbTutor": {
+      "tamanoFuenteReferencia": 268884,
+      "carga": "solo si el tutor 3D es visible y seleccionado"
+    },
+    "notas": [
+      "Los transferSize observados incluyen efectos de caché y compresión.",
+      "No se bloquean demos educativas por presupuestos orientativos.",
+      "No hay telemetría de estudiantes ni se envían métricas del navegador.",
+      "INP requiere interacción real; no sustituir su ausencia por cero."
+    ]
+  },
+  "verificacion": {
+    "automatizada": "node --test regresiones.cjs",
+    "build": "node build.js",
+    "visual": "verificacion.html#rendimiento"
+  }
+}
