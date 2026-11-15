@@ -145,7 +145,7 @@ test('tutor predeterminado es Vértiz y no se ofrecen dragones como emoji',()=>{
 test('elegir Pokémon recuerda el tutor y proporciona una voz humana diferenciada',()=>{
   const {api,datos}=tutores('vertiz');
   assert.equal(api.elegir('pikachu'),true);assert.equal(datos['geo3d.tutor.v1'],'pikachu');
-  assert.ok(api.perfilVoz().pitch>1);assert.ok(api.perfilVoz().rate<=1.1);
+  assert.equal(api.perfilVoz().pitch,1);assert.equal(api.perfilVoz().rate,1); // voz natural predeterminada
 });
 test('los recursos del dragón y Pokémon están incluidos localmente',()=>{
   const {api}=tutores('dragon');
