@@ -82,7 +82,7 @@ test('Fase 4: eventos de palabra y estado conservan la figura origen',()=>{
   u.onboundary({name:'word',charIndex:3,charLength:5});
   const b=v.events.filter(e=>e.type==='avatar-palabra').at(-1);
   assert.equal(b.detail.origen,'figura-a');
-  assert.equal(b.detail.texto,'A B igual a 12');
+  assert.equal(b.detail.texto,'A be igual a 12');
   assert.equal(b.detail.charIndex,3);
   u.onend();
   assert.equal(v.api.getEstadoVoz().estado,'finalizado');
@@ -130,7 +130,7 @@ test('Fase 4: voces españolas preferidas, selección segura y error TTS sin blo
   assert.equal(v.api.getEstadoVoz().estado,'error');
 });
 function tutores(guardado) {
-  const datos={'geo3d.tutor.v1':guardado},window={};
+  const datos={'geo3d.tutor.v1':guardado},window={addEventListener(){}};
   const document={currentScript:{src:'http://localhost/js/tutores.js'},addEventListener(){},querySelectorAll(){return[];},dispatchEvent(){}};
   vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/tutores.js'),'utf8'),{window,document,URL,localStorage:{getItem:k=>datos[k],setItem:(k,v)=>{datos[k]=v;}},CustomEvent:function(){}});
   return {api:window.Tutores,datos};
@@ -532,7 +532,7 @@ test('Fase 6: sitemap con 23 URL canónicas y todas las lecciones',()=>{
 });
 test('Fase 6: el ZIP y el build incluyen recursos y evidencias del cierre',()=>{
  const window={};
- vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/descarga.js'),'utf8'),{window});
+ vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/descarga.js'),'utf8'),{window,document:{readyState:'loading',addEventListener(){}}});
  const archivos=window.Descarga.ARCHIVOS;
  assert.equal(new Set(archivos).size,archivos.length,'no duplicar rutas en ZIP');
  ['robots.txt','sitemap.xml','FASE6-REPORTE-2026-11-14.md',
