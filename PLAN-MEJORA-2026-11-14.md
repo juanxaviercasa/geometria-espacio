@@ -76,12 +76,14 @@
 **Informe Fase 4:** [FASE4-REPORTE-2026-11-14.md](FASE4-REPORTE-2026-11-14.md). QA de navegador: 174/174 autocomprobaciones y prueba a 390 px sin scroll horizontal; pruebas del motor de voz simulado superadas. `npm test`, `npm run build` y certificación con voces/lectores de pantalla reales quedan pendientes de Fases 5–6.
 
 ## Fase 5 — Rendimiento y calidad técnica
-- [ ] Medir peso de recursos, LCP, CLS, INP, memoria y errores de consola en móvil y desktop.
-- [ ] Evitar precargar todo el currículo y la librería 3D en páginas que no los necesitan; definir división de bundles con presupuesto.
-- [ ] Corregir estructura compartida HTML/CSS, reglas duplicadas, tamaño de fuentes auxiliares y HTML inline repetido.
-- [ ] Revisar metadatos de páginas, enlaces, privacidad local, validación de entradas y superficie del servidor.
-- [ ] Añadir más tests Node sin dependencias para validación de números, puntuaciones, geometría y voz; los tests existentes no certifican todo el currículo.
-- [ ] Registrar pruebas de build y validación funcional, evitando automatizaciones CI innecesarias hasta revisar disponibilidad de minutos GitHub Actions.
+- [x] Incorporar panel local de recursos, FCP, LCP, CLS, INP aproximado, heap y errores; registrar muestras móviles. El INP real, LCP/CLS de campo y memoria GPU física se certificarán en Fase 6.
+- [x] SVG primero, Three.js bajo demanda, catálogo ligero y límites orientativos en `PRESUPUESTOS-RENDIMIENTO.json`.
+- [x] Consolidar estilos del panel de verificación en `css/fase5.css` y excluir CSS/JS pesados de páginas informativas. La revisión editorial exhaustiva de otros estilos permanece en Fase 6.
+- [x] Idioma es-PE, URLs canónicas para páginas y 17 lecciones, texto de descargas actualizado, cabeceras Cloudflare y servidor local con rutas permitidas y realpath.
+- [x] Añadir regresiones de carga diferida, catálogo ligero, RAF estático, dispose GPU y exposición de archivos; se mantienen las pruebas académicas y de voz.
+- [x] Registrar pruebas en navegador, pruebas JS aisladas, límites y comandos Node; no iniciar CI de GitHub Actions. `npm test` y `npm run build` siguen pendientes de ejecución en runner.
+
+**Informe técnico:** [FASE5-REPORTE-2026-11-14.md](FASE5-REPORTE-2026-11-14.md). **Nota:** no se consideran certificados aún el build Node, los Core Web Vitals de campo ni la matriz de navegadores.
 
 ## Fase 6 — Matriz de QA y cierre
 - [ ] Desktop: 1440/1280 px; tablet 1024/768 px; móviles 390/360 px, orientación vertical y horizontal.
