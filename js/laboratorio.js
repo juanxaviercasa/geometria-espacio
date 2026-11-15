@@ -111,22 +111,12 @@ function render2d(){
  if(result){lienzo.setAttribute('aria-label',m.spec.alt);estado.hidden=true;}
 }
 function cargarThree(){
- if(w.THREE && w.THREE.WebGLRenderer)return Promise.resolve();
+ if(w.THREE&&w.THREE.WebGLRenderer)return Promise.resolve();
  if(loading3d)return loading3d;
- // Migración progresiva a ES modules; si la distribución modular no está disponible
- // se usa la versión local clásica, que todavía requieren algunas lecciones.
- loading3d=import('../vendor/three.module.min.js').then(function(mod){
-  if(!mod || !mod.WebGLRenderer || !mod.Scene)throw Error('Módulo Three.js no válido');
-  w.THREE=mod;
- }).catch(function(){
-  return new Promise(function(resolve,reject){
-   if(w.THREE&&w.THREE.WebGLRenderer)return resolve();
-   var el=document.createElement('script');
-   el.src='vendor/three.min.js';el.onload=function(){if(w.THREE&&w.THREE.WebGLRenderer)resolve();else reject(Error('Three.js no disponible'));};
-   el.onerror=function(){reject(Error('No se puede cargar Three.js'));};
-   document.head.appendChild(el);
-  });
- });
+ // La edición UMD local es mucho más ligera que three.module.min.js y
+ // comparte un único cargador con el resto de la plataforma.
+ loading3d=(w.Cargador3D?w.Cargador3D.cargarThree():Promise.reject(Error('Cargador 3D ausente')))
+  .catch(function(err){loading3d=null;throw err;});
  return loading3d;
 }
 function mostrarError(msg){
