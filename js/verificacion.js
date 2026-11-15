@@ -627,6 +627,46 @@
     });
   }
 
+  /* Fase 4 — verificación de pronunciación y controles de lectura accesible. */
+  function vozAcademica() {
+    comprobar('Vértiz y voz', 'Motor de español matemático presente', function(){
+      return {ok:!!window.VozMatematica && !!window.Avatar,
+        detalle:'Lectura local: no necesita servicio externo ni cuenta'};
+    });
+    if(!window.VozMatematica || !window.Avatar)return;
+    var casos=[
+      ['Cuadrados','a² + b² + c² = 49','a al cuadrado más be al cuadrado más ce al cuadrado igual a 49'],
+      ['Vértices con subíndices','AC₁ = √49','A C sub 1 igual a raíz cuadrada de 49'],
+      ['Dos vértices consecutivos','C₁D₁','C sub 1 D sub 1'],
+      ['B frente a V','B y V','be y uve'],
+      ['Ecuación de segundo grado','x² -7x +12','equis al cuadrado menos 7 equis más 12'],
+      ['Fracciones en LaTeX','\\frac{3}{4}','fracción 3 sobre 4'],
+      ['Volumen y unidad cúbica','V=12 cm³','uve igual a 12 centímetros cúbicos'],
+      ['Área en milímetros cuadrados','3 mm²','3 milímetros cuadrados'],
+      ['Raíz cúbica','∛8','raíz cúbica de 8'],
+      ['Número entero no fragmentado','12','12'],
+      ['Unidades y porcentaje','50%','50 por ciento'],
+      ['Ángulos y grados','θ ≈ 45°','teta aproximadamente igual a 45 grados']
+    ];
+    casos.forEach(function(caso){
+      comprobar('Vértiz y voz',caso[0],function(){
+        var actual=window.VozMatematica.leer(caso[1]);
+        return {ok:actual===caso[2],detalle:actual};
+      });
+    });
+    comprobar('Vértiz y voz', 'Seguimiento de palabra por índice de carácter', function(){
+      var texto='raíz cuadrada de 49',i=window.VozMatematica.palabraEn(texto,5);
+      return {ok:i===1 && window.VozMatematica.palabras(texto).length===4,
+        detalle:'Índices calculados a partir del mismo texto narrado'};
+    });
+    comprobar('Vértiz y voz', 'Pausa, reanudación, silencio y cancelación disponibles',function(){
+      var v=window.Avatar;
+      var ok=['pausarVoz','reanudarVoz','detenerVoz','setVozHabilitada',
+        'getEstadoVoz','getVozHabilitada','vocesDisponibles','elegirVoz'].every(function(k){return typeof v[k]==='function';});
+      return {ok:ok,detalle:'Controles reales; el texto no depende del sintetizador'};
+    });
+  }
+
   /* ==========================================================
      Render del informe
      ========================================================== */
@@ -689,6 +729,7 @@
     estructura();
     figuras();
     auditoriaAcademica();
+    vozAcademica();
     render();
   }
 
