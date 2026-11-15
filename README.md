@@ -172,8 +172,8 @@ El motor 3D funciona tanto en local haciendo doble clic en el archivo HTML (`fil
 - Render verificado con capturas en escritorio y móvil: portada con las 12 tarjetas, banda de
   Vértiz completa, avatar visible y sin recortes en la columna lateral, sin código crudo a la vista.
 - `verificacion.html` reúne comprobaciones de estructura, fórmulas, escenas, **64 claves
-  numéricas independientes, 129 distractores y 18 retos**. Resultado observado tras Fase 3:
-  **159/159** superadas en el navegador conectado (14/11/2026). No sustituye las pruebas
+  numéricas independientes, 129 distractores y 18 retos**. Resultado observado tras Fase 4:
+  **174/174** superadas en el navegador conectado (14/11/2026). No sustituye las pruebas
   completas `npm test`, `npm run build` y QA en navegadores físicos.
 
 Correcciones matemáticas aplicadas tras revisión: sección `MNC₁` de un cubo (trapecio isósceles
@@ -219,3 +219,8 @@ Informe de implementación y QA: [FASE2-REPORTE-2026-11-14.md](FASE2-REPORTE-202
 ## Fase 3 — Rigor matemático y pedagógico (2026-11-14)
 
 Se auditaron las 17 lecciones del catálogo. Se corrigieron claves numéricas, demostraciones y enunciados ambiguos, incluidos el tetraedro de volumen cero, la altura √13 de una pirámide, la sección pentagonal del cubo, la orientación de prismas oblicuos y la inclusión octaedro–tetraedro. El banco se amplió de 90 a **107 ejercicios**, con 17 problemas avanzados tipo UNI, **43 preguntas de opción**, **64 numéricas**, **18 retos** y **129 diagnósticos específicos de distractores**. Cada lección dispone de una guía de principios, comprobación y límites de aplicación. La práctica diferencia reintentos, consulta explícita de soluciones y resolución independiente. Ver [FASE3-REPORTE-2026-11-14.md](FASE3-REPORTE-2026-11-14.md).
+
+
+## Fase 4 — Vértiz y narración matemática accesible (2026-11-14)
+
+Se actualizó el motor de voz del navegador con normalización de expresiones en español: potencias, raíces, fracciones LaTeX, subíndices, letras B/V, ángulos y unidades. Los visores ofrecen selección de voz, velocidad, repetición, pausa, reanudación y silencio, además de transcripción visible sincronizada con eventos reales de palabra cuando Web Speech los expone. Cada figura conserva título, texto, enfoque geométrico y capa resaltada aunque falle o termine la voz. Se mantienen los 107 ejercicios y 18 retos. En la comprobación del navegador publicada se observaron **174/174 verificaciones superadas** y una prueba móvil de 390 px sin scroll horizontal. Esta validación no sustituye pruebas físicas de TTS ni accesibilidad WCAG completa. Informe: [FASE4-REPORTE-2026-11-14.md](FASE4-REPORTE-2026-11-14.md).
