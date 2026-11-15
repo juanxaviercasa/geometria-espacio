@@ -605,7 +605,9 @@
     }
 
     document.addEventListener('avatar-hablando', function (e) {
-      var activo = !!(e.detail && e.detail.activo);
+      var detalle=e.detail||{};
+      if(opciones.origen && detalle.origen!==opciones.origen)return;
+      var activo=!!detalle.activo;
       escenario.classList.toggle('hablando', activo);
       setEstado(activo ? 'habla' : 'senala');
     });
