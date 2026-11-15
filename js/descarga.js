@@ -36,6 +36,8 @@
     'FASE2-REPORTE-2026-11-14.md',
     'FASE3-REPORTE-2026-11-14.md',
     'FASE4-REPORTE-2026-11-14.md',
+    'FASE5-REPORTE-2026-11-14.md',
+    'PRESUPUESTOS-RENDIMIENTO.json',
     '.gitignore',
     '.nojekyll',
     // Estilos
@@ -44,8 +46,12 @@
     'css/laboratorio.css',
     'css/fase3.css',
     'css/fase4.css',
+    'css/fase5.css',
     // Lógica
     'js/progreso.js',
+    'js/catalogo-ligero.js',
+    'js/cargador3d.js',
+    'js/metricas-rendimiento.js',
     'js/contenido.js',
     'js/contenido-a.js',
     'js/contenido-b.js',
