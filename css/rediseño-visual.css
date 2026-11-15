@@ -1,12 +1,107 @@
-
-/* El avatar SVG del modo maestro usa una clase adicional distinta al tutor elegido. */
-.vertiz-stage-mini .avatar-escena { width: 142px; height: 176px; margin-left: -71px; }
-@media (max-width: 900px) {
-  .vertiz-stage-mini .avatar-escena { width: 128px; height: 158px; margin-left: -64px; }
+/*
+ * Rediseño visual transversal — Geometría del espacio
+ * Capa de presentación: no cambia IDs, estados ni contratos JavaScript.
+ */
+:root {
+  --paper:#f6f7fb; --surface:#fff; --surface-2:#f0f2fb; --surface-3:#e4e8f4;
+  --ink:#17203b; --ink-2:#45516f; --ink-3:#6d7894; --line:#dce2f0; --line-2:#b9c4dc;
+  --primary:#4a43c7; --primary-2:#665fe2; --primary-soft:#efefff; --primary-ink:#302a88;
+  --accent:#087f9b; --accent-soft:#e8f8fb; --teal:#13846f; --teal-soft:#e9f8f3;
+  --gold:#ad6a17; --max:1380px; --radius:16px; --radius-sm:11px;
+  --shadow-1:0 8px 24px rgba(31,38,78,.06); --shadow-2:0 24px 60px rgba(40,45,106,.13);
 }
-@media (max-width: 680px) {
-  .vertiz-stage-mini .avatar-escena { width: 104px; height: 132px; margin-left: -52px; }
+body { background:var(--paper); color:var(--ink); }
+body::before { background-image:radial-gradient(circle at 5% 0%,rgba(98,91,226,.09),transparent 32%),radial-gradient(circle at 96% 12%,rgba(12,162,184,.08),transparent 28%),linear-gradient(135deg,rgba(255,255,255,.35),transparent 55%); }
+.wrap { width:min(calc(100% - 3rem),var(--max)); }
+.sitio-head { background:rgba(250,251,255,.9); border-bottom-color:rgba(185,196,220,.7); }
+.sitio-head .wrap.sitio-head-inner,.sitio-head .wrap:not(.sitio-head-inner) { min-height:78px; padding-block:.7rem; }
+.marca { gap:.75rem; } .marca svg { width:42px; height:42px; }
+.marca span small { color:var(--ink-3); letter-spacing:.12em; } .marca span b { color:var(--ink); font-size:1.04rem; }
+.nav-principal a { color:var(--ink-2); border-radius:10px; }
+.nav-principal a:hover,.nav-principal a[aria-current="page"] { background:var(--primary-soft); color:var(--primary-ink); }
+.insignia-progreso { box-shadow:0 2px 8px rgba(49,42,136,.06); }
+h1,h2,h3,h4 { color:var(--ink); } .seccion-cabeza { max-width:70ch; }
+.seccion-cabeza h2 { letter-spacing:-.04em; } .seccion-cabeza p,.contenido,.prosa { color:var(--ink-2); }
+.hero { padding:clamp(2.4rem,5vw,5.5rem) 0 clamp(2.3rem,4vw,4.5rem); background:linear-gradient(180deg,rgba(255,255,255,.42),rgba(239,241,252,.2)); }
+.hero .wrap { grid-template-columns:minmax(360px,.78fr) minmax(0,1.22fr); gap:clamp(2rem,4vw,5rem); align-items:center; }
+.hero h1 { font-size:clamp(2.8rem,5vw,5rem); line-height:1.02; max-width:12ch; }
+.hero .entradilla { font-size:clamp(1.08rem,1.55vw,1.24rem); max-width:48ch; line-height:1.7; }
+.eyebrow { color:var(--primary-ink); background:var(--primary-soft); border-color:#d4d1ff; }
+.hero-acciones { margin-top:1.75rem; gap:.8rem; } .hero-acciones .btn { min-height:50px; }
+.hero-datos { grid-template-columns:repeat(4,minmax(0,1fr)); gap:.6rem; margin-top:2.1rem; padding-top:1.4rem; }
+.hero-datos div { min-height:82px; padding:.75rem .8rem; background:rgba(255,255,255,.68); }
+.hero-datos strong { font-size:1.6rem; }
+.hero-figura { border-radius:22px; box-shadow:var(--shadow-2); background:rgba(255,255,255,.92); }
+.hero-figura > svg { min-height:390px; object-fit:contain; padding:1.2rem; }
+.hero-figura .figura-pie-referencia { font-size:.9rem; padding:.8rem 1.15rem; }
+.seccion { padding-block:clamp(3rem,6vw,6rem); } .seccion:nth-of-type(even) { background:rgba(255,255,255,.52); }
+.continuar { border:1px solid #d7d4fc; box-shadow:var(--shadow-1); padding:1.35rem 1.5rem; }
+.ruta { gap:1rem; } .modulo { border-radius:var(--radius); box-shadow:var(--shadow-1); }
+.modulo-cabeza { padding:1.25rem 1.35rem; } .modulo-titulo { font-size:1.1rem; } .modulo-desc { font-size:.93rem; }
+.modulo-cuerpo { padding:.55rem .9rem .9rem; background:#fcfcff; } .leccion-fila { padding:1rem .75rem; }
+.leccion-fila:hover { background:var(--primary-soft); }
+.banda-vertiz { background:linear-gradient(135deg,#eceeff 0%,#f7fbff 55%,#e9f8f7 100%); }
+.vertiz-marco { border-radius:24px; box-shadow:var(--shadow-1); padding:clamp(1.5rem,3vw,2.5rem); }
+.vertiz-marco .avatar-escenario { max-width:220px; height:270px; }
+.vertiz-marco .avatar-escena { width:208px; height:260px; margin-left:-104px; }
+.vertiz-texto { max-width:58ch; } .vertiz-texto h3 { font-size:clamp(1.7rem,3vw,2.5rem); } .vertiz-texto p { font-size:1.05rem; }
+.figura { border-radius:20px; box-shadow:var(--shadow-2); } .figura-barra-sup { padding:.85rem 1.15rem; background:#fbfcff; }
+.hud-fig-titulo { font-size:1rem; } .btn-fig-hud,.btn-pildora-capa { min-height:34px; }
+.figura-escenario-clase { grid-template-columns:minmax(0,1.72fr) minmax(340px,.94fr); min-height:610px; }
+.figura-stage-wrap { background:radial-gradient(circle at 50% 43%,#fff 0%,#f2f5fc 70%,#e5eaf5 100%); }
+.figura-lienzo,.figura-lienzo.lienzo-hero { height:clamp(450px,42vw,610px); }
+.figura-col-maestro { padding:1.25rem; gap:1rem; background:linear-gradient(180deg,#f8f9ff 0%,#fff 100%); }
+.mm-profesor-cabecera { grid-template-columns:142px minmax(0,1fr); gap:1rem; padding-bottom:.9rem; }
+.mm-avatar-slot,.vertiz-stage-mini .mini-escenario,.vertiz-stage-mini .avatar-escena.tutor-personalizado { width:142px; height:176px; }
+.vertiz-stage-mini .avatar-escena { width:142px; height:176px; margin-left:-71px; }
+.figura-col-maestro .tutor-pokemon { padding:3%; }
+.mm-profesor-nombre { font-size:1rem; } .mm-rol-tag { font-size:.68rem; }
+.mm-dialogo-titulo { font-size:1rem; } .mm-dialogo-texto { font-size:.94rem; line-height:1.62; }
+.mm-caja-dialogo { padding:1rem 1.05rem; border-left-width:5px; } .mm-guion-lista { gap:6px; }
+.mm-guion-item { font-size:.82rem; padding:.55rem .65rem; } .mm-acciones-fila { gap:.65rem; }
+.btn-mm-nav { min-height:42px; font-size:.86rem; } .figura-capas { padding:.8rem 1rem; gap:.5rem; }
+.chip-medida { font-size:.77rem; }
+.leccion-cabeza { padding:1.25rem 0 1.8rem; } .leccion-cabeza h1 { font-size:clamp(2.1rem,4vw,3.4rem); }
+.leccion-layout { grid-template-columns:minmax(0,1fr) 320px; gap:clamp(2rem,4vw,4rem); }
+.contenido { font-size:1.08rem; line-height:1.78; } .tarjeta-aside { box-shadow:var(--shadow-1); }
+.fml { box-shadow:0 18px 35px rgba(20,25,52,.16); } .bloque { margin-bottom:2.5rem; }
+.practica-layout { grid-template-columns:minmax(0,1fr) 320px; gap:clamp(2rem,4vw,4rem); }
+.ejercicio,.reto,.doc-seccion { border-radius:var(--radius); } .filtros { border-radius:var(--radius); box-shadow:var(--shadow-1); }
+.sitio-pie { background:#171d3d; color:#edf0ff; padding-block:3.5rem 1.6rem; }
+.sitio-pie h4 { color:#bfc8f2; } .sitio-pie p,.sitio-pie a { color:#dbe0fa; }
+.aside-leccion #avatar-guia .avatar-escenario,.panel-practica #avatar-guia .avatar-escenario { max-width:176px; height:218px; }
+.aside-leccion #avatar-guia .avatar-escena,.panel-practica #avatar-guia .avatar-escena { width:168px; height:210px; margin-left:-84px; }
+.aside-leccion #avatar-guia .tutor-personalizado,.panel-practica #avatar-guia .tutor-personalizado { width:100%; height:100%; margin-left:0; }
+@media (max-width:1180px) {
+  .hero .wrap { grid-template-columns:minmax(0,1fr); max-width:980px; gap:2rem; } .hero h1 { max-width:20ch; }
+  .hero-figura { width:100%; } .figura-escenario-clase { grid-template-columns:minmax(0,1.5fr) minmax(300px,.9fr); }
+  .figura-lienzo,.figura-lienzo.lienzo-hero { height:clamp(430px,52vw,560px); }
 }
-@media (max-width: 420px) {
-  .vertiz-stage-mini .avatar-escena { width: 88px; height: 114px; margin-left: -44px; }
+@media (max-width:900px) {
+  .wrap { width:min(calc(100% - 2rem),var(--max)); } .hero-datos { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .figura-escenario-clase { grid-template-columns:minmax(0,1fr); min-height:0; } .figura-col-maestro { border-left:0; border-top:1px solid var(--line); }
+  .figura-lienzo,.figura-lienzo.lienzo-hero { height:clamp(390px,70vw,560px); }
+  .mm-profesor-cabecera { grid-template-columns:128px minmax(0,1fr); } .mm-avatar-slot,.vertiz-stage-mini .mini-escenario,.vertiz-stage-mini .avatar-escena.tutor-personalizado { width:128px; height:158px; }
+  .vertiz-stage-mini .avatar-escena { width:128px; height:158px; margin-left:-64px; }
 }
+@media (max-width:680px) {
+  .wrap { width:calc(100% - 1.25rem); } .sitio-head .wrap.sitio-head-inner,.sitio-head .wrap:not(.sitio-head-inner) { min-height:68px; }
+  .hero { padding-top:2rem; } .hero h1 { font-size:clamp(2.5rem,12vw,3.5rem); } .hero .entradilla { font-size:1rem; }
+  .hero-datos div { min-height:74px; font-size:.76rem; } .hero-datos strong { font-size:1.35rem; }
+  .hero-figura > svg { min-height:300px; padding:.7rem; } .seccion { padding-block:2.5rem; }
+  .figura-barra-sup { align-items:flex-start; } .figura-barra-sup .acciones-fig { width:100%; }
+  .figura-lienzo,.figura-lienzo.lienzo-hero { height:min(92vw,430px); min-height:300px; } .figura-col-maestro { padding:.9rem; }
+  .mm-profesor-cabecera { grid-template-columns:104px minmax(0,1fr); gap:.75rem; } .mm-avatar-slot,.vertiz-stage-mini .mini-escenario,.vertiz-stage-mini .avatar-escena.tutor-personalizado { width:104px; height:132px; }
+  .vertiz-stage-mini .avatar-escena { width:104px; height:132px; margin-left:-52px; } .mm-profesor-nombre { font-size:.92rem; }
+  .mm-dialogo-texto { font-size:.9rem; } .vertiz-marco .avatar-escenario { max-width:170px; height:210px; }
+  .vertiz-marco .avatar-escena { width:160px; height:200px; margin-left:-80px; }
+  .aside-leccion #avatar-guia .avatar-escenario,.panel-practica #avatar-guia .avatar-escenario { max-width:150px; height:188px; }
+  .aside-leccion #avatar-guia .avatar-escena,.panel-practica #avatar-guia .avatar-escena { width:142px; height:178px; margin-left:-71px; }
+}
+@media (max-width:420px) {
+  .hero-acciones .btn { width:100%; } .hero-datos { gap:.45rem; } .hero-datos div { padding:.6rem; }
+  .mm-profesor-cabecera { grid-template-columns:88px minmax(0,1fr); } .mm-avatar-slot,.vertiz-stage-mini .mini-escenario,.vertiz-stage-mini .avatar-escena.tutor-personalizado { width:88px; height:114px; }
+  .vertiz-stage-mini .avatar-escena { width:88px; height:114px; margin-left:-44px; } .mm-rol-tag { display:inline-block; }
+  .mm-acciones-fila { grid-template-columns:1fr; } .btn-mm-nav { width:100%; }
+}
+@media (prefers-reduced-motion:reduce) { .hero-figura,.modulo,.leccion-fila { transition:none; } }
