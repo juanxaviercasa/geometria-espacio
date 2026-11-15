@@ -1,54 +1,76 @@
-const http = require('http');
-const fs = require('fs');
-const path = require('path');
-
-const PORT = 3000;
-const MIME = {
-  '.html': 'text/html; charset=utf-8',
-  '.css': 'text/css; charset=utf-8',
-  '.js': 'application/javascript; charset=utf-8',
-  '.json': 'application/json; charset=utf-8',
-  '.svg': 'image/svg+xml',
-  '.png': 'image/png',
-  '.ico': 'image/x-icon',
-  '.txt': 'text/plain; charset=utf-8'
+/* Servidor local de desarrollo; producción se sirve por Cloudflare Pages. */
+const http=require('http');
+const fs=require('fs');
+const path=require('path');
+const ROOT=fs.realpathSync(__dirname);
+const PORT=Number(process.env.PORT)||3000;
+const MIME={
+ '.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8',
+ '.js':'application/javascript; charset=utf-8','.mjs':'text/javascript; charset=utf-8',
+ '.json':'application/json; charset=utf-8','.md':'text/markdown; charset=utf-8',
+ '.svg':'image/svg+xml','.png':'image/png','.webp':'image/webp',
+ '.jpg':'image/jpeg','.jpeg':'image/jpeg','.gif':'image/gif',
+ '.glb':'model/gltf-binary','.wasm':'application/wasm',
+ '.woff':'font/woff','.woff2':'font/woff2',
+ '.ico':'image/x-icon','.txt':'text/plain; charset=utf-8'
 };
-
-const server = http.createServer((req, res) => {
-  let reqPath;
-  try {
-    reqPath = decodeURIComponent((req.url || '/').split('?')[0]);
-  } catch {
-    res.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8' });
-    res.end('Ruta inválida');
-    return;
+const PAGINAS=new Set(['index.html','laboratorio.html','leccion.html','practica.html',
+ 'acerca.html','descarga.html','verificacion.html']);
+const DOCUMENTOS=new Set(['README.md','TODO.md','SUBIR-A-GITHUB.md',
+ 'PLAN-MEJORA-2026-11-14.md','TUTORES-2026-10-28.md',
+ 'FASE1-REPORTE-2026-11-14.md','FASE2-REPORTE-2026-11-14.md',
+ 'FASE3-REPORTE-2026-11-14.md','FASE4-REPORTE-2026-11-14.md',
+ 'FASE5-REPORTE-2026-11-14.md','.gitignore','.nojekyll']);
+const CARPETAS=new Set(['css','js','vendor']);
+function rutaPublica(ruta){
+ const pedazos=ruta.split('/').filter(Boolean);
+ if(!pedazos.length)return false;
+ if(pedazos.some(x=>x==='.'||x==='..'||x.startsWith('.')))return pedazos.length===1&&DOCUMENTOS.has(pedazos[0]);
+ if(pedazos.length===1)return PAGINAS.has(pedazos[0])||DOCUMENTOS.has(pedazos[0]);
+ return CARPETAS.has(pedazos[0])&&pedazos.length>=2;
+}
+function dentroDeRaiz(nombre){
+ return nombre.startsWith(ROOT+path.sep);
+}
+const server=http.createServer((req,res)=>{
+ res.setHeader('X-Content-Type-Options','nosniff');
+ res.setHeader('Referrer-Policy','strict-origin-when-cross-origin');
+ res.setHeader('Permissions-Policy','camera=(), microphone=(), geolocation=()');
+ if(req.method!=='GET'&&req.method!=='HEAD'){
+  res.writeHead(405,{'Allow':'GET, HEAD'});res.end();return;
+ }
+ let solicitada;
+ try{solicitada=decodeURIComponent((req.url||'/').split('?')[0]);}
+ catch(e){res.writeHead(400);res.end('URL incorrecta');return;}
+ if(solicitada==='/'||solicitada==='')solicitada='/index.html';
+ if(solicitada.includes('\\')||solicitada.includes('\0')||!rutaPublica(solicitada)){
+  res.writeHead(403,{'Content-Type':'text/plain; charset=utf-8'});res.end('Acceso denegado');return;
+ }
+ const filePath=path.resolve(ROOT,solicitada.replace(/^\/+/, ''));
+ if(!dentroDeRaiz(filePath)){
+  res.writeHead(403);res.end('Acceso denegado');return;
+ }
+ fs.realpath(filePath,(err,real)=>{
+  if(err||!dentroDeRaiz(real)){
+   res.writeHead(err&&err.code==='ENOENT'?404:403);
+   res.end('No disponible');return;
   }
-  if (reqPath === '/' || reqPath === '') reqPath = '/index.html';
-  // No permitir que una URL lea ficheros fuera de la carpeta del proyecto.
-  const filePath = path.resolve(__dirname, reqPath.replace(/^[/]+/, ''));
-  if (!filePath.startsWith(__dirname + path.sep) || reqPath.indexOf(String.fromCharCode(0)) !== -1) {
-    res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });
-    res.end('Acceso denegado');
-    return;
-  }
-
-  fs.stat(filePath, (err, stats) => {
-    if (err || !stats.isFile()) {
-      res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
-      res.end('<h1>404 Not Found</h1><p><a href="/">Volver al inicio</a></p>');
-      return;
-    }
-
-    const ext = path.extname(filePath).toLowerCase();
-    const contentType = MIME[ext] || 'application/octet-stream';
-    res.writeHead(200, {
-      'Content-Type': contentType,
-      'Access-Control-Allow-Origin': '*'
-    });
-    fs.createReadStream(filePath).pipe(res);
+  fs.stat(real,(statErr,st)=>{
+   if(statErr||!st.isFile()){
+    res.writeHead(404);res.end('No encontrado');return;
+   }
+   const tipo=MIME[path.extname(real).toLowerCase()]||'application/octet-stream';
+   res.writeHead(200,{
+    'Content-Type':tipo,
+    'Content-Length':st.size,
+    'Cache-Control':tipo.startsWith('text/html')?'no-cache':'public, max-age=3600'
+   });
+   if(req.method==='HEAD'){res.end();return;}
+   fs.createReadStream(real).on('error',()=>res.destroy()).pipe(res);
   });
+ });
 });
-
-server.listen(PORT, () => {
-  console.log(`Servidor local activo en http://localhost:${PORT}`);
+if(require.main===module)server.listen(PORT,()=>{
+ console.log('Servidor local de Geometría 3D en http://localhost:'+PORT);
 });
+module.exports={server,rutaPublica,dentroDeRaiz};
