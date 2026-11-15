@@ -51,6 +51,7 @@
     'js/contenido-d.js',
     'js/contenido-uni.js',
     'js/auditoria-academica.js',
+    'js/distractores.js',
     'js/guia-academica.js',
     'js/figuras.js',
     'js/parametricas.js',
