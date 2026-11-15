@@ -66,12 +66,14 @@
 **Informe de ejecución:** [FASE3-REPORTE-2026-11-14.md](FASE3-REPORTE-2026-11-14.md). La ejecución del navegador registró 159/159 comprobaciones; `npm test`, `npm run build` y la certificación de accesibilidad multidispositivo siguen pendientes de la Fase 6.
 
 ## Fase 4 — Vértiz, narración y accesibilidad
-- [ ] Sincronizar paso de narración, visualización, resaltado persistente y lectura del texto matemático.
-- [ ] Seleccionar pronunciación española natural según voces disponibles; el texto educativo nunca dependerá del sonido.
-- [ ] Manejar voces no disponibles, fallos TTS y cancelaciones sin perder el paso; permitir repetir, silenciar y pausar.
-- [ ] Auditar lecturas de fracciones, raíces, exponentes, letras B/V, unidades, subíndices y nombres de vértices.
-- [ ] Semántica, foco, avisos dinámicos, alt de figuras, controles de teclado y reducción de movimiento.
+- [x] Sincronizar por origen de figura y paso: transcripción, eventos reales de palabra, foco y capas persistentes, incluso con voz desactivada.
+- [x] Elegir voces españolas instaladas con prioridad es-PE y opción manual; mantener 100 % de las explicaciones por escrito si no existe audio.
+- [x] Estados Web Speech, sesión anticuada descartada, error/fallback, repetición, silencio, pausa y reanudación nativas.
+- [x] Normalización académica comprobada para fracciones, raíces, potencias, B/V, unidades y vértices; QA de voces en dispositivos físicos pendiente de Fase 6.
+- [x] Semántica de figura, `aria-live` breve, `aria-current`, `aria-pressed`, atajos accesibles y reducción de movimiento; certificación WCAG transversal pendiente de Fase 6.
 **Criterios:** se entiende cada lección con voz apagada, no hay audio obsoleto, no hay pérdida de foco ni superposición de avatar y matemática.
+
+**Informe Fase 4:** [FASE4-REPORTE-2026-11-14.md](FASE4-REPORTE-2026-11-14.md). QA de navegador: 174/174 autocomprobaciones y prueba a 390 px sin scroll horizontal; pruebas del motor de voz simulado superadas. `npm test`, `npm run build` y certificación con voces/lectores de pantalla reales quedan pendientes de Fases 5–6.
 
 ## Fase 5 — Rendimiento y calidad técnica
 - [ ] Medir peso de recursos, LCP, CLS, INP, memoria y errores de consola en móvil y desktop.
