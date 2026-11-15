@@ -13,6 +13,8 @@ function recurso(path,condicion){
   js.onload=function(){if(condicion())resolve();else reject(Error('El recurso no inicializó: '+path));};
   js.onerror=function(){reject(Error('No se pudo descargar '+path));};
   document.head.appendChild(js);
+ }).then(function(){
+  delete pendientes[path];
  }).catch(function(err){
   delete pendientes[path];
   var node=document.querySelector('script[data-cargador3d="'+path+'"]');
