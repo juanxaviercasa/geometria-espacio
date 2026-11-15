@@ -880,6 +880,8 @@
   };
 
   Visor3D.prototype.destruir = function () {
+    if(this._destruido)return;
+    this._destruido=true;
     this.animando = false;
     if (this._raf) cancelAnimationFrame(this._raf);
     this._raf = null;
@@ -888,13 +890,21 @@
     else window.removeEventListener('resize', this._resize);
     window.removeEventListener('mousemove', this._mover);
     window.removeEventListener('mouseup', this._fin);
-    this.escena.traverse(function (o) {
-      if (o.geometry) o.geometry.dispose();
-      if (o.material) {
-        if (o.material.map) o.material.map.dispose();
-        o.material.dispose();
-      }
+    var geos=new Set(),mats=new Set(),texs=new Set();
+    this.escena.traverse(function(o){
+      if(o.geometry)geos.add(o.geometry);
+      var materiales=Array.isArray(o.material)?o.material:(o.material?[o.material]:[]);
+      materiales.forEach(function(m){
+        if(!m || mats.has(m))return;
+        mats.add(m);
+        if(m.map)texs.add(m.map);
+      });
     });
+    if(this._geoCil)geos.add(this._geoCil);
+    if(this._geoEsf)geos.add(this._geoEsf);
+    geos.forEach(function(g){g.dispose();});
+    texs.forEach(function(t){t.dispose();});
+    mats.forEach(function(m){m.dispose();});
     this.renderer.dispose();
     if (this.renderer.forceContextLoss) {
       try { this.renderer.forceContextLoss(); } catch (e) {}
