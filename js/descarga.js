@@ -35,6 +35,7 @@
     'FASE1-REPORTE-2026-11-14.md',
     'FASE2-REPORTE-2026-11-14.md',
     'FASE3-REPORTE-2026-11-14.md',
+    'FASE4-REPORTE-2026-11-14.md',
     '.gitignore',
     '.nojekyll',
     // Estilos
@@ -42,6 +43,7 @@
     'css/fase1.css',
     'css/laboratorio.css',
     'css/fase3.css',
+    'css/fase4.css',
     // Lógica
     'js/progreso.js',
     'js/contenido.js',
@@ -61,6 +63,8 @@
     'js/visor3d.js',
     'js/visor.js',
     'js/avatar.js',
+    'js/voz-matematica.js',
+    'js/narracion-ui.js',
     'js/tutores.js',
     'js/matematicas.js',
     'vendor/katex.min.js', 'vendor/katex.min.css',
