@@ -27,6 +27,7 @@ function voz() {
     document: { dispatchEvent(e) { events.push(e); } }, CustomEvent: function (type, data) { this.type=type; this.detail=data.detail; },
     SpeechSynthesisUtterance: function (text) { this.text=text; },
     setTimeout(fn, ms) { timers.push({fn,ms}); return timers.length; }, clearTimeout() {} };
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname, 'js/voz-matematica.js'),'utf8'),context);
   vm.runInNewContext(fs.readFileSync(path.join(__dirname, 'js/avatar.js'),'utf8'),context);
   return { api: window.Avatar, events, timers, spoken, window };
 }
@@ -48,8 +49,8 @@ test('silenciar antes de los 50 ms impide que arranque la voz', () => {
 test('el fin de la voz anterior no apaga la actual', () => {
   const v=voz(); v.api.hablarVoz('Uno'); v.timers[0].fn();
   const old=v.spoken[0]; v.api.hablarVoz('Dos'); v.timers[1].fn();
-  old.onend(); assert.equal(v.events.filter(e=>e.type==='avatar-hablando').at(-1).detail.activo,true);
-  v.spoken[1].onend(); assert.equal(v.events.at(-1).detail.activo,false);
+  old.onend(); assert.equal(v.api.getEstadoVoz().estado,'preparando','un evento antiguo no cancela la nueva narración');
+  v.spoken[1].onstart();v.spoken[1].onend();assert.equal(v.api.getEstadoVoz().estado,'finalizado');
 });
 test('la animación termina con el audio real, sin temporizador estimado', () => {
   const v=voz(); v.api.hablarVoz('Explicación extensa'); v.timers[0].fn();
@@ -60,6 +61,73 @@ test('aplica el perfil tonal sin cambiar el texto matemático', () => {
   v.api.hablarVoz('a² + b²');v.timers[0].fn();
   assert.equal(v.spoken[0].pitch,0.72);assert.equal(v.spoken[0].rate,0.93);
   assert.equal(v.spoken[0].text,'a al cuadrado más be al cuadrado');
+});
+
+test('Fase 4: fracciones, raíces, grados, letras B/V y unidades no separan dígitos',()=>{
+  const v=voz(),formato=v.api.limpiarTextoParaVoz;
+  assert.equal(formato('B y V'),'be y uve');
+  assert.equal(formato('x² -7x +12'),'equis al cuadrado menos 7 equis más 12');
+  assert.equal(formato('\\frac{3}{4}'),'fracción 3 sobre 4');
+  assert.equal(formato('C₁D₁'),'C sub 1 D sub 1');
+  assert.equal(formato('V=12 cm³'),'uve igual a 12 centímetros cúbicos');
+  assert.equal(formato('3 mm²'),'3 milímetros cuadrados');
+  assert.ok(formato('∛8').includes('raíz cúbica'));
+});
+test('Fase 4: eventos de palabra y estado conservan la figura origen',()=>{
+  const v=voz();
+  v.api.hablarVoz('AB = 12',null,{origen:'figura-a'});
+  v.timers[0].fn();
+  const u=v.spoken[0];u.onstart();
+  assert.equal(v.api.getEstadoVoz().estado,'hablando');
+  u.onboundary({name:'word',charIndex:3,charLength:5});
+  const b=v.events.filter(e=>e.type==='avatar-palabra').at(-1);
+  assert.equal(b.detail.origen,'figura-a');
+  assert.equal(b.detail.texto,'A B igual a 12');
+  assert.equal(b.detail.charIndex,3);
+  u.onend();
+  assert.equal(v.api.getEstadoVoz().estado,'finalizado');
+});
+test('Fase 4: locución sustituida no puede marcar el estado de la nueva',()=>{
+  const v=voz();
+  v.api.hablarVoz('Primera',null,{origen:'figura-a'});v.timers[0].fn();
+  const anterior=v.spoken[0];anterior.onstart();
+  v.api.hablarVoz('Segunda',null,{origen:'figura-b'});v.timers[1].fn();
+  const actual=v.spoken[1];actual.onstart();
+  anterior.onerror({error:'canceled'});
+  anterior.onend();
+  assert.equal(v.api.getEstadoVoz().origen,'figura-b');
+  assert.equal(v.api.getEstadoVoz().estado,'hablando');
+  actual.onend();
+  assert.equal(v.api.getEstadoVoz().estado,'finalizado');
+});
+test('Fase 4: pausa y reanudación reales, sin avanzar pasos por temporizador',()=>{
+  const v=voz();
+  let pausas=0,reanudaciones=0;
+  v.window.speechSynthesis.pause=()=>{pausas++;};
+  v.window.speechSynthesis.resume=()=>{reanudaciones++;};
+  v.api.hablarVoz('Un prisma tiene seis caras',null,{origen:'figura-c'});
+  v.timers[0].fn();v.spoken[0].onstart();
+  assert.equal(v.api.pausarVoz(),true);
+  assert.equal(v.api.getEstadoVoz().estado,'pausado');
+  assert.equal(v.api.reanudarVoz(),true);
+  assert.equal(v.api.getEstadoVoz().estado,'hablando');
+  assert.equal(pausas,1);assert.equal(reanudaciones,1);
+  assert.equal(v.timers.length,1,'no se programa fin estimado de audio');
+});
+test('Fase 4: voces españolas preferidas, selección segura y error TTS sin bloquear',()=>{
+  const v=voz();
+  v.window.speechSynthesis.getVoices=()=>[
+    {lang:'en-US',name:'English',voiceURI:'en'},
+    {lang:'es-ES',name:'Castellano',voiceURI:'es'},
+    {lang:'es-PE',name:'Voz peruana',voiceURI:'pe'}
+  ];
+  assert.equal(v.api.vocesDisponibles().length,2);
+  assert.equal(v.api.elegirVoz('inexistente'),false);
+  assert.equal(v.api.elegirVoz('pe'),true);
+  v.api.hablarVoz('Raíz',null,{origen:'figura-d'});v.timers[0].fn();
+  assert.equal(v.spoken[0].voice.voiceURI,'pe');
+  v.spoken[0].onerror({error:'language-unavailable'});
+  assert.equal(v.api.getEstadoVoz().estado,'error');
 });
 function tutores(guardado) {
   const datos={'geo3d.tutor.v1':guardado},window={};
