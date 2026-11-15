@@ -45,6 +45,7 @@
     var guardado = (P.resumenLeccion(idLeccion) || { ejercicios: {} }).ejercicios[ej.id] || {};
     var pistasUsadas = guardado.pistas || 0;
     var resuelto = !!guardado.ok;
+    var consultoSolucion = !!guardado.consultoSolucion;
 
     var procedencia = opciones.mostrarModulo
       ? '<p style="font-size:.74rem;color:var(--ink-3);margin:0 0 .5rem">' +
@@ -137,10 +138,14 @@
         var i = parseInt(elegida.value, 10);
         ok = !!ej.opciones[i].correcta;
         art.querySelectorAll('.opcion').forEach(function (lab, k) {
-          lab.classList.add('bloqueada');
-          lab.querySelector('input').disabled = true;
-          if (ej.opciones[k].correcta) lab.classList.add('correcta');
-          else if (k === i) lab.classList.add('incorrecta');
+          lab.classList.remove('incorrecta');
+          if (ok) {
+            lab.classList.add('bloqueada');
+            lab.querySelector('input').disabled = true;
+            if (ej.opciones[k].correcta) lab.classList.add('correcta');
+          } else if (k === i) {
+            lab.classList.add('incorrecta');
+          }
         });
       } else {
         var v = entrada ? aNumero(entrada.value) : NaN;
@@ -154,23 +159,27 @@
         ok = Math.abs(v - ej.respuesta) <= tol + 1e-9;
         detalle = '<p>Tu respuesta: <span class="m">' + esc(entrada.value) + '</span> ' +
           esc(ej.unidad || '') +
-          (ok ? '' : ' · Valor esperado: <span class="m">' + ej.respuesta + '</span> ' + esc(ej.unidad || '')) +
+          (ok ? '' : ' · Comprueba el planteamiento y revisa las unidades.') +
           '</p>';
       }
 
       zona.innerHTML = '';
       if (ok) {
-        retro('ok', 'Correcto', detalle + '<p>' + ej.explicacion + '</p>');
+        retro('ok', consultoSolucion ? 'Correcto con ayuda' : 'Correcto',
+          detalle + '<p>' + ej.explicacion + '</p>' +
+          (consultoSolucion ? '<p>Has aprendido revisando el procedimiento. Se registra como resolución con solución consultada.</p>' : ''));
         btnComp.disabled = true;
         btnComp.textContent = 'Resuelto ✓';
         if (global.AvatarMensaje) global.AvatarMensaje('acierto');
       } else {
-        retro('no', 'Todavía no', detalle +
-          '<p>' + ej.explicacion + '</p>' +
-          '<p><em>Si el cálculo no cambió, revisa el planteamiento antes que la aritmética.</em></p>');
+        var nPistas = Math.max(0, (ej.pistas || []).length - pistasUsadas);
+        retro('no', 'Vuelve a intentarlo', detalle +
+          '<p>La respuesta aún no coincide. Revisa la hipótesis, la fórmula y las unidades antes de recalcular.</p>' +
+          (nPistas ? '<p>Dispones de ' + nPistas + ' pista(s) sin revelar el procedimiento completo.</p>' :
+            '<p>También puedes consultar la explicación completa, pero se registrará como resolución con ayuda.</p>'));
         if (global.AvatarMensaje) global.AvatarMensaje('fallo');
       }
-      P.registrarEjercicio(idLeccion, ej.id, ok, pistasUsadas);
+      P.registrarEjercicio(idLeccion, ej.id, ok, pistasUsadas, true, consultoSolucion);
       if (alCambiar) alCambiar();
     }
 
@@ -179,9 +188,12 @@
     art.querySelector('[data-accion="explicacion"]').addEventListener('click', function () {
       var existente = zona.querySelector('.solucion-detalle');
       if (existente) { existente.remove(); return; }
+      consultoSolucion = true;
+      P.registrarEjercicio(idLeccion, ej.id, false, pistasUsadas, false, true);
+      if (alCambiar) alCambiar();
       var d = document.createElement('div');
       d.className = 'solucion-detalle';
-      d.innerHTML = '<p><strong>Razonamiento completo</strong></p><p>' + ej.explicacion + '</p>' +
+      d.innerHTML = '<p><strong>Razonamiento completo · solución consultada</strong></p><p>' + ej.explicacion + '</p>' +
         ((ej.pistas || []).length
           ? '<p style="font-size:.84rem;color:var(--ink-3)">Hay ' + ej.pistas.length +
             ' pista(s) disponibles si prefieres llegar por tu cuenta.</p>'
@@ -266,6 +278,10 @@
         if (parseInt(b.getAttribute('data-fase'), 10) <= fase) b.disabled = true;
       });
       P.registrarReto(idLeccion, r.id, fase, false);
+      if (fase >= 2 && !guardado.resuelto) {
+        btnResuelto.disabled = true;
+        btnResuelto.textContent = 'Desarrollo consultado · repasar';
+      }
       if (global.AvatarMensaje && fase >= 2) global.AvatarMensaje('pista');
       if (alCambiar) alCambiar();
     }
@@ -279,12 +295,17 @@
     var btnResuelto = art.querySelector('[data-accion="resuelto"]');
     if (guardado.resuelto) {
       btnResuelto.disabled = true;
-      btnResuelto.textContent = 'Registrado ✓';
+      btnResuelto.textContent = 'Resolución declarada ✓';
+    } else if (fase >= 2) {
+      btnResuelto.disabled = true;
+      btnResuelto.textContent = 'Desarrollo consultado · repasar';
     }
     btnResuelto.addEventListener('click', function () {
+      // La consulta del desarrollo impide declarar resolución independiente.
+      if (fase >= 2) return;
       P.registrarReto(idLeccion, r.id, Math.max(fase, 1), true);
       this.disabled = true;
-      this.textContent = 'Registrado ✓';
+      this.textContent = 'Resolución declarada ✓';
       if (global.AvatarMensaje) global.AvatarMensaje('acierto');
       if (alCambiar) alCambiar();
     });
