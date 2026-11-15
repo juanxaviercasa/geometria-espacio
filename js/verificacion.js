@@ -592,6 +592,13 @@
         detalle:informe.lecciones+' lecciones · '+informe.ejercicios+' ejercicios · '+
           informe.retos+' retos · '+informe.errores.length+' incidencias' };
     });
+    comprobar('Auditoría académica','Diagnóstico de las 129 opciones incorrectas',function(){
+      var d=window.DiagnosticoAcademico;
+      var conMotivo=Contenido.bancoPractica().filter(function(e){return e.tipo==='opcion';})
+        .reduce(function(sum,e){return sum+e.opciones.filter(function(o){return !o.correcta&&typeof o.motivo==='string'&&o.motivo.length>15;}).length;},0);
+      return {ok:!!d&&d.total===43&&d.esperados===43&&conMotivo===129,
+        detalle:conMotivo+' de 129 alternativas incorrectas con diagnóstico específico'};
+    });
     var banco=Contenido.bancoPractica(), mapa={};
     banco.forEach(function(e){mapa[e.id]=e;});
     Object.keys(aud.claves).forEach(function(id){
