@@ -124,18 +124,11 @@
     ],
     retos: [
       {
-        id: 'm10l1r1', titulo: 'Sección pentagonal', nivel: 'UNI', puntos: 25,
+        id: 'm10l1r1', titulo: "Sección triangular por tres puntos medios", nivel: 'UNI', puntos: 25,
         enunciado: 'En un cubo de arista <var>a</var>, el plano pasa por los puntos medios de tres aristas que concurren en un mismo vértice. Describe la sección, calcula su área y el volumen del sólido menor que queda.',
         estrategia: ['Identifica el tetraedro que se separa.', 'La sección es su cara opuesta al vértice.', 'Calcula área y volumen con las fórmulas del tetraedro trirrectángulo.'],
-        desarrollo: [
-          'Los tres puntos medios están a <span class="m">a/2</span> del vértice <var>A</var> sobre aristas mutuamente perpendiculares.',
-          'La sección es un triángulo cuyos lados unen esos puntos: cada lado mide <span class="m">√(a²/4 + a²/4) = a/√2</span>. Es un triángulo equilátero.',
-          'Área: <span class="m">(√3/4)(a²/2) = a²√3/8 ≈ 0,2165a²</span>.',
-          'Volumen del tetraedro separado: <span class="m">V = (1/6)(a/2)³ = a³/48 ≈ 0,0208a³</span>.',
-          'Verificación con base × altura: altura del vértice al plano de la sección <span class="m">= (a/2)/√3 = a/(2√3)</span>. <span class="m">V = (1/3)(a²√3/8)(a/(2√3)) = a³/48</span> ✓.',
-          'La sección <em>no</em> es pentagonal: es triangular. El nombre del reto es una trampa para comprobar si sigues el método en lugar del título.'
-        ],
-        respuesta: 'Triángulo equilátero de lado <span class="m">a/√2</span>, área <span class="m">a²√3/8</span>; el tetraedro separado tiene volumen <span class="m">a³/48</span>. Lección: nunca dejes que el título del problema decida la forma de la sección.'
+        desarrollo: ["Desde el vértice <var>A</var> parten tres aristas del cubo mutuamente perpendiculares. Los tres puntos medios están a distancia <span class=\"m\">a/2</span> sobre cada una.","Cada lado del triángulo que une dos puntos medios mide <span class=\"m\">√((a/2)²+(a/2)²)=a/√2</span>. Por tanto, la sección es un triángulo equilátero.","El área de la sección es <span class=\"m\">(√3/4)(a/√2)²=a²√3/8</span>.","El volumen del tetraedro trirrectángulo cortado es <span class=\"m\">V=(a/2)(a/2)(a/2)/6=a³/48</span>.","Segunda vía: la distancia del vértice A al plano de los tres puntos medios es <span class=\"m\">a/(2√3)</span>. Con <span class=\"m\">V=(1/3)(a²√3/8)(a/(2√3))=a³/48</span> se obtiene el mismo resultado."],
+        respuesta: "La sección es un <strong>triángulo equilátero</strong> de lado <span class=\"m\">a/√2</span>, área <span class=\"m\">a²√3/8</span> y volumen separado <span class=\"m\">a³/48</span>. No se trata de un pentágono: los tres puntos medios están en aristas concurrentes."
       }
     ]
   });
@@ -251,17 +244,9 @@
     retos: [
       {
         id: 'm11l1r1', titulo: 'Problema integrador de tres sólidos', nivel: 'UNI', puntos: 25,
-        enunciado: 'Un cilindro de radio 6 y altura 12 contiene una esfera de radio 6 inscrita y, sobre ella, un cono de radio 6 y altura 6 con vértice en el centro de la tapa superior. ¿Qué fracción del cilindro está ocupada por los dos sólidos?',
+        enunciado: "En un cilindro de radio 6 y altura 12 hay una esfera inscrita de radio 6. Dentro del hemisferio superior se coloca un cono recto de radio 6 y altura 6, cuya <strong>base está en el plano ecuatorial de la esfera</strong> y cuyo vértice es el centro de la tapa superior del cilindro. ¿Qué fracción del cilindro ocupa la unión de la esfera y el cono? Justifica si los volúmenes deben sumarse.",
         estrategia: ['Calcula los tres volúmenes por separado con las fórmulas exactas.', 'Comprueba si los sólidos se solapan.', 'Trabaja con πR³ como unidad para simplificar.'],
-        desarrollo: [
-          'Volumen del cilindro: <span class="m">π·36·12 = 432π</span>.',
-          'Volumen de la esfera: <span class="m">(4/3)π·216 = 288π</span>.',
-          'Volumen del cono: <span class="m">(1/3)π·36·6 = 72π</span>.',
-          '¿Se solapan? La esfera ocupa de <span class="m">z = 0</span> a <span class="m">z = 12</span>, con centro en <span class="m">z = 6</span>. El cono va de <span class="m">z = 12</span> (base, radio 6) a <span class="m">z = 12 − 6 = 6</span>… espera: el vértice está en el centro de la tapa superior, es decir en <span class="m">z = 12</span>, y la base del cono estaría en el «ecuador» de la esfera, <span class="m">z = 6</span>, con radio 6. El cono está contenido en el hemisferio superior de la esfera, y su vértice coincide con el punto más alto de la esfera. Por tanto está completamente dentro de la esfera.',
-          'Conclusión: los sólidos se solapan totalmente (el cono ⊂ esfera), así que el volumen ocupado es solo el de la esfera: <span class="m">288π</span>.',
-          'Fracción: <span class="m">288π/432π = 2/3</span>.',
-          'Verificación: el cilindro de radio 6 y altura 12 es exactamente el cilindro circunscrito a la esfera de radio 6, y en ese caso la esfera ocupa 2/3 (resultado de Arquímedes de la lección 8) ✓.'
-        ],
+        desarrollo: ["El volumen del cilindro es <span class=\"m\">V_c=π·6²·12=432π</span>.","El volumen de la esfera inscrita es <span class=\"m\">V_e=(4/3)π·6³=288π</span>.","El volumen del cono sería <span class=\"m\">V_k=(1/3)π·6²·6=72π</span>, pero sumar sin examinar la intersección contaría espacio dos veces.","Con el origen de alturas en la base inferior, la esfera tiene centro <span class=\"m\">z=6</span>. En una altura <span class=\"m\">z∈[6,12]</span>, la sección horizontal del cono tiene radio <span class=\"m\">r_k=12-z</span>, mientras la sección de la esfera tiene radio <span class=\"m\">r_e=√(36-(z-6)²)</span>.","Al poner <span class=\"m\">u=z-6</span> entre 0 y 6, se cumple <span class=\"m\">r_e²-r_k²=36-u²-(6-u)²=12u-2u²=2u(6-u)≥0</span>. Por tanto, <strong>todo el cono está contenido en la esfera</strong>.","El volumen de la unión es únicamente <span class=\"m\">V_e=288π</span>, y su fracción del cilindro es <span class=\"m\">288π/432π=2/3</span>. No se suman 72π porque corresponden a espacio ya ocupado."],
         respuesta: '<span class="m">2/3</span> del cilindro, porque el cono está contenido en la esfera y no añade volumen. Este problema existe para comprobar el paso 5 del protocolo: verificar solapamientos antes de sumar volúmenes.'
       }
     ]
@@ -297,7 +282,7 @@
       },
       {
         id: 'm12l1e2', tipo: 'numerico', dificultad: 'Avanzado',
-        pregunta: 'En un cubo de arista 2, halla la distancia entre el centro del cubo y una arista que no pase por ninguno de sus vértices adyacentes, por ejemplo la arista <span class="m">AB</span>. (Distancia punto-recta.)',
+        pregunta: "En un cubo de arista 2, ¿cuál es la distancia entre el <strong>centro del cubo</strong> y la recta que contiene la arista <span class=\"m\">AB</span>? Considera <span class=\"m\">A(0,0,0)</span>, <span class=\"m\">B(2,0,0)</span> y centro <span class=\"m\">(1,1,1)</span>.",
         unidad: 'u', respuesta: 1.414, tolerancia: 0.01,
         explicacion: 'Centro <span class="m">(1,1,1)</span>; recta <span class="m">AB</span> es el eje <span class="m">x</span> desde <span class="m">(0,0,0)</span> a <span class="m">(2,0,0)</span>, es decir la recta <span class="m">{y = 0, z = 0}</span>. La distancia del punto a esa recta es <span class="m">√(1² + 1²) = √2 ≈ 1,414</span>.',
         pistas: ['La distancia de un punto a una recta coordenada es la raíz de la suma de los cuadrados de las otras dos coordenadas.', 'El centro está en <span class="m">(1,1,1)</span>.']
@@ -333,17 +318,9 @@
       {
         id: 'm12l1r1', titulo: 'Cubo, tetraedro y octaedro en el mismo espacio', nivel: 'UNI', puntos: 25,
         enunciado: 'En un cubo de arista <span class="m">a</span> se inscribe un octaedro (vértices en los centros de las caras) y se forma un tetraedro con cuatro vértices alternos del cubo. Halla la razón <span class="m">V_cubo : V_tetraedro : V_octaedro</span> y el volumen de la parte del cubo no ocupada por ninguno de los dos.',
-        estrategia: ['El tetraedro de vértices alternos tiene arista igual a la diagonal de cara.', 'Usa <span class="m">V = a³√2/12</span> para el tetraedro y <span class="m">V = s³√2/3</span> para el octaedro.', 'Comprueba si tetraedro y octaedro se solapan.'],
-        desarrollo: [
-          'Cubo: <span class="m">V = a³</span>.',
-          'Tetraedro con vértices alternos: <span class="m">A(0,0,0)</span>, <span class="m">C(a,a,0)</span>, <span class="m">B₁(a,0,a)</span>, <span class="m">D₁(0,a,a)</span>. La arista mide <span class="m">a√2</span> (diagonal de cara). Volumen: <span class="m">(a√2)³√2/12 = (2a³√2·√2)/12 = 4a³/12 = a³/3</span>.',
-          'Octaedro inscrito (reto del módulo 9): <span class="m">V = a³/6</span>.',
-          'Razón: <span class="m">V_cubo : V_tetra : V_octa = 1 : 1/3 : 1/6 = 6 : 2 : 1</span>.',
-          '¿Se solapan? Los vértices del octaedro son los centros de las caras; el tetraedro usa vértices alternos del cubo. Ambos están contenidos en el cubo y sus interiores se cortan: el tetraedro incluye el centro del cubo, y el octaedro también.',
-          'Volumen de la unión: estrictamente, <span class="m">V_unión = V_tetra + V_octa − V_intersección</span>. La intersección es un sólido complicado (un cubo rotado contenido en ambos); para este nivel basta con reconocer la estructura y no sumar ingenuamente.',
-          'Volumen no ocupado por el octaedro: <span class="m">a³ − a³/6 = 5a³/6</span>. Son 8 tetraedros en las esquinas, cada uno de volumen <span class="m">a³/48</span>: <span class="m">8·a³/48 = a³/6</span> ✓.'
-        ],
-        respuesta: '<span class="m">6 : 2 : 1</span>. El volumen del cubo no ocupado por el octaedro es <span class="m">5a³/6</span>, repartido en 8 tetraedros de esquina de volumen <span class="m">a³/48</span> cada uno.'
+        estrategia: ["Calcula los tres volúmenes por separado y expresa sus razones con el volumen del cubo.","Comprueba si los seis centros de las caras del cubo son puntos medios de aristas del tetraedro de vértices alternos.","Decide si el octaedro está contenido en el tetraedro; si lo está, el volumen de la unión coincide con el del tetraedro."],
+        desarrollo: ["El cubo tiene volumen <span class=\"m\">V_c=a³</span>.","El tetraedro de vértices alternos, por ejemplo <span class=\"m\">A(0,0,0), C(a,a,0), B₁(a,0,a), D₁(0,a,a)</span>, tiene lado <span class=\"m\">a√2</span> y volumen <span class=\"m\">(a√2)³√2/12=a³/3</span>.","El octaedro con vértices en los centros de las seis caras del cubo tiene arista <span class=\"m\">a/√2</span> y volumen <span class=\"m\">a³/6</span>.","La razón es <span class=\"m\">V_c:V_t:V_o=1:(1/3):(1/6)=6:2:1</span>.","Los seis centros de las caras del cubo son exactamente los <strong>puntos medios de las seis aristas</strong> de ese tetraedro. El octaedro que forman está, por convexidad, <strong>completamente contenido en el tetraedro</strong>; no es una intersección desconocida.","Así, <span class=\"m\">V(tetraedro∪octaedro)=V_t=a³/3</span> y la parte libre del cubo vale <span class=\"m\">a³-a³/3=2a³/3</span>.","Comprobación geométrica: la región exterior al tetraedro se divide en cuatro tetraedros trirrectángulos en los otros cuatro vértices del cubo, cada uno de volumen <span class=\"m\">a³/6</span>. Suman <span class=\"m\">4a³/6=2a³/3</span>. Dentro del tetraedro quedan además cuatro tetraedros pequeños alrededor del octaedro, pero no forman parte del volumen libre."],
+        respuesta: "La razón es <strong><span class=\"m\">6:2:1</span></strong> y el volumen del cubo <strong>no ocupado por ninguno de los dos</strong> es <strong><span class=\"m\">2a³/3</span></strong>. El octaedro está contenido dentro del tetraedro de vértices alternos; por tanto, la unión ocupa <span class=\"m\">a³/3</span>."
       }
     ]
   });
