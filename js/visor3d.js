@@ -73,6 +73,9 @@
     this.autoGiro = !this.reducido;
     this._sucio = true;
     this._resalte = null;
+    this._raf=null;
+    this._destruido=false;
+    this._renders=0;
 
     this.escena = new T.Scene();
     this.escena.background = null;
@@ -125,7 +128,7 @@
     this._resize();
 
     this.animando = true;
-    this._raf = requestAnimationFrame(this._loop);
+    this._solicitarFrame();
   }
 
   /* ---------- medidas de la figura ---------- */
@@ -499,6 +502,7 @@
     );
     this.camara.lookAt(this.centro);
     this._sucio = true;
+    if(this.animando && this._loop)this._solicitarFrame();
     if(this.opciones.alMoverCamara)this.opciones.alMoverCamara();
   };
 
@@ -713,9 +717,11 @@
       objs: objs,
       tocados: tocados,
       t0: ahora,
-      hasta: duracionMs ? ahora + duracionMs : Infinity
+      hasta: duracionMs ? ahora + duracionMs : Infinity,
+      estatico: false
     };
     this._sucio = true;
+    this._solicitarFrame();
   };
 
   Visor3D.prototype.quitarResalte = function () {
@@ -735,6 +741,7 @@
     });
     this._resalte = null;
     this._sucio = true;
+    this._solicitarFrame();
   };
 
   Visor3D.prototype._animarResalte = function (ahora) {
@@ -744,6 +751,7 @@
       this.quitarResalte();
       return true;
     }
+    if(r.estatico && !Number.isFinite(r.hasta))return false;
     var t = ahora - r.t0;
     // Late con fuerza los primeros 3 s y luego queda engrosado
     var pulso = this.reducido ? 0.6 : (t < 3000 ? 0.5 + 0.5 * Math.sin(t * 0.009) : 0.6);
@@ -757,6 +765,7 @@
         o.material.opacity = Math.max(g.opacity, 0.26) + 0.18 * pulso;
       }
     });
+    if((this.reducido || t>=3000) && !Number.isFinite(r.hasta))r.estatico=true;
     return true;
   };
 
@@ -808,47 +817,66 @@
     var lista = this.objetosCapa[id] || [];
     lista.forEach(function (o) { o.visible = !!visible; });
     this._sucio = true;
+    this._solicitarFrame();
   };
 
   Visor3D.prototype.setAutoGiro = function (activo) {
     this.autoGiro = !!activo && !this.reducido;
+    this._solicitarFrame();
   };
 
   Visor3D.prototype.setReducido = function (v) {
     this.reducido = !!v;
     if (this.reducido) this.autoGiro = false;
+    this._solicitarFrame();
   };
 
-  /* ---------- bucle (render bajo demanda) ---------- */
+  /* No se programa otro RAF si la cámara y el resaltado están estáticos. */
+  Visor3D.prototype._solicitarFrame = function () {
+    if(!this.animando || this._raf || this._destruido)return;
+    this._raf=requestAnimationFrame(this._loop);
+  };
+
   Visor3D.prototype._loop = function (t) {
-    if (!this.animando) return;
-    var dt = Math.min(0.05, (t - (this._ultimo || t)) / 1000);
-    this._ultimo = t;
-    if (this.autoGiro && !this.arrastrando && !this._animCamaraId) {
-      this.theta += dt * 0.16;
+    this._raf=null;
+    if(!this.animando || this._destruido)return;
+    var dt=Math.min(0.05,(t-(this._ultimo||t))/1000);
+    this._ultimo=t;
+    if(this.autoGiro && !this.arrastrando && !this._animCamaraId){
+      this.theta+=dt*0.16;
       this._actualizarCamara();
     }
-    if (this._animarResalte(t)) this._sucio = true;
-    if (this._sucio) {
-      this.renderer.render(this.escena, this.camara);
-      this._sucio = false;
+    if(this._animarResalte(t))this._sucio=true;
+    if(this._sucio){
+      this.renderer.render(this.escena,this.camara);
+      this._renders++;
+      this._sucio=false;
     }
-    this._raf = requestAnimationFrame(this._loop);
+    if(this.autoGiro || (this._resalte &&
+       (!this._resalte.estatico || Number.isFinite(this._resalte.hasta))))
+      this._solicitarFrame();
   };
 
   Visor3D.prototype.pausar = function () {
-    this.animando = false;
-    if (this._raf) cancelAnimationFrame(this._raf);
-    this._raf = null;
-    this.renderer.render(this.escena, this.camara);
+    this.animando=false;
+    if(this._raf)cancelAnimationFrame(this._raf);
+    this._raf=null;
   };
 
   Visor3D.prototype.reanudar = function () {
-    if (this.animando) return;
-    this.animando = true;
-    this._sucio = true;
-    this._ultimo = performance.now();
-    this._raf = requestAnimationFrame(this._loop);
+    if(this._destruido)return;
+    this.animando=true;
+    this._sucio=true;
+    this._ultimo=performance.now();
+    this._solicitarFrame();
+  };
+
+  Visor3D.prototype.estadisticas = function () {
+    var info=this.renderer&&this.renderer.info;
+    return {activo:!!this.animando,autoGiro:!!this.autoGiro,
+      renderizados:this._renders,programado:!!this._raf,
+      geometria:info&&info.memory?info.memory.geometries:null,
+      texturas:info&&info.memory?info.memory.textures:null};
   };
 
   Visor3D.prototype.destruir = function () {
