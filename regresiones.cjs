@@ -405,3 +405,93 @@ test('Fase 3: se mantienen los contornos de sección y la claridad de nombres ge
   assert.ok(pis.pregunta.includes('en ese orden'),'coherencia del corte plano');
   assert.ok(pis.explicacion.includes('2+5=3+4'),'suma de alturas opuestas');
 });
+
+/* Fase 5: carga crítica, catálogo ligero, GPU y seguridad del servidor local. */
+test('Fase 5: la portada y lecciones no cargan Three.js de forma bloqueante',()=>{
+  ['index.html','leccion.html'].forEach(file=>{
+    const html=fs.readFileSync(path.join(__dirname,file),'utf8');
+    assert.ok(html.includes('js/cargador3d.js'),file+' usa cargador compartido');
+    assert.ok(!html.includes('<script src="vendor/three.min.js"'),file+' no precarga Three');
+    assert.ok(!html.includes('<script src="js/visor3d.js'),file+' no precarga visor 3D');
+    assert.ok(html.includes('js/visor2d.js'),file+' mantiene SVG');
+  });
+  const lab=fs.readFileSync(path.join(__dirname,'js/laboratorio.js'),'utf8');
+  assert.ok(!lab.includes("import('../vendor/three.module.min.js')"),'laboratorio evita el paquete modular más pesado');
+  assert.ok(fs.statSync(path.join(__dirname,'vendor/three.min.js')).size<700000);
+  assert.ok(fs.statSync(path.join(__dirname,'vendor/three.module.min.js')).size>1000000);
+});
+test('Fase 5: páginas informativas conservan progreso con catálogo ligero',()=>{
+  const window={Progreso:{estado:id=>['m1l1','m7l1'].includes(id)?'hecho':'pendiente'}};
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/catalogo-ligero.js'),'utf8'),{window});
+  const resumen=window.Contenido.progresoGlobal();
+  assert.equal(window.Contenido.IDs.length,17);
+  assert.equal(resumen.hechas,2);
+  assert.equal(resumen.total,17);
+  assert.equal(resumen.pct,12);
+  ['acerca.html','descarga.html','laboratorio.html'].forEach(page=>{
+    const html=fs.readFileSync(path.join(__dirname,page),'utf8');
+    assert.ok(html.includes('js/catalogo-ligero.js'),page+' declara catálogo liviano');
+    assert.ok(!html.includes('js/contenido-a.js'),page+' no carga demostraciones');
+    assert.ok(!html.includes('js/contenido-d.js'),page+' no carga banco de retos');
+    assert.ok(!html.includes('js/tutores.js'),page+' no necesita motor 3D de tutores');
+  });
+});
+test('Fase 5: la vista 3D estática no conserva un bucle RAF permanente',()=>{
+  const callbacks=[],context={
+    module:{exports:{}},exports:{},console,performance:{now:()=>100},
+    requestAnimationFrame:fn=>{callbacks.push(fn);return callbacks.length;},
+    cancelAnimationFrame:()=>{},window:{removeEventListener(){}}
+  };
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/visor3d.js'),'utf8'),context);
+  const proto=context.module.exports.Visor3D.prototype;
+  const visor=Object.create(proto);let renders=0;
+  Object.assign(visor,{
+    animando:true,_destruido:false,_raf:null,_sucio:true,
+    autoGiro:false,_resalte:null,_ultimo:100,_renders:0,
+    renderer:{render(){renders++;}},escena:{},camara:{},
+    capasOcultas:{},objetosCapa:{aristas:[{visible:true}]}
+  });
+  visor._loop(110);
+  assert.equal(renders,1);
+  assert.equal(callbacks.length,0,'sin giro ni cambios no debe programar RAF');
+  visor.setCapa('aristas',false);
+  assert.equal(callbacks.length,1,'un cambio solicita exactamente un nuevo fotograma');
+  callbacks[0](125);
+  assert.equal(renders,2);
+  assert.equal(callbacks.length,1,'vuelve a quedar quieto después del cambio');
+  assert.equal(visor.estadisticas().renderizados,2);
+});
+test('Fase 5: destruir un visor libera recursos compartidos una sola vez',()=>{
+  const context={
+    module:{exports:{}},exports:{},console,
+    requestAnimationFrame:()=>1,cancelAnimationFrame:()=>{},
+    window:{removeEventListener(){}}
+  };
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/visor3d.js'),'utf8'),context);
+  const proto=context.module.exports.Visor3D.prototype;
+  const cuentas={geo:0,mat:0,tex:0,renderer:0,contexto:0},g={dispose(){cuentas.geo++;}},
+    tex={dispose(){cuentas.tex++;}},mat={map:tex,dispose(){cuentas.mat++;}};
+  const visor=Object.create(proto);
+  Object.assign(visor,{
+    _destruido:false,animando:true,_raf:null,_animCamaraId:null,_ro:{disconnect(){}},
+    _geoCil:g,_geoEsf:g,_mover:function(){},_fin:function(){},
+    escena:{traverse(fn){fn({geometry:g,material:mat});fn({geometry:g,material:mat});}},
+    renderer:{dispose(){cuentas.renderer++;},forceContextLoss(){cuentas.contexto++;},
+      domElement:{parentNode:{removeChild(){}}}}
+  });
+  visor.destruir();visor.destruir();
+  assert.deepEqual(cuentas,{geo:1,mat:1,tex:1,renderer:1,contexto:1});
+});
+test('Fase 5: servidor local expone solo recursos publicados, no secretos',()=>{
+  const ruta=require('./server.js').rutaPublica;
+  assert.equal(ruta('/index.html'),true);
+  assert.equal(ruta('/js/visor.js'),true);
+  assert.equal(ruta('/vendor/tutor-dragon.glb'),true);
+  assert.equal(ruta('/README.md'),true);
+  for(const acceso of ['/server.js','/package.json','/.env','/.git/config',
+    '/js/../server.js','/node_modules/a.js','/css/.secreto','/assets-privados/datos.json'])
+    assert.equal(ruta(acceso),false,acceso+' denegado');
+  const build=fs.readFileSync(path.join(__dirname,'build.js'),'utf8');
+  assert.ok(build.includes("'_headers'"));
+  assert.ok(fs.readFileSync(path.join(__dirname,'_headers'),'utf8').includes('X-Content-Type-Options: nosniff'));
+});
