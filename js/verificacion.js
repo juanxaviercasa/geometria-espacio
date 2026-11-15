@@ -689,7 +689,7 @@
     document.getElementById('verif-titulo').textContent =
       ok === total ? 'Todo correcto' : (total - ok) + ' comprobación(es) fallida(s)';
     document.getElementById('verif-detalle').textContent =
-      ok + ' de ' + total + ' comprobaciones superadas · ' + new Date().toLocaleString('es-PE');
+      ok + ' de ' + total + ' comprobaciones superadas · ' + new Date().toLocaleString('es-PE', {timeZone:'America/Lima', timeZoneName:'short'});
 
     var html = '';
     Object.keys(grupos).forEach(function (g) {
