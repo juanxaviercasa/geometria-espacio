@@ -432,6 +432,7 @@
     var textoNarracion = '';
     var palabraActual = null;
     if(global.Avatar && global.Avatar.getVelocidadVoz) selectVelocidad.value=String(global.Avatar.getVelocidadVoz());
+    var narrador=global.NarracionUI&&global.NarracionUI.montar({panel:colMaestro,origen:origenNarracion});
     var btnAnt = colMaestro.querySelector('[data-mm-accion="ant"]');
     var btnSig = colMaestro.querySelector('[data-mm-accion="sig"]');
     var txtSig = colMaestro.querySelector('[data-mm-sig-txt]');
@@ -484,6 +485,7 @@
       txtPasoNum.textContent = 'Paso ' + (idx + 1) + ' de ' + pasos.length;
       txtTitulo.textContent = paso.titulo;
       txtExplicacion.innerHTML = paso.texto;
+      if(narrador)narrador.mostrarPaso(paso.texto,idx,pasos.length);
 
       var infoCapa = nombreCapa(spec, paso.capaResaltada);
       if (tagCapa) {
@@ -519,7 +521,7 @@
         if (giroBtn) giroBtn.setAttribute('aria-pressed', 'false');
 
         if (paso.camara && estado.api.enfocarCamara) {
-          estado.api.enfocarCamara(paso.camara.theta, paso.camara.phi, paso.camara.dist, 750);
+          estado.api.enfocarCamara(paso.camara.theta, paso.camara.phi, paso.camara.dist,estado.reducido?0:750);
         }
         if (paso.capaResaltada && estado.api.resaltarCapa) {
           estado.api.resaltarCapa(paso.capaResaltada, 0);
@@ -528,18 +530,15 @@
         }
       }
 
-      /* Locución y animación de Vértiz */
+      /* La voz y el resaltado son accesorios: jamás desaparece el paso al terminar. */
       actualizarAtencion();
-      if (conAudio !== false) {
-        if (global.AvatarGuia && global.AvatarGuia.hablar) {
-          global.AvatarGuia.hablar(paso.texto, {
-            estadoFinal: (idx === pasos.length - 1) ? 'celebra' : 'senala',
-            conVoz: true
-          });
-        } else if (global.Avatar && global.Avatar.hablarVoz) {
-          global.Avatar.hablarVoz(paso.texto);
-        }
-
+      if(global.AvatarGuia && global.AvatarGuia.setMensaje)
+        global.AvatarGuia.setMensaje(txtExplicacion.textContent);
+      if(conAudio!==false) {
+        if(global.Avatar && global.Avatar.hablarVoz)
+          global.Avatar.hablarVoz(paso.texto,null,{origen:origenNarracion});
+      } else if(narrador) {
+        narrador.detenerSiPropio();
       }
     }
 
@@ -586,7 +585,8 @@
       if(e.detail.figura!==figura){estado.atencionActiva=false;guiaFoco.hidden=true;var m=colMaestro.querySelector('.tutor-consigna');if(m)m.hidden=true;}
     });
     document.addEventListener('avatar-hablando', function (e) {
-      var activo = !!(e.detail && e.detail.activo);
+      var d=e.detail||{};
+      var activo=!!d.activo&&d.origen===origenNarracion;
       if (ondasMM) ondasMM.classList.toggle('activo', activo);
       colMaestro.classList.toggle('hablando-ahora', activo);
     });
@@ -718,7 +718,8 @@
       siguientePaso: function () { btnSig.click(); },
       anteriorPaso: function () { btnAnt.click(); },
       alternarProyector: alternarProyector,
-      obtenerEstado: function () { return estado; }
+      obtenerEstado: function () { return estado; },
+      origenNarracion: origenNarracion
     };
 
     if (!visorActivo) visorActivo = instanciaPublica;
