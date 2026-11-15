@@ -689,7 +689,7 @@
     document.getElementById('verif-titulo').textContent =
       ok === total ? 'Todo correcto' : (total - ok) + ' comprobación(es) fallida(s)';
     document.getElementById('verif-detalle').textContent =
-      ok + ' de ' + total + ' comprobaciones superadas · ' + new Date().toLocaleString('es-ES');
+      ok + ' de ' + total + ' comprobaciones superadas · ' + new Date().toLocaleString('es-PE');
 
     var html = '';
     Object.keys(grupos).forEach(function (g) {
@@ -698,10 +698,9 @@
       html += '<section style="margin-bottom:1.8rem">' +
         '<h2 style="display:flex;align-items:center;gap:.6rem;font-size:1.1rem">' +
         g +
-        '<span class="pildora" style="background:' + (fallos ? 'var(--danger-soft)' : 'var(--teal-soft)') +
-        ';color:' + (fallos ? 'var(--danger)' : 'var(--teal)') + '">' +
+        '<span class="pildora verif-estado-' + (fallos ? 'error' : 'ok') + '">' +
         (lista.length - fallos) + '/' + lista.length + '</span></h2>' +
-        '<div class="tabla-envoltura"><table class="datos tabla-larga">' +
+        '<div class="tabla-envoltura" tabindex="0" role="region" aria-label="Tabla de resultados: ' + g + '"><table class="datos tabla-larga">' +
         '<caption>Resultados de la ejecución actual en este navegador.</caption>' +
         '<thead><tr><th scope="col">Comprobación</th><th scope="col">Resultado</th>' +
         '<th scope="col">Detalle</th></tr></thead><tbody>' +

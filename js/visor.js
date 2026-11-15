@@ -135,7 +135,7 @@
     barraSup.innerHTML =
       '<div class="hud-titulo-wrap">' +
         '<span class="hud-badge">' + (esHero ? '✨ AULA 3D' : '📐 VISOR 3D') + '</span>' +
-        '<h3 class="hud-fig-titulo">' + spec.titulo + '</h3>' +
+        '<p class="hud-fig-titulo">' + spec.titulo + '</p>' +
       '</div>' +
       '<div class="acciones-fig">' +
         (tipoLaboratorio ? '<a class="btn-fig btn-fig-hud" href="laboratorio.html?modelo=' + tipoLaboratorio + '" title="Experimentar con las dimensiones de este tipo de sólido">Modificar medidas ↗</a>' : '') +
