@@ -230,12 +230,12 @@
         id: 'm1l2e5', tipo: 'opcion', dificultad: 'Avanzado',
         pregunta: 'En un cubo, sea <var>r</var> la recta que contiene a la arista <span class="m">AB</span> y <var>s</var> la recta que contiene a la arista <span class="m">CC₁</span>. ¿Qué relación tienen?',
         opciones: [
-          { texto: 'Son alabeadas y perpendiculares', correcta: true },
+          { texto: 'Son alabeadas y ortogonales', correcta: true },
           { texto: 'Son paralelas' },
           { texto: 'Son secantes en <var>C</var>' },
           { texto: 'Son alabeadas y oblicuas' }
         ],
-        explicacion: 'No son coplanares (AB está en la cara inferior, CC₁ es vertical, y no hay plano que contenga a ambas), luego son alabeadas. Además, el ángulo entre ellas se mide trasladando una paralela: la recta <span class="m">BB₁</span> es paralela a <span class="m">CC₁</span> y es perpendicular a <span class="m">AB</span> en <var>B</var>. Por tanto el ángulo es 90° y se dice que son perpendiculares (aunque no se corten).',
+        explicacion: 'No son coplanares (AB está en la cara inferior, CC₁ es vertical, y no hay plano que contenga a ambas), luego son alabeadas. Además, el ángulo entre ellas se mide trasladando una paralela: la recta <span class="m">BB₁</span> es paralela a <span class="m">CC₁</span> y es perpendicular a <span class="m">AB</span> en <var>B</var>. Por tanto las <strong>direcciones son ortogonales</strong> y forman un ángulo de 90°. Como las rectas no se cortan, conviene llamarlas <strong>rectas alabeadas ortogonales</strong> y reservar «perpendiculares» para rectas secantes.',
         pistas: ['Comprueba primero si hay un plano que las contenga.', 'Para el ángulo, traslada una de ellas a un punto de la otra.']
       }
     ],
