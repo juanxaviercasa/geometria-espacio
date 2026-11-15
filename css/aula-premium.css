@@ -137,3 +137,14 @@ body.con-visor-proyectado .hero .figura.modo-proyector { z-index:2147482000; }
   .hero .figura-hero-modo .mm-profesor-cabecera {grid-template-columns:100px minmax(0,1fr)!important;}
   .hero .figura-hero-modo .mm-avatar-slot {width:100px!important;height:130px!important;}
 }
+
+/* Los controles pasan a una segunda línea en móviles, nunca sobre Vértiz. */
+@media(max-width:920px){
+  .hero .hero-toolbar{flex-wrap:wrap;align-items:center;gap:.35rem .5rem;}
+  .hero .hero-toolbar .figura-barra-sup{flex:0 1 auto;}
+  .hero .hero-toolbar .mm-controles-audio{flex:0 1 auto;}
+}
+@media(max-width:600px){
+  .hero .hero-toolbar{min-height:42px;justify-content:center;}
+  .hero .hero-toolbar .figura-ajustes{top:calc(100% + .45rem);}
+}
