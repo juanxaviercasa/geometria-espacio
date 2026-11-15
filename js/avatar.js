@@ -184,179 +184,175 @@
     } catch (e) {}
   }
 
-  /* Selección priorizada de voz en español */
+  /* Motor de locución único: cada narración conserva sesión, origen y estados. */
   var vozEspanol = null;
-  function elegirMejorVozEspanol() {
-    if (!('speechSynthesis' in window)) return null;
-    var voces = window.speechSynthesis.getVoices() || [];
-    if (!voces.length) return null;
-
-    var candidatas = voces.filter(function (v) {
-      var l = (v.lang || '').toLowerCase();
-      return l.indexOf('es') === 0;
-    });
-
-    if (!candidatas.length) return null;
-
-    // Priorizar voces naturales / Microsoft / Google en español latino o España
-    candidatas.sort(function (a, b) {
-      var na = (a.name || '').toLowerCase();
-      var nb = (b.name || '').toLowerCase();
-      var pa = (na.indexOf('natural') !== -1 || na.indexOf('neural') !== -1 ? 4 : 0) +
-               (na.indexOf('google') !== -1 || na.indexOf('sabina') !== -1 || na.indexOf('helena') !== -1 || na.indexOf('elvira') !== -1 || na.indexOf('dalia') !== -1 ? 2 : 0) +
-               (a.localService ? 1 : 0);
-      var pb = (nb.indexOf('natural') !== -1 || nb.indexOf('neural') !== -1 ? 4 : 0) +
-               (nb.indexOf('google') !== -1 || nb.indexOf('sabina') !== -1 || nb.indexOf('helena') !== -1 || nb.indexOf('elvira') !== -1 || nb.indexOf('dalia') !== -1 ? 2 : 0) +
-               (b.localService ? 1 : 0);
-      return pb - pa;
-    });
-
-    return candidatas[0];
-  }
-
-  if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-    window.speechSynthesis.onvoiceschanged = function () {
-      vozEspanol = elegirMejorVozEspanol();
-    };
-    vozEspanol = elegirMejorVozEspanol();
-  }
-
-  function limpiarTextoParaVoz(texto) {
-    return String(texto || '')
-      .replace(/<[^>]+>/g, ' ')
-      .replace(/&nbsp;/g, ' ')
-      .replace(/&mdash;/g, ', ')
-      .replace(/AC₁/g, 'A C sub 1')
-      .replace(/AA₁/g, 'A A sub 1')
-      .replace(/A₁/g, 'A sub 1')
-      .replace(/B₁/g, 'B sub 1')
-      .replace(/C₁/g, 'C sub 1')
-      .replace(/D₁/g, 'D sub 1')
-      .replace(/√\(([^)]+)\)/g, 'raíz cuadrada de $1')
-      .replace(/√/g, 'raíz cuadrada de ')
-      .replace(/²/g, ' al cuadrado ')
-      .replace(/³/g, ' al cubo ')
-      .replace(/\^2\b/g, ' al cuadrado ')
-      .replace(/\^3\b/g, ' al cubo ')
-      .replace(/\bb(?= al cuadrado)/g, 'be')
-      .replace(/\bc(?= al cuadrado)/g, 'ce')
-      .replace(/\+/g, ' más ')
-      .replace(/=/g, ' igual a ')
-      .replace(/[×·]/g, ' por ')
-      .replace(/π/g, ' pi ')
-      .replace(/≠/g, ' distinto de ')
-      .replace(/≤/g, ' menor o igual que ')
-      .replace(/≥/g, ' mayor o igual que ')
-      .replace(/⟂/g, ' perpendicular a ')
-      .replace(/\s+/g, ' ')
-      .trim();
-  }
-
+  var vozPreferida = '';
+  try { vozPreferida = localStorage.getItem('geo3d.voz.voiceuri.v1') || ''; } catch(e) {}
   var vozSesion = 0;
-
-  function hablarVoz(texto, callbackFin, opciones) {
-    var sesion = ++vozSesion;
-    opciones = opciones || {};
-    if (!vozHabilitada) {
-      if (callbackFin) callbackFin();
-      return;
-    }
-
-    var limpio = limpiarTextoParaVoz(texto);
-    if (!limpio) {
-      if (callbackFin) callbackFin();
-      return;
-    }
-
-    var palabras = limpio.split(/\s+/).length;
-    var duracionEstimadaMs = Math.max(2000, Math.round((palabras * 260) / velocidadVoz));
-
-    emitirAcordePaso(opciones.tipoAcorde || 'paso');
-    document.dispatchEvent(new CustomEvent('avatar-hablando', {
-      detail: { activo: true, texto: limpio }
-    }));
-
-    var terminado = false;
-    var timerSeguridad = null;
-
-    function finalizar() {
-      if (terminado || sesion !== vozSesion) return;
-      terminado = true;
-      if (timerSeguridad) clearTimeout(timerSeguridad);
-      window._activeSpeechUtterance = null;
-      document.dispatchEvent(new CustomEvent('avatar-hablando', {
-        detail: { activo: false }
-      }));
-      if (callbackFin) callbackFin();
-    }
-
-    if ('speechSynthesis' in window && typeof SpeechSynthesisUtterance !== 'undefined') {
-      try {
-        window.speechSynthesis.cancel();
-        window.speechSynthesis.resume();
-
-        setTimeout(function () {
-          if (terminado || sesion !== vozSesion || !vozHabilitada) return;
-          try {
-            var u = new SpeechSynthesisUtterance(limpio);
-            window._activeSpeechUtterance = u;
-
-            if (!vozEspanol) vozEspanol = elegirMejorVozEspanol();
-            if (vozEspanol) {
-              u.voice = vozEspanol;
-              u.lang = vozEspanol.lang;
-            } else {
-              u.lang = 'es-ES';
-            }
-            var perfil = global.Tutores ? global.Tutores.perfilVoz() : {rate:1,pitch:1.04};
-            u.rate = Math.max(0.75, Math.min(1.35, velocidadVoz * perfil.rate));
-            u.pitch = perfil.pitch;
-
-            u.onboundary = function (ev) {
-              if (sesion === vozSesion && ev.name === 'word') {
-                document.dispatchEvent(new CustomEvent('avatar-palabra', {
-                  detail: { charIndex: ev.charIndex, charLength: ev.charLength || 0, texto: limpio }
-                }));
-              }
-            };
-            u.onend = finalizar;
-            u.onerror = finalizar;
-
-            window.speechSynthesis.speak(u);
-            // La voz real determina el final; no cortar la animación con una estimación.
-          } catch (e) {
-            timerSeguridad = setTimeout(finalizar, duracionEstimadaMs);
-          }
-        }, 50);
-      } catch (e) {
-        timerSeguridad = setTimeout(finalizar, duracionEstimadaMs);
-      }
-    } else {
-      timerSeguridad = setTimeout(finalizar, duracionEstimadaMs);
-    }
+  var timerPendiente = null;
+  var estadoVoz = 'detenido';
+  var origenVoz = '';
+  var textoVoz = '';
+  function vocesEsp() {
+    if (!global.speechSynthesis || !global.speechSynthesis.getVoices) return [];
+    try { return (global.speechSynthesis.getVoices() || []).filter(function(v){
+      return /^es(?:-|$)/i.test(v.lang || '');
+    }); } catch(e) { return []; }
   }
-
+  function elegirMejorVozEspanol() {
+    var voces = vocesEsp().slice();
+    voces.sort(function(a,b) {
+      function puntuar(v) {
+        var nombre=(v.name || '').toLowerCase(),lang=(v.lang || '').toLowerCase();
+        return (lang==='es-pe'?25:lang==='es-419'?20:lang==='es-mx'?17:lang.startsWith('es-')?8:0)+
+          (/natural|neural/.test(nombre)?5:0)+(v.localService?1:0);
+      }
+      return puntuar(b)-puntuar(a);
+    });
+    if (vozPreferida) {
+      var encontrada = voces.filter(function(v) {
+        return (v.voiceURI || v.name)===vozPreferida;
+      })[0];
+      if (encontrada) return encontrada;
+    }
+    return voces[0] || null;
+  }
+  function vocesDisponibles() {
+    return vocesEsp().map(function(v) {
+      return {id:v.voiceURI || v.name,nombre:v.name,idioma:v.lang};
+    });
+  }
+  function elegirVoz(id) {
+    if (id && !vocesEsp().some(function(v){return (v.voiceURI||v.name)===id;})) return false;
+    vozPreferida=String(id||'');
+    try { localStorage.setItem('geo3d.voz.voiceuri.v1',vozPreferida); } catch(e) {}
+    vozEspanol=elegirMejorVozEspanol();
+    document.dispatchEvent(new CustomEvent('avatar-voces-cambiadas', {detail:{seleccion:vozPreferida}}));
+    return true;
+  }
+  if (global.speechSynthesis) {
+    if (typeof global.speechSynthesis.addEventListener==='function')
+      global.speechSynthesis.addEventListener('voiceschanged',function(){
+        vozEspanol=elegirMejorVozEspanol();
+        document.dispatchEvent(new CustomEvent('avatar-voces-cambiadas',{detail:{seleccion:vozPreferida}}));
+      });
+    else global.speechSynthesis.onvoiceschanged=function(){
+      vozEspanol=elegirMejorVozEspanol();
+      document.dispatchEvent(new CustomEvent('avatar-voces-cambiadas',{detail:{seleccion:vozPreferida}}));
+    };
+    vozEspanol=elegirMejorVozEspanol();
+  }
+  function limpiarTextoParaVoz(texto) {
+    if (global.VozMatematica) return global.VozMatematica.leer(texto);
+    return String(texto||'').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+  }
+  function anunciarEstado(tipo,sesion,origen,error) {
+    estadoVoz=tipo; origenVoz=origen||''; 
+    document.dispatchEvent(new CustomEvent('avatar-voz-estado',{
+      detail:{estado:tipo,sesion:sesion,origen:origenVoz,texto:textoVoz,error:error||''}
+    }));
+    document.dispatchEvent(new CustomEvent('avatar-hablando',{
+      detail:{activo:tipo==='hablando',pausado:tipo==='pausado',origen:origenVoz}
+    }));
+  }
   function detenerVoz() {
     vozSesion++;
-    if ('speechSynthesis' in window) {
-      try { window.speechSynthesis.cancel(); } catch (e) {}
+    if (timerPendiente !== null) {clearTimeout(timerPendiente);timerPendiente=null;}
+    try {if(global.speechSynthesis)global.speechSynthesis.cancel();}catch(e){}
+    global._activeSpeechUtterance=null;
+    textoVoz='';
+    anunciarEstado('detenido',vozSesion,origenVoz);
+  }
+  function hablarVoz(texto, callbackFin, opciones) {
+    opciones=opciones||{};
+    detenerVoz();
+    var sesion=vozSesion;
+    var origen=String(opciones.origen||'');
+    var limpio=limpiarTextoParaVoz(texto);
+    textoVoz=limpio;
+    origenVoz=origen;
+    var termino=false;
+    function terminar(motivo,error) {
+      if(termino||sesion!==vozSesion)return;
+      termino=true;
+      global._activeSpeechUtterance=null;
+      anunciarEstado(motivo||'finalizado',sesion,origen,error);
+      if(typeof callbackFin==='function')callbackFin({estado:motivo||'finalizado',error:error||''});
     }
-    window._activeSpeechUtterance = null;
-    document.dispatchEvent(new CustomEvent('avatar-hablando', { detail: { activo: false } }));
+    if (!vozHabilitada || !limpio) {
+      terminar(!vozHabilitada?'silenciado':'vacio');
+      return sesion;
+    }
+    if (!global.speechSynthesis || typeof SpeechSynthesisUtterance==='undefined') {
+      terminar('sin-voz','Este navegador no tiene síntesis de voz disponible.');
+      return sesion;
+    }
+    anunciarEstado('preparando',sesion,origen);
+    try {global.speechSynthesis.cancel();}catch(e){}
+    timerPendiente=setTimeout(function() {
+      timerPendiente=null;
+      if(sesion!==vozSesion || !vozHabilitada)return;
+      try {
+        var u=new SpeechSynthesisUtterance(limpio);
+        global._activeSpeechUtterance=u;
+        vozEspanol=elegirMejorVozEspanol();
+        if (vozEspanol) {u.voice=vozEspanol;u.lang=vozEspanol.lang;}
+        else u.lang='es-PE';
+        var perfil=global.Tutores?global.Tutores.perfilVoz():{rate:1,pitch:1.04};
+        u.rate=Math.min(1.35,Math.max(.75,velocidadVoz*(perfil.rate||1)));
+        u.pitch=Math.min(1.8,Math.max(.6,perfil.pitch||1));
+        u.onstart=function() {
+          if(sesion!==vozSesion)return;
+          anunciarEstado('hablando',sesion,origen);
+        };
+        u.onboundary=function(ev) {
+          if(sesion!==vozSesion || estadoVoz!=='hablando')return;
+          if(typeof ev.charIndex!=='number')return;
+          if(ev.name && ev.name!=='word')return;
+          document.dispatchEvent(new CustomEvent('avatar-palabra',{detail:{
+            origen:origen,sesion:sesion,charIndex:ev.charIndex,
+            charLength:ev.charLength||0,texto:limpio
+          }}));
+        };
+        u.onpause=function(){if(sesion===vozSesion)anunciarEstado('pausado',sesion,origen);};
+        u.onresume=function(){if(sesion===vozSesion)anunciarEstado('hablando',sesion,origen);};
+        u.onend=function(){terminar('finalizado');};
+        u.onerror=function(ev) {
+          if (sesion!==vozSesion)return;
+          terminar('error',ev && ev.error ? String(ev.error) : 'Error del sintetizador');
+        };
+        global.speechSynthesis.speak(u);
+      }catch(e){terminar('error',e && e.message ? e.message : String(e));}
+    },50);
+    return sesion;
   }
-
+  function pausarVoz() {
+    if(estadoVoz!=='hablando' && estadoVoz!=='preparando')return false;
+    if(estadoVoz==='preparando'){detenerVoz();return true;}
+    try {global.speechSynthesis.pause();anunciarEstado('pausado',vozSesion,origenVoz);return true;}
+    catch(e){return false;}
+  }
+  function reanudarVoz() {
+    if(estadoVoz!=='pausado')return false;
+    try {global.speechSynthesis.resume();anunciarEstado('hablando',vozSesion,origenVoz);return true;}
+    catch(e){return false;}
+  }
   function setVozHabilitada(activa) {
-    vozHabilitada = !!activa;
-    try { localStorage.setItem('geo3d.voz.v1', String(vozHabilitada)); } catch (e) {}
-    if (!vozHabilitada) detenerVoz();
-    document.dispatchEvent(new CustomEvent('voz-cambiada', { detail: { activa: vozHabilitada } }));
+    vozHabilitada=!!activa;
+    try {localStorage.setItem('geo3d.voz.v1',String(vozHabilitada));}catch(e){}
+    if(!vozHabilitada)detenerVoz();
+    document.dispatchEvent(new CustomEvent('voz-cambiada',{detail:{activa:vozHabilitada}}));
   }
-
   function setVelocidadVoz(vel) {
-    var v = parseFloat(vel);
-    if (isNaN(v)) return;
-    velocidadVoz = Math.max(0.75, Math.min(1.35, v));
-    try { localStorage.setItem('geo3d.voz.vel.v1', String(velocidadVoz)); } catch (e) {}
+    var v=Number(vel);
+    if(!Number.isFinite(v))return;
+    velocidadVoz=Math.max(.75,Math.min(1.35,v));
+    try {localStorage.setItem('geo3d.voz.vel.v1',String(velocidadVoz));}catch(e){}
+  }
+  if(typeof document!=='undefined'&&document.addEventListener) {
+    document.addEventListener('visibilitychange',function() {
+      if(document.hidden && estadoVoz==='hablando')pausarVoz();
+    });
   }
 
   /* ---------- Mensajes y Consejos ---------- */
@@ -635,6 +631,12 @@
     setVozHabilitada: setVozHabilitada,
     getVozHabilitada: function () { return vozHabilitada; },
     setVelocidadVoz: setVelocidadVoz,
-    getVelocidadVoz: function () { return velocidadVoz; }
+    getVelocidadVoz: function () { return velocidadVoz; },
+    getEstadoVoz: function () { return {estado:estadoVoz,origen:origenVoz,sesion:vozSesion}; },
+    pausarVoz: pausarVoz,
+    reanudarVoz: reanudarVoz,
+    vocesDisponibles: vocesDisponibles,
+    elegirVoz: elegirVoz,
+    getVozElegida: function () { return vozPreferida; }
   };
 })(window);
