@@ -347,3 +347,43 @@ body { background:var(--studio-paper); }
   .figura-col-maestro .vertiz-stage-mini .avatar-escena { height:200px; }
   .figura-col-maestro .tutor-canvas { transform:scale(1.85); }
 }
+
+/* Aula v8: configuración bajo demanda y foco pedagógico. */
+.figura { position:relative; }
+.figura-barra-sup { position:relative; z-index:12; }
+.figura-barra-sup .acciones-fig { flex:0 0 auto; flex-wrap:nowrap; }
+.figura-barra-sup .btn-ajustes { background:#27336d; color:#fff; border-color:#7d8ae0; }
+.figura-barra-sup .btn-ajustes[aria-expanded="true"] { background:#8df0ee; color:#12204c; border-color:#8df0ee; }
+.figura-ajustes {
+  position:absolute; z-index:30; top:76px; right:1.25rem; width:min(430px,calc(100% - 2.5rem));
+  display:flex; flex-wrap:wrap; gap:.55rem; align-items:center;
+  padding:1rem; background:#fff; color:#17204a; border:1px solid #cbd4ed;
+  border-radius:16px; box-shadow:0 20px 45px rgba(10,19,65,.28);
+}
+.figura-ajustes[hidden] { display:none; }
+.figura-ajustes-titulo { flex:1 0 100%; display:flex; align-items:baseline; justify-content:space-between; gap:1rem; padding-bottom:.35rem; border-bottom:1px solid #e8ebf5; }
+.figura-ajustes-titulo strong { font-size:.95rem; } .figura-ajustes-titulo span { color:#687594; font-size:.72rem; }
+.figura-ajustes .btn-fig-hud { color:#17204a; background:#f4f6ff; border-color:#c5cee7; min-height:36px; }
+.figura-ajustes .btn-fig-hud:hover { color:#fff; background:#5d51df; }
+.figura-col-maestro .mm-preferencias-voz,
+.figura-col-maestro .tutor-preferencias { display:none; }
+.figura-col-maestro .tutor-preferencias { width:100%; }
+.figura.ajustes-abiertos .mm-preferencias-voz,
+.figura.ajustes-abiertos .tutor-preferencias { display:flex; }
+.figura.ajustes-abiertos .mm-preferencias-voz { flex-wrap:wrap; gap:.7rem; }
+.figura.ajustes-abiertos .tutor-preferencias { flex-direction:column; gap:.55rem; }
+.figura-col-maestro .mm-profesor-cabecera { position:relative; }
+.figura-col-maestro .mm-profesor-info { width:100%; }
+.figura-col-maestro .mm-controles-audio { justify-content:center; }
+.figura-col-maestro .tutor-canvas { transform:scale(2.7); }
+@media (max-width:900px) {
+  .figura-ajustes { top:68px; right:.8rem; width:min(390px,calc(100% - 1.6rem)); }
+  .figura-col-maestro .tutor-canvas { transform:scale(2.3); }
+}
+@media (max-width:680px) {
+  .figura-barra-sup .acciones-fig { gap:.3rem; }
+  .figura-barra-sup .btn-ajustes { font-size:.68rem; padding-inline:9px; }
+  .figura-ajustes { top:60px; right:.55rem; width:calc(100% - 1.1rem); }
+  .figura-ajustes .btn-fig-hud { flex:1 1 auto; }
+  .figura-col-maestro .tutor-canvas { transform:scale(1.95); }
+}

@@ -154,8 +154,28 @@
         '<button type="button" class="btn-fig btn-fig-hud btn-proyectar" data-accion="proyectar" aria-pressed="false" title="Modo Proyector a pantalla completa (tecla F)">' +
           '<span data-proyectar-texto>⛶ Proyectar</span>' +
         '</button>' +
+        '<button type="button" class="btn-fig btn-fig-hud btn-ajustes" data-accion="ajustes" aria-expanded="false" title="Mostrar u ocultar los ajustes del aula">⚙ Ajustes</button>' +
       '</div>';
     figura.appendChild(barraSup);
+
+    /* Los controles secundarios viven en un panel bajo demanda para no competir con la explicación. */
+    var accionesVisor = barraSup.querySelector('.acciones-fig');
+    var btnAjustes = accionesVisor.querySelector('[data-accion="ajustes"]');
+    var panelAjustes = document.createElement('div');
+    panelAjustes.className = 'figura-ajustes';
+    panelAjustes.hidden = true;
+    panelAjustes.setAttribute('aria-label', 'Ajustes del aula 3D');
+    panelAjustes.innerHTML = '<div class="figura-ajustes-titulo"><strong>Configurar aula</strong><span>Se oculta al terminar</span></div>';
+    Array.prototype.slice.call(accionesVisor.children).forEach(function (control) {
+      if (control !== btnAjustes && !control.classList.contains('btn-proyectar')) panelAjustes.appendChild(control);
+    });
+    figura.appendChild(panelAjustes);
+    btnAjustes.addEventListener('click', function () {
+      var abierto = !panelAjustes.hidden;
+      panelAjustes.hidden = abierto;
+      btnAjustes.setAttribute('aria-expanded', String(!abierto));
+      figura.classList.toggle('ajustes-abiertos', !abierto);
+    });
 
     /* 2. Escenario de clase: Columna Lienzo 3D + Columna Profesor Vértiz */
     var escenarioClase = document.createElement('div');
