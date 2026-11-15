@@ -54,14 +54,16 @@
 **Cierre de implementación:** [FASE2-REPORTE-2026-11-14.md](FASE2-REPORTE-2026-11-14.md), con resultados matemáticos, capturas y limitaciones explícitas.
 
 ## Fase 3 — Rigor matemático y didáctico
-- [ ] Inventariar todas las definiciones, teoremas, fórmulas, ejemplos, ejercicios y distractores de las 17 lecciones.
-- [ ] Verificar con resolución independiente cálculos exactos, unidades, aproximaciones, tolerancias, convenciones y nombres geométricos.
-- [ ] Adoptar renderizado matemático accesible (KaTeX o MathJax evaluados según peso, cobertura y legibilidad), evitando fórmulas cortadas.
-- [ ] Añadir contraste entre «hipótesis», «demostración», «interpretación» y «caso en que NO aplica».
-- [ ] Replantear errores frecuentes: explicación causal, contraejemplo y pista por niveles, no mostrar automáticamente una solución completa ante el primer error.
-- [ ] Aumentar ejercicios tipo UNI y bancos de dificultad graduada con claves y justificación de distractores.
-- [ ] Distinguir «solución consultada» de «resolución demostrada» en las métricas de progreso.
+- [x] Inventariar 17 lecciones con definiciones, teoremas, ejemplos, 107 ejercicios y 18 retos; evaluar 43 alternativas y 129 distractores.
+- [x] Recalcular 64 respuestas numéricas y comprobar relaciones de 18 retos; corregir claves, unidades, hipótesis y convenciones de geometría.
+- [x] Conservar render matemático KaTeX con MathML y mejorar contenedores responsive en `css/fase3.css`; comprobación visual inicial. Auditoría WCAG transversal permanece en Fase 6.
+- [x] Añadir 17 guías académicas (principio, comprobación, condición límite), aclarar hipótesis, corregir demostraciones y ejemplos con resultados ambiguos.
+- [x] Permitir reintentos, ocultar claves tras un fallo, registrar consulta explícita y mostrar diagnóstico causal según alternativa elegida.
+- [x] Incorporar 17 ejercicios UNI de transferencia, uno por lección; total 107; 129 motivos específicos para alternativas erróneas.
+- [x] Distinguir solución consultada (5 puntos en ejercicio) de acierto autónomo (10); no puntuar reto si el desarrollo ya fue revelado; preservar puntos de resolución previa.
 **Criterios:** todas las respuestas del banco recalculadas, tolerancias justificadas y sin discrepancias entre modelo gráfico y fórmula.
+
+**Informe de ejecución:** [FASE3-REPORTE-2026-11-14.md](FASE3-REPORTE-2026-11-14.md). La ejecución del navegador registró 159/159 comprobaciones; `npm test`, `npm run build` y la certificación de accesibilidad multidispositivo siguen pendientes de la Fase 6.
 
 ## Fase 4 — Vértiz, narración y accesibilidad
 - [ ] Sincronizar paso de narración, visualización, resaltado persistente y lectura del texto matemático.
