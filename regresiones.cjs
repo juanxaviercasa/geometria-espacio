@@ -273,6 +273,7 @@ function cargarCursoFase3(){
     vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js',file),'utf8'),{Contenido:C});
   }
   vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/figuras.js'),'utf8'),{window});
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/distractores.js'),'utf8'),{Contenido:C,window});
   vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/auditoria-academica.js'),'utf8'),{window});
   vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/guia-academica.js'),'utf8'),{window});
   return window;
@@ -283,6 +284,8 @@ test('Fase 3: las 17 lecciones y las 107 preguntas tienen cobertura académica c
   assert.equal(r.lecciones,17);assert.equal(r.ejercicios,107);
   assert.equal(r.numericos,64);assert.equal(r.opciones,43);assert.equal(r.retos,18);
   assert.equal(r.recalculos,64);assert.equal(r.advertencias.length,0);
+  assert.equal(w.DiagnosticoAcademico.total,43);assert.equal(w.DiagnosticoAcademico.esperados,43);
+  assert.equal(w.Contenido.bancoPractica().filter(e=>e.tipo==='opcion').flatMap(e=>e.opciones.filter(o=>!o.correcta&&!o.motivo)).length,0);
   assert.equal(w.GuiaAcademica.ids.length,17);
   w.Contenido.listaOrdenada().forEach(l=>{
     const a=w.GuiaAcademica.obtener(l.id);
@@ -318,4 +321,15 @@ test('Fase 3: solución consultada recibe menos puntos; las pistas no cuentan co
   assert.equal(P.puntos(),15);
   P.registrarReto('m1l1','autonomo',1,true);
   assert.equal(P.puntos(),40);
+});
+
+test('Fase 3: se mantienen los contornos de sección y la claridad de nombres geométricos',()=>{
+  const w=cargarCursoFase3(),c=w.Contenido;
+  const sec=c.obtenerLeccion('m1l2').retos[0].respuesta;
+  assert.ok(sec.includes('a(√10+1/√2)'), 'perímetro de la sección pentagonal');
+  const ort=c.obtenerLeccion('m1l2').ejercicios.find(e=>e.id==='m1l2e5');
+  assert.ok(ort.opciones[0].texto.includes('ortogonales'),'rectas alabeadas ortogonales');
+  const pis=c.obtenerLeccion('m6l2').ejercicios.find(e=>e.id==='m6l2e2');
+  assert.ok(pis.pregunta.includes('en ese orden'),'coherencia del corte plano');
+  assert.ok(pis.explicacion.includes('2+5=3+4'),'suma de alturas opuestas');
 });
