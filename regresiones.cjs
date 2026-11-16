@@ -135,26 +135,39 @@ function tutores(guardado) {
   vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/tutores.js'),'utf8'),{window,document,URL,localStorage:{getItem:k=>datos[k],setItem:(k,v)=>{datos[k]=v;}},CustomEvent:function(){}});
   return {api:window.Tutores,datos};
 }
-test('tutor predeterminado es Vértiz y no se ofrecen dragones como emoji',()=>{
-  const {api}=tutores('desconocido');assert.equal(api.actual(),'vertiz');
-  assert.equal(api.elegir('dragon'),false);
-  assert.equal(api.elegir('dragon-alado'),false);
-  assert.equal(api.elegir('inexistente'),false);assert.equal(api.actual(),'vertiz');
-  assert.ok(!api.catalogo.some(p=>p.id==='dragon'||p.id==='dragon-alado'));
+test('tutor inicial: maestro KayKit 3D y alternativa accesible SVG',()=>{
+  const {api}=tutores('desconocido');
+  assert.equal(api.actual(),'maestro-arcano');
+  for(const id of ['dragon','dragon-alado','pikachu','charizard'])
+    assert.equal(api.elegir(id),false);
+  assert.equal(api.elegir('inexistente'),false);
+  assert.equal(api.actual(),'maestro-arcano');
+  assert.ok(api.catalogo.some(p=>p.id==='vertiz'&&p.tipo==='Ilustración'));
 });
-test('elegir Pokémon recuerda el tutor y proporciona una voz humana diferenciada',()=>{
-  const {api,datos}=tutores('vertiz');
-  assert.equal(api.elegir('pikachu'),true);assert.equal(datos['geo3d.tutor.v1'],'pikachu');
-  assert.equal(api.perfilVoz().pitch,1);assert.equal(api.perfilVoz().rate,1); // voz natural predeterminada
+test('cambiar de profesor recuerda el personaje 3D con la voz neural preservada',()=>{
+  const {api,datos}=tutores('maestro-arcano');
+  assert.equal(api.elegir('guardian-zenit'),true);
+  assert.equal(datos['geo3d.tutor.v1'],'guardian-zenit');
+  assert.equal(api.perfilVoz().pitch,1);
+  assert.equal(api.perfilVoz().rate,1);
+  assert.equal(api.elegir('exploradora-zenit'),true);
 });
-test('los recursos del dragón y Pokémon están incluidos localmente',()=>{
-  const {api}=tutores('dragon');
-  assert.equal(api.catalogo.filter(p=>p.tipo==='3D').length,7);
-  api.catalogo.filter(p=>p.pokemon).forEach(p=>['gif','png'].forEach(ext=>assert.ok(fs.statSync(path.join(__dirname,'vendor/pokemon-'+p.pokemon+'.'+ext)).size>0)));
-  const glb=fs.readFileSync(path.join(__dirname,'vendor/tutor-dragon.glb'));
-  assert.equal(glb.readUInt32LE(0),0x46546c67);
-  const data=JSON.parse(glb.subarray(20,20+glb.readUInt32LE(12)));
-  assert.ok(data.skins.length>0);assert.ok(data.animations.some(a=>/flying/i.test(a.name)));
+test('tres profesores GLB se distribuyen con rig y clips genuinos',()=>{
+  const {api}=tutores('maestro-arcano');
+  const models=api.catalogo.filter(p=>p.tipo==='3D');
+  assert.equal(models.length,3);
+  for(const tutor of models){
+    assert.ok(tutor.modelo.startsWith('vendor/avatares/'));
+    const glb=fs.readFileSync(path.join(__dirname,tutor.modelo));
+    assert.equal(glb.readUInt32LE(0),0x46546c67);
+    assert.ok(glb.length>150000&&glb.length<900000);
+    const d=JSON.parse(glb.subarray(20,20+glb.readUInt32LE(12)));
+    assert.ok(d.skins?.length>0);
+    const names=d.animations.map(a=>a.name);
+    assert.ok(names.includes('Idle'),tutor.id);
+    assert.ok(names.includes('Spellcast_Shoot'),tutor.id);
+    assert.ok(names.includes('Walking_A'),tutor.id);
+  }
 });
 test('el prisma contiene una diagonal de base y una espacial con longitudes correctas', () => {
   const window={}; vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/figuras.js'),'utf8'),{window});
@@ -673,4 +686,16 @@ test('Vértiz reproduce MP3 neural con pausa/reanuda y libera audio al cambiar d
   v.api.detenerVoz();
   assert.equal(v.api.getEstadoVoz().estado,'detenido');
   assert.equal(released.length,2);
+});
+
+
+test('Profesor 3D: el navegador utiliza GLTFLoader, gestos por voz y fallback 2D',()=>{
+  const js=fs.readFileSync(path.join(__dirname,'js/tutores.js'),'utf8');
+  const html=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
+  assert.ok(js.includes("if(!p.modelo)return bloques(p.id)"));
+  assert.ok(js.includes("new T.GLTFLoader().load(url(p.modelo)"));
+  assert.ok(js.includes("cambiarGesto(hablando)"));
+  assert.ok(js.includes("acciones3d[claveAccion]"));
+  assert.ok(js.includes("if (p.id === 'vertiz') return"));
+  assert.ok(html.includes('css/avatares-3d.css'));
 });

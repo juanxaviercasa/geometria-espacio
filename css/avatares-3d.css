@@ -1,0 +1,33 @@
+/* Personajes profesionales KayKit: portada y lecciones.
+   Los modelos son GLB CC0 preexistentes, no personajes recreados con emojis. */
+.figura-col-maestro .mm-avatar-slot:has(.tutor-personalizado){
+  position:relative;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 30%,#e4e9ff 0%,#d9e5ff 58%,#edf4ff 100%);
+}
+.figura-col-maestro .tutor-personalizado{
+  isolation:isolate;overflow:hidden;
+}
+.figura-col-maestro .tutor-visual.tutor-canvas{
+  display:block;position:absolute;inset:0;width:100%;height:100%;
+  object-fit:contain!important;transform:none!important;
+  image-rendering:auto;cursor:grab;outline-offset:-3px;
+}
+.figura-col-maestro .tutor-personalizado[data-carga="error"]::after{
+  content:"No se pudo cargar el personaje 3D. Cambia a Vértiz en Ajustes.";
+  position:absolute;inset:auto .4rem .4rem;background:#fff;
+  border:1px solid #d0d6ec;border-radius:8px;padding:.45rem;
+  text-align:center;color:#30436e;font-size:.7rem;line-height:1.4;
+  pointer-events:none;
+}
+.hero .figura-hero-modo .tutor-visual.tutor-canvas{
+  transform:none!important;
+}
+.hero .figura-hero-modo .mm-avatar-slot:has(.tutor-personalizado){
+  box-shadow:inset 0 0 0 1px rgba(75,102,168,.1),0 7px 25px rgba(41,57,122,.12);
+}
+.hero .figura-hero-modo .mm-profesor-nombre{font-size:clamp(1.08rem,1.45vw,1.32rem);}
+.hero .figura-hero-modo .mm-profesor-subtitulo{font-size:.86rem;}
+.figura-col-maestro .tutor-personalizado:focus-within{outline:3px solid #5953db;outline-offset:2px;}
+@media(prefers-reduced-motion:reduce){
+  .tutor-canvas{transition:none!important;animation:none!important;}
+}
