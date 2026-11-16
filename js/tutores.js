@@ -50,7 +50,7 @@
     if(buscar(valor))elegido=valor;
   } catch (e) {}
   var vistas = [], selectores = [], cargas = {}, T, renderer, scene, camera, modelo, mixer, alas = [], cabeza;
-  var revision = 0, animacion = 0, ultimo = 0, hablando = false, giro = 0.35, arrastrando = false;
+  var revision = 0, animacion = 0, ultimo = 0, hablando = false, giro = 0.08, arrastrando = false;
   var foco=null, huesosGuia=null,acciones3d=null,accion3d=null;
    var miradaX=0,miradaY=0,gestoNivel=0;
   var mallasLabios=[],elementoAudio=null,envolventeAudio=null,pasoAudio=.05;
@@ -495,14 +495,16 @@
     var factor=quieto?1:0.24;
     // La mirada alterna con el estudiante al terminar la locución;
     // durante la explicación sigue el objetivo de atención del visor.
-    var siguiendo=!!vistaObjetivo && (hablando || !elementoAudio);
-    miradaX+=((siguiendo?dir.x*0.22:0)-miradaX)*factor;
-    miradaY+=((siguiendo?dir.y*0.09:0)-miradaY)*factor;
-    gestoNivel+=((vistaObjetivo?1:0)-gestoNivel)*factor;
+    // Alternar la atención entre el sólido y el estudiante:
+    // al hablar mira el punto señalado; al detenerse vuelve al frente.
+    var siguiendo=!!vistaObjetivo && hablando;
+    miradaX+=((siguiendo?dir.x*0.42:0)-miradaX)*factor;
+    miradaY+=((siguiendo?dir.y*0.22:0)-miradaY)*factor;
+    gestoNivel+=((vistaObjetivo?(hablando?1:0.30):0)-gestoNivel)*factor;
     lista.forEach(function(v){
       if(!v.canvas)return;
       var activa=participa(v),d=activa?direccion(v):{x:0,y:0};
-      modelo.rotation.y=giro+(activa?miradaX*0.65:(quieto?0:Math.sin(t*0.5)*0.05));
+      modelo.rotation.y=giro+(activa?miradaX*0.38:(quieto?0:Math.sin(t*0.5)*0.05));
       modelo.position.y=quieto?0:Math.sin(t*2)*0.015;
       if(cabeza){
         cabeza.rotation.y=activa?miradaX:0;
@@ -521,17 +523,17 @@
         Object.keys(bases).forEach(function(k){huesosGuia[k].quaternion.copy(bases[k]);});
         // Cabeza y ojos observan el sólido mientras el docente lo señala.
         if(huesosGuia.neck){
-          huesosGuia.neck.rotateY(miradaX*0.40);
-          huesosGuia.neck.rotateX(-miradaY*0.3);
+          huesosGuia.neck.rotateY(miradaX*0.35);
+          huesosGuia.neck.rotateX(miradaY*0.35);
         }
         if(huesosGuia.head){
           huesosGuia.head.rotateY(miradaX*0.85);
-          huesosGuia.head.rotateX(-miradaY*0.7+(hablando&&!quieto?Math.sin(t*2.2)*0.022:0));
+          huesosGuia.head.rotateX(miradaY*0.65+(hablando&&!quieto?Math.sin(t*2.2)*0.022:0));
         }
         ['leftEye','rightEye'].forEach(function(k){
           if(huesosGuia[k]){
-            huesosGuia[k].rotateY(miradaX*0.38);
-            huesosGuia[k].rotateX(-miradaY*0.35);
+            huesosGuia[k].rotateY(miradaX*0.40);
+            huesosGuia[k].rotateX(miradaY*0.28);
           }
         });
         // En los Rocketbox, las articulaciones bip01*upperarm se verificaron
@@ -540,8 +542,10 @@
         if(activa && gestoNivel>0.02){
           // No mantener una estatua: durante la locución el codo acompaña
           // las frases con un movimiento lento y reconocible.
-          var pulso=hablando&&!quieto ? 0.15*Math.sin(t*2.5) : 0;
-          var fuerzaGesto=Math.max(0.45,Math.min(1,gestoNivel*(0.87+pulso)));
+          // Movimiento visible de hombro y antebrazo mientras explica.
+          // No es una pose fija: el vector del objetivo cambia suavemente.
+          var pulso=hablando&&!quieto ? 0.34*Math.sin(t*2.25) : 0;
+          var fuerzaGesto=Math.max(0.12,Math.min(1,gestoNivel*(0.88+0.14*Math.sin(t*2.1))));
           var haciaIzquierda=d.x<0;
           var brazo=haciaIzquierda?huesosGuia.right:huesosGuia.left;
           var codo=haciaIzquierda?huesosGuia.rightForearm:huesosGuia.leftForearm;
@@ -551,7 +555,7 @@
             // Se usan vectores en espacio mundial y se respeta la orientación
             // de la cámara para que la acción sea perceptible de frente.
             var orientado=orientarHueso(brazo,codo,
-              new T.Vector3(lado*0.74,0.52+pulso*0.5,0.44),0.95*fuerzaGesto);
+              new T.Vector3(lado*0.74,0.57+pulso,0.42),0.95*fuerzaGesto);
             if(!orientado){
               brazo.rotateZ(lado*1.02*gestoNivel);
               brazo.rotateX(-0.48*gestoNivel);
@@ -559,7 +563,7 @@
           }
           var mano=haciaIzquierda?huesosGuia.rightHand:huesosGuia.leftHand;
           if(codo&&mano){
-            orientarHueso(codo,mano,new T.Vector3(lado*0.87,0.40+pulso,0.28),0.95*fuerzaGesto);
+            orientarHueso(codo,mano,new T.Vector3(lado*0.82,0.49+pulso,0.28),0.95*fuerzaGesto);
           }
         }else if(hablando&&!quieto){
           if(huesosGuia.left)huesosGuia.left.rotateZ(0.18+0.09*Math.sin(t*2.2));
