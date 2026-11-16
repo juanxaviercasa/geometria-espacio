@@ -431,14 +431,16 @@ test('Fase 3: se mantienen los contornos de sección y la claridad de nombres ge
 });
 
 /* Fase 5: carga crítica, catálogo ligero, GPU y seguridad del servidor local. */
-test('Fase 5: la portada y lecciones no cargan Three.js de forma bloqueante',()=>{
-  ['index.html','leccion.html'].forEach(file=>{
+test('Fase 5: portada ligera, lecciones y laboratorios con 3D diferido',()=>{
+  const home=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
+  assert.ok(!home.includes('js/cargador3d.js'),'inicio sin motor WebGL');
+  for(const file of ['leccion.html','solido.html']){
     const html=fs.readFileSync(path.join(__dirname,file),'utf8');
     assert.ok(html.includes('js/cargador3d.js'),file+' usa cargador compartido');
     assert.ok(!html.includes('<script src="vendor/three.min.js"'),file+' no precarga Three');
     assert.ok(!html.includes('<script src="js/visor3d.js'),file+' no precarga visor 3D');
     assert.ok(html.includes('js/visor2d.js'),file+' mantiene SVG');
-  });
+  }
   const lab=fs.readFileSync(path.join(__dirname,'js/laboratorio.js'),'utf8');
   assert.ok(!lab.includes("import('../vendor/three.module.min.js')"),'laboratorio evita el paquete modular más pesado');
   assert.ok(fs.statSync(path.join(__dirname,'vendor/three.min.js')).size<700000);
@@ -536,10 +538,12 @@ test('Fase 6: dos Vértiz no comparten los ID ni los gradientes del SVG',()=>{
  }
 });
 
-test('Fase 6: sitemap con 23 URL canónicas y todas las lecciones',()=>{
+test('Fase 6: sitemap de lecciones más páginas de sólidos',()=>{
  const xml=fs.readFileSync(path.join(__dirname,'sitemap.xml'),'utf8');
  const urls=[...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(x=>x[1]);
- assert.equal(urls.length,23);
+ assert.equal(urls.length,25);
+ assert.ok(urls.some(u=>u.endsWith('/solidos.html')));
+ assert.ok(urls.some(u=>u.includes('/solido.html?tipo=prisma')));
  assert.equal(new Set(urls).size,23);
  assert.ok(urls.includes('https://geometriaespacio.sistemazenit.com/'));
  const datos=JSON.parse(fs.readFileSync(path.join(__dirname,'QA-FASE6/matriz.json'),'utf8'));
@@ -635,7 +639,7 @@ test('Vértiz tiene como opción principal la voz neural masculina',()=>{
  assert.equal(api.setMotorVoz('nativa'),true);
  assert.equal(api.getMotorVoz(),'nativa');
  assert.equal(api.setMotorVoz('neural'),true);
- const html=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
+ const html=fs.readFileSync(path.join(__dirname,'leccion.html'),'utf8');
  assert.ok(html.indexOf('js/voz-neural.js') < html.indexOf('js/avatar.js'));
 });
 
