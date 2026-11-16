@@ -701,7 +701,7 @@ test('Profesor 3D: el navegador utiliza GLTFLoader, gestos por voz y fallback 2D
   const js=fs.readFileSync(path.join(__dirname,'js/tutores.js'),'utf8');
   const html=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
   assert.ok(js.includes("if(!p.modelo)return bloques(p.id)"));
-  assert.ok(js.includes("new T.GLTFLoader().load(url(p.modelo)"));
+  assert.ok(js.includes("loader.load(url(p.modelo)"),"cargador reutilizable con Meshopt");
   assert.ok(js.includes("cambiarGesto(hablando)"));
   assert.ok(js.includes("acciones3d[claveAccion]"));
   assert.ok(js.includes("if (p.id === 'vertiz') return"));
