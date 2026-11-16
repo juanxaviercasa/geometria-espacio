@@ -913,7 +913,7 @@ test('En escritorio, avatar y explicación comparten una fila sin scroll interno
     'el panel se restaura correctamente en móvil');
   assert.ok(css.includes('.figura-col-maestro.mm-distribucion-horizontal'));
   assert.ok(css.includes('overflow:hidden!important'));
-  assert.ok(css.includes('bottom:10.5%!important'),'sombra bajo los pies');
+  assert.ok(css.includes('bottom:0!important'),'sombra bajo los pies');
 });
 test('Prisma: demostrar paralelismo y perpendicularidad durante frases específicas',()=>{
   const win={};

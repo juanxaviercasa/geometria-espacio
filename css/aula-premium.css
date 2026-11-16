@@ -217,12 +217,12 @@ body.con-visor-proyectado .hero .figura.modo-proyector { z-index:2147482000; }
 }
 /* Plataforma visual bajo los zapatos, no una sombra flotante al fondo. */
 .hero .figura-hero-modo .mm-distribucion-horizontal .mm-avatar-slot:has(.tutor-realista)::before{
-  bottom:10.5%!important;left:13%!important;width:74%!important;height:18px!important;
+  bottom:0!important;left:13%!important;width:74%!important;height:18px!important;
   background:rgba(33,50,98,.21)!important;filter:blur(6px)!important;
   z-index:0;
 }
 .hero .figura-hero-modo .mm-distribucion-horizontal .mm-avatar-slot:has(.tutor-realista)::after{
-  content:"";position:absolute;left:6%;bottom:9.5%;width:88%;height:32px;
+  content:"";position:absolute;left:6%;bottom:0;width:88%;height:32px;
   background:radial-gradient(ellipse at center,rgba(80,106,183,.13),transparent 72%);
   pointer-events:none;z-index:0;
 }
