@@ -190,7 +190,7 @@
       visual.alt = p.nombre + ', tutor Pokémon animado en 2D'; visual.className = 'tutor-visual tutor-pokemon';
       visual.addEventListener('error', function () { visual.alt = p.nombre + ' no pudo cargarse. Puedes elegir otro tutor.'; });
     } else {
-      visual = document.createElement('canvas'); visual.width = 420; visual.height = 420;
+      visual = document.createElement('canvas'); visual.width = 420; visual.height = 600;
       visual.className = 'tutor-visual tutor-canvas'; visual.setAttribute('role', 'img');
       visual.tabIndex=0;
       visual.setAttribute('aria-label', p.nombre + ' 3D. Arrastra o usa las flechas izquierda y derecha para girarlo.');
@@ -204,11 +204,11 @@
       // No dibujamos emojis como sustitutos del profesor.
       var ctx=visual.getContext('2d');
       if(ctx) {
-        var grad=ctx.createLinearGradient(0,0,0,420);
+        var grad=ctx.createLinearGradient(0,0,0,600);
         grad.addColorStop(0,'#e7edff');grad.addColorStop(1,'#f8faff');
-        ctx.fillStyle=grad;ctx.fillRect(0,0,420,420);
+        ctx.fillStyle=grad;ctx.fillRect(0,0,420,600);
         ctx.fillStyle='#343d70';ctx.font='600 24px sans-serif';
-        ctx.textAlign='center';ctx.fillText('Cargando profesor 3D…',210,355);
+        ctx.textAlign='center';ctx.fillText('Cargando profesor 3D…',210,540);
       }
     }
     v.nodo.appendChild(visual);
@@ -216,7 +216,7 @@
     actualizarGestos();
     if(v.canvas && renderer && cargadoId===p.id)copiar(v);
   }
-  function copiar(v) { if(!v.canvas)return;var ctx=v.canvas.getContext('2d');if(ctx){ctx.clearRect(0,0,420,420);ctx.drawImage(renderer.domElement,0,0);} }
+  function copiar(v) { if(!v.canvas)return;var ctx=v.canvas.getContext('2d');if(ctx){ctx.clearRect(0,0,420,600);ctx.drawImage(renderer.domElement,0,0,420,600);} }
   function montar(nodo) {
     var v = { nodo: nodo, visible: !('IntersectionObserver' in global), canvas: null };
     vistas.push(v); pintar(v);
@@ -308,9 +308,9 @@
     if(renderer) return;
     T=global.THREE;
     renderer=new T.WebGLRenderer({alpha:true,antialias:!reducido(),preserveDrawingBuffer:false,powerPreference:'low-power'});
-    renderer.setSize(420,420); renderer.setPixelRatio(1); renderer.outputColorSpace=T.SRGBColorSpace;
+    renderer.setSize(420,600); renderer.setPixelRatio(1); renderer.outputColorSpace=T.SRGBColorSpace;
     renderer.toneMapping=T.ACESFilmicToneMapping; renderer.toneMappingExposure=1.2;
-    scene=new T.Scene(); camera=new T.PerspectiveCamera(32,1,0.1,100); camera.position.set(0,1.15,4.8); camera.lookAt(0,0.96,0);
+    scene=new T.Scene(); camera=new T.PerspectiveCamera(32,420/600,0.1,100); camera.position.set(0,1.15,4.8); camera.lookAt(0,0.96,0);
     scene.add(new T.HemisphereLight('#e5f5ff','#b3a0ab',1.9)); var frente=new T.DirectionalLight('#ffffff',1.7);frente.position.set(0,2,5);scene.add(frente);
     var sol=new T.DirectionalLight('#fff2d6',2.4); sol.position.set(3,5,4); scene.add(sol);
     var borde=new T.DirectionalLight('#9ebdff',1.8); borde.position.set(-4,3,-3); scene.add(borde);
@@ -419,8 +419,8 @@
       // Medio cuerpo: rostro y brazos distinguibles sin alejar al profesor.
       // En los humanos se conserva todo el cuerpo con margen inferior,
       // evitando cortar los zapatos al cambiar de pose.
-      camera.position.set(0,p.realista?1.04:(p.modelo?1.18:1.15),
-        p.realista?4.75:(p.modelo?3.85:4.8));
+      camera.position.set(0,p.realista?1.00:(p.modelo?1.18:1.15),
+        p.realista?4.2:(p.modelo?3.85:4.8));
       camera.lookAt(0,p.realista?0.95:1.0,0);
       modelo.rotation.y=giro;
       if(mixer){mixer.update(0);cambiarGesto(hablando);}
