@@ -409,6 +409,8 @@
           right:huesoPorNombres(['bip01rupperarm','upperarmr','rightupperarm','upperarmright']),
           leftForearm:huesoPorNombres(['bip01lforearm','lowerarml','forearml','leftforearm']),
           rightForearm:huesoPorNombres(['bip01rforearm','lowerarmr','forearmr','rightforearm']),
+          leftHand:huesoPorNombres(['bip01lhand','handl','lefthand']),
+          rightHand:huesoPorNombres(['bip01rhand','handr','righthand']),
           leftEye:huesoPorNombres(['bip01leye','lefteye','eyel']),
           rightEye:huesoPorNombres(['bip01reye','righteye','eyer'])
         };
@@ -449,6 +451,23 @@
     despertar();
   }
   function despertar() { if(!animacion && renderer && modelo && !document.hidden) animacion=requestAnimationFrame(frame); }
+  // Orienta una articulación a partir de la dirección real de sus dos huesos.
+  // No depende de que el eje local Z de Rocketbox coincida con el de KayKit.
+  function orientarHueso(hueso,extremo,direccion,fuerza) {
+    if(!hueso||!extremo||!fuerza)return false;
+    hueso.updateWorldMatrix(true,true);
+    var origen=hueso.getWorldPosition(new T.Vector3());
+    var fin=extremo.getWorldPosition(new T.Vector3());
+    var actual=fin.sub(origen);
+    if(actual.lengthSq()<1e-8)return false;
+    var giroMundo=new T.Quaternion().setFromUnitVectors(actual.normalize(),direccion.clone().normalize());
+    var padre=hueso.parent?hueso.parent.getWorldQuaternion(new T.Quaternion()):new T.Quaternion();
+    var giroLocal=padre.clone().invert().multiply(giroMundo).multiply(padre);
+    var destino=hueso.quaternion.clone().premultiply(giroLocal);
+    hueso.quaternion.slerp(destino,Math.min(1,fuerza));
+    hueso.updateWorldMatrix(false,true);
+    return true;
+  }
   function dibujarVistas(lista,t,quieto) {
     if(mallasLabios.length){
       var apertura=quieto?0:nivelDeVoz(t);
@@ -519,10 +538,20 @@
           var codo=haciaIzquierda?huesosGuia.rightForearm:huesosGuia.leftForearm;
           var lado=haciaIzquierda?-1:1;
           if(brazo){
-            brazo.rotateZ(lado*(0.85*gestoNivel));
-            brazo.rotateX(-0.42*gestoNivel);
+            // Elevar el codo hacia el lateral del sólido y adelantar la mano.
+            // Se usan vectores en espacio mundial y se respeta la orientación
+            // de la cámara para que la acción sea perceptible de frente.
+            var orientado=orientarHueso(brazo,codo,
+              new T.Vector3(lado*0.72,-0.18,0.62),0.90*gestoNivel);
+            if(!orientado){
+              brazo.rotateZ(lado*0.72*gestoNivel);
+              brazo.rotateX(-0.35*gestoNivel);
+            }
           }
-          if(codo)codo.rotateX(-0.28*gestoNivel);
+          var mano=haciaIzquierda?huesosGuia.rightHand:huesosGuia.leftHand;
+          if(codo&&mano){
+            orientarHueso(codo,mano,new T.Vector3(lado*0.87,0.10,0.43),0.85*gestoNivel);
+          }
         }else if(hablando&&!quieto){
           if(huesosGuia.left)huesosGuia.left.rotateZ(0.18+0.09*Math.sin(t*2.2));
           if(huesosGuia.right)huesosGuia.right.rotateZ(-0.18-0.08*Math.sin(t*2.1+1));
