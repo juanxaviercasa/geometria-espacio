@@ -7,6 +7,12 @@
      Tienen esqueleto y clips Idle/Spellcast/Walking, pero NO visemas faciales:
      gesticulan al hablar; no se presenta como lipsync fonético exacto. */
   var CATALOGO = [
+    {id:'profesor-realista',nombre:'Marco · Profesor realista',tipo:'3D',
+      modelo:'vendor/avatares/rocketbox_male.glb',meshopt:true,realista:true,
+      descripcion:'Profesor 3D humano con visemas y expresiones faciales'},
+    {id:'profesora-realista',nombre:'Elena · Profesora realista',tipo:'3D',
+      modelo:'vendor/avatares/rocketbox_female.glb',meshopt:true,realista:true,
+      descripcion:'Profesora 3D con rostro expresivo y gestos'},
     {id:'maestro-arcano',nombre:'Ariel · Maestro 3D',tipo:'3D',modelo:'vendor/avatares/player_priest.glb',
       descripcion:'Profesor de estilo anime-aventura, con gestos de enseñanza'},
     {id:'guardian-zenit',nombre:'Axel · Guardián 3D',tipo:'3D',modelo:'vendor/avatares/player_swordsman.glb',
@@ -45,6 +51,36 @@
   var vistas = [], selectores = [], cargas = {}, T, renderer, scene, camera, modelo, mixer, alas = [], cabeza;
   var revision = 0, animacion = 0, ultimo = 0, hablando = false, giro = 0.35, arrastrando = false;
   var foco=null, huesosGuia=null,acciones3d=null,accion3d=null;
+  var mallasLabios=[],elementoAudio=null,envolventeAudio=null,pasoAudio=.05;
+  function limpiarAudioVisual(){elementoAudio=null;envolventeAudio=null;}
+  function procesarAudio(blob,elemento){
+    limpiarAudioVisual();elementoAudio=elemento;
+    var Contexto=global.AudioContext||global.webkitAudioContext;
+    if(!Contexto||!blob||!blob.arrayBuffer)return;
+    var contexto;
+    try{contexto=new Contexto();}catch(e){return;}
+    blob.arrayBuffer().then(function(bytes){return contexto.decodeAudioData(bytes);})
+      .then(function(audio){
+        if(elementoAudio!==elemento)return;
+        var data=audio.getChannelData(0),salto=Math.max(1,Math.round(audio.sampleRate*pasoAudio));
+        var result=new Float32Array(Math.ceil(data.length/salto));
+        for(var k=0;k<result.length;k++){
+          var desde=k*salto,hasta=Math.min(data.length,desde+salto),sum=0,n=0;
+          for(var j=desde;j<hasta;j+=8){sum+=data[j]*data[j];n++;}
+          result[k]=n?Math.sqrt(sum/n):0;
+        }
+        if(elementoAudio===elemento)envolventeAudio=result;
+      }).catch(function(){/* sin datos PCM: gestos normales */})
+      .finally(function(){contexto.close().catch(function(){});});
+  }
+  function nivelDeVoz(t){
+    if(!hablando)return 0;
+    if(elementoAudio&&envolventeAudio){
+      var i=Math.floor(elementoAudio.currentTime/pasoAudio);
+      return Math.min(.92,Math.max(0,(envolventeAudio[i]||0)*4));
+    }
+    return .22+.10*Math.max(0,Math.sin(t*14));
+  }
   var erroresModelo=0;
   var baseURL = new URL('../', document.currentScript.src);
   function url(ruta) { return new URL(ruta, baseURL).href; }
@@ -88,7 +124,7 @@
     var select = document.createElement('select'); select.setAttribute('aria-label', 'Elige tu tutor');
     ['3D', 'Ilustración'].forEach(function (tipo) {
       var grupo = document.createElement('optgroup');
-      grupo.label=tipo==='3D'?'Profesores 3D animados · KayKit CC0':'Alternativa ligera';
+      grupo.label=tipo==='3D'?'Profesores 3D · humanos y videojuego':'Alternativa ligera';
       CATALOGO.filter(function (p) { return p.tipo === tipo; }).forEach(function (p) {
         var option = document.createElement('option'); option.value = p.id; option.textContent = p.nombre; grupo.appendChild(option);
       });
@@ -261,6 +297,7 @@
       modelo=null;
     }
     alas=[]; cabeza=null;huesosGuia=null;acciones3d=null;accion3d=null;
+    mallasLabios=[];limpiarAudioVisual();
   }
   function iniciarMotor() {
     if(renderer) return;
@@ -292,9 +329,18 @@
       if(token!==revision)return;
       liberarModelo(); vistas.forEach(function(v){v.nodo.dataset.carga="modelo";});
       if(!p.modelo)return bloques(p.id);
-      return (T.GLTFLoader?Promise.resolve():script('vendor/GLTFLoader.js?v=160-1')).then(function(){
+      var librerias=[];
+      if(!T.GLTFLoader)librerias.push(script('vendor/GLTFLoader.js?v=160-1'));
+      if(p.meshopt&&!global.MeshoptDecoder)
+        librerias.push(script('vendor/meshopt_decoder_reference.js?v=20261115'));
+      return Promise.all(librerias).then(function(){
+        var loader=new T.GLTFLoader();
+        if(p.meshopt){
+          if(!global.MeshoptDecoder)throw Error('Decodificador Meshopt ausente');
+          loader.setMeshoptDecoder(global.MeshoptDecoder);
+        }
         return new Promise(function(resolve,reject){
-          new T.GLTFLoader().load(url(p.modelo),resolve,undefined,reject);
+          loader.load(url(p.modelo),resolve,undefined,reject);
         });
       });
     }).then(function (resultado) {
@@ -304,6 +350,11 @@
         modelo.traverse(function(o){
           if(!o.isMesh)return;
           o.frustumCulled=false;
+          if(o.morphTargetDictionary&&o.morphTargetDictionary.viseme_aa!==undefined)
+            mallasLabios.push({
+              mesh:o,aa:o.morphTargetDictionary.viseme_aa,
+              sil:o.morphTargetDictionary.viseme_sil
+            });
           var mats=Array.isArray(o.material)?o.material:[o.material];
           mats.filter(Boolean).forEach(function(m){
             m.side=T.FrontSide;
@@ -338,7 +389,8 @@
         };
       }
       scene.add(modelo); cargadoId=p.id; pendienteId=null;
-      camera.position.set(0,p.modelo?1.18:1.15,p.modelo?3.6:4.8);
+      camera.position.set(0,p.realista?1.15:(p.modelo?1.18:1.15),
+        p.realista?3.4:(p.modelo?3.6:4.8));
       camera.lookAt(0,1.0,0);
       modelo.rotation.y=giro;
       if(mixer){mixer.update(0);cambiarGesto(hablando);}
@@ -351,6 +403,9 @@
       pendienteId=null;
       erroresModelo++;
       vistas.forEach(function(v){v.nodo.dataset.carga='error';});
+      // Si el hardware no puede descodificar el humano, se conserva el aula:
+      // volver a un personaje de videojuego más ligero en vez de mostrar vacío.
+      if(p.realista && elegido===p.id) elegir('maestro-arcano');
       vistas.forEach(function(v){if(v.canvas){v.canvas.setAttribute('aria-label',p.nombre+': 3D no disponible. Elige otro tutor.');}});
     });
   }
@@ -366,6 +421,15 @@
   }
   function despertar() { if(!animacion && renderer && modelo && !document.hidden) animacion=requestAnimationFrame(frame); }
   function dibujarVistas(lista,t,quieto) {
+    if(mallasLabios.length){
+      var apertura=quieto?0:nivelDeVoz(t);
+      mallasLabios.forEach(function(item){
+        var weights=item.mesh.morphTargetInfluences;
+        if(!weights)return;
+        weights[item.aa]=apertura;
+        if(item.sil!==undefined)weights[item.sil]=1-apertura;
+      });
+    }
     var bases={};
     if(huesosGuia)Object.keys(huesosGuia).forEach(function(k){var b=huesosGuia[k];if(b)bases[k]=b.quaternion.clone();});
     lista.forEach(function(v){
@@ -394,12 +458,16 @@
     var visibles=vistas.filter(function(v){return v.canvas && v.visible && v.nodo.isConnected;});
     if(!visibles.length || !modelo || document.hidden)return;
     var dt=ultimo?Math.min((now-ultimo)/1000,0.06):0.016;
-    if(now-ultimo<(hablando?66:110) && !reducido()) { despertar(); return; } ultimo=now;
+    if(now-ultimo<(hablando&&mallasLabios.length?45:hablando?66:110) && !reducido()) { despertar(); return; } ultimo=now;
     var t=now/1000, quieto=reducido();
     if(mixer) { mixer.update(quieto?0:dt*(hablando?1:0.65)); }
     dibujarVistas(visibles,t,quieto);
     if(!quieto)despertar();
   }
+  document.addEventListener('avatar-audio-elemento',function(e){
+    var d=e.detail||{};
+    if(d.audio&&d.blob)procesarAudio(d.blob,d.audio);
+  });
   document.addEventListener('avatar-hablando',function(e){
     hablando=!!(e.detail&&e.detail.activo);
     cambiarGesto(hablando);
@@ -426,6 +494,7 @@
       reproduciendo:!!(mixer&&accion3d),fallos:erroresModelo,
       vistas:vistas.length,visibles:vistas.filter(function(v){return v.visible;}).length,
       conectadas:vistas.filter(function(v){return v.nodo.isConnected;}).length,
-      gesto:acciones3d && accion3d===acciones3d.Spellcast_Shoot?'explicando':'reposo'};}
+      gesto:acciones3d && accion3d===acciones3d.Spellcast_Shoot?'explicando':'reposo',
+      visemas:mallasLabios.length,decoder:!!global.MeshoptDecoder};}
   };
 })(window);
