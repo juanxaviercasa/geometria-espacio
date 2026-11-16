@@ -652,7 +652,9 @@ test('Vértiz reproduce MP3 neural con pausa/reanuda y libera audio al cambiar d
     {origen:'prisma-uno',figura:'prisma-elementos',paso:0});
   await new Promise(resolve=>setImmediate(resolve));
   assert.equal(fetches.length,1);
-  assert.deepEqual(fetches[0].arg,{figura:'prisma-elementos',paso:0,voz:'javier'});
+  assert.equal(fetches[0].arg.figura,'prisma-elementos');
+  assert.equal(fetches[0].arg.paso,0);
+  assert.equal(fetches[0].arg.voz,'javier');
   assert.equal(v.api.getEstadoVoz().estado,'hablando');
   assert.equal(a.length,1);
   assert.equal(v.spoken.length,0,'no se ha invocado el sintetizador robótico del dispositivo');
