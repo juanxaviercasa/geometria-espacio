@@ -188,7 +188,11 @@
       }, {rootMargin:'80px'});
       v.observer.observe(nodo);
     }
-    actualizarNombres(); cargarModelo();
+    actualizarNombres();
+    // crearMini() monta el tutor ANTES de insertarlo en el DOM. Si cargamos
+    // aquí, cargarModelo() elimina las vistas no conectadas y el observer
+    // nunca puede reactivarlas. Esperar a la primera entrada visible.
+    if(nodo.isConnected)cargarModelo();
   }
   function material(color) { return new T.MeshStandardMaterial({color:color,roughness:0.72,metalness:0.02}); }
   function esfera(parent, color, pos, scale) {
