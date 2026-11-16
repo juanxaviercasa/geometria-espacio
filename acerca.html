@@ -240,7 +240,7 @@
             <td>Especificación Khronos (términos propios)</td>
             <td>7 870</td>
             <td>2026-10-26</td>
-            <td><span class="estado-si">Integrado</span> El dragón de Quaternius se carga como GLB con esqueleto y animaciones. El capibara y el águila se generan por código.</td>
+            <td><span class="estado-si">Integrado</span> El visor carga tres personajes KayKit en GLB, cada uno con esqueleto y animaciones reales. Las figuras geométricas continúan siendo procedimentales.</td>
           </tr>
         </tbody>
       </table>
@@ -289,19 +289,32 @@
   <!-- Avatar -->
   <section class="doc-seccion prosa" id="avatar">
     <h2>Tutores y voces de personaje</h2>
-    <p>El selector permite cambiar entre ocho animales 3D con estética de bloques tipo Roblox (modelos originales), más el dragón alado animado de Quaternius; Pikachu, Charizard, Eevee y Dragonite con sprites animados 2D; o Vértiz clásico. La elección y el modo de voz se guardan localmente.</p>
-    <p>El dragón animado es de <a href="https://quaternius.com/packs/animatedmonster.html">Quaternius (CC0)</a>, con conversión GLB del <a href="https://github.com/trebeljahr/gamedev">catálogo GameDev</a>. Los animales de bloques son creaciones originales de esta aplicación, sin usar modelos ni cuentas de Roblox. Los sprites proceden de <a href="https://github.com/PokeAPI/sprites">PokéAPI Sprites</a>; Pokémon y sus personajes pertenecen a sus respectivos titulares. Esta app no es un producto oficial Pokémon.</p>
-    <p>La voz usa el sintetizador en español del navegador con tono y ritmo propios para cada tutor. «Héroe de anime» ofrece una tonalidad original más enérgica; «Voz natural» desactiva esos cambios. Son tonalidades originales de caricatura, no imitaciones de actores ni voces oficiales. Su resultado depende de las voces disponibles en el dispositivo. Consulta los <a href="vendor/TUTORES-CREDITOS.md">créditos de recursos</a>.</p>
+    <p>El selector del aula presenta tres <strong>profesores 3D reales con rig y animaciones</strong>:
+      Ariel (Maestro), Axel (Guardián) y Lía (Exploradora). Los tres son modelos KayKit
+      importados como GLB al propio sitio; Vértiz SVG se conserva como alternativa ligera.
+      La selección se guarda únicamente en el dispositivo.</p>
+    <p>Los modelos originales pertenecen al paquete
+      <a href="https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0">KayKit Adventurers</a>
+      de Kay Lousberg (CC0). Usamos versiones optimizadas y reexportadas del
+      <a href="https://github.com/sion-rgb/tactical-slash/blob/main/THIRD_PARTY_ASSETS.md">archivo de recursos de Tactical Slash</a>.
+      No utilizamos personajes oficiales de Pokémon, Roblox, GTA ni otras series en el selector.
+      <a href="vendor/avatares/ORIGEN-Y-LICENCIA.md">Ver origen, licencia y limitaciones de los modelos.</a></p>
+    <p>La narración principal procede de Cloudflare Workers AI, con voz neural masculina en español;
+      existen voces alternativas seleccionables en Ajustes. El personaje gesticula durante la narración,
+      alternando animaciones reales de reposo y explicación, y la explicación escrita sigue visible.
+      <strong>Estos tres modelos no tienen visemas faciales:</strong> sus gestos acompañan al audio, pero
+      los labios no representan fonemas exactos. El sintetizador del navegador sigue disponible
+      como opción de respaldo.</p>
     <p>
       La opción «Vértiz clásico» es un personaje <strong>original</strong>, dibujado como SVG vectorial dentro de este
       repositorio. No reproduce ni se inspira en un personaje o marca existente. Su diseño usa la
       propia paleta de la aplicación y un prendedor triangular en el cabello como guiño al tema.
     </p>
     <p>
-      <strong>Locución y Modo Maestro:</strong> Vértiz ahora cuenta con síntesis de voz en español
-      nativa (mediante la Web Speech API del navegador), lo que le permite explicar en voz alta
-      los teoremas, figuras y pasos didácticos. Puedes silenciarlo en cualquier momento con el botón
-      de volumen si el maestro prefiere dar la explicación con su propia voz.
+      <strong>Locución y Modo Maestro:</strong> la voz neural narra los pasos de geometría desde
+      una función Cloudflare. Puedes silenciarla, repetirla, pausarla y elegir una voz desde Ajustes.
+      La animación del profesor virtual sigue los estados reales del reproductor y no avanza por sí
+      misma al siguiente paso.
     </p>
     <p>
       <strong>Qué hace y qué no hace:</strong> Cambia de postura y de mensaje según el momento
@@ -404,10 +417,11 @@
       <li><strong>La lección «completa» es la del módulo 6</strong> (prismas y diagonales): es la
         más desarrollada, con 8 ejercicios y 2 retos. El resto de módulos son lecciones sólidas,
         no monografías.</li>
-      <li>Vértiz clásico es una animación vectorial. El dragón sí tiene esqueleto 3D. Está indicado en esta
-        página y no se presenta como otra cosa.</li>
-      <li>No hay figuras con texturas ni modelos GLB: todas se generan por código, lo que mantiene
-        el repositorio sin binarios y sin dudas de licencia sobre recursos externos.</li>
+      <li>Vértiz es una ilustración SVG; Ariel, Axel y Lía son personajes 3D animados con esqueleto.
+        Estos últimos usan gestos durante la voz pero no sincronización fonética exacta de labios.</li>
+      <li>Los sólidos geométricos se calculan por código; los personajes del aula utilizan tres
+        archivos GLB CC0 optimizados. Los recursos de terceros y su procedencia se documentan
+        de forma separada para distinguirlos del contenido académico original.</li>
       <li>No hay exámenes oficiales de la UNI reproducidos: los retos son de dificultad
         comparable, redactados para este proyecto.</li>
       <li>El sitio es estático: se puede alojar en cualquier servidor de archivos, incluido GitHub

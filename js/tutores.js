@@ -420,6 +420,7 @@
     estadisticas:function(){return{cargado:cargadoId,pendiente:pendienteId,
       reproduciendo:!!(mixer&&accion3d),fallos:erroresModelo,
       vistas:vistas.length,visibles:vistas.filter(function(v){return v.visible;}).length,
-      conectadas:vistas.filter(function(v){return v.nodo.isConnected;}).length};}
+      conectadas:vistas.filter(function(v){return v.nodo.isConnected;}).length,
+      gesto:acciones3d && accion3d===acciones3d.Spellcast_Shoot?'explicando':'reposo'};}
   };
 })(window);

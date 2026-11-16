@@ -699,3 +699,19 @@ test('Profesor 3D: el navegador utiliza GLTFLoader, gestos por voz y fallback 2D
   assert.ok(js.includes("if (p.id === 'vertiz') return"));
   assert.ok(html.includes('css/avatares-3d.css'));
 });
+
+
+test('No se pierde el personaje creado antes de insertarlo en DOM',()=>{
+ const js=fs.readFileSync(path.join(__dirname,'js/tutores.js'),'utf8');
+ assert.ok(js.includes('if(nodo.isConnected)cargarModelo()'));
+ assert.ok(js.includes('if(v.visible)cargarModelo()'));
+ assert.ok(js.includes("acciones3d[claveAccion]"));
+});
+test('Documentación: licencia CC0 y ausencia de lipsync fonético explícito',()=>{
+ const about=fs.readFileSync(path.join(__dirname,'acerca.html'),'utf8');
+ const credit=fs.readFileSync(path.join(__dirname,'vendor/avatares/ORIGEN-Y-LICENCIA.md'),'utf8');
+ assert.ok(about.includes('KayKit Adventurers'));
+ assert.ok(about.includes('no tienen visemas'));
+ assert.ok(!about.includes('selector permite cambiar entre ocho animales'));
+ assert.ok(credit.includes('CC0 1.0'));
+});
