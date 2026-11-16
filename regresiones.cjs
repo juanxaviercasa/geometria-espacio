@@ -812,7 +812,7 @@ test('Los docentes 3D señalan con huesos reales de Rocketbox y KayKit', () => {
   }
   assert.ok(codigo.includes('vistaObjetivo?direccion(vistaObjetivo)'));
   assert.ok(codigo.includes('gestoNivel'));
-  assert.ok(codigo.includes('huesosGuia.neck.rotateY'));
+  assert.ok(codigo.includes('girarMundo(huesosGuia.neck,new T.Vector3(0,1,0)'));
 });
 
 test('Navegación del visor permite retroceder y volver a oír el paso anterior',()=>{
@@ -846,7 +846,7 @@ test('La publicación genera URLs de assets distintas para evitar CSS y JS antig
 });
 test('Mirada baja hacia el sólido y hombros gesticulan al hablar',()=>{
   const s=fs.readFileSync(path.join(__dirname,'js/tutores.js'),'utf8');
-  assert.ok(s.includes('huesosGuia.head.rotateX(-miradaY*0.65'), 'ángulo vertical no invertido');
+  assert.ok(s.includes('girarMundo(huesosGuia.head,new T.Vector3(1,0,0)'), 'mirada usa eje vertical coherente con el mundo');
   assert.ok(s.includes('0.34*Math.sin(t*2.25)'), 'gesto de brazos perceptible');
   assert.ok(s.includes('visual.height = 600'), 'renderizado vertical real');
 });
@@ -857,4 +857,12 @@ test('La pose comienza antes de que la voz neural esté lista',()=>{
   assert.ok(tutor.includes("estadoAudio.estado==='preparando'"),'el audio pendiente no bloquea brazos');
   assert.ok(tutor.includes("var guiando=!!vistaObjetivo && (hablando||preparando||inicio)"),
     'mirada y manos no esperan el MP3');
+});
+
+test('La mirada usa coordenadas globales y evita ejes locales retorcidos del FBX',()=>{
+  const js=fs.readFileSync(path.join(__dirname,'js/tutores.js'),'utf8');
+  assert.ok(js.includes('function girarMundo(hueso,eje,angulo)'));
+  assert.ok(js.includes('eje.clone().applyQuaternion(qPadre.invert()).normalize()'));
+  assert.ok(js.includes('girarMundo(huesosGuia.head,new T.Vector3(0,1,0)'));
+  assert.ok(js.includes('girarMundo(huesosGuia.neck,new T.Vector3(1,0,0)'));
 });
