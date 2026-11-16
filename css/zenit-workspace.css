@@ -105,3 +105,33 @@
 .z-concept-card p{color:#66718b;line-height:1.55;font-size:.83rem;margin:0 .4rem}
 @media(max-width:900px){.z-concept-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.z-concept-art{height:155px}}
 @media(max-width:520px){.z-concept-grid{grid-template-columns:1fr}.z-concept-art{height:190px}}
+
+/* Ilustración editorial por familia: lejos de la figura interactiva. */
+.z-head{position:relative;isolation:isolate;min-height:160px;padding:1.35rem 1.3rem;background:linear-gradient(115deg,#fff,#f5f3ff);border:1px solid #e8e5f8;border-radius:24px;overflow:hidden}
+.z-head>div:first-child{position:relative;z-index:1;max-width:min(60%,680px)}
+.z-head p{max-width:530px}
+.z-family-art{position:absolute;right:235px;top:50%;transform:translateY(-50%);width:min(205px,20vw);height:165px;object-fit:contain;opacity:.93;filter:drop-shadow(0 8px 16px #5440b022);pointer-events:none}
+.z-head-actions{position:relative;z-index:2;margin-left:auto}
+@media(max-width:900px){.z-family-art{right:12px;top:62%;width:145px;height:130px;opacity:.47}.z-head>div:first-child{max-width:80%}}
+@media(max-width:620px){.z-head{min-height:150px;padding:1rem}.z-head>div:first-child{max-width:100%}.z-family-art{right:-18px;top:38px;width:115px;height:110px;opacity:.25}.z-head-actions{width:100%;margin-top:1rem}}
+
+/* Profesor Xavier: vuelve a ser protagonista, de cuerpo completo, tres cuartos. */
+.z-sidebar>div{gap:.72rem;padding:1rem}
+.z-panel-header{padding-bottom:.6rem}
+.z-panel-header h2{font-size:1.23rem}
+.z-panel-header p{font-size:.83rem;line-height:1.45}
+.z-teacher{position:relative;display:grid;grid-template-columns:minmax(180px,1.18fr) minmax(0,.82fr);gap:.25rem;align-items:center;overflow:visible;min-height:325px;padding:.1rem .65rem .1rem .2rem;background:radial-gradient(ellipse at 31% 66%,#ece9fc 0%,#f6f7ff 58%,#fcfcff 100%);border:1px solid #e7e6fb}
+.z-teacher-model{position:relative;justify-self:center;align-self:stretch;width:min(100%,235px);min-width:0;height:325px;max-height:325px;overflow:visible;isolation:isolate}
+.z-teacher-model canvas{position:relative;z-index:1;width:100%!important;height:100%!important;object-fit:contain!important}
+.z-teacher-model::after{bottom:0;left:8%;width:84%;height:13px;background:#3a3a8b27;filter:blur(7px);z-index:0}
+.z-teacher .z-professor-info{min-width:0;align-self:center;padding:.2rem 0}
+.z-teacher strong{font-size:clamp(1rem,1.25vw,1.27rem);line-height:1.2}
+.z-teacher .z-teacher-naming{font-size:.69rem}
+.z-teacher .z-professor-info>span:last-of-type{display:block;font-size:.83rem;line-height:1.4}
+.z-teacher .tutor-consigna{display:block;color:#4c44a0;font-size:.75rem;font-weight:750;margin:.6rem 0 0;padding:.5rem .55rem;background:#ffffffbc;border-radius:9px;line-height:1.35}
+.z-teacher .tutor-consigna[hidden]{display:none}
+.z-step-card{min-height:110px;flex:0 1 auto;padding:.9rem}
+.z-step-card p{font-size:.94rem;line-height:1.5;margin:.5rem 0 .15rem}
+@media(max-width:1180px){.z-teacher{min-height:285px;grid-template-columns:minmax(145px,1.12fr) minmax(0,.88fr)}.z-teacher-model{height:285px;max-height:285px;width:min(100%,212px)}}
+@media(max-width:920px){.z-teacher{grid-template-columns:minmax(185px,.85fr) minmax(0,1.15fr);min-height:270px;max-width:650px;margin:auto;width:100%}.z-teacher-model{height:270px;max-height:270px;width:min(100%,205px)}}
+@media(max-width:620px){.z-teacher{min-height:222px;grid-template-columns:minmax(130px,.83fr) minmax(0,1.17fr);padding:.2rem}.z-teacher-model{height:222px;max-height:222px;width:min(100%,162px)}.z-teacher strong{font-size:1.08rem}.z-teacher .tutor-consigna{font-size:.7rem}}

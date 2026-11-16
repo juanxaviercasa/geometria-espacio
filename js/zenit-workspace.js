@@ -182,6 +182,16 @@ function learnStep(){
  if(prev)prev.disabled=indexPaso===0;
  if(next)next.textContent=indexPaso===modelo.guide.length-1?'Volver al inicio ↺':'Siguiente paso →';
  guideLayers();refreshLayerInputs();
+ if(w.Tutores&&teacherMounted&&modo==='aprender') {
+  var lienzo=$('z-stage');
+  if(lienzo&&lienzo.clientWidth) {
+   var targetY=d.focus==='bases'?.65:d.focus==='altura'?.47:.45;
+   try {
+    w.Tutores.enfocar({figura:$('z-panel'),lienzo:lienzo,
+      x:lienzo.clientWidth*.36,y:lienzo.clientHeight*targetY,nombre:d.title});
+   } catch(e) {console.warn('Foco pedagógico',e);}
+  }
+ }
  if(api){(modelo.spec.capas||[]).forEach(function(c){api.setCapa(c.id,!capasOcultas[c.id]);});}
  else if(render==='2d')draw2D();
 }
@@ -192,7 +202,7 @@ function panelLearn(){
  var teacher=element('div','z-teacher');
  if(!teacherNode){teacherNode=element('div','z-teacher-model');teacherNode.setAttribute('aria-label','Representación 3D del Profesor Xavier');}
  teacher.appendChild(teacherNode);
- var caption=element('div');
+ var caption=element('div','z-professor-info mm-profesor-info');
  caption.append(element('span','z-teacher-naming','Docente virtual'),
   element('strong',null,'Profesor Xavier'),
   element('span',null,'Observa, escucha y comprende cada sólido geométrico.'));
@@ -361,7 +371,10 @@ function updateModel(immediate){
 }
 function changeMode(next){
  if(!['aprender','experimentar','resolver'].includes(next))return;
- stopVoice();modo=next;setUrl();panel();syncRenderButtons();
+ stopVoice();
+ if(modo==='aprender'&&w.Tutores&&w.Tutores.suspender)
+  w.Tutores.suspender($('z-panel'));
+ modo=next;setUrl();panel();syncRenderButtons();
 }
 
 function conceptCards(){
@@ -395,6 +408,8 @@ function conceptCards(){
 function init(){
  w.UI.iniciar({avatar:false});
  $('z-title').textContent=Z.META[tipo].titulo;
+ var familyArt=$('z-family-art');
+ if(familyArt)familyArt.src='assets/zenit/'+tipo+'.svg';
  document.title=Z.META[tipo].titulo+' | Laboratorio 3D · Sistema Zénit';
  var canonical=$('z-canonical');
  if(canonical)canonical.href='https://geometriaespacio.sistemazenit.com/solido.html?tipo='+tipo;
