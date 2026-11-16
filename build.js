@@ -50,4 +50,22 @@ for (const item of ITEMS) {
   }
 }
 
-console.log('Build completado en ./dist (' + ITEMS.length + ' recursos copiados).');
+// Cloudflare entrega una URL diferente de CSS/JS en cada publicación.
+ // Sin esto, el navegador puede conservar scripts antiguos aunque se actualice main.
+const crypto=require('crypto');
+const version=(process.env.CF_PAGES_COMMIT_SHA||process.env.GITHUB_SHA||
+  crypto.createHash('sha256').update(
+    fs.readFileSync(path.join(ROOT,'js','visor.js'))+
+    fs.readFileSync(path.join(ROOT,'js','tutores.js'))+
+    fs.readFileSync(path.join(ROOT,'css','aula-premium.css'))
+  ).digest('hex')).slice(0,12);
+for(const page of ['index.html','leccion.html','laboratorio.html','practica.html','acerca.html','descarga.html','verificacion.html']){
+  const dest=path.join(DIST,page);
+  if(!fs.existsSync(dest))continue;
+  const updated=fs.readFileSync(dest,'utf8').replace(
+    /((?:src|href)=["'])(js|css)\/([^"']+)(["'])/g,
+    (_,head,folder,file,quote)=>head+folder+'/'+file.split('?')[0]+'?v='+version+quote
+  );
+  fs.writeFileSync(dest,updated);
+}
+console.log('Build completado en ./dist (' + ITEMS.length + ' recursos copiados, assets v'+version+').');
