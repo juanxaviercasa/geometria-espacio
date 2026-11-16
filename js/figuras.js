@@ -476,8 +476,8 @@
       capas: [
         { id: 'caras', nombre: 'Caras', color: '#5b6bd6', activa: true, opacidad: 0.06 },
         { id: 'aristas', nombre: 'Aristas', color: '#131829', activa: true },
-        { id: 'seccion', nombre: 'Sección', color: '#a8271f', activa: true, opacidad: 0.2 },
-        { id: 'diagonal-espacial', nombre: 'Diagonal', color: '#0c7367', activa: true },
+        { id: 'seccion', nombre: 'Sección', color: '#a8271f', activa: false, opacidad: 0.2 },
+        { id: 'diagonal-espacial', nombre: 'Diagonal', color: '#0c7367', activa: false },
         { id: 'etiquetas', nombre: 'Nombres', color: '#6c748c', activa: false }
       ]
     });
@@ -821,18 +821,21 @@
         titulo: 'El cubo y sus aristas',
         texto: 'Un cubo regular posee seis caras cuadradas idénticas y doce aristas de igual longitud.',
         camara: { theta: -0.7, phi: 0.35 },
+        capasVisibles: ['caras', 'aristas'],
         capaResaltada: 'caras'
       },
       {
         titulo: 'Corte por los puntos medios',
         texto: 'Al hacer pasar un plano secante por los puntos medios de 6 aristas consecutivas, cortamos el sólido.',
         camara: { theta: 0.78, phi: 0.62 },
+        capasVisibles: ['caras', 'aristas', 'seccion'],
         capaResaltada: 'seccion'
       },
       {
         titulo: 'El hexágono regular resultante',
         texto: '¡Observen la sección roja! El resultado es un hexágono regular perfecto, perpendicular a la diagonal espacial del cubo.',
         camara: { theta: 0.78, phi: 0.62 },
+        capasVisibles: ['caras', 'aristas', 'seccion'],
         capaResaltada: 'seccion'
       }
     ],
