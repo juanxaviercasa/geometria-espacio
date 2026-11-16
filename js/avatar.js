@@ -341,6 +341,9 @@
         urlNeural=global.URL.createObjectURL(blob);
         var audio=new global.Audio(urlNeural);audioNeural=audio;
         audio.preload='auto';audio.playbackRate=velocidadVoz;
+        document.dispatchEvent(new CustomEvent('avatar-audio-elemento',{
+          detail:{audio:audio,blob:blob,origen:origen,sesion:sesion}
+        }));
         audio.onplaying=function(){if(sesion===vozSesion)anunciarEstado('hablando',sesion,origen);};
         audio.onpause=function(){if(sesion===vozSesion&&estadoVoz==='hablando')anunciarEstado('pausado',sesion,origen);};
         audio.onended=function(){terminar('finalizado');};
