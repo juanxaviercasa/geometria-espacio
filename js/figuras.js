@@ -573,6 +573,10 @@
       A1: { p: des(A), etiqueta: 'A₁' }, B1: { p: des(B), etiqueta: 'B₁' },
       C1: { p: des(C), etiqueta: 'C₁' }, D1: { p: des(D), etiqueta: 'D₁' }
     };
+    // En un prisma oblicuo los centros NO están alineados verticalmente.
+    // La altura es una perpendicular a los planos, distinta de AA₁.
+    vs.O = { p: v(0, 0, 0), etiqueta: 'O', sinEsfera: true, capa: 'altura' };
+    vs.H = { p: v(0, h, 0), etiqueta: 'H', sinEsfera: true, capa: 'altura' };
     registrar('paralelepipedo-oblicuo', {
       titulo: 'Paralelepípedo oblicuo',
       alt: 'Paralelepípedo cuyas caras laterales son paralelogramos inclinados; la altura es menor que la arista lateral.',
@@ -597,8 +601,12 @@
         { a: 'C', b: 'C1', capa: 'aristas' }, { a: 'D', b: 'D1', capa: 'aristas' }
       ],
       lineas: [
-        { pts: [v(-a / 2, 0, b / 2), v(-a / 2 + dx, h, b / 2)], capa: 'arista-lateral', estilo: 'fuerte', grosor: 3 },
-        { pts: [v(-a / 2, 0, b / 2), v(-a / 2, h, b / 2)], capa: 'altura', estilo: 'punteada', grosor: 2.4 }
+        { v: ['A', 'A1'], capa: 'arista-lateral', estilo: 'fuerte', grosor: 3 },
+        { v: ['O', 'H'], capa: 'altura', estilo: 'punteada', grosor: 2.5 },
+        { pts: marcaRecta(vs.O.p, resta(vs.H.p, vs.O.p), resta(B, A), 0.28),
+          capa: 'altura', grosor: 1.6 },
+        { pts: marcaRecta(vs.H.p, resta(vs.O.p, vs.H.p), resta(B, A), 0.28),
+          capa: 'altura', grosor: 1.6 }
       ],
       capas: [
         { id: 'bases', nombre: 'Bases', color: '#2c3c9e', activa: true, opacidad: 0.14 },
@@ -1029,9 +1037,10 @@
         capaResaltada: 'laterales'
       },
       {
-        titulo: 'Arista lateral versus altura',
-        texto: '¡Cuidado en los exámenes! Al estar inclinada, la arista lateral mide más que la altura vertical real.',
+        titulo: 'Arista lateral y altura perpendicular',
+        texto: 'La arista lateral AA uno está inclinada. En cambio, la altura OH es perpendicular a ambos planos de las bases, por eso forma noventa grados con ellos y su longitud es menor que la arista lateral.',
         camara: { theta: -0.65, phi: 0.28 },
+        capasVisibles: ['bases','aristas','altura','arista-lateral','etiquetas'],
         capaResaltada: 'altura'
       },
       {

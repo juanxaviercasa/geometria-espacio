@@ -1070,3 +1070,27 @@ test('Portada ofrece selección accesible de cinco clases de prisma',()=>{
   assert.ok(html.includes('aria-label="Elegir clase de prisma en 3D"'));
   assert.ok(script.includes("selectorPrisma.addEventListener('change'"));
 });
+
+
+test('Prisma oblicuo: la altura es perpendicular, interior y más corta que la arista lateral',()=>{
+  const w={};
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/figuras.js'),'utf8'),{window:w});
+  const p=w.Figuras.obtener('paralelepipedo-oblicuo');
+  const v=k=>Array.from(p.vertices[k].p);
+  const d=(a,b)=>b.map((x,i)=>x-a[i]);
+  const dot=(a,b)=>a.reduce((acc,x,i)=>acc+x*b[i],0);
+  const len=x=>Math.hypot(...x);
+  const O=v('O'),H=v('H'),h=d(O,H),l=d(v('A'),v('A1'));
+  assert.ok(Math.abs(h[0])<1e-10&&Math.abs(h[2])<1e-10);
+  assert.ok(Math.abs(dot(h,d(v('A'),v('B'))))<1e-10);
+  assert.ok(Math.abs(dot(h,d(v('A1'),v('B1'))))<1e-10);
+  assert.ok(len(l)>len(h));
+  const topXs=['A1','B1','C1','D1'].map(k=>v(k)[0]);
+  assert.ok(H[0]>=Math.min(...topXs)&&H[0]<=Math.max(...topXs),
+    'el extremo superior de la altura está dentro del rango del plano basal');
+  const a=p.lineas.filter(l=>l.capa==='altura');
+  assert.equal(a.length,3);
+  assert.equal(Array.from(a[0].v).join(','),'O,H');
+  assert.ok(p.pasosGuia[1].texto.includes('perpendicular'));
+  assert.ok(p.pasosGuia[1].capasVisibles.includes('altura'));
+});
