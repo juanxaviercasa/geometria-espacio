@@ -42,7 +42,6 @@
             '<a href="solidos.html" data-nav="solidos">Sólidos 3D</a>' +
             '<a href="index.html#ruta" data-nav="modulos">Lecciones</a>' +
             '<a href="practica.html" data-nav="practica">Práctica</a>' +
-            '<a href="laboratorio.html" data-nav="laboratorio">Laboratorio 3D</a>' +
             '<a href="acerca.html" data-nav="acerca">Cómo aprender</a>' +
           '</nav>' +
           '<a class="insignia-progreso" href="index.html#ruta"><span class="anillo" id="anillo-progreso" style="--p:0"><span>0%</span></span><span data-progreso-texto>0/17 lecciones</span></a>' +
@@ -74,7 +73,7 @@
     if (pie) pie.innerHTML =
       '<div class="wrap pie-grid">' +
         '<div class="pie-identidad"><p class="pie-marca">Geometría del espacio <span>· Piensa en 3D</span></p><p>Aprende a ver, razonar y resolver problemas del espacio con una ruta guiada y modelos interactivos.</p></div>' +
-        '<div><h2>Aprender</h2><a href="solidos.html">Catálogo 3D</a><a href="index.html#ruta">Ruta de módulos</a><a href="practica.html">Práctica y retos</a></div>' +
+        '<div><h2>Aprender</h2><a href="solidos.html">Catálogo 3D</a><a href="index.html#ruta">Ruta de módulos</a><a href="laboratorio.html?modelo=seccion">Cortes avanzados</a><a href="practica.html">Práctica y retos</a></div>' +
         '<div><h2>Tu experiencia</h2><a href="acerca.html">Método de estudio</a><a href="acerca.html#datos">Gestionar mi progreso</a><a href="leccion.html?id=m12l1">Simulacro tipo UNI</a></div>' +
         '<div class="legal"><span>© <span id="anio">2026</span> Geometría del espacio · Sistema Zénit</span><span>Tu progreso se conserva en este dispositivo · Sin registro</span></div>' +
       '</div>';
