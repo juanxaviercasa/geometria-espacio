@@ -312,7 +312,7 @@
       '</div>' +
 
       '<div class="mm-acciones-fila">' +
-        '<button type="button" class="btn-mm-nav btn-mm-ant" data-mm-accion="ant" disabled title="Paso anterior (←)">' +
+        '<button type="button" class="btn-mm-nav btn-mm-ant" data-mm-accion="ant" title="Volver al paso anterior y escucharlo (PageUp)">' +
           '◀ Anterior' +
         '</button>' +
         '<button type="button" class="btn-mm-nav btn-mm-sig" data-mm-accion="sig" title="Iniciar o avanzar al siguiente paso (→ o Espacio)">' +
@@ -552,7 +552,9 @@
         b.classList.toggle('visitado', nPaso < idx);
       });
 
-      btnAnt.disabled = (idx === 0);
+      // El primer paso también permite regresar al último y volver a escuchar.
+      btnAnt.disabled = false;
+      btnAnt.title = idx===0 ? 'Ir al último paso y escucharlo' : 'Volver al paso anterior y escucharlo';
       if (idx === pasos.length - 1) {
         txtSig.textContent = '↻ Reiniciar explicación';
         btnSig.classList.add('btn-completado');
@@ -613,9 +615,7 @@
     });
 
     btnAnt.addEventListener('click', function () {
-      if (estado.pasoActual > 0) {
-        irAPaso(estado.pasoActual - 1, true);
-      }
+      irAPaso(estado.pasoActual>0 ? estado.pasoActual-1 : pasos.length-1, true);
     });
 
     btnRepetir.addEventListener('click', function () {
