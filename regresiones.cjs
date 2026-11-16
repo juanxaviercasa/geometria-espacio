@@ -1113,7 +1113,7 @@ test('Motor 3.0 mantiene fórmulas y poliedros 2D/3D consistentes',()=>{
   assert.ok(m.spec.capas?.length>=1);
  }
  const prism=w.ZSolidos.generar('prisma',{lados:8,base:'irregular',angulo:60,a:4,b:3,h:5});
- assert.equal(prism.spec.caras.length,10);
+ assert.equal(prism.spec.caras.length,11);
  assert.equal(prism.spec.aristas.length,24);
  const vec=(id)=>prism.spec.vertices[id].p;
  const H=vec('H'),O1=vec('O1');
@@ -1179,4 +1179,26 @@ test('Todas las rutas de los ocho sólidos figuran en sitemap',()=>{
  }
  assert.ok(html.includes('id="z-canonical"'));
  assert.ok(app.includes("canonical.href="));
+});
+
+test('Sección transversal del prisma es congruente a la base y opcional',()=>{
+ const w={};
+ vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/parametricas.js'),'utf8'),{window:w});
+ vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/zenit-solids.js'),'utf8'),{window:w});
+ for(const angle of [45,70,90]){
+  for(const n of [3,6,12]){
+   const p=w.ZSolidos.generar('prisma',{lados:n,angulo:angle,nivel:.35,base:'irregular'});
+   const first=p.spec.vertices.A0.p,sec=p.spec.vertices.S0.p,top=p.spec.vertices.B0.p;
+   const t=.35;
+   for(let k=0;k<3;k++)assert.ok(Math.abs(sec[k]-(first[k]+(top[k]-first[k])*t))<1e-10);
+   const area=ids=>Math.abs(ids.reduce((s,id,i)=>{
+    const a=p.spec.vertices[id].p,b=p.spec.vertices[ids[(i+1)%n]].p;
+    return s+a[0]*b[2]-b[0]*a[2];
+   },0)/2);
+   assert.ok(Math.abs(area(Array.from({length:n},(_,i)=>'A'+i))-
+     area(Array.from({length:n},(_,i)=>'S'+i)))<1e-9);
+   assert.ok(p.spec.capas.find(x=>x.id==='corte').activa===false);
+   assert.ok(p.guide.some(x=>x.focus==='corte'));
+  }
+ }
 });

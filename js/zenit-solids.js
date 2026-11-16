@@ -12,15 +12,15 @@ var META={
  tetraedro:{titulo:'Tetraedros',singular:'Tetraedro',subtitulo:'Un poliedro regular de cuatro caras triangulares'},
  octaedro:{titulo:'Octaedros',singular:'Octaedro',subtitulo:'Ocho caras triangulares congruentes'}
 };
-var DEFAULTS={lados:6,base:'regular',a:3.4,b:2.5,h:3.2,angulo:90,desplazamiento:0,r:1.8,arista:3};
-var RANGOS={lados:[3,12],a:[1,8],b:[1,8],h:[.7,8],angulo:[45,90],desplazamiento:[-.8,.8],r:[.5,5],arista:[1,7]};
+var DEFAULTS={lados:6,base:'regular',a:3.4,b:2.5,h:3.2,angulo:90,desplazamiento:0,r:1.8,arista:3,nivel:.5};
+var RANGOS={lados:[3,12],a:[1,8],b:[1,8],h:[.7,8],angulo:[45,90],desplazamiento:[-.8,.8],r:[.5,5],arista:[1,7],nivel:[.15,.85]};
 var CONTROLES={
- prisma:['lados','base','a','b','h','angulo'],
+ prisma:['lados','base','a','b','h','angulo','nivel'],
  piramide:['lados','base','a','b','h','desplazamiento'],
  cilindro:['r','h'],cono:['r','h'],esfera:['r'],cubo:['arista'],
  tetraedro:['arista'],octaedro:['arista']
 };
-var NOMBRES={lados:'Lados de la base',base:'Forma de la base',a:'Ancho / diámetro a',b:'Profundidad b',h:'Altura perpendicular h',angulo:'Ángulo arista–base',desplazamiento:'Desplazamiento del vértice',r:'Radio r',arista:'Longitud de arista'};
+var NOMBRES={lados:'Lados de la base',base:'Forma de la base',a:'Ancho / diámetro a',b:'Profundidad b',h:'Altura perpendicular h',angulo:'Ángulo arista–base',desplazamiento:'Desplazamiento del vértice',r:'Radio r',arista:'Longitud de arista',nivel:'Nivel de la sección transversal'};
 function normalizar(input){
  var out=Object.assign({},DEFAULTS),v=input||{};
  Object.keys(RANGOS).forEach(function(k){
@@ -48,6 +48,7 @@ function basicLayers(){
   {id:'aristas',nombre:'Aristas',color:'#293250',activa:true},
   {id:'altura',nombre:'Altura y 90°',color:'#079583',activa:false,auxiliar:true},
   {id:'diagonales',nombre:'Diagonales',color:'#db8840',activa:false,auxiliar:true},
+  {id:'corte',nombre:'Sección transversal',color:'#0c93ba',activa:false,auxiliar:true},
   {id:'etiquetas',nombre:'Nombres',color:'#64748b',activa:true}
  ];
 }
@@ -76,6 +77,15 @@ function makePrism(p){
   lower.push(a);upper.push(b);
  });
  faces.push({v:lower,capa:'bases'},{v:upper,capa:'bases'});
+ // Sección con plano paralelo a las bases: mismo polígono, trasladado.
+ // Por defecto no se dibuja; el estudiante la activa cuando la estudia.
+ var seccion=[];
+ ps.forEach(function(point,i){
+  var name='S'+i;
+  vv[name]=v(vec(point[0]+dx*p.nivel,p.h*p.nivel,point[2]),'','corte');
+  seccion.push(name);
+ });
+ faces.push({v:seccion,capa:'corte'});
  var areaSide=0,lv=vec(dx,p.h,0);
  for(var i=0;i<n;i++){
   var j=(i+1)%n;
@@ -92,6 +102,7 @@ function makePrism(p){
  vv.O1=v(centerUpper,'O₁','altura');
  vv.Q=v(vec(dx+.31,0,0),'90°','altura');
  lines.push({v:['H','O1'],capa:'altura',estilo:'punteada',grosor:2.7});
+ lines.push({v:seccion,capa:'corte',cerrado:true,grosor:2.5});
  lines.push({pts:[vec(dx+.22,0,0),vec(dx+.22,.22,0),vec(dx,.22,0)],capa:'altura',grosor:1.8});
  if(n>=4){lines.push({v:[lower[0],lower[Math.floor(n/2)]],capa:'diagonales',estilo:'punteada',grosor:2.2});}
  var Ab=areaPolygon(ps),Pb=perimeter(ps),At=2*Ab+areaSide,V=Ab*p.h;
@@ -111,6 +122,7 @@ function makePrism(p){
   guide:[
     {title:'Identifica las bases',text:'Las dos bases tienen la misma forma y tamaño y se sitúan en planos paralelos. Esta base tiene '+n+' lados.',focus:'bases',latex:'A_b'},
     {title:straight?'La altura del prisma recto':'Recto y oblicuo: no son iguales',text:straight?'Las aristas laterales son perpendiculares a las bases. La altura es la distancia perpendicular entre sus planos.':'Las aristas laterales están inclinadas '+p.angulo+' grados respecto al plano basal. La altura sigue siendo perpendicular a ambas bases, no coincide con una arista inclinada.',focus:'altura',latex:'h'},
+    {title:'Secciones paralelas a las bases',text:'Un plano de sección paralelo a las bases determina un polígono congruente a ellas. Puedes cambiar su posición sin alterar su área.',focus:'corte',latex:'A_s=A_b'},
     {title:'Área, superficie y volumen',text:'El volumen siempre se obtiene multiplicando el área de la base por la altura perpendicular. '+(straight?'Para el área lateral de este prisma recto multiplicamos perímetro por altura.':'Para el área lateral oblicua sumamos las áreas de las caras laterales.'),focus:'laterales',latex:'V=A_b\\,h'}
   ]
  };

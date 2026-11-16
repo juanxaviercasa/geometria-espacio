@@ -250,12 +250,12 @@ function control(k){
  }else{
   input=document.createElement('input');input.type='range';
   input.min=Z.RANGOS[k][0];input.max=Z.RANGOS[k][1];
-  input.step=['lados'].includes(k)?'1':['angulo'].includes(k)?'5':k==='desplazamiento'?'0.1':'0.1';
+  input.step=['lados'].includes(k)?'1':['angulo'].includes(k)?'5':k==='nivel'?'0.05':k==='desplazamiento'?'0.1':'0.1';
   input.value=valores[k];
  }
  input.id=id;
  function format(){value.textContent=k==='base'?valores.base==='regular'?'Regular':'Irregular':
-   num(valores[k])+(k==='angulo'?'°':k==='lados'?'':' u');}
+   (k==='nivel'?Math.round(valores.nivel*100)+' %':num(valores[k])+(k==='angulo'?'°':k==='lados'?'':' u'));}
  format();
  row.appendChild(input);
  input.addEventListener('input',function(){
@@ -281,6 +281,11 @@ function panelExperiment(){
  var reset=element('button','z-btn','↺ Restablecer medidas');
  reset.addEventListener('click',function(){valores=Z.normalizar({});persist();updateModel(true);panelExperiment();});
  box.append(reset,element('span','z-small-note','El ángulo de las aristas con la base es 90° en un prisma recto. La altura siempre se mide perpendicularmente.'));
+ if(tipo==='prisma'){
+  var cutLink=element('a','z-link-tutor','Explorar cortes oblicuos avanzados ↗');
+  cutLink.href='laboratorio.html?modelo=seccion';
+  box.append(cutLink);
+ }
 }
 function solveSteps(){
  var f=modelo.formulas.find(function(x){return tarea==='V'?x.label==='Volumen':x.label==='Área total';})||modelo.formulas.at(-1);
