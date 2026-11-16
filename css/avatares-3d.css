@@ -1,11 +1,11 @@
 /* Personajes profesionales KayKit: portada y lecciones.
    Los modelos son GLB CC0 preexistentes, no personajes recreados con emojis. */
 .figura-col-maestro .mm-avatar-slot:has(.tutor-personalizado){
-  position:relative;overflow:hidden;
-  background:radial-gradient(ellipse at 50% 30%,#e4e9ff 0%,#d9e5ff 58%,#edf4ff 100%);
+  position:relative;overflow:visible;
+  background:transparent;
 }
 .figura-col-maestro .tutor-personalizado{
-  isolation:isolate;overflow:hidden;
+  isolation:isolate;overflow:visible;
 }
 .figura-col-maestro .tutor-visual.tutor-canvas{
   display:block;position:absolute;inset:0;width:100%;height:100%;
@@ -23,7 +23,7 @@
   transform:none!important;
 }
 .hero .figura-hero-modo .mm-avatar-slot:has(.tutor-personalizado){
-  box-shadow:inset 0 0 0 1px rgba(75,102,168,.1),0 7px 25px rgba(41,57,122,.12);
+  box-shadow:none!important;border:0!important;background:transparent!important;
 }
 .hero .figura-hero-modo .mm-profesor-nombre{font-size:clamp(1.08rem,1.45vw,1.32rem);}
 .hero .figura-hero-modo .mm-profesor-subtitulo{font-size:.86rem;}
@@ -49,8 +49,23 @@
 
 /* Rocketbox: retrato de profesor en lugar de figura diminuta de cuerpo entero. */
 .figura-col-maestro .tutor-realista.tutor-personalizado {
-  background:radial-gradient(circle at 50% 35%,#e6f0ff 0%,#d9e4fb 55%,#c9d6f3 100%);
+  background:transparent!important;
 }
 .hero .figura-hero-modo .mm-avatar-slot:has(.tutor-realista){
-  border-color:#b7c5f0;box-shadow:0 7px 23px rgba(40,55,111,.15);
+  border:0!important;box-shadow:none!important;
 }
+
+/* Escenario abierto: el personaje está completo, sin tarjeta ni máscara.
+   Una sombra elíptica lo apoya sobre el suelo; no tapa los controles. */
+.hero .figura-hero-modo .mm-avatar-slot:has(.tutor-realista)::before,
+.hero .figura-hero-modo .mm-avatar-slot:has(.tutor-personalizado)::before{
+  content:"";position:absolute;bottom:1%;left:12%;width:76%;height:12px;
+  border-radius:50%;background:rgba(42,51,101,.14);filter:blur(7px);
+  pointer-events:none;
+}
+.hero .figura-hero-modo .mm-avatar-slot:has(.tutor-personalizado),
+.hero .figura-hero-modo .mm-avatar-slot .tutor-personalizado{
+  border:0!important;border-radius:0!important;box-shadow:none!important;
+  background:transparent!important;overflow:visible!important;
+}
+.hero .figura-hero-modo .tutor-visual.tutor-canvas{z-index:1;}
