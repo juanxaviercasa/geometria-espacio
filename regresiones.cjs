@@ -544,7 +544,7 @@ test('Fase 6: sitemap de lecciones más páginas de sólidos',()=>{
  assert.equal(urls.length,25);
  assert.ok(urls.some(u=>u.endsWith('/solidos.html')));
  assert.ok(urls.some(u=>u.includes('/solido.html?tipo=prisma')));
- assert.equal(new Set(urls).size,23);
+ assert.equal(new Set(urls).size,25);
  assert.ok(urls.includes('https://geometriaespacio.sistemazenit.com/'));
  const datos=JSON.parse(fs.readFileSync(path.join(__dirname,'QA-FASE6/matriz.json'),'utf8'));
  assert.equal(datos.lecciones.length,17);
