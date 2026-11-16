@@ -414,6 +414,8 @@
     elegir:elegir,montar:montar,selector:selector,perfilVoz:perfilVoz,
     enfocar:enfocar,orientar:orientar,suspender:suspender,
     estadisticas:function(){return{cargado:cargadoId,pendiente:pendienteId,
-      reproduciendo:!!(mixer&&accion3d),fallos:erroresModelo};}
+      reproduciendo:!!(mixer&&accion3d),fallos:erroresModelo,
+      vistas:vistas.length,visibles:vistas.filter(function(v){return v.visible;}).length,
+      conectadas:vistas.filter(function(v){return v.nodo.isConnected;}).length};}
   };
 })(window);
