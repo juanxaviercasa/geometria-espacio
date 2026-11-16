@@ -171,6 +171,12 @@
       if (control !== btnAjustes && !control.classList.contains('btn-proyectar')) panelAjustes.appendChild(control);
     });
     figura.appendChild(panelAjustes);
+    // Los botones secundarios se trasladan al panel de Ajustes. Buscar en
+    // su contenedor REAL evita abortar el montaje por querySelector(null).
+    function buscarControl(accion){
+      return panelAjustes.querySelector('[data-accion="'+accion+'"]') ||
+             barraSup.querySelector('[data-accion="'+accion+'"]');
+    }
     btnAjustes.addEventListener('click', function () {
       var abierto = !panelAjustes.hidden;
       panelAjustes.hidden = abierto;
@@ -396,9 +402,9 @@
       pintar2d();
       var b = barraSup.querySelector('[data-vista-texto]');
       if (b) b.textContent = 'Vista 3D';
-      var btn = barraSup.querySelector('[data-accion="vista"]');
+      var btn = buscarControl('vista');
       if (btn) btn.setAttribute('aria-pressed', 'true');
-      var giroBtn = barraSup.querySelector('[data-accion="giro"]');
+      var giroBtn = buscarControl('giro');
       if (giroBtn) giroBtn.hidden = true;
       if (motivo === 'error') {
         aviso.hidden = false;
@@ -424,11 +430,11 @@
           estado.api.setAutoGiro(estado.giro && !estado.reducido);
           aviso.hidden=!!opciones.sinAviso;
           aviso.textContent='Arrastra para girar · rueda para zoom';
-          var btn=barraSup.querySelector('[data-accion="vista"]');
+          var btn=buscarControl('vista');
           if(btn)btn.setAttribute('aria-pressed','false');
           var vt=barraSup.querySelector('[data-vista-texto]');
           if(vt)vt.textContent='Vista 2D';
-          var giroBtn=barraSup.querySelector('[data-accion="giro"]');
+          var giroBtn=buscarControl('giro');
           if(giroBtn)giroBtn.hidden=estado.reducido;
           if(instancias.indexOf(estado)<0)instancias.push(estado);
           if(estado.iniciado)irAPaso(estado.pasoActual,false);
@@ -559,7 +565,7 @@
       if (estado.tipo === '3d' && estado.api) {
         estado.giro = false;
         estado.api.setAutoGiro(false);
-        var giroBtn = barraSup.querySelector('[data-accion="giro"]');
+        var giroBtn = buscarControl('giro');
         if (giroBtn) giroBtn.setAttribute('aria-pressed', 'false');
 
         if (paso.camara && estado.api.enfocarCamara) {
@@ -638,7 +644,7 @@
     actualizarBotonVoz();
 
     /* ---------- Controles de la barra superior ---------- */
-    barraSup.querySelector('[data-accion="vista"]').addEventListener('click', function () {
+    buscarControl('vista').addEventListener('click', function () {
       if(vistaDeseada==='3d') {
         vistaDeseada='2d';
         usar2d();
@@ -650,7 +656,7 @@
       fijarVistaPreferida(vistaDeseada);
     });
 
-    barraSup.querySelector('[data-accion="reset"]').addEventListener('click', function () {
+    buscarControl('reset').addEventListener('click', function () {
       if (estado.tipo === '3d' && estado.api) {
         estado.api.reset();
         if (estado.iniciado) irAPaso(estado.pasoActual, false);
@@ -659,13 +665,13 @@
       }
     });
 
-    barraSup.querySelector('[data-accion="giro"]').addEventListener('click', function () {
+    buscarControl('giro').addEventListener('click', function () {
       estado.giro = !estado.giro;
       this.setAttribute('aria-pressed', estado.giro ? 'true' : 'false');
       if (estado.api) estado.api.setAutoGiro(estado.giro);
     });
 
-    barraSup.querySelector('[data-accion="contraste"]').addEventListener('click', function () {
+    buscarControl('contraste').addEventListener('click', function () {
       var oscuro = figura.classList.toggle('tema-oscuro-visor');
       this.setAttribute('aria-pressed', oscuro ? 'true' : 'false');
       if (estado.api && estado.api._resize) estado.api._resize();

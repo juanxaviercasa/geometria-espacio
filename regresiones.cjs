@@ -620,3 +620,14 @@ test('Vértiz tiene como opción principal la voz neural masculina',()=>{
  const html=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
  assert.ok(html.indexOf('js/voz-neural.js') < html.indexOf('js/avatar.js'));
 });
+
+
+test('Visor: controles secundarios trasladados a Ajustes siguen disponibles',()=>{
+ const s=fs.readFileSync(path.join(__dirname,'js/visor.js'),'utf8');
+ assert.ok(s.includes('function buscarControl(accion)'));
+ for(const accion of ['vista','reset','giro','contraste']){
+   assert.ok(s.includes("buscarControl('"+accion+"').addEventListener"),accion+' tiene manejador activo');
+   assert.ok(!s.includes("barraSup.querySelector('[data-accion=\""+accion+"\"]').addEventListener"),accion+' no busca el nodo en su posición antigua');
+ }
+ assert.ok(s.includes("btnProyectar.addEventListener('click', alternarProyector)"));
+});
