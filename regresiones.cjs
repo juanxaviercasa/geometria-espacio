@@ -152,21 +152,29 @@ test('cambiar de profesor recuerda el personaje 3D con la voz neural preservada'
   assert.equal(api.perfilVoz().rate,1);
   assert.equal(api.elegir('exploradora-zenit'),true);
 });
-test('tres profesores GLB se distribuyen con rig y clips genuinos',()=>{
+test('cinco profesores GLB: tres con animaciones y dos Rocketbox con visemas',()=>{
   const {api}=tutores('maestro-arcano');
   const models=api.catalogo.filter(p=>p.tipo==='3D');
-  assert.equal(models.length,3);
+  assert.equal(models.length,5);
   for(const tutor of models){
     assert.ok(tutor.modelo.startsWith('vendor/avatares/'));
     const glb=fs.readFileSync(path.join(__dirname,tutor.modelo));
     assert.equal(glb.readUInt32LE(0),0x46546c67);
-    assert.ok(glb.length>150000&&glb.length<900000);
+    assert.ok(glb.length>150000&&glb.length<1200000);
     const d=JSON.parse(glb.subarray(20,20+glb.readUInt32LE(12)));
     assert.ok(d.skins?.length>0);
-    const names=d.animations.map(a=>a.name);
-    assert.ok(names.includes('Idle'),tutor.id);
-    assert.ok(names.includes('Spellcast_Shoot'),tutor.id);
-    assert.ok(names.includes('Walking_A'),tutor.id);
+    if(tutor.realista){
+      assert.ok(tutor.meshopt);
+      assert.ok(d.extensionsRequired.includes('EXT_meshopt_compression'));
+      const morphs=d.meshes.flatMap(m=>m.extras?.targetNames||[]);
+      for(const name of ['viseme_aa','viseme_PP','viseme_O'])
+        assert.ok(morphs.includes(name),tutor.id+' necesita '+name);
+    }else{
+      const names=d.animations.map(a=>a.name);
+      assert.ok(names.includes('Idle'),tutor.id);
+      assert.ok(names.includes('Spellcast_Shoot'),tutor.id);
+      assert.ok(names.includes('Walking_A'),tutor.id);
+    }
   }
 });
 test('el prisma contiene una diagonal de base y una espacial con longitudes correctas', () => {
@@ -714,4 +722,20 @@ test('Documentación: licencia CC0 y ausencia de lipsync fonético explícito',(
  assert.ok(about.includes('no tienen visemas'));
  assert.ok(!about.includes('selector permite cambiar entre ocho animales'));
  assert.ok(credit.includes('CC0 1.0'));
+});
+
+
+test('Rocketbox: decoder MIT, boca guiada por MP3 y licencia reproducida',()=>{
+ const js=fs.readFileSync(path.join(__dirname,'js/tutores.js'),'utf8');
+ const avatar=fs.readFileSync(path.join(__dirname,'js/avatar.js'),'utf8');
+ const dec=fs.readFileSync(path.join(__dirname,'vendor/meshopt_decoder_reference.js'),'utf8');
+ const lic=fs.readFileSync(path.join(__dirname,'vendor/avatares/ROCKETBOX-LICENSE.txt'),'utf8');
+ assert.ok(js.includes("loader.setMeshoptDecoder(global.MeshoptDecoder)"));
+ assert.ok(js.includes("morphTargetDictionary.viseme_aa"));
+ assert.ok(js.includes("document.addEventListener('avatar-audio-elemento'"));
+ assert.ok(avatar.includes("new CustomEvent('avatar-audio-elemento'"));
+ const win={};vm.runInNewContext(dec,{window:win,Promise,Uint8Array,Uint32Array});
+ assert.equal(win.MeshoptDecoder.supported,true);
+ assert.equal(typeof win.MeshoptDecoder.decodeGltfBuffer,'function');
+ assert.ok(lic.includes('Copyright (c) 2020 Microsoft'));
 });

@@ -240,7 +240,7 @@
             <td>Especificación Khronos (términos propios)</td>
             <td>7 870</td>
             <td>2026-10-26</td>
-            <td><span class="estado-si">Integrado</span> El visor carga tres personajes KayKit en GLB, cada uno con esqueleto y animaciones reales. Las figuras geométricas continúan siendo procedimentales.</td>
+            <td><span class="estado-si">Integrado</span> El visor carga tres personajes KayKit y dos Rocketbox humanos en GLB con esqueleto; los humanos incluyen visemas. Las figuras geométricas continúan siendo procedimentales.</td>
           </tr>
         </tbody>
       </table>
@@ -289,22 +289,28 @@
   <!-- Avatar -->
   <section class="doc-seccion prosa" id="avatar">
     <h2>Tutores y voces de personaje</h2>
-    <p>El selector del aula presenta tres <strong>profesores 3D reales con rig y animaciones</strong>:
-      Ariel (Maestro), Axel (Guardián) y Lía (Exploradora). Los tres son modelos KayKit
-      importados como GLB al propio sitio; Vértiz SVG se conserva como alternativa ligera.
+    <p>El selector del aula presenta <strong>cinco docentes tridimensionales</strong>:
+      Marco (profesor humano realista), Elena (profesora humana realista), Ariel (mago),
+      Axel (guardián) y Lía (exploradora). Los modelos están alojados como GLB en el propio sitio;
+      Vértiz SVG se conserva como alternativa ligera.
       La selección se guarda únicamente en el dispositivo.</p>
-    <p>Los modelos originales pertenecen al paquete
+    <p>Los tres docentes de estilo videojuego pertenecen al paquete
       <a href="https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0">KayKit Adventurers</a>
       de Kay Lousberg (CC0). Usamos versiones optimizadas y reexportadas del
       <a href="https://github.com/sion-rgb/tactical-slash/blob/main/THIRD_PARTY_ASSETS.md">archivo de recursos de Tactical Slash</a>.
       No utilizamos personajes oficiales de Pokémon, Roblox, GTA ni otras series en el selector.
       <a href="vendor/avatares/ORIGEN-Y-LICENCIA.md">Ver origen, licencia y limitaciones de los modelos.</a></p>
-    <p>La narración principal procede de Cloudflare Workers AI, con voz neural masculina en español;
-      existen voces alternativas seleccionables en Ajustes. El personaje gesticula durante la narración,
-      alternando animaciones reales de reposo y explicación, y la explicación escrita sigue visible.
-      <strong>Estos tres modelos no tienen visemas faciales:</strong> sus gestos acompañan al audio, pero
-      los labios no representan fonemas exactos. El sintetizador del navegador sigue disponible
-      como opción de respaldo.</p>
+    <p>Los dos docentes humanos proceden de
+      <a href="https://github.com/microsoft/Microsoft-Rocketbox">Microsoft Rocketbox</a> (MIT) y
+      fueron distribuidos como GLB optimizados por
+      <a href="https://github.com/interviewflowai/talking-avatar">Talking Avatar</a>.
+      Incorporan 15 visemas Oculus y otras expresiones faciales.
+      El aula mueve la boca siguiendo la intensidad del MP3 neural: este movimiento se
+      ajusta al audio, pero no identifica con precisión cada fonema en español.</p>
+    <p>La narración principal procede de Cloudflare Workers AI, con voces masculinas neurales
+      en español. Los personajes KayKit cambian de animación durante la voz, mientras que los
+      humanos mueven rostro y cabeza. <strong>Los modelos KayKit no tienen visemas faciales</strong>.
+      Toda la explicación escrita sigue disponible aun sin audio.</p>
     <p>
       La opción «Vértiz clásico» es un personaje <strong>original</strong>, dibujado como SVG vectorial dentro de este
       repositorio. No reproduce ni se inspira en un personaje o marca existente. Su diseño usa la
@@ -417,10 +423,11 @@
       <li><strong>La lección «completa» es la del módulo 6</strong> (prismas y diagonales): es la
         más desarrollada, con 8 ejercicios y 2 retos. El resto de módulos son lecciones sólidas,
         no monografías.</li>
-      <li>Vértiz es una ilustración SVG; Ariel, Axel y Lía son personajes 3D animados con esqueleto.
-        Estos últimos usan gestos durante la voz pero no sincronización fonética exacta de labios.</li>
-      <li>Los sólidos geométricos se calculan por código; los personajes del aula utilizan tres
-        archivos GLB CC0 optimizados. Los recursos de terceros y su procedencia se documentan
+      <li>Vértiz es una ilustración SVG; Ariel, Axel y Lía son personajes animados con esqueleto.
+        Marco y Elena son humanos Rocketbox con visemas. La boca humana responde al nivel del
+        audio; no se presenta como seguimiento fonético exacto de palabras.</li>
+      <li>Los sólidos geométricos se calculan por código; el aula incluye tres GLB CC0 y dos
+        GLB Microsoft Rocketbox MIT. Los recursos de terceros y su procedencia se documentan
         de forma separada para distinguirlos del contenido académico original.</li>
       <li>No hay exámenes oficiales de la UNI reproducidos: los retos son de dificultad
         comparable, redactados para este proyecto.</li>

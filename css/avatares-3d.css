@@ -46,3 +46,11 @@
   left:0!important; right:0!important; top:0!important; bottom:0!important;
   margin:0!important; transform:none!important;
 }
+
+/* Rocketbox: retrato de profesor en lugar de figura diminuta de cuerpo entero. */
+.figura-col-maestro .tutor-realista.tutor-personalizado {
+  background:radial-gradient(circle at 50% 35%,#e6f0ff 0%,#d9e4fb 55%,#c9d6f3 100%);
+}
+.hero .figura-hero-modo .mm-avatar-slot:has(.tutor-realista){
+  border-color:#b7c5f0;box-shadow:0 7px 23px rgba(40,55,111,.15);
+}

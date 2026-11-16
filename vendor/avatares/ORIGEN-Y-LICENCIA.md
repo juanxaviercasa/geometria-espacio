@@ -35,3 +35,22 @@ de voz hablada, con transición cruzada.
 - El modelo humano realista Rocketbox y los avatares VRoid se evaluaron, pero no
   se insertaron automáticamente: sus formatos, pesos y permisos de modelos
   concretos requieren una conversión o validación específica.
+
+
+## Humanos Microsoft Rocketbox — licencia MIT
+
+Dos modelos adicionales fueron copiados sin alterar sus bytes desde
+https://github.com/interviewflowai/talking-avatar/tree/master/avatars
+y conservan su licencia específica en
+`vendor/avatares/ROCKETBOX-LICENSE.txt`.
+
+| Docente | Archivo | Procedencia | Licencia |
+|---|---|---|---|
+| Marco | `rocketbox_male.glb` (1.021.288 B) | Rocketbox Business male 01, GLB optimizado por InterviewFlowAI | MIT, copyright Microsoft 2020 |
+| Elena | `rocketbox_female.glb` (821.360 B) | Rocketbox Business female 04, GLB optimizado por InterviewFlowAI | MIT, copyright Microsoft 2020 |
+
+Los dos archivos incluyen `EXT_meshopt_compression`, `EXT_texture_webp`,
+15 visemas Oculus y controles ARKit. Para mostrarlos se incluye el decodificador
+de referencia Meshopt, MIT (Arseny Kapoulkine/Jasper St. Pierre).
+La boca sigue una envolvente de audio MP3 calculada en el navegador; eso
+**no sustituye** un alineador de fonemas real para el español.

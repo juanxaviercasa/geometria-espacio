@@ -255,3 +255,8 @@ La portada es un aula de **ocho sólidos geométricos** con los controles de Pro
 ## Profesores 3D CC0 existentes (15/11/2026)
 
 Se incorporaron tres personajes KayKit terminados, no generados por IA: **Ariel (mago), Axel (caballero) y Lía (exploradora)**. Se distribuyen como GLB optimizados bajo `vendor/avatares/`, con esqueleto y siete animaciones cada uno. Se seleccionan en Ajustes y el maestro 3D es la opción predeterminada. La animación `Idle` se usa en reposo y `Spellcast_Shoot` al hablar mediante el reproductor neural ya integrado. Vértiz SVG permanece como alternativa ligera. **No se afirma sincronización fonética labial** porque los activos no incluyen visemas. Procedencia, licencia y límites: [vendor/avatares/ORIGEN-Y-LICENCIA.md](vendor/avatares/ORIGEN-Y-LICENCIA.md).
+
+
+### Profesores humanos Rocketbox (15/11/2026)
+
+Se incorporan **Marco y Elena**, modelos humanos ya terminados de Microsoft Rocketbox, en GLB optimizados distribuidos bajo MIT por Talking Avatar. Cada uno incluye 15 visemas Oculus y expresiones ARKit; el frontend los carga bajo demanda con Meshopt. Al sonar el MP3 neural, la apertura de la boca se guía por una envolvente de audio calculada localmente, **no por reconocimiento fonético exacto**. Los tres KayKit y Vértiz se conservan como opciones más ligeras. La licencia MIT de Microsoft se adjunta en `vendor/avatares/ROCKETBOX-LICENSE.txt`.

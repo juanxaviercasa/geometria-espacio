@@ -176,6 +176,7 @@
   function pintar(v) {
     var p = buscar(elegido); v.canvas = null;
     v.nodo.classList.toggle('tutor-personalizado', p.id !== 'vertiz');
+    v.nodo.classList.toggle('tutor-realista', !!p.realista);
     v.nodo.querySelectorAll('.tutor-visual').forEach(function (n) { n.remove(); });
     if (p.id === 'vertiz') return;
     var visual;
@@ -389,9 +390,9 @@
         };
       }
       scene.add(modelo); cargadoId=p.id; pendienteId=null;
-      camera.position.set(0,p.realista?1.15:(p.modelo?1.18:1.15),
-        p.realista?3.4:(p.modelo?3.6:4.8));
-      camera.lookAt(0,1.0,0);
+      camera.position.set(0,p.realista?1.29:(p.modelo?1.18:1.15),
+        p.realista?2.75:(p.modelo?3.6:4.8));
+      camera.lookAt(0,p.realista?1.29:1.0,0);
       modelo.rotation.y=giro;
       if(mixer){mixer.update(0);cambiarGesto(hablando);}
       // La voz puede comenzar antes de que el modelo GLB termine de cargar.
