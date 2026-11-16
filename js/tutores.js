@@ -538,6 +538,10 @@
         // directamente en los GLB. El brazo elevado apunta hacia el visor.
         // Se modula la pose para no confundir un gesto con un espasmo repetido.
         if(activa && gestoNivel>0.02){
+          // No mantener una estatua: durante la locución el codo acompaña
+          // las frases con un movimiento lento y reconocible.
+          var pulso=hablando&&!quieto ? 0.15*Math.sin(t*2.5) : 0;
+          var fuerzaGesto=Math.max(0.45,Math.min(1,gestoNivel*(0.87+pulso)));
           var haciaIzquierda=d.x<0;
           var brazo=haciaIzquierda?huesosGuia.right:huesosGuia.left;
           var codo=haciaIzquierda?huesosGuia.rightForearm:huesosGuia.leftForearm;
@@ -547,7 +551,7 @@
             // Se usan vectores en espacio mundial y se respeta la orientación
             // de la cámara para que la acción sea perceptible de frente.
             var orientado=orientarHueso(brazo,codo,
-              new T.Vector3(lado*0.74,0.52,0.44),0.95*gestoNivel);
+              new T.Vector3(lado*0.74,0.52+pulso*0.5,0.44),0.95*fuerzaGesto);
             if(!orientado){
               brazo.rotateZ(lado*1.02*gestoNivel);
               brazo.rotateX(-0.48*gestoNivel);
@@ -555,7 +559,7 @@
           }
           var mano=haciaIzquierda?huesosGuia.rightHand:huesosGuia.leftHand;
           if(codo&&mano){
-            orientarHueso(codo,mano,new T.Vector3(lado*0.87,0.40,0.28),0.95*gestoNivel);
+            orientarHueso(codo,mano,new T.Vector3(lado*0.87,0.40+pulso,0.28),0.95*fuerzaGesto);
           }
         }else if(hablando&&!quieto){
           if(huesosGuia.left)huesosGuia.left.rotateZ(0.18+0.09*Math.sin(t*2.2));
