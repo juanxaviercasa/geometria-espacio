@@ -1236,3 +1236,14 @@ test('Profesor Xavier: el aula recupera figura completa y gestos de enfoque',()=
  assert.ok(app.includes("w.Tutores.enfocar({figura:$('z-panel')"));
  assert.ok(tutor.includes("giro = 0.24"),'vista inicial tres cuartos');
 });
+
+test('Hero generado con IA tiene versión WebP ligera en producción',()=>{
+ const fs=require('fs'),path=require('path');
+ const filename=path.join(__dirname,'assets/zenit/prisma-ai.webp');
+ const buf=fs.readFileSync(filename);
+ assert.equal(buf.toString('ascii',0,4),'RIFF');
+ assert.equal(buf.toString('ascii',8,12),'WEBP');
+ assert.ok(buf.length<20000,'imagen optimizada');
+ const home=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
+ assert.ok(home.includes('src="assets/zenit/prisma-ai.webp"'));
+});

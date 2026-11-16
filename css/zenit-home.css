@@ -70,3 +70,6 @@
 .zenit-preview-card strong{padding-top:.22rem}
 @media(max-width:700px){.zenit-mode-card{min-height:0}.zenit-mode-art{height:144px}.zenit-preview-card{min-height:250px}}
 @media(max-width:470px){.zenit-preview-art{height:155px}.zenit-preview-card{min-height:278px}}
+
+/* Hero fotorealista optimizado: render IA original convertido a WebP (~4 KB). */
+.zenit-intro-visual .zenit-hero-solid{mix-blend-mode:multiply;max-width:min(490px,96%);max-height:440px;border-radius:24px;}

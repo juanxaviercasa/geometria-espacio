@@ -289,3 +289,5 @@ El laboratorio vuelve a utilizar al Profesor Xavier de cuerpo completo y tres
 cuartos, con altura visual mayor en escritorio y orientación de gestos hacia la
 figura durante las explicaciones.
 
+
+La imagen fotorealista de la portada `assets/zenit/prisma-ai.webp` se generó mediante IA, se revisó visualmente y se convirtió a WebP optimizado (380 × 380). Las restantes ilustraciones conceptuales y de catálogo son SVGs locales; las fórmulas y relaciones exactas se mantienen en el motor geométrico.
