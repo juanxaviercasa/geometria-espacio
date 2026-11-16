@@ -419,9 +419,11 @@
       // Medio cuerpo: rostro y brazos distinguibles sin alejar al profesor.
       // En los humanos se conserva todo el cuerpo con margen inferior,
       // evitando cortar los zapatos al cambiar de pose.
-      camera.position.set(0,p.realista?1.00:(p.modelo?1.18:1.15),
+      camera.position.set(p.realista?-0.14:0,p.realista?1.00:(p.modelo?1.18:1.15),
         p.realista?4.2:(p.modelo?3.85:4.8));
-      camera.lookAt(0,p.realista?0.95:1.0,0);
+      // Desplazar ligeramente el cuerpo a la derecha dentro del lienzo:
+      // la mano que señala hacia el cubo no queda cortada por el canvas.
+      camera.lookAt(p.realista?-0.14:0,p.realista?0.95:1.0,0);
       modelo.rotation.y=giro;
       if(mixer){mixer.update(0);cambiarGesto(hablando);}
       // La voz puede comenzar antes de que el modelo GLB termine de cargar.
@@ -529,16 +531,16 @@
         // Cabeza y ojos observan el sólido mientras el docente lo señala.
         if(huesosGuia.neck){
           huesosGuia.neck.rotateY(miradaX*0.35);
-          huesosGuia.neck.rotateX(miradaY*0.35);
+          huesosGuia.neck.rotateX(-miradaY*0.35);
         }
         if(huesosGuia.head){
           huesosGuia.head.rotateY(miradaX*0.85);
-          huesosGuia.head.rotateX(miradaY*0.65+(hablando&&!quieto?Math.sin(t*2.2)*0.022:0));
+          huesosGuia.head.rotateX(-miradaY*0.65+(hablando&&!quieto?Math.sin(t*2.2)*0.022:0));
         }
         ['leftEye','rightEye'].forEach(function(k){
           if(huesosGuia[k]){
             huesosGuia[k].rotateY(miradaX*0.40);
-            huesosGuia[k].rotateX(miradaY*0.28);
+            huesosGuia[k].rotateX(-miradaY*0.28);
           }
         });
         // En los Rocketbox, las articulaciones bip01*upperarm se verificaron
@@ -560,7 +562,7 @@
             // Se usan vectores en espacio mundial y se respeta la orientación
             // de la cámara para que la acción sea perceptible de frente.
             var orientado=orientarHueso(brazo,codo,
-              new T.Vector3(lado*0.74,0.57+pulso,0.42),0.95*fuerzaGesto);
+              new T.Vector3(lado*0.78,(d.y>0?0.04:0.40)+pulso*0.20,0.48),0.95*fuerzaGesto);
             if(!orientado){
               brazo.rotateZ(lado*1.02*gestoNivel);
               brazo.rotateX(-0.48*gestoNivel);
@@ -568,7 +570,7 @@
           }
           var mano=haciaIzquierda?huesosGuia.rightHand:huesosGuia.leftHand;
           if(codo&&mano){
-            orientarHueso(codo,mano,new T.Vector3(lado*0.82,0.49+pulso,0.28),0.95*fuerzaGesto);
+            orientarHueso(codo,mano,new T.Vector3(lado*0.84,(d.y>0?-0.20:0.28)+pulso*0.35,0.35),0.95*fuerzaGesto);
           }
         }else if(hablando&&!quieto){
           if(huesosGuia.left)huesosGuia.left.rotateZ(0.18+0.09*Math.sin(t*2.2));
