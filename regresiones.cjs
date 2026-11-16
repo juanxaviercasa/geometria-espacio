@@ -599,7 +599,7 @@ test('Aula premium: barra externa, avatar protagonista y controles separados',()
  assert.ok(visor.includes('controlesExternos.appendChild(barraSup)'));
  assert.ok(visor.includes('controlesExternos.appendChild(controlesVoz)'));
  assert.ok(visor.includes('panelAjustes.appendChild(preferencias)'));
- assert.ok(css.includes('grid-template-columns:clamp(126px,12vw,174px)'));
+ assert.ok(css.includes('grid-template-columns:clamp(180px,17vw,226px)'), 'retrato ampliado del profesor');
  assert.ok(css.includes('.hero .hero-toolbar .figura-ajustes[hidden]'));
  assert.ok(css.includes('.hero .hero-toolbar{flex-wrap:wrap'));
 });
