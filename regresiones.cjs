@@ -872,6 +872,8 @@ test('El prisma comienza limpio y revela su altura solamente en el cuarto paso',
   const p=window.Figuras.obtener('prisma-elementos');
   assert.equal(p.capas.find(c=>c.id==='altura').activa,false);
   assert.equal(p.vertices.H.capa,'altura');
+  assert.equal(p.vertices.O.capa,'altura');
+  assert.equal(p.vertices.O1.capa,'altura');
   assert.equal(p.pasosGuia.length,5);
   assert.ok(p.pasosGuia.slice(0,3).every(s=>!s.capasVisibles.includes('altura')));
   assert.ok(p.pasosGuia[3].capasVisibles.includes('altura'));
@@ -936,4 +938,38 @@ test('Prisma: demostrar paralelismo y perpendicularidad durante frases específi
   assert.ok(visor.includes("audio.addEventListener('timeupdate',seguirAudio)"));
   assert.ok(visor.includes("document.createElementNS('http://www.w3.org/2000/svg','svg')"));
   assert.ok(visor.includes("demoActiva==='perpendiculares'"));
+});
+
+test('La altura del prisma recto es OO₁ entre centros y perpendicular a ambas bases',()=>{
+  const win={};
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/figuras.js'),'utf8'),{window:win});
+  const fig=win.Figuras.obtener('prisma-elementos');
+  const p=k=>Array.from(fig.vertices[k].p);
+  const vec=(a,b)=>a.map((x,i)=>b[i]-x);
+  const dot=(a,b)=>a.reduce((acc,x,i)=>acc+x*b[i],0);
+  const norm=a=>Math.hypot(...a);
+  const centroid=keys=>keys.reduce((acc,k)=>acc.map((x,i)=>x+p(k)[i]),[0,0,0]).map(x=>x/keys.length);
+  const O=p('O'),O1=p('O1'),h=vec(O,O1);
+  for(const [k,v] of [['O',centroid(['A','B','C','D'])],['O1',centroid(['A1','B1','C1','D1'])]]){
+    assert.ok(p(k).every((x,i)=>Math.abs(x-v[i])<1e-10),k+' es centro de la base');
+  }
+  assert.ok(Math.abs(h[0])<1e-12&&Math.abs(h[2])<1e-12,'OO₁ es vertical');
+  for(const keys of [['A','B','D'],['A1','B1','D1']]){
+    assert.ok(Math.abs(dot(h,vec(p(keys[0]),p(keys[1]))))<1e-12,'altura perpendicular al primer lado');
+    assert.ok(Math.abs(dot(h,vec(p(keys[0]),p(keys[2]))))<1e-12,'altura perpendicular al segundo lado');
+  }
+  assert.ok(Math.abs(norm(h)-norm(vec(p('A'),p('A1'))))<1e-12,'misma medida que una arista lateral');
+  const alturas=fig.lineas.filter(l=>l.capa==='altura');
+  assert.equal(alturas.length,3,'un segmento y dos marcas de 90 grados');
+  assert.equal(Array.from(alturas[0].v).join(','),'O,O1');
+  assert.ok(!alturas.some(l=>l.v && Array.from(l.v).includes('H')),'no conecta la altura con un punto oblicuo');
+  for(const [i,origen] of [[1,O],[2,O1]]){
+    const [x,y,z]=Array.from(alturas[i].pts,p=>Array.from(p));
+    const u=vec(origen,x),v=vec(x,y),w=vec(y,z);
+    assert.ok(Math.abs(dot(u,v))<1e-10,'escuadra '+i+' contiene ángulo recto');
+    assert.ok(norm(u)>0&&norm(v)>0&&norm(w)>0,'escuadra con tamaño real');
+  }
+  assert.equal(fig.vertices.R0.etiqueta,'90°');
+  assert.equal(fig.vertices.R1.etiqueta,'90°');
+  assert.ok(fig.pasosGuia[3].texto.includes('noventa grados'));
 });

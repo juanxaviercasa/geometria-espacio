@@ -386,19 +386,40 @@
       return { v: f, capa: i === 0 || i === 1 ? 'bases' : 'laterales' };
     });
     var vs = Object.assign({}, pr.vertices);
-    // arista lateral destacada y altura
-    vs.H = { p: v(0, 0, 1.05), etiqueta: 'h', sinEsfera: true, capa: 'altura' };
+    // Altura exacta del prisma RECTO: la distancia perpendicular entre
+    // los planos de las bases, ilustrada mediante sus centros O y O₁.
+    // AA₁ es una arista lateral distinta de OO₁, aunque mide lo mismo.
+    var O = centroide(['A', 'B', 'C', 'D'].map(function (k) { return vs[k].p; }));
+    var O1 = centroide(['A1', 'B1', 'C1', 'D1'].map(function (k) { return vs[k].p; }));
+    var direccionAltura = resta(O1, O);
+    var direccionBaseInferior = resta(vs.B.p, vs.A.p);
+    var direccionBaseSuperior = resta(vs.B1.p, vs.A1.p);
+    var tMarca = Math.min(pr.dims.a, pr.dims.b, pr.dims.h) * 0.15;
+    vs.O = { p: O, etiqueta: 'O', sinEsfera: true, capa: 'altura' };
+    vs.O1 = { p: O1, etiqueta: 'O₁', sinEsfera: true, capa: 'altura' };
+    vs.H = { p: suma(punto(O, O1, 0.50), v(tMarca * 0.85, 0, 0)),
+      etiqueta: 'h', sinEsfera: true, capa: 'altura' };
+    vs.R0 = { p: suma(O, v(tMarca * 1.24, tMarca * 0.76, 0)),
+      etiqueta: '90°', sinEsfera: true, capa: 'altura' };
+    vs.R1 = { p: suma(O1, v(tMarca * 1.24, -tMarca * 0.76, 0)),
+      etiqueta: '90°', sinEsfera: true, capa: 'altura' };
     registrar('prisma-elementos', {
       titulo: 'Prisma recto y sus elementos',
-      alt: 'Prisma recto de base rectangular A B C D con bases paralelas y caras laterales rectangulares; se marca la altura h.',
-      pie: 'Un prisma recto tiene dos bases paralelas y caras laterales rectangulares. La altura h coincide con la arista lateral; si el prisma es oblicuo, no coinciden.',
-      medidas: [['a × b', 'base', 'arista'], ['h', 'altura = arista lateral', 'altura']],
+      alt: 'Prisma recto de base rectangular con altura OO₁ trazada entre los centros de ambas bases y marcas de perpendicularidad en los dos extremos.',
+      pie: 'La altura h es la distancia perpendicular entre los planos de las bases. En un prisma recto su medida es igual a la de cada arista lateral, aunque OO₁ no es una arista.',
+      medidas: [['a × b', 'base', 'arista'], ['h = OO₁', 'distancia perpendicular entre bases', 'altura']],
       camara: { theta: -0.68, phi: 0.3 },
       vertices: vs,
       caras: caras,
       aristas: pr.aristas.map(function (p) { return { a: p[0], b: p[1], capa: 'aristas' }; }),
       lineas: [
-        { v: ['A1', 'H'], capa: 'altura', estilo: 'fuerte', grosor: 2.6 }
+        { v: ['O', 'O1'], capa: 'altura', estilo: 'fuerte', grosor: 2.6 },
+        // Escuadras de 90° en los dos planos: cada tramo toca el
+        // segmento vertical y una dirección contenida en su base.
+        { pts: marcaRecta(O, direccionAltura, direccionBaseInferior, tMarca),
+          capa: 'altura', estilo: 'fuerte', grosor: 1.5 },
+        { pts: marcaRecta(O1, escala(direccionAltura, -1), direccionBaseSuperior, tMarca),
+          capa: 'altura', estilo: 'fuerte', grosor: 1.5 }
       ],
       capas: [
         { id: 'bases', nombre: 'Bases', color: '#2c3c9e', activa: true, opacidad: 0.16 },
@@ -779,8 +800,8 @@
         demostraciones: [{ tipo: 'perpendiculares', frase: 'rectángulos perfectos', duracion: 2550 }]
       },
       {
-        titulo: 'La altura del prisma',
-        texto: 'La línea verde vertical es la altura h. En todo prisma recto, la altura mide exactamente lo mismo que la arista lateral.',
+        titulo: 'La altura perpendicular del prisma',
+        texto: 'La altura h es el segmento verde que une los centros O y O sub uno de las dos bases. Forma noventa grados con ambas bases. En este prisma recto, su longitud coincide con la de cada arista lateral.',
         camara: { theta: -0.68, phi: 0.25 },
         capasVisibles: ['bases', 'aristas', 'altura', 'etiquetas'],
         capaResaltada: 'altura'
