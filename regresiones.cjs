@@ -787,3 +787,30 @@ test('el cubo inicia limpio y su sección de seis puntos es un hexágono regular
   assert.ok(vertices.every(v=>Math.abs(v.reduce((s,x)=>s+x,0)-plano)<1e-9), 'seis puntos coplanares');
   assert.ok(lados[0]>0);
 });
+
+test('Los docentes 3D señalan con huesos reales de Rocketbox y KayKit', () => {
+  const glb = archivo => {
+    const bytes=fs.readFileSync(path.join(__dirname, 'vendor/avatares',archivo));
+    assert.equal(bytes.toString('ascii',0,4),'glTF');
+    const longitud=bytes.readUInt32LE(12);
+    const doc=JSON.parse(bytes.toString('utf8',20,20+longitud));
+    return (doc.nodes||[]).map(n=>n.name).filter(Boolean);
+  };
+  for(const nombre of ['rocketbox_male.glb','rocketbox_female.glb']){
+    const nodos=glb(nombre);
+    for(const hueso of ['Head','Bip01_Neck','Bip01_L_UpperArm','Bip01_R_UpperArm',
+      'Bip01_L_Forearm','Bip01_R_Forearm','Bip01_LEye','Bip01_REye']){
+      assert.ok(nodos.includes(hueso),nombre+' requiere '+hueso);
+    }
+  }
+  const aventura=glb('player_priest.glb');
+  assert.ok(aventura.includes('upperarm.l')&&aventura.includes('upperarm.r'));
+  const codigo=fs.readFileSync(path.join(__dirname,'js/tutores.js'),'utf8');
+  for(const nombre of ['bip01lupperarm','bip01rupperarm','bip01leye','bip01reye',
+    'bip01lforearm','bip01rforearm']){
+    assert.ok(codigo.includes(nombre),'El controlador debe reconocer '+nombre);
+  }
+  assert.ok(codigo.includes('vistaObjetivo?direccion(vistaObjetivo)'));
+  assert.ok(codigo.includes('gestoNivel'));
+  assert.ok(codigo.includes('huesosGuia.neck.rotateY'));
+});
