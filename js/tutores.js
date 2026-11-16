@@ -52,6 +52,7 @@
   var vistas = [], selectores = [], cargas = {}, T, renderer, scene, camera, modelo, mixer, alas = [], cabeza;
   var revision = 0, animacion = 0, ultimo = 0, hablando = false, giro = 0.35, arrastrando = false;
   var foco=null, huesosGuia=null,acciones3d=null,accion3d=null;
+   var miradaX=0,miradaY=0,gestoNivel=0;
   var mallasLabios=[],elementoAudio=null,envolventeAudio=null,pasoAudio=.05;
   function limpiarAudioVisual(){elementoAudio=null;envolventeAudio=null;}
   function procesarAudio(blob,elemento){
@@ -300,6 +301,7 @@
       modelo=null;
     }
     alas=[]; cabeza=null;huesosGuia=null;acciones3d=null;accion3d=null;
+    miradaX=0;miradaY=0;gestoNivel=0;
     mallasLabios=[];limpiarAudioVisual();
   }
   function iniciarMotor() {
@@ -387,20 +389,28 @@
           accion3d=acciones3d.Idle || mixer.clipAction(resultado.animations[0]);
           accion3d.play();
         }
-        // Buscar por nombre normalizado: Rocketbox y KayKit usan rigs diferentes.
-        function buscarHueso(patron) {
+        // Huesos verificables en los GLB Rocketbox: Bip01_R_UpperArm,
+        // Bip01_L_UpperArm, Bip01_R_Forearm, Bip01_L_Forearm,
+        // Bip01_REye, Bip01_LEye, Head, Bip01_Neck.
+        // KayKit utiliza upperarm.l / upperarm.r / head.
+        function huesoPorNombres(nombres) {
           var encontrado=null;
           modelo.traverse(function(o){
             if(encontrado||!o.isBone)return;
             var nombre=(o.name||'').toLowerCase().replace(/[^a-z0-9]/g,'');
-            if(patron.test(nombre))encontrado=o;
+            if(nombres.indexOf(nombre)!==-1)encontrado=o;
           });
           return encontrado;
         }
         huesosGuia={
-          head:buscarHueso(/head$/),
-          left:buscarHueso(/(leftupperarm|upperarmleft|upperarml|leftarm|armleft|arml$)/),
-          right:buscarHueso(/(rightupperarm|upperarmright|upperarmr|rightarm|armright|armr$)/)
+          head:huesoPorNombres(['head','bip01head']),
+          neck:huesoPorNombres(['bip01neck','neck']),
+          left:huesoPorNombres(['bip01lupperarm','upperarml','leftupperarm','upperarmleft']),
+          right:huesoPorNombres(['bip01rupperarm','upperarmr','rightupperarm','upperarmright']),
+          leftForearm:huesoPorNombres(['bip01lforearm','lowerarml','forearml','leftforearm']),
+          rightForearm:huesoPorNombres(['bip01rforearm','lowerarmr','forearmr','rightforearm']),
+          leftEye:huesoPorNombres(['bip01leye','lefteye','eyel']),
+          rightEye:huesoPorNombres(['bip01reye','righteye','eyer'])
         };
       }
       scene.add(modelo); cargadoId=p.id; pendienteId=null;
@@ -454,49 +464,82 @@
       });
     }
     var bases={};
-    if(huesosGuia)Object.keys(huesosGuia).forEach(function(k){var b=huesosGuia[k];if(b)bases[k]=b.quaternion.clone();});
+    if(huesosGuia)Object.keys(huesosGuia).forEach(function(k){
+      var bone=huesosGuia[k];if(bone)bases[k]=bone.quaternion.clone();
+    });
+    // La atención está vinculada a coordenadas REALES proyectadas del sólido.
+    // Interpolar evita que ojos y brazos salten entre los pasos.
+    var vistaObjetivo=lista.find(function(v){return v.canvas && participa(v);});
+    var dir=vistaObjetivo?direccion(vistaObjetivo):{x:0,y:0};
+    var factor=quieto?1:0.18;
+    miradaX+=( (vistaObjetivo?dir.x*0.32:0)-miradaX)*factor;
+    miradaY+=( (vistaObjetivo?dir.y*0.12:0)-miradaY)*factor;
+    gestoNivel+=((vistaObjetivo?1:0)-gestoNivel)*factor;
     lista.forEach(function(v){
       if(!v.canvas)return;
       var activa=participa(v),d=activa?direccion(v):{x:0,y:0};
-      modelo.rotation.y=giro+(activa?d.x*0.32:(quieto?0:Math.sin(t*0.5)*0.08));
-      modelo.position.y=quieto?0:Math.sin(t*2)*0.025;
-      if(cabeza){cabeza.rotation.y=activa?d.x*0.34:0;cabeza.rotation.x=(activa?d.y*0.16:0)+(quieto?0:Math.sin(t*(hablando?7:1.2))*(hablando?0.035:0.015));}
+      modelo.rotation.y=giro+(activa?miradaX*0.65:(quieto?0:Math.sin(t*0.5)*0.05));
+      modelo.position.y=quieto?0:Math.sin(t*2)*0.015;
+      if(cabeza){
+        cabeza.rotation.y=activa?miradaX:0;
+        cabeza.rotation.x=activa?miradaY:0;
+      }
       alas.forEach(function(a,i){
         a.rotation.x=0;
         a.rotation.z=quieto?0:Math.sin(t*(hablando?5:1.4))*(hablando?0.12:0.035)*(a.userData.tutorBrazo || a.userData.tutorAla || (i?1:-1));
         var lado=d.x || -1;
-        if(activa && a.userData.tutorBrazo===lado){a.rotation.z=lado*(d.x?1.25:2.7);a.rotation.x=-0.3+(hablando&&!quieto?Math.sin(t*6)*0.03:0);}
+        if(activa && a.userData.tutorBrazo===lado){
+          a.rotation.z=lado*(d.x?1.25:2.7);a.rotation.x=-0.3;
+        }
         if(activa && a.userData.tutorAla===lado)a.rotation.z=lado*0.45;
       });
       if(huesosGuia){
         Object.keys(bases).forEach(function(k){huesosGuia[k].quaternion.copy(bases[k]);});
-        if(huesosGuia.head){
-          if(activa){huesosGuia.head.rotateY(d.x*0.16);huesosGuia.head.rotateX(d.y*0.06);}
-          else if(hablando&&!quieto)huesosGuia.head.rotateX(Math.sin(t*2)*0.035);
+        // Cabeza y ojos observan el sólido mientras el docente lo señala.
+        if(huesosGuia.neck){
+          huesosGuia.neck.rotateY(miradaX*0.40);
+          huesosGuia.neck.rotateX(-miradaY*0.3);
         }
-        // Señalar el sólido con el brazo próximo. Los ajustes son temporales:
-        // los huesos se restauran tras dibujar cada vista, sin acumular rotación.
-        if(activa){
-          var brazo=d.x<0?huesosGuia.right:huesosGuia.left;
-          if(brazo){
-            brazo.rotateZ((d.x<0?1:-1)*(quieto?0.5:0.72));
-            brazo.rotateX(-0.28+(hablando&&!quieto?Math.sin(t*3.5)*0.08:0));
+        if(huesosGuia.head){
+          huesosGuia.head.rotateY(miradaX*0.85);
+          huesosGuia.head.rotateX(-miradaY*0.7+(hablando&&!quieto?Math.sin(t*2.2)*0.022:0));
+        }
+        ['leftEye','rightEye'].forEach(function(k){
+          if(huesosGuia[k]){
+            huesosGuia[k].rotateY(miradaX*0.38);
+            huesosGuia[k].rotateX(-miradaY*0.35);
           }
-        } else if(hablando&&!quieto){
-          if(huesosGuia.left){huesosGuia.left.rotateZ(-0.16-0.10*Math.sin(t*2.4));huesosGuia.left.rotateX(-0.10);}
-          if(huesosGuia.right){huesosGuia.right.rotateZ(0.15+0.09*Math.sin(t*2.1+1));huesosGuia.right.rotateX(-0.1);}
+        });
+        // En los Rocketbox, las articulaciones bip01*upperarm se verificaron
+        // directamente en los GLB. El brazo elevado apunta hacia el visor.
+        // Se modula la pose para no confundir un gesto con un espasmo repetido.
+        if(activa && gestoNivel>0.02){
+          var haciaIzquierda=d.x<0;
+          var brazo=haciaIzquierda?huesosGuia.right:huesosGuia.left;
+          var codo=haciaIzquierda?huesosGuia.rightForearm:huesosGuia.leftForearm;
+          var lado=haciaIzquierda?-1:1;
+          if(brazo){
+            brazo.rotateZ(lado*(0.85*gestoNivel));
+            brazo.rotateX(-0.42*gestoNivel);
+          }
+          if(codo)codo.rotateX(-0.28*gestoNivel);
+        }else if(hablando&&!quieto){
+          if(huesosGuia.left)huesosGuia.left.rotateZ(0.18+0.09*Math.sin(t*2.2));
+          if(huesosGuia.right)huesosGuia.right.rotateZ(-0.18-0.08*Math.sin(t*2.1+1));
         }
       }
       renderer.render(scene,camera);copiar(v);
     });
-    if(huesosGuia)Object.keys(bases).forEach(function(k){huesosGuia[k].quaternion.copy(bases[k]);});
+    if(huesosGuia)Object.keys(bases).forEach(function(k){
+      huesosGuia[k].quaternion.copy(bases[k]);
+    });
   }
   function frame(now) {
     animacion=0;
     var visibles=vistas.filter(function(v){return v.canvas && v.visible && v.nodo.isConnected;});
     if(!visibles.length || !modelo || document.hidden)return;
     var dt=ultimo?Math.min((now-ultimo)/1000,0.06):0.016;
-    if(now-ultimo<(hablando&&mallasLabios.length?45:hablando?66:110) && !reducido()) { despertar(); return; } ultimo=now;
+    if(now-ultimo<(hablando||foco?33:75) && !reducido()) { despertar(); return; } ultimo=now;
     var t=now/1000, quieto=reducido();
     if(mixer) { mixer.update(quieto?0:dt*(hablando?1:0.65)); }
     dibujarVistas(visibles,t,quieto);
