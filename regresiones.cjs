@@ -26,7 +26,7 @@ function voz() {
   const context = { window, localStorage: { getItem() { return null; }, setItem() {} },
     document: { dispatchEvent(e) { events.push(e); } }, CustomEvent: function (type, data) { this.type=type; this.detail=data.detail; },
     SpeechSynthesisUtterance: function (text) { this.text=text; },
-    setTimeout(fn, ms) { timers.push({fn,ms}); return timers.length; }, clearTimeout() {} };
+    setTimeout(fn, ms) { timers.push({fn,ms}); return timers.length; }, clearTimeout() {}, AbortController };
   vm.runInNewContext(fs.readFileSync(path.join(__dirname, 'js/voz-matematica.js'),'utf8'),context);
   vm.runInNewContext(fs.readFileSync(path.join(__dirname, 'js/avatar.js'),'utf8'),context);
   return { api: window.Avatar, events, timers, spoken, window };
@@ -630,4 +630,45 @@ test('Visor: controles secundarios trasladados a Ajustes siguen disponibles',()=
    assert.ok(!s.includes("barraSup.querySelector('[data-accion=\""+accion+"\"]').addEventListener"),accion+' no busca el nodo en su posición antigua');
  }
  assert.ok(s.includes("btnProyectar.addEventListener('click', alternarProyector)"));
+});
+
+
+test('Vértiz reproduce MP3 neural con pausa/reanuda y libera audio al cambiar de paso',async()=>{
+  const v=voz(),a=[],released=[],fetches=[];
+  class AudioSimulado {
+    constructor(src){this.src=src;this.playbackRate=1;this.playing=false;a.push(this);}
+    play(){this.playing=true;if(this.onplaying)this.onplaying();return Promise.resolve();}
+    pause(){this.playing=false;if(this.onpause)this.onpause();}
+    removeAttribute(){this.src='';}
+    load(){}
+  }
+  v.window.Audio=AudioSimulado;
+  v.window.URL={createObjectURL:()=> 'blob:voz-prueba',revokeObjectURL:u=>released.push(u)};
+  v.window.VozNeural={generar:(arg,signal)=>{
+    fetches.push({arg,signal});
+    return Promise.resolve({size:1200,type:'audio/mpeg'});
+  }};
+  v.api.hablarVoz('Un prisma recto',null,
+    {origen:'prisma-uno',figura:'prisma-elementos',paso:0});
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(fetches.length,1);
+  assert.deepEqual(fetches[0].arg,{figura:'prisma-elementos',paso:0,voz:'javier'});
+  assert.equal(v.api.getEstadoVoz().estado,'hablando');
+  assert.equal(a.length,1);
+  assert.equal(v.spoken.length,0,'no se ha invocado el sintetizador robótico del dispositivo');
+  assert.equal(v.api.pausarVoz(),true);
+  assert.equal(v.api.getEstadoVoz().estado,'pausado');
+  assert.equal(v.api.reanudarVoz(),true);
+  assert.equal(v.api.getEstadoVoz().estado,'hablando');
+  v.api.hablarVoz('Siguiente paso',null,
+    {origen:'prisma-dos',figura:'prisma-elementos',paso:1});
+  assert.equal(fetches[0].signal.aborted,true);
+  assert.equal(a[0].playing,false);
+  assert.equal(released.length,1);
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(a.length,2);
+  assert.equal(v.api.getEstadoVoz().origen,'prisma-dos');
+  v.api.detenerVoz();
+  assert.equal(v.api.getEstadoVoz().estado,'detenido');
+  assert.equal(released.length,2);
 });
