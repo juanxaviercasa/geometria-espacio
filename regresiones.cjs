@@ -749,3 +749,15 @@ test('Humano 3D inicial parpadea y conserva sincronización guiada por amplitud'
   assert.ok(tutor.includes('nivelDeVoz(t)'));
   assert.ok(tutor.includes('if(!mallasLabios.length)return'));
 });
+
+
+test('La elección explícita de docente SVG persiste y los perfiles están completos',()=>{
+ const {api}=tutores('vertiz');
+ assert.equal(api.actual(),'vertiz');
+ assert.equal(api.perfilVoz().pitch,1);
+ assert.equal(api.elegir('profesor-realista'),true);
+ assert.equal(api.perfilVoz().pitch,1);
+ const s=fs.readFileSync(path.join(__dirname,'js/tutores.js'),'utf8');
+ assert.ok(s.includes("if(!renderer)elegir('vertiz')"));
+ assert.ok(!s.includes("['personaje','Voz de personaje']"));
+});

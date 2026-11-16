@@ -45,8 +45,9 @@
   var elegido = 'profesor-realista';
   try {
     var valor = localStorage.getItem(clave);
-    // Actualización visual del tutor clásico: migración a un personaje GLB real.
-    if(buscar(valor) && valor!=='vertiz')elegido=valor;
+    // La elección explícita del estudiante prevalece. Usuarios nuevos ven
+    // a Marco; quien eligió Vértiz conserva el modo ligero en próximas visitas.
+    if(buscar(valor))elegido=valor;
   } catch (e) {}
   var vistas = [], selectores = [], cargas = {}, T, renderer, scene, camera, modelo, mixer, alas = [], cabeza;
   var revision = 0, animacion = 0, ultimo = 0, hablando = false, giro = 0.35, arrastrando = false;
@@ -137,7 +138,7 @@
     var vozLabel=document.createElement('label');vozLabel.className='tutor-selector';
     var vozNombre=document.createElement('span');vozNombre.textContent='Tonalidad de voz';vozLabel.appendChild(vozNombre);
     var vozSelect=document.createElement('select');vozSelect.setAttribute('aria-label','Tonalidad de voz');
-    [['personaje','Voz de personaje'],['anime','Héroe de anime (original)'],['natural','Voz natural']].forEach(function(v){var o=document.createElement('option');o.value=v[0];o.textContent=v[1];vozSelect.appendChild(o);});
+    [['natural','Voz natural'],['anime','Tono expresivo (voz del dispositivo)']].forEach(function(v){var o=document.createElement('option');o.value=v[0];o.textContent=v[1];vozSelect.appendChild(o);});
     vozSelect.value=estiloVoz;vocesSelectores.push(vozSelect);
     vozSelect.addEventListener('change',function(){estiloVoz=vozSelect.value;try{localStorage.setItem('geo3d.voz.estilo.v1',estiloVoz);}catch(e){}if(global.Avatar)global.Avatar.detenerVoz();actualizarNombres();});
     vozLabel.appendChild(vozSelect);panel.appendChild(vozLabel);
@@ -147,7 +148,7 @@
   function perfilVoz() {
     if(estiloVoz==='natural')return {pitch:1,rate:1,descripcion:'Voz natural'};
     if(estiloVoz==='anime')return {pitch:1.08,rate:1.06,descripcion:'Heroica y enérgica'};
-    return PERFILES[elegido];
+    return PERFILES[elegido]||{pitch:1,rate:1,descripcion:'Voz natural'};
   }
   function participa(v) { var f=v.nodo.closest('.figura');return !!foco && (!f || f===foco.figura); }
   function direccion(v) {
@@ -409,7 +410,10 @@
       vistas.forEach(function(v){v.nodo.dataset.carga='error';});
       // Si el hardware no puede descodificar el humano, se conserva el aula:
       // volver a un personaje de videojuego más ligero en vez de mostrar vacío.
-      if(p.realista && elegido===p.id) elegir('maestro-arcano');
+      if(elegido===p.id){
+        if(!renderer)elegir('vertiz');
+        else if(p.realista)elegir('maestro-arcano');
+      }
       vistas.forEach(function(v){if(v.canvas){v.canvas.setAttribute('aria-label',p.nombre+': 3D no disponible. Elige otro tutor.');}});
     });
   }
