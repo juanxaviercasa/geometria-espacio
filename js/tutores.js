@@ -45,12 +45,12 @@
   var elegido = 'profesor-realista';
   try {
     var valor = localStorage.getItem(clave);
-    // La elección explícita del estudiante prevalece. Usuarios nuevos ven
-    // a Marco; quien eligió Vértiz conserva el modo ligero en próximas visitas.
+    // La elección explícita del estudiante prevalece. Los nuevos usuarios
+    // ven al Profesor Xavier; se respetan las selecciones previas.
     if(buscar(valor))elegido=valor;
   } catch (e) {}
   var vistas = [], selectores = [], cargas = {}, T, renderer, scene, camera, modelo, mixer, alas = [], cabeza;
-  var revision = 0, animacion = 0, ultimo = 0, hablando = false, giro = 0.08, arrastrando = false;
+  var revision = 0, animacion = 0, ultimo = 0, hablando = false, giro = 0.24, arrastrando = false;
   var foco=null, huesosGuia=null,acciones3d=null,accion3d=null,ultimaPose=null;
    var miradaX=0,miradaY=0,gestoNivel=0;
   var mallasLabios=[],elementoAudio=null,envolventeAudio=null,pasoAudio=.05;

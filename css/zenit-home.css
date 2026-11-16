@@ -58,3 +58,15 @@
 @media(max-width:700px){.zenit-intro{padding:2.5rem 0 3rem}.zenit-intro-grid{grid-template-columns:1fr}.zenit-intro-copy h1{font-size:clamp(2.7rem,10vw,3.6rem)}.zenit-intro-visual{min-height:300px;max-height:350px}.zenit-hero-solid{max-height:345px}.zenit-mode-grid{grid-template-columns:1fr}.zenit-preview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.zenit-preview-card{min-height:190px}.zenit-catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.zenit-catalog-card{min-height:270px}.zenit-catalog-visual{height:120px}.zenit-catalog-visual svg{height:100px}}
 @media(max-width:470px){.zenit-preview-grid,.zenit-catalog-grid{grid-template-columns:1fr}.zenit-preview-card{min-height:180px}.zenit-catalog-card{min-height:250px}.zenit-catalog-visual{height:135px}.zenit-cta-row{display:grid}.zenit-primary,.zenit-secondary{width:100%}.zenit-trust-row{font-size:.75rem;gap:.5rem}}
 @media(prefers-reduced-motion:reduce){.zenit-hero-solid{animation:none}.zenit-preview-card,.zenit-catalog-card,.zenit-primary,.zenit-secondary{transition:none}}
+
+/* Ilustraciones renderizadas en formato SVG ligero y consistente. */
+.zenit-hero-solid{display:block;object-fit:contain;filter:drop-shadow(0 15px 22px #5245b01b);border-radius:25px}
+.zenit-mode-card{overflow:hidden;min-height:298px}
+.zenit-mode-art{display:block;width:100%;max-width:none;height:134px;object-fit:contain;background:transparent;border-radius:13px;margin:.6rem 0 .9rem}
+.zenit-preview-art{display:block;object-fit:contain;min-width:0;width:100%;height:116px;max-height:none;border-radius:16px;aspect-ratio:4/3;background:#f7f5ff}
+.zenit-catalog-visual{overflow:hidden}
+.zenit-catalog-visual img{width:100%;height:100%;display:block;object-fit:cover;object-position:center}
+.zenit-preview-card{min-height:265px}
+.zenit-preview-card strong{padding-top:.22rem}
+@media(max-width:700px){.zenit-mode-card{min-height:0}.zenit-mode-art{height:144px}.zenit-preview-card{min-height:250px}}
+@media(max-width:470px){.zenit-preview-art{height:155px}.zenit-preview-card{min-height:278px}}

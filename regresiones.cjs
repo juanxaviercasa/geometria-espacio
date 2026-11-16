@@ -1202,3 +1202,37 @@ test('Sección transversal del prisma es congruente a la base y opcional',()=>{
   }
  }
 });
+
+test('El sistema visual Zénit entrega ilustraciones con fuentes locales válidas',()=>{
+ const fs=require('fs'),path=require('path');
+ const assets=['hero-laboratorio','prisma','piramide','cilindro','cono','esfera','cubo','tetraedro','octaedro',
+  'modo-aprender','modo-experimentar','modo-resolver',
+  'prisma-bases','prisma-altura','prisma-oblicuo','prisma-seccion','prisma-volumen'];
+ for(const name of assets){
+  const p=path.join(__dirname,'assets','zenit',name+'.svg');
+  assert.ok(fs.existsSync(p),'ilustración faltante '+name);
+  const svg=fs.readFileSync(p,'utf8');
+  assert.ok(svg.startsWith('<svg ')&&svg.includes('</svg>'),name+' SVG válido');
+  assert.ok(svg.includes('aria-label='),name+' descripción');
+ }
+ const build=fs.readFileSync(path.join(__dirname,'build.js'),'utf8');
+ assert.ok(build.includes("'assets'"),'la compilación copia el pack visual');
+ const home=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
+ const catalog=fs.readFileSync(path.join(__dirname,'solidos.html'),'utf8');
+ const lab=fs.readFileSync(path.join(__dirname,'solido.html'),'utf8');
+ assert.ok(home.includes('hero-laboratorio.svg'));
+ assert.equal((catalog.match(/class="zenit-catalog-visual"/g)||[]).length,8);
+ assert.equal((catalog.match(/src="assets\/zenit\/[^"]+\.svg"/g)||[]).length,8);
+ assert.ok(lab.includes('id="z-family-art"'));
+ assert.ok(lab.includes('id="z-concept-grid"'));
+});
+test('Profesor Xavier: el aula recupera figura completa y gestos de enfoque',()=>{
+ const css=fs.readFileSync(path.join(__dirname,'css/zenit-workspace.css'),'utf8');
+ const app=fs.readFileSync(path.join(__dirname,'js/zenit-workspace.js'),'utf8');
+ const tutor=fs.readFileSync(path.join(__dirname,'js/tutores.js'),'utf8');
+ assert.ok(css.includes('min-height:325px'),'docente visible en escritorio');
+ assert.ok(css.includes('height:222px'),'docente legible en móvil');
+ assert.ok(css.includes('.z-professor-info'));
+ assert.ok(app.includes("w.Tutores.enfocar({figura:$('z-panel')"));
+ assert.ok(tutor.includes("giro = 0.24"),'vista inicial tres cuartos');
+});

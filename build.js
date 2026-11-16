@@ -36,7 +36,8 @@ const ITEMS = [
   'PRESUPUESTOS-RENDIMIENTO.json',
   'css',
   'js',
-  'vendor'
+  'vendor',
+  'assets'
 ];
 
 if (fs.existsSync(DIST)) {

@@ -91,3 +91,17 @@
 @media(max-width:620px){.z-main{padding-top:.6rem}.z-head{align-items:start}.z-head h1{font-size:2.15rem}.z-head-actions{width:100%;justify-content:space-between}.z-head-actions select{flex:1;max-width:none}.z-tabs{gap:.2rem}.z-tabs button{flex:1;min-width:0;padding:.85rem .2rem;font-size:.82rem}.z-tabs button span{display:none}.z-visual-top{padding:.8rem}.z-stage{height:80vw;min-height:315px}.z-view-tools{padding:.65rem}.z-view-tools button{font-size:.72rem}.z-layers{padding:.65rem}.z-sidebar>div{padding:.85rem}.z-teacher{min-height:105px}.z-teacher-model{height:105px;width:76px;min-width:76px}.z-step-card{padding:.85rem}.z-formula-grid{grid-template-columns:1fr 1fr}.z-math-card{padding:.5rem}.z-math-card .katex{font-size:.9em}.z-bottom{padding:1.25rem}.z-control-grid{gap:.65rem}}
 @media(max-width:370px){.z-formula-grid{grid-template-columns:1fr}.z-stage{min-height:260px}.z-breadcrumb{font-size:.72rem}.z-view-tools{gap:.3rem}.z-view-tools button{padding:.3rem .45rem}}
 @media(prefers-reduced-motion:reduce){.z-btn,.z-math-card{transition:none;animation:none}}
+
+/* Galería pedagógica: imágenes de apoyo, siempre separadas del modelo exacto. */
+.z-concept-section{margin-top:2.7rem;min-width:0}
+.z-concept-heading{display:flex;justify-content:space-between;align-items:end;gap:1rem;margin-bottom:1.25rem}
+.z-concept-heading h2{font-size:clamp(1.65rem,2.8vw,2.5rem);line-height:1.15;letter-spacing:-.03em;color:#272950;margin:.55rem 0}
+.z-concept-heading p{color:#626c84;margin:0;font-size:.94rem;line-height:1.5}
+.z-concept-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;min-width:0}
+.z-concept-card{min-width:0;overflow:hidden;background:#fff;border:1px solid #e1e3f4;border-radius:20px;
+ padding:.8rem .8rem 1rem;box-shadow:0 10px 25px #242b6d09}
+.z-concept-art{display:block;width:100%;height:170px;object-fit:cover;border-radius:14px;background:#f8f7ff}
+.z-concept-card h3{color:#30305a;font-size:1.08rem;font-weight:750;margin:.82rem .4rem .4rem}
+.z-concept-card p{color:#66718b;line-height:1.55;font-size:.83rem;margin:0 .4rem}
+@media(max-width:900px){.z-concept-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.z-concept-art{height:155px}}
+@media(max-width:520px){.z-concept-grid{grid-template-columns:1fr}.z-concept-art{height:190px}}

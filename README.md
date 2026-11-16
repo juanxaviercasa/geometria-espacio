@@ -275,3 +275,17 @@ Se incorporan **Marco y Elena**, modelos humanos ya terminados de Microsoft Rock
 - **Compatibilidad**: `index.html?solido=prisma` y otros enlaces antiguos redirigen a su página individual; 17 lecciones y práctica se conservan.
 - **Calidad**: ejecutar `npm test && npm run build` y auditar Chrome desktop/móvil. No se equipara el éxito de build a la certificación visual de todas las combinaciones.
 
+
+
+## Sistema visual premium Zénit — 16/11/2026
+
+Se ha incorporado una familia de ilustraciones vectoriales 3D en `assets/zenit/`:
+portada, ocho sólidos, tres métodos de aprendizaje y cinco conceptos geométricos
+de prismas. Se mantienen independientes de la geometría paramétrica educativa; ninguna
+imagen sustituye la demostración matemática y los modelos SVG/WebGL. El despliegue
+incluye la carpeta `assets` desde `build.js`; las imágenes usan `loading=lazy`
+fuera del hero y sus descripciones accesibles se encuentran en el contexto textual.
+El laboratorio vuelve a utilizar al Profesor Xavier de cuerpo completo y tres
+cuartos, con altura visual mayor en escritorio y orientación de gestos hacia la
+figura durante las explicaciones.
+

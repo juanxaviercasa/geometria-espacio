@@ -363,6 +363,35 @@ function changeMode(next){
  if(!['aprender','experimentar','resolver'].includes(next))return;
  stopVoice();modo=next;setUrl();panel();syncRenderButtons();
 }
+
+function conceptCards(){
+ var root=$('z-concept-grid');if(!root)return;
+ root.replaceChildren();
+ var concepts={
+  prisma:[
+   ['prisma-bases','Bases paralelas','Dos polígonos congruentes en planos paralelos.'],
+   ['prisma-altura','Altura perpendicular','La distancia entre bases es perpendicular a sus planos.'],
+   ['prisma-oblicuo','Prisma oblicuo','La inclinación de las aristas no cambia qué es la altura.'],
+   ['prisma-seccion','Sección transversal','Un plano paralelo a las bases produce una sección congruente.'],
+   ['prisma-volumen','Volumen','Área de la base por altura perpendicular.']
+  ],
+  piramide:[['piramide','Vértice y base','Las caras laterales triangulares comparten un vértice.'],['modo-aprender','La altura','Se mide perpendicularmente hasta el plano de la base.']],
+  cilindro:[['cilindro','Radio y altura','Dos bases circulares paralelas y una superficie lateral curva.'],['modo-experimentar','Desarrollo lateral','La superficie lateral de un cilindro recto se extiende en un rectángulo.']],
+  cono:[['cono','Radio y generatriz','Radio, altura y generatriz forman un triángulo rectángulo.'],['modo-resolver','Volumen','Un tercio del cilindro con la misma base y altura.']],
+  esfera:[['esfera','Radio y diámetro','Todos los puntos de la superficie están a la misma distancia del centro.'],['modo-experimentar','Planos de corte','Una sección plana de la esfera es un círculo.']],
+  cubo:[['cubo','Las seis caras','Cada cara es un cuadrado congruente.'],['modo-resolver','Diagonales','Distingue la diagonal de una cara de la diagonal espacial.']],
+  tetraedro:[['tetraedro','Cuatro triángulos','Cuatro caras equiláteras congruentes en el tetraedro regular.'],['modo-aprender','Altura','Una perpendicular entre el vértice y la base opuesta.']],
+  octaedro:[['octaedro','Ocho triángulos','Ocho caras equiláteras congruentes en el octaedro regular.'],['modo-resolver','Simetría y volumen','Relaciona la arista con el área y el volumen.']]
+ };
+ (concepts[tipo]||[]).forEach(function(entry){
+  var card=element('article','z-concept-card');
+  var art=element('img','z-concept-art');
+  art.src='assets/zenit/'+entry[0]+'.svg';art.alt='';
+  art.loading='lazy';art.decoding='async';art.width=680;art.height=460;
+  card.append(art,element('h3',null,entry[1]),element('p',null,entry[2]));
+  root.append(card);
+ });
+}
 function init(){
  w.UI.iniciar({avatar:false});
  $('z-title').textContent=Z.META[tipo].titulo;
@@ -372,6 +401,7 @@ function init(){
  $('z-crumb').textContent=Z.META[tipo].titulo;
  $('z-subtitle').textContent=Z.META[tipo].subtitulo;
  $('z-view-title').textContent=Z.META[tipo].singular+' interactivo';
+ conceptCards();
  $('z-type').value=tipo;
  $('z-type').addEventListener('change',function(){location.href='solido.html?tipo='+encodeURIComponent(this.value);});
  document.querySelectorAll('[data-z-mode]').forEach(function(b){

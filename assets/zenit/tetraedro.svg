@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480" role="img" aria-label="Ilustración tridimensional de tetraedro">
+<defs>
+<radialGradient id="bg" cx="50%" cy="43%" r="65%"><stop stop-color="#faf9ff"/><stop offset=".64" stop-color="#eeeaff"/><stop offset="1" stop-color="#f6f7ff"/></radialGradient>
+<linearGradient id="top" x1=".07" y1="0" x2=".98" y2="1"><stop stop-color="#f7f3ff" stop-opacity=".92"/><stop offset=".38" stop-color="#c1b5ff" stop-opacity=".83"/><stop offset="1" stop-color="#7164d9" stop-opacity=".83"/></linearGradient>
+<linearGradient id="face" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f6edff" stop-opacity=".92"/><stop offset=".45" stop-color="#b3a6f3" stop-opacity=".64"/><stop offset="1" stop-color="#7569cf" stop-opacity=".49"/></linearGradient>
+<linearGradient id="deep" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#9c8ef0" stop-opacity=".64"/><stop offset="1" stop-color="#42339c" stop-opacity=".61"/></linearGradient>
+<linearGradient id="shine" x1="0" y1="0" x2=".9" y2="1"><stop stop-color="#fdf9ff" stop-opacity=".8"/><stop offset="1" stop-color="#aa9bf3" stop-opacity=".25"/></linearGradient>
+<linearGradient id="gold" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#f4d791"/><stop offset="1" stop-color="#bb8d37"/></linearGradient>
+<filter id="shadow" x="-50%" y="-100%" width="200%" height="300%"><feGaussianBlur stdDeviation="18"/></filter>
+<filter id="glow" x="-35%" y="-35%" width="170%" height="170%"><feGaussianBlur stdDeviation="3"/></filter>
+</defs>
+<rect width="640" height="480" fill="url(#bg)" rx="32"/>
+<ellipse cx="320" cy="398.4" rx="192" ry="31.200000000000003" fill="#6558bd" opacity=".16" filter="url(#shadow)"/>
+<g opacity=".26"><circle cx="147.20000000000002" cy="96" r="70.4" stroke="#b9b0f4" stroke-width="1.5" fill="none"/><circle cx="499.20000000000005" cy="297.6" r="121.6" stroke="#aea5e4" stroke-width="1" fill="none"/></g>
+<polygon points="226.8,281.9 490,343.5 320,90.9" fill="url(#top)" stroke="#6555b4" stroke-width="2.8" opacity="0.84" stroke-linejoin="round"/><polygon points="226.8,281.9 490,343.5 228.6,361.1" fill="url(#shine)" stroke="#6555b4" stroke-width="2.8" opacity="0.84" stroke-linejoin="round"/><polygon points="490,343.5 228.6,361.1 320,90.9" fill="url(#face)" stroke="#6555b4" stroke-width="2.8" opacity="0.84" stroke-linejoin="round"/><polygon points="228.6,361.1 226.8,281.9 320,90.9" fill="url(#top)" stroke="#6555b4" stroke-width="2.8" opacity="0.84" stroke-linejoin="round"/>
+</svg>
