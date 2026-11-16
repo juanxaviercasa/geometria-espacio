@@ -827,9 +827,9 @@ test('Docentes humanos usan cámara de cuerpo completo y brazo elevado para señ
   const tutores=fs.readFileSync(path.join(__dirname,'js/tutores.js'),'utf8');
   const css=fs.readFileSync(path.join(__dirname,'css/avatares-3d.css'),'utf8');
   assert.ok(tutores.includes('p.realista?4.75'),'cámara alejada para no recortar piernas');
-  assert.ok(tutores.includes('new T.Vector3(lado*0.74,0.52,0.44)'),
+  assert.ok(tutores.includes('new T.Vector3(lado*0.74,0.52+pulso*0.5,0.44)'),
     'el codo se dirige hacia arriba y al lado del sólido');
-  assert.ok(tutores.includes('new T.Vector3(lado*0.87,0.40,0.28)'),
+  assert.ok(tutores.includes('new T.Vector3(lado*0.87,0.40+pulso,0.28)'),
     'la mano prolonga la señal');
   assert.ok(css.includes('overflow:visible!important'),'escenario sin máscara de tarjeta');
 });
