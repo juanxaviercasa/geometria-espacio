@@ -827,7 +827,7 @@ test('Docentes humanos usan cámara de cuerpo completo y brazo elevado para señ
   const tutores=fs.readFileSync(path.join(__dirname,'js/tutores.js'),'utf8');
   const css=fs.readFileSync(path.join(__dirname,'css/avatares-3d.css'),'utf8');
   assert.ok(tutores.includes('renderer.setSize(420,600)'),'lienzo vertical para figura entera');
-  assert.ok(tutores.includes('p.realista?4.50'),'cámara sin recorte de pies');
+  assert.ok(tutores.includes('p.realista?4.12'),'cámara cercana para mostrar al docente completo');
   assert.ok(tutores.includes('new T.Vector3(lado*0.62,(d.y>0?-0.48:0.12)+pulso*0.10,0.62)'),
     'el codo se dirige hacia arriba y al lado del sólido');
   assert.ok(tutores.includes('new T.Vector3(lado*0.84,(d.y>0?-0.08:0.23)+pulso*0.13,0.50)'),
@@ -895,4 +895,45 @@ test('El maestro parte de brazos relajados, no de la pose en T del rig',()=>{
   assert.ok(js.includes("['left','leftForearm','leftHand',1]"));
   assert.ok(js.includes('new T.Vector3(ladoReposo*0.17,-0.97,0.18)'));
   assert.ok(js.includes('new T.Vector3(lado*0.84,(d.y>0?-0.08:0.23)'));
+});
+
+test('Identidad visible: Profesor Xavier en todos los visores del aula',()=>{
+  const {api}=tutores('profesor-realista');
+  assert.equal(api.catalogo.find(c=>c.id==='profesor-realista').nombre,'Profesor Xavier');
+  const visor=fs.readFileSync(path.join(__dirname,'js/visor.js'),'utf8');
+  assert.ok(visor.includes('Explicación paso a paso con Profesor Xavier'));
+  assert.ok(visor.includes('<strong class="mm-profesor-nombre">Profesor Xavier</strong>'));
+});
+test('En escritorio, avatar y explicación comparten una fila sin scroll interno',()=>{
+  const visor=fs.readFileSync(path.join(__dirname,'js/visor.js'),'utf8');
+  const css=fs.readFileSync(path.join(__dirname,'css/aula-premium.css'),'utf8');
+  assert.ok(visor.includes("infoDocente.appendChild(filaPedagogica)"));
+  assert.ok(visor.includes("infoDocente.appendChild(explicacionPedagogica)"));
+  assert.ok(visor.includes("colMaestro.insertBefore(explicacionPedagogica,listaPedagogica)"),
+    'el panel se restaura correctamente en móvil');
+  assert.ok(css.includes('.figura-col-maestro.mm-distribucion-horizontal'));
+  assert.ok(css.includes('overflow:hidden!important'));
+  assert.ok(css.includes('bottom:10.5%!important'),'sombra bajo los pies');
+});
+test('Prisma: demostrar paralelismo y perpendicularidad durante frases específicas',()=>{
+  const win={};
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/figuras.js'),'utf8'),{window:win});
+  const p=win.Figuras.obtener('prisma-elementos');
+  const demos=p.pasosGuia[0].demostraciones;
+  assert.equal(demos.length,2);
+  assert.equal(demos[0].tipo,'paralelas');
+  assert.equal(demos[1].tipo,'perpendiculares');
+  for(const paso of p.pasosGuia.slice(0,3)){
+    for(const d of paso.demostraciones||[]){
+      assert.ok(paso.texto.toLowerCase().includes(d.frase.toLowerCase()),
+        'la marca temporal debe existir en la narración');
+    }
+  }
+  const visor=fs.readFileSync(path.join(__dirname,'js/visor.js'),'utf8');
+  assert.ok(visor.includes('demoSesion=global.Avatar.hablarVoz'));
+  assert.ok(visor.includes("'avatar-palabra'"),'sincronización nativa por palabras');
+  assert.ok(visor.includes("'avatar-audio-elemento'"),'sincronización con audio neural');
+  assert.ok(visor.includes("audio.addEventListener('timeupdate',seguirAudio)"));
+  assert.ok(visor.includes("document.createElementNS('http://www.w3.org/2000/svg','svg')"));
+  assert.ok(visor.includes("demoActiva==='perpendiculares'"));
 });

@@ -7,7 +7,7 @@
   /* Rocketbox tiene visemas Oculus; KayKit tiene animaciones esqueléticas
      pero no visemas. Ninguno se presenta como lipsync fonético exacto. */
   var CATALOGO = [
-    {id:'profesor-realista',nombre:'Marco · Profesor realista',tipo:'3D',
+    {id:'profesor-realista',nombre:'Profesor Xavier',tipo:'3D',
       modelo:'vendor/avatares/rocketbox_male.glb',meshopt:true,realista:true,
       descripcion:'Profesor 3D humano con visemas y expresiones faciales'},
     {id:'profesora-realista',nombre:'Elena · Profesora realista',tipo:'3D',
@@ -420,10 +420,10 @@
       // En los humanos se conserva todo el cuerpo con margen inferior,
       // evitando cortar los zapatos al cambiar de pose.
       camera.position.set(p.realista?-0.08:0,p.realista?1.00:(p.modelo?1.18:1.15),
-        p.realista?4.50:(p.modelo?3.85:4.8));
+        p.realista?4.12:(p.modelo?3.85:4.8));
       // Desplazar ligeramente el cuerpo a la derecha dentro del lienzo:
       // la mano que señala hacia el cubo no queda cortada por el canvas.
-      camera.lookAt(p.realista?-0.08:0,p.realista?0.95:1.0,0);
+      camera.lookAt(p.realista?-0.08:0,p.realista?1.08:1.0,0);
       modelo.rotation.y=giro;
       if(mixer){mixer.update(0);cambiarGesto(hablando);}
       // La voz puede comenzar antes de que el modelo GLB termine de cargar.

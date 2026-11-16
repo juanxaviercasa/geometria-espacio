@@ -153,3 +153,97 @@ body.con-visor-proyectado .hero .figura.modo-proyector { z-index:2147482000; }
 .figura-capas .btn-aux-todos{border:1px dashed #7b80ba;white-space:nowrap;font-weight:750;color:#28346b;background:#f8f8ff}
 .figura-capas .btn-aux-todos[aria-pressed="true"]{background:#dfe4ff;border-color:#5858c9;color:#252d76}
 .figura-capas .btn-aux-todos:focus-visible{outline:3px solid #6b64d9;outline-offset:2px}
+
+
+/* Aula Xavier: diseño de dos zonas al nivel del docente.
+   El texto ya no forma una segunda fila que provoca scroll interno. */
+.hero .figura-hero-modo .figura-col-maestro.mm-distribucion-horizontal{
+  display:flex!important;flex-direction:column!important;overflow:hidden!important;
+  overscroll-behavior:none;justify-content:stretch!important;
+  gap:.4rem!important;padding:clamp(.6rem,1.1vw,.85rem)!important;
+}
+.hero .figura-hero-modo .mm-distribucion-horizontal .mm-profesor-cabecera{
+  display:grid!important;grid-template-columns:minmax(185px,1.12fr) minmax(0,1fr)!important;
+  flex:1 1 auto!important;min-height:0!important;
+  gap:clamp(.5rem,.9vw,.8rem)!important;align-items:center!important;
+  border:0!important;padding:0!important;overflow:visible;
+}
+.hero .figura-hero-modo .mm-distribucion-horizontal .mm-avatar-slot{
+  width:100%!important;max-width:282px!important;
+  height:auto!important;aspect-ratio:420/600;min-height:0!important;
+  align-self:center!important;justify-self:center;
+  background:transparent!important;isolation:isolate;
+}
+.hero .figura-hero-modo .mm-distribucion-horizontal .mm-profesor-info{
+  min-width:0;min-height:0;align-self:center;display:flex!important;
+  flex-direction:column;align-items:stretch!important;
+  justify-content:center;gap:.48rem!important;overflow:visible;
+}
+.hero .figura-hero-modo .mm-distribucion-horizontal .mm-profesor-nombre{
+  font-size:clamp(1.11rem,1.55vw,1.4rem);line-height:1.15;
+}
+.hero .figura-hero-modo .mm-distribucion-horizontal .mm-profesor-subtitulo{
+  font-size:.83rem;line-height:1.3;
+}
+.hero .figura-hero-modo .mm-distribucion-horizontal .mm-progreso-fila{
+  margin-top:.45rem;gap:.4rem;justify-content:flex-start;flex-wrap:wrap;
+}
+.hero .figura-hero-modo .mm-distribucion-horizontal .mm-puntos-lista{gap:.2rem}
+.hero .figura-hero-modo .mm-distribucion-horizontal .mm-punto-paso{
+  width:25px;height:25px;font-size:.76rem;
+}
+.hero .figura-hero-modo .mm-distribucion-horizontal .mm-num-tag{
+  font-size:.73rem;padding:.25rem .4rem;
+}
+.hero .figura-hero-modo .mm-distribucion-horizontal .mm-caja-dialogo{
+  flex:0 1 auto!important;margin:0;padding:.72rem .75rem!important;
+  border:1px solid #d9def3;border-left:3px solid #5750d9;
+  border-radius:12px;box-shadow:none;
+}
+.hero .figura-hero-modo .mm-distribucion-horizontal .mm-dialogo-titulo{
+  font-size:clamp(.92rem,1vw,1.03rem);line-height:1.28;
+}
+.hero .figura-hero-modo .mm-distribucion-horizontal .mm-dialogo-texto{
+  font-size:clamp(.88rem,.98vw,1.01rem);line-height:1.5;
+  max-height:none;overflow:visible;
+}
+.hero .figura-hero-modo .mm-distribucion-horizontal .mm-dialogo-header{margin-bottom:.28rem}
+.hero .figura-hero-modo .mm-distribucion-horizontal .mm-transcripcion{
+  display:none!important;/* El texto completo ya está arriba: evita duplicación. */
+}
+.hero .figura-hero-modo .mm-distribucion-horizontal .mm-acciones-fila{
+  flex:0 0 auto!important;position:static!important;margin:0!important;
+  padding:.42rem 0 0!important;border-top:1px solid #e5e9fa;
+}
+/* Plataforma visual bajo los zapatos, no una sombra flotante al fondo. */
+.hero .figura-hero-modo .mm-distribucion-horizontal .mm-avatar-slot:has(.tutor-realista)::before{
+  bottom:10.5%!important;left:13%!important;width:74%!important;height:18px!important;
+  background:rgba(33,50,98,.21)!important;filter:blur(6px)!important;
+  z-index:0;
+}
+.hero .figura-hero-modo .mm-distribucion-horizontal .mm-avatar-slot:has(.tutor-realista)::after{
+  content:"";position:absolute;left:6%;bottom:9.5%;width:88%;height:32px;
+  background:radial-gradient(ellipse at center,rgba(80,106,183,.13),transparent 72%);
+  pointer-events:none;z-index:0;
+}
+@media (max-width:1200px){
+  .hero .figura-hero-modo .mm-distribucion-horizontal .mm-dialogo-texto{
+    font-size:.88rem;line-height:1.4;
+  }
+}
+
+/* Trazos conceptuales: aparecen solo mientras se explica cada propiedad. */
+.figura-stage-wrap .mm-demostracion-conceptual{
+  position:absolute;inset:0;width:100%;height:100%;z-index:6;
+  opacity:0;pointer-events:none;transition:opacity .26s ease;
+  filter:drop-shadow(0 2px 3px rgba(14,30,73,.25));
+}
+.figura-stage-wrap .mm-demostracion-conceptual.visible{opacity:1}
+.figura-stage-wrap .mm-demostracion-conceptual line,
+.figura-stage-wrap .mm-demostracion-conceptual polyline,
+.figura-stage-wrap .mm-demostracion-conceptual polygon{
+  stroke-linecap:round;stroke-linejoin:round;
+}
+@media(prefers-reduced-motion:reduce){
+  .figura-stage-wrap .mm-demostracion-conceptual{transition:none}
+}

@@ -226,6 +226,12 @@
     guiaFoco.innerHTML='<svg class="guia-foco-trazo" width="100%" height="100%"><path fill="none"></path></svg><span class="guia-foco-punto"></span><span class="guia-foco-etiqueta"></span>';
     lienzoWrap.appendChild(guiaFoco);
 
+    var trazoConceptual=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    trazoConceptual.setAttribute('class','mm-demostracion-conceptual');
+    trazoConceptual.setAttribute('aria-hidden','true');
+    trazoConceptual.setAttribute('preserveAspectRatio','none');
+    trazoConceptual.dataset.demostracion='ninguna';
+    lienzoWrap.appendChild(trazoConceptual);
     colLienzo.appendChild(lienzoWrap);
 
     /* Barra de capas + medidas debajo del lienzo */
@@ -267,7 +273,7 @@
     /* 2b. Columna Docente: Vértiz + Paso a Paso */
     var colMaestro = document.createElement('aside');
     colMaestro.className = 'figura-col-maestro';
-    colMaestro.setAttribute('aria-label', 'Explicación paso a paso con Vértiz');
+    colMaestro.setAttribute('aria-label', 'Explicación paso a paso con Profesor Xavier');
 
     var puntosHtml = pasos.map(function (p, idx) {
       return '<button type="button" class="mm-punto-paso' + (idx === 0 ? ' activo' : '') + '" data-mm-ir="' + idx + '" title="Ir al paso ' + (idx + 1) + ': ' + p.titulo + '">' + (idx + 1) + '</button>';
@@ -288,7 +294,7 @@
               '<span class="onda-1"></span><span class="onda-2"></span><span class="onda-3"></span><span class="onda-4"></span>' +
             '</span>' +
           '</div>' +
-          '<strong class="mm-profesor-nombre">Vértiz</strong>' +
+          '<strong class="mm-profesor-nombre">Profesor Xavier</strong>' +
           '<span class="mm-profesor-subtitulo">Tu guía de geometría</span>' +
           '<div class="mm-controles-audio">' +
             '<button type="button" class="btn-mm-chip-voz" data-mm-accion="voz" title="Activar o silenciar voz">' +
@@ -342,6 +348,26 @@
     escenarioClase.appendChild(colMaestro);
     figura.appendChild(escenarioClase);
 
+    // Aprovechar la columna del profesor: en escritorio, pasos y explicación
+    // comparten la fila del avatar, dejando la navegación visible al pie.
+    var infoDocente=colMaestro.querySelector('.mm-profesor-info');
+    var filaPedagogica=colMaestro.querySelector('.mm-progreso-fila');
+    var explicacionPedagogica=colMaestro.querySelector('.mm-caja-dialogo');
+    var listaPedagogica=colMaestro.querySelector('.mm-guion-lista');
+    function reorganizarProfesor(){
+      var horizontal=esHero && window.innerWidth>1120 && window.innerHeight>=700;
+      colMaestro.classList.toggle('mm-distribucion-horizontal',horizontal);
+      if(horizontal){
+        if(filaPedagogica.parentNode!==infoDocente)infoDocente.appendChild(filaPedagogica);
+        if(explicacionPedagogica.parentNode!==infoDocente)infoDocente.appendChild(explicacionPedagogica);
+      }else{
+        if(filaPedagogica.parentNode!==colMaestro)colMaestro.insertBefore(filaPedagogica,listaPedagogica);
+        if(explicacionPedagogica.parentNode!==colMaestro)colMaestro.insertBefore(explicacionPedagogica,listaPedagogica);
+      }
+    }
+    reorganizarProfesor();
+    window.addEventListener('resize',reorganizarProfesor);
+
     /* Pie descriptivo en lecciones */
     if (!esHero && spec.pie) {
       var pie = document.createElement('figcaption');
@@ -373,6 +399,144 @@
       iniciado: false,
       figura: figura
     };
+    // Demostraciones geométricas transitorias: no modifican la figura ni
+    // sus capas. Se proyectan desde los vértices reales en vistas 2D/3D.
+    var demoActiva=null, demoTemporizador=null, demoMostradas={}, demoSesion=null;
+    function svgConcepto(tipo,atributos,contenido){
+      var el=document.createElementNS('http://www.w3.org/2000/svg',tipo);
+      Object.keys(atributos||{}).forEach(function(k){el.setAttribute(k,String(atributos[k]));});
+      if(contenido!==undefined)el.textContent=contenido;
+      trazoConceptual.appendChild(el);
+      return el;
+    }
+    function proyectarConcepto(nombre){
+      var punto=spec.vertices&&spec.vertices[nombre];
+      if(!punto)return null;
+      var q=estado.tipo==='3d'&&estado.api&&estado.api.proyectarPunto
+        ?estado.api.proyectarPunto(punto.p)
+        :estado.proyeccion2d&&estado.proyeccion2d.proyectar(punto.p);
+      return q&&q.visible&&Number.isFinite(q.x)&&Number.isFinite(q.y)?q:null;
+    }
+    function lineaConcepto(a,b,color,ancho,punteada){
+      return svgConcepto('line',{x1:a.x,y1:a.y,x2:b.x,y2:b.y,
+        stroke:color,'stroke-width':ancho||5,'stroke-linecap':'round',
+        'stroke-dasharray':punteada?'9 6':'none',
+        'vector-effect':'non-scaling-stroke'});
+    }
+    function rotuloConcepto(x,y,t,color){
+      x=Math.max(75,Math.min(lienzo.clientWidth-75,x));
+      y=Math.max(26,Math.min(lienzo.clientHeight-24,y));
+      svgConcepto('rect',{x:x-79,y:y-20,width:158,height:32,rx:11,
+        fill:'#132448','fill-opacity':'.91'});
+      svgConcepto('text',{x:x,y:y+2,'text-anchor':'middle',
+        'font-size':'15','font-weight':'800',fill:color||'#fff',
+        'font-family':'system-ui, sans-serif'},t);
+    }
+    function dibujarConcepto(){
+      trazoConceptual.replaceChildren();
+      if(!demoActiva)return;
+      var ancho=lienzo.clientWidth,alto=lienzo.clientHeight;
+      if(ancho<=0||alto<=0)return;
+      trazoConceptual.setAttribute('viewBox','0 0 '+ancho+' '+alto);
+      var A=proyectarConcepto('A'),B=proyectarConcepto('B'),
+        A1=proyectarConcepto('A1'),B1=proyectarConcepto('B1'),
+        C=proyectarConcepto('C'),D=proyectarConcepto('D'),
+        C1=proyectarConcepto('C1'),D1=proyectarConcepto('D1');
+      if(!A||!B||!A1||!B1)return;
+      if(demoActiva==='paralelas'){
+        // Dos secciones correspondientes de planos paralelos.
+        if(C&&D&&C1&&D1){
+          [ [A,B,C,D],[A1,B1,C1,D1] ].forEach(function(puntos,i){
+            svgConcepto('polygon',{points:puntos.map(function(p){return p.x+','+p.y;}).join(' '),
+              fill:i?'#18a9b8':'#4879ff','fill-opacity':'.14',
+              stroke:i?'#11a7a2':'#4d68f4','stroke-width':'2',
+              'stroke-dasharray':'7 5'});
+          });
+        }
+        lineaConcepto(A,B,'#4d68f4',5.5);
+        lineaConcepto(A1,B1,'#0ca99e',5.5);
+        lineaConcepto(A,A1,'#718096',2.5,true);
+        lineaConcepto(B,B1,'#718096',2.5,true);
+        rotuloConcepto((A1.x+B1.x)/2,Math.min(A1.y,B1.y)-39,'Bases paralelas ∥','#c7fff5');
+      } else if(demoActiva==='perpendiculares'){
+        // En un prisma RECTO, AB y AA1 son perpendiculares en el espacio.
+        lineaConcepto(A,B,'#3186ff',5.5);
+        lineaConcepto(A,A1,'#f59e0b',5.5);
+        var vx=B.x-A.x,vy=B.y-A.y,wx=A1.x-A.x,wy=A1.y-A.y,
+          nb=Math.hypot(vx,vy),nh=Math.hypot(wx,wy);
+        if(nb>5&&nh>5){
+          var u={x:vx/nb,y:vy/nb},v={x:wx/nh,y:wy/nh},
+            m=Math.min(28,nb*.22,nh*.22),
+            p={x:A.x+u.x*m,y:A.y+u.y*m},
+            q={x:A.x+v.x*m,y:A.y+v.y*m},
+            cr={x:p.x+v.x*m,y:p.y+v.y*m};
+          svgConcepto('polyline',{points:[p,cr,q].map(function(z){return z.x+','+z.y;}).join(' '),
+            fill:'none',stroke:'#ef4444','stroke-width':4,'stroke-linejoin':'round'});
+          rotuloConcepto(A.x+(u.x+v.x)*m*2,
+            A.y+(u.y+v.y)*m*2-16,'Ángulo de 90°','#ffdfaa');
+        }
+      }
+    }
+    function ocultarConcepto(){
+      if(demoTemporizador!==null){clearTimeout(demoTemporizador);demoTemporizador=null;}
+      demoActiva=null;
+      trazoConceptual.classList.remove('visible');
+      trazoConceptual.dataset.demostracion='ninguna';
+      trazoConceptual.replaceChildren();
+    }
+    function mostrarConcepto(tipo,duracion){
+      ocultarConcepto();
+      demoActiva=tipo;
+      trazoConceptual.dataset.demostracion=tipo;
+      dibujarConcepto();
+      trazoConceptual.classList.add('visible');
+      demoTemporizador=setTimeout(ocultarConcepto,duracion||2300);
+    }
+    function posicionFrase(texto,frase){
+      var t=String(texto||'').toLocaleLowerCase('es'),f=String(frase||'').toLocaleLowerCase('es');
+      var indice=t.indexOf(f);
+      return indice>=0?indice:Math.max(0,t.indexOf(f.split(' ').pop()));
+    }
+    function dispararConceptosEn(posicion,texto){
+      var actual=pasos[estado.pasoActual],cues=actual&&actual.demostraciones||[];
+      cues.forEach(function(c,i){
+        if(demoMostradas[i])return;
+        if(posicion>=posicionFrase(texto,c.frase)){
+          demoMostradas[i]=true;
+          mostrarConcepto(c.tipo,c.duracion);
+        }
+      });
+    }
+    function reiniciarConceptos(){
+      ocultarConcepto();
+      demoMostradas={};
+      demoSesion=null;
+    }
+    document.addEventListener('avatar-palabra',function(e){
+      var d=e.detail||{};
+      if(d.origen!==origenNarracion||d.sesion!==demoSesion)return;
+      dispararConceptosEn(d.charIndex,d.texto);
+    });
+    document.addEventListener('avatar-audio-elemento',function(e){
+      var d=e.detail||{};
+      if(d.origen!==origenNarracion||d.sesion!==demoSesion||!d.audio)return;
+      var audio=d.audio,indice=estado.pasoActual;
+      var texto=pasos[indice].texto;
+      function seguirAudio(){
+        if(indice!==estado.pasoActual||!Number.isFinite(audio.duration)||audio.duration<=0)return;
+        // La voz neural no publica marcas de fonemas: posición temporal
+        // proporcional a la frase, ligada al audio (respeta pausa y búsqueda).
+        dispararConceptosEn(Math.floor((audio.currentTime/audio.duration)*texto.length),texto);
+      }
+      audio.addEventListener('timeupdate',seguirAudio);
+      audio.addEventListener('seeked',seguirAudio);
+    });
+    document.addEventListener('avatar-voz-estado',function(e){
+      var d=e.detail||{};
+      if(d.origen===origenNarracion&&d.sesion===demoSesion&&
+         ['finalizado','detenido','silenciado','sin-voz','error'].indexOf(d.estado)!==-1)
+        ocultarConcepto();
+    });
     function sincronizarCapas(){
       capasBar.querySelectorAll('[data-capa]').forEach(function(b){
         var id=b.getAttribute('data-capa');
@@ -395,6 +559,7 @@
     }
 
     function actualizarAtencion() {
+      if(demoActiva)dibujarConcepto();
       if(!estado.iniciado || !estado.atencionActiva || !estado.puntoAtencion || !estado.capaAtencion || estado.capasOcultas[estado.capaAtencion]) {
         guiaFoco.hidden=true;
         if(estado.atencionActiva && estado.capasOcultas[estado.capaAtencion] && global.Tutores)global.Tutores.suspender(figura);
@@ -531,6 +696,7 @@
     function irAPaso(idx, conAudio) {
       if (idx < 0 || idx >= pasos.length) return;
       visorActivo = instanciaPublica;
+      reiniciarConceptos();
       estado.pasoActual = idx;
       estado.iniciado = true;
       var paso = pasos[idx];
@@ -614,7 +780,7 @@
         global.AvatarGuia.setMensaje(txtExplicacion.textContent);
       if(conAudio!==false) {
         if(global.Avatar && global.Avatar.hablarVoz)
-          global.Avatar.hablarVoz(paso.texto,null,{origen:origenNarracion,figura:idFigura,paso:idx});
+          demoSesion=global.Avatar.hablarVoz(paso.texto,null,{origen:origenNarracion,figura:idFigura,paso:idx});
         // Dos pasos siguientes se descargan mientras se oye el actual.
         // Sin precarga de otros módulos para limitar uso de Workers AI.
         if(global.VozNeural && global.VozNeural.precargar &&

@@ -756,21 +756,27 @@
         texto: 'Un prisma recto es un poliedro con dos bases poligonales paralelas e idénticas, y caras laterales perpendiculares a ellas.',
         camara: { theta: -0.68, phi: 0.3 },
         capasVisibles: ['bases', 'aristas', 'etiquetas'],
-        capaResaltada: 'bases'
+        capaResaltada: 'bases',
+        demostraciones: [
+          { tipo: 'paralelas', frase: 'bases poligonales paralelas', duracion: 2200 },
+          { tipo: 'perpendiculares', frase: 'caras laterales perpendiculares', duracion: 2450 }
+        ]
       },
       {
         titulo: 'Las bases superior e inferior',
         texto: 'Miren las dos bases en color azul. Al ser paralelas e iguales, definen el área basal que usaremos para el volumen.',
         camara: { theta: -0.68, phi: 0.65 },
         capasVisibles: ['bases', 'aristas', 'etiquetas'],
-        capaResaltada: 'bases'
+        capaResaltada: 'bases',
+        demostraciones: [{ tipo: 'paralelas', frase: 'paralelas e iguales', duracion: 2400 }]
       },
       {
         titulo: 'Caras laterales y aristas',
         texto: 'Las caras laterales en color ámbar son rectángulos perfectos. Cada arista lateral une vértices correspondientes de ambas bases.',
         camara: { theta: 0.35, phi: 0.2 },
         capasVisibles: ['bases', 'laterales', 'aristas', 'etiquetas'],
-        capaResaltada: 'laterales'
+        capaResaltada: 'laterales',
+        demostraciones: [{ tipo: 'perpendiculares', frase: 'rectángulos perfectos', duracion: 2550 }]
       },
       {
         titulo: 'La altura del prisma',
