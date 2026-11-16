@@ -472,6 +472,18 @@
     hueso.updateWorldMatrix(false,true);
     return true;
   }
+  // Las articulaciones Rocketbox tienen ejes FBX arbitrarios.
+  // Convertir los ejes de giro del mundo al espacio del padre evita
+  // que un intento de mirar a la izquierda incline la cabeza de lado.
+  function girarMundo(hueso,eje,angulo){
+    if(!hueso || !angulo)return;
+    var padre=hueso.parent;
+    if(padre)padre.updateWorldMatrix(true,false);
+    var qPadre=padre?padre.getWorldQuaternion(new T.Quaternion()):new T.Quaternion();
+    var ejeLocal=eje.clone().applyQuaternion(qPadre.invert()).normalize();
+    hueso.quaternion.premultiply(new T.Quaternion().setFromAxisAngle(ejeLocal,angulo));
+    hueso.updateWorldMatrix(false,true);
+  }
   function dibujarVistas(lista,t,quieto) {
     if(mallasLabios.length){
       var apertura=quieto?0:nivelDeVoz(t);
@@ -530,17 +542,18 @@
         Object.keys(bases).forEach(function(k){huesosGuia[k].quaternion.copy(bases[k]);});
         // Cabeza y ojos observan el sólido mientras el docente lo señala.
         if(huesosGuia.neck){
-          huesosGuia.neck.rotateY(miradaX*0.35);
-          huesosGuia.neck.rotateX(-miradaY*0.35);
+          girarMundo(huesosGuia.neck,new T.Vector3(0,1,0),miradaX*0.32);
+          girarMundo(huesosGuia.neck,new T.Vector3(1,0,0),miradaY*0.23);
         }
         if(huesosGuia.head){
-          huesosGuia.head.rotateY(miradaX*0.85);
-          huesosGuia.head.rotateX(-miradaY*0.65+(hablando&&!quieto?Math.sin(t*2.2)*0.022:0));
+          girarMundo(huesosGuia.head,new T.Vector3(0,1,0),miradaX*0.72);
+          girarMundo(huesosGuia.head,new T.Vector3(1,0,0),
+            miradaY*0.58+(hablando&&!quieto?Math.sin(t*2.2)*0.016:0));
         }
         ['leftEye','rightEye'].forEach(function(k){
           if(huesosGuia[k]){
-            huesosGuia[k].rotateY(miradaX*0.40);
-            huesosGuia[k].rotateX(-miradaY*0.28);
+            girarMundo(huesosGuia[k],new T.Vector3(0,1,0),miradaX*0.25);
+            girarMundo(huesosGuia[k],new T.Vector3(1,0,0),miradaY*0.16);
           }
         });
         // En los Rocketbox, las articulaciones bip01*upperarm se verificaron
