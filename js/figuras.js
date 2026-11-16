@@ -431,6 +431,69 @@
     });
   })();
 
+
+  /* Variantes clasificables para el laboratorio de prismas.
+     Y es el eje perpendicular a los planos de las bases. La base irregular
+     permanece convexa, pero sus lados/ángulos no son todos iguales. */
+  function prismaPoligonal(n, regular, titulo) {
+    var R=1.25,h=2.7,vs={},caras=[],aristas=[],inferior=[],superior=[];
+    var radios=regular?[]:[1,0.92,1.12,0.98,1.06,0.88];
+    for(var i=0;i<n;i++){
+      var ang=2*Math.PI*i/n+Math.PI/n;
+      var rr=R*(regular?1:radios[i]);
+      var p=v(rr*Math.cos(ang),0,rr*Math.sin(ang));
+      var lo='A'+(i+1),hi='B'+(i+1);
+      vs[lo]={p:p,etiqueta:'A'+(i+1),sinEtiqueta:i>=4};
+      vs[hi]={p:v(p[0],h,p[2]),etiqueta:'B'+(i+1),sinEtiqueta:i>=4};
+      inferior.push(lo);superior.push(hi);
+    }
+    caras.push({v:inferior,capa:'bases'},{v:superior,capa:'bases'});
+    for(var j=0;j<n;j++){
+      var nx=(j+1)%n, a=inferior[j],b=inferior[nx],
+        c=superior[j],d=superior[nx];
+      caras.push({v:[a,b,d,c],capa:'laterales'});
+      aristas.push({a:a,b:b,capa:'aristas'},{a:c,b:d,capa:'aristas'},
+        {a:a,b:c,capa:'aristas'});
+    }
+    var centroB=centroide(inferior.map(function(k){return vs[k].p;}));
+    var centroT=centroide(superior.map(function(k){return vs[k].p;}));
+    vs.O={p:centroB,etiqueta:'O',capa:'altura',sinEsfera:true};
+    vs.O1={p:centroT,etiqueta:'O₁',capa:'altura',sinEsfera:true};
+    var lados=inferior.map(function(a,i){
+      return norma(resta(vs[inferior[(i+1)%n]].p,vs[a].p));
+    });
+    var perimetro=lados.reduce(function(acc,v){return acc+v;},0);
+    var areaBase=0;
+    for(var k=0;k<n;k++){
+      var p1=vs[inferior[k]].p,p2=vs[inferior[(k+1)%n]].p;
+      areaBase+=p1[0]*p2[2]-p2[0]*p1[2];
+    }
+    areaBase=Math.abs(areaBase)/2;
+    return {
+      titulo:titulo,
+      alt:titulo+' con dos bases paralelas congruentes y '+n+' caras laterales rectangulares.',
+      pie:'Es un prisma recto: las aristas laterales son perpendiculares a las bases. Volumen = área basal × altura.',
+      camara:{theta:-0.73,phi:0.28},
+      vertices:vs,caras:caras,aristas:aristas,
+      lineas:[{v:['O','O1'],capa:'altura',estilo:'fuerte',grosor:2.4}],
+      capas:[
+        {id:'bases',nombre:'Bases',color:'#2c3c9e',activa:true,opacidad:0.15},
+        {id:'laterales',nombre:'Caras laterales',color:'#b85c0d',activa:false,opacidad:0.12},
+        {id:'aristas',nombre:'Aristas',color:'#131829',activa:true},
+        {id:'altura',nombre:'Altura',color:'#0c7367',activa:false,auxiliar:true},
+        {id:'etiquetas',nombre:'Nombres',color:'#6c748c',activa:true}
+      ],
+      parametros:{lados:n,regular:regular,altura:h,perimetroBase:perimetro,
+        areaBase:areaBase,areaLateral:perimetro*h,volumen:areaBase*h}
+    };
+  }
+  registrar('prisma-hexagonal',
+    prismaPoligonal(6,true,'Prisma recto de base hexagonal regular'));
+  registrar('prisma-octagonal',
+    prismaPoligonal(8,true,'Prisma recto de base octagonal regular'));
+  registrar('prisma-irregular',
+    prismaPoligonal(6,false,'Prisma recto de base hexagonal irregular'));
+
   /* --- 7. MÓDULO ESTRELLA: prisma y diagonales (2:3:6) --- */
   (function () {
     var a = 2, b = 3, h = 6;
@@ -807,11 +870,102 @@
         capaResaltada: 'altura'
       },
       {
-        titulo: 'Fórmulas maestras de cálculo',
-        texto: 'Área Total = Área Lateral + 2 veces el Área de la Base. Y el Volumen = Área de la base por la altura.',
+        titulo: 'Área y volumen del prisma recto',
+        texto: 'El área total suma las dos bases y el área lateral. El volumen se obtiene multiplicando el área de la base por la altura perpendicular. Observa las expresiones matemáticas.',
+        formulas: [
+          { etiqueta: 'Área de la base', latex: 'A_b=a\\,b',
+            nota: 'Base rectangular del modelo.' },
+          { etiqueta: 'Área lateral', latex: 'A_L=P_b\\,h',
+            nota: 'Se aplica a los prismas rectos.' },
+          { etiqueta: 'Área total', latex: 'A_T=2A_b+A_L',
+            nota: 'Dos bases y las caras laterales.' },
+          { etiqueta: 'Volumen', latex: 'V=A_b\\,h',
+            nota: 'Área basal por altura perpendicular.' }
+        ],
         camara: { theta: -0.68, phi: 0.3 },
         capasVisibles: ['bases', 'laterales', 'aristas', 'etiquetas'],
         capaResaltada: 'bases'
+      }
+    ],
+
+    'prisma-hexagonal': [
+      {
+        titulo:'Bases hexagonales regulares',
+        texto:'Este prisma recto tiene dos bases hexagonales congruentes, con seis lados y seis ángulos iguales. Sus caras laterales son rectángulos.',
+        camara:{theta:-0.72,phi:0.34},capasVisibles:['bases','aristas','etiquetas'],
+        capaResaltada:'bases'
+      },
+      {
+        titulo:'Altura y apotema basal',
+        texto:'La altura es perpendicular a los planos de ambas bases. En una base regular, el área se obtiene con el perímetro por la apotema, dividido entre dos.',
+        camara:{theta:-0.72,phi:0.38},capasVisibles:['bases','aristas','altura','etiquetas'],
+        capaResaltada:'altura',
+        formulas:[{etiqueta:'Base hexagonal regular',latex:'A_b=\\frac{P_b\\,a_p}{2}',nota:'Apotema aₚ del hexágono.'}]
+      },
+      {
+        titulo:'Áreas y volumen',
+        texto:'Para cualquier prisma recto, el área lateral es el perímetro de la base por la altura. El volumen es el área basal por la altura perpendicular.',
+        camara:{theta:-0.72,phi:0.32},capasVisibles:['bases','laterales','aristas','etiquetas'],
+        capaResaltada:'laterales',
+
+        formulas: [
+          {etiqueta:'Área lateral',latex:'A_L=P_b\\,h',nota:'Válida para este prisma recto.'},
+          {etiqueta:'Área total',latex:'A_T=2A_b+A_L',nota:'Suma de todas las caras.'},
+          {etiqueta:'Volumen',latex:'V=A_b\\,h',nota:'H es la distancia entre bases.'}
+        ],
+      }
+    ],
+    'prisma-octagonal': [
+      {
+        titulo:'Prisma con ocho lados',
+        texto:'Las dos bases son octágonos regulares congruentes. Cada base tiene ocho lados y ocho ángulos iguales; el prisma tiene ocho caras laterales.',
+        camara:{theta:-0.72,phi:0.35},capasVisibles:['bases','aristas','etiquetas'],
+        capaResaltada:'bases'
+      },
+      {
+        titulo:'Base regular y altura',
+        texto:'El área de un polígono regular es la mitad del perímetro multiplicado por su apotema. La altura une perpendicularmente ambos planos de base.',
+        camara:{theta:-0.72,phi:0.38},capasVisibles:['bases','aristas','altura','etiquetas'],
+        capaResaltada:'altura',
+        formulas:[{etiqueta:'Área del octágono regular',latex:'A_b=\\frac{P_b\\,a_p}{2}',nota:'Pᵦ: perímetro, aₚ: apotema.'}]
+      },
+      {
+        titulo:'Áreas y volumen',
+        texto:'El área lateral de este prisma recto es perímetro por altura. Para calcular su volumen, multiplica el área del octágono por la altura.',
+        camara:{theta:-0.72,phi:0.32},capasVisibles:['bases','laterales','aristas','etiquetas'],
+        capaResaltada:'laterales',
+
+        formulas: [
+          {etiqueta:'Área lateral',latex:'A_L=P_b\\,h',nota:'Válida para este prisma recto.'},
+          {etiqueta:'Área total',latex:'A_T=2A_b+A_L',nota:'Suma de todas las caras.'},
+          {etiqueta:'Volumen',latex:'V=A_b\\,h',nota:'H es la distancia entre bases.'}
+        ],
+      }
+    ],
+    'prisma-irregular': [
+      {
+        titulo:'Base poligonal irregular',
+        texto:'Esta base hexagonal es irregular: sus lados y sus ángulos no son todos iguales. Las dos bases del prisma siguen siendo congruentes y paralelas.',
+        camara:{theta:-0.72,phi:0.33},capasVisibles:['bases','aristas','etiquetas'],
+        capaResaltada:'bases'
+      },
+      {
+        titulo:'La altura sigue siendo perpendicular',
+        texto:'Aunque la base no sea regular, las aristas laterales de este prisma recto forman noventa grados con las bases. El segmento entre sus centros indica la altura.',
+        camara:{theta:-0.72,phi:0.38},capasVisibles:['bases','aristas','altura','etiquetas'],
+        capaResaltada:'altura'
+      },
+      {
+        titulo:'Calcular el volumen de la base irregular',
+        texto:'El área de una base irregular puede hallarse dividiéndola en triángulos. Después se multiplica por la altura. No emplees apotema si el polígono no es regular.',
+        camara:{theta:-0.72,phi:0.32},capasVisibles:['bases','laterales','aristas','etiquetas'],
+        capaResaltada:'bases',
+
+        formulas: [
+          {etiqueta:'Área lateral',latex:'A_L=P_b\\,h',nota:'Válida para este prisma recto.'},
+          {etiqueta:'Área total',latex:'A_T=2A_b+A_L',nota:'Suma de todas las caras.'},
+          {etiqueta:'Volumen',latex:'V=A_b\\,h',nota:'H es la distancia entre bases.'}
+        ],
       }
     ],
     'prisma-diagonales': [
@@ -881,8 +1035,13 @@
         capaResaltada: 'altura'
       },
       {
-        titulo: 'Cálculo de volumen',
-        texto: 'El volumen es el área de la base por la altura, o el área de la sección recta por la arista lateral.',
+        titulo: 'Área y volumen del prisma oblicuo',
+        texto: 'Aunque las aristas laterales estén inclinadas, el volumen se obtiene multiplicando el área basal por la distancia perpendicular entre las bases. El área lateral se calcula sumando las áreas de las caras, no multiplicando el perímetro por la altura.',
+        formulas: [
+          {etiqueta:'Volumen (recto u oblicuo)',latex:'V=A_b\\,h',nota:'Usa altura perpendicular, no la arista oblicua.'},
+          {etiqueta:'Área total',latex:'A_T=2A_b+A_L',nota:'Suma las dos bases congruentes.'},
+          {etiqueta:'Área lateral oblicua',latex:'A_L=\\sum_{i=1}^{n}A_i',nota:'Suma las áreas de las caras laterales.'}
+        ],
         camara: { theta: -0.65, phi: 0.28 },
         capaResaltada: 'arista-lateral'
       }

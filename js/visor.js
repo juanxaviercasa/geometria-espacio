@@ -323,6 +323,7 @@
           badgeCapaHtml +
         '</div>' +
         '<p class="mm-dialogo-texto" data-mm-texto aria-live="off">' + pasos[0].texto + '</p>' +
+        '<div class="mm-tablero-formulas" data-mm-formulas hidden aria-label="Expresiones matemáticas del paso"></div>' +
         '<div class="mm-transcripcion" data-mm-transcripcion aria-hidden="true"></div>' +
         '<p class="mm-estado-narracion" data-mm-estado-voz role="status" aria-live="polite">Explicación visible. Pulsa explicar para escuchar.</p>' +
       '</div>' +
@@ -677,6 +678,44 @@
     var txtPasoNum = colMaestro.querySelector('[data-mm-paso-num]');
     var txtTitulo = colMaestro.querySelector('[data-mm-titulo]');
     var txtExplicacion = colMaestro.querySelector('[data-mm-texto]');
+    var tableroFormulas = colMaestro.querySelector('[data-mm-formulas]');
+    function renderizarTarjetasFormula(formulas) {
+      var activas=Array.isArray(formulas)&&formulas.length>0;
+      colMaestro.classList.toggle('mm-matematicas',activas);
+      tableroFormulas.hidden=!activas;
+      tableroFormulas.replaceChildren();
+      if(!activas)return;
+      formulas.forEach(function(f) {
+        var tarjeta=document.createElement('div');
+        tarjeta.className='mm-formula-tarjeta';
+        var etiqueta=document.createElement('span');
+        etiqueta.className='mm-formula-nombre';
+        etiqueta.textContent=f.etiqueta||'Expresión';
+        var formula=document.createElement('span');
+        formula.className='mm-formula-latex';
+        formula.setAttribute('aria-label',f.etiqueta||'Fórmula');
+        formula.textContent=f.latex;
+        // KaTeX local con MathML accesible; evita mostrar fórmulas narradas
+        // como texto en lugar de notación matemática.
+        if(global.katex && typeof global.katex.render==='function') {
+          try {
+            global.katex.render(f.latex,formula,{
+              displayMode:false,throwOnError:true,trust:false,
+              output:'htmlAndMathml',strict:'ignore'
+            });
+          } catch (error) { formula.setAttribute('data-math-error','true'); }
+        }
+        tarjeta.appendChild(etiqueta);
+        tarjeta.appendChild(formula);
+        if(f.nota){
+          var nota=document.createElement('small');
+          nota.className='mm-formula-nota';
+          nota.textContent=f.nota;
+          tarjeta.appendChild(nota);
+        }
+        tableroFormulas.appendChild(tarjeta);
+      });
+    }
     var tagCapa = colMaestro.querySelector('[data-mm-capa-tag]');
     var ondasMM = colMaestro.querySelector('[data-mm-ondas]');
     var botonesPuntos = colMaestro.querySelectorAll('[data-mm-ir]');
@@ -726,7 +765,8 @@
 
       txtPasoNum.textContent = 'Paso ' + (idx + 1) + ' de ' + pasos.length;
       txtTitulo.textContent = paso.titulo;
-      txtExplicacion.innerHTML = paso.texto;
+      txtExplicacion.textContent = paso.texto;
+      renderizarTarjetasFormula(paso.formulas);
       if(narrador)narrador.mostrarPaso(paso.texto,idx,pasos.length);
 
       var infoCapa = nombreCapa(spec, paso.capaResaltada);

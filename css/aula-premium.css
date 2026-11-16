@@ -247,3 +247,98 @@ body.con-visor-proyectado .hero .figura.modo-proyector { z-index:2147482000; }
 @media(prefers-reduced-motion:reduce){
   .figura-stage-wrap .mm-demostracion-conceptual{transition:none}
 }
+
+
+/* Biblioteca de prismas: control contextual, sin ocultar los otros sólidos. */
+.hero .hero-tipos-prisma{
+  flex:0 0 auto;display:inline-flex;align-items:center;gap:.35rem;
+  padding:0 .28rem;white-space:nowrap;color:#c9d9ff;
+  font-size:.72rem;font-weight:750;
+}
+.hero .hero-tipos-prisma select{
+  max-width:175px;min-height:39px;padding:.4rem 1.2rem .4rem .58rem;
+  color:#eaf4ff;background:#1a2855;border:1px solid #8197d3;
+  border-radius:10px;font:inherit;font-size:.82rem;cursor:pointer;
+}
+.hero .hero-tipos-prisma select:focus-visible{
+  outline:3px solid #f3d47b;outline-offset:2px;
+}
+
+/* Fórmulas matemáticas reales, en KaTeX/MathML, junto al docente.
+   Las tarjetas se revelan al llegar al paso, sin afectar a la narración. */
+.mm-tablero-formulas[hidden]{display:none!important}
+.mm-tablero-formulas{
+  display:grid;gap:.38rem;margin-top:.4rem;min-width:0;
+}
+.mm-formula-tarjeta{
+  display:grid;grid-template-columns:minmax(0,.83fr) minmax(0,1.17fr);
+  align-items:center;gap:.15rem .5rem;padding:.43rem .54rem;
+  min-width:0;border-radius:10px;border:1px solid #d9e2f8;
+  background:linear-gradient(115deg,#f8faff,#f0f5ff);
+  animation:zenit-formula-aparece .35s ease both;
+}
+.mm-formula-tarjeta:nth-child(2){animation-delay:.09s}
+.mm-formula-tarjeta:nth-child(3){animation-delay:.18s}
+.mm-formula-tarjeta:nth-child(4){animation-delay:.27s}
+.mm-formula-nombre{font-size:.72rem;line-height:1.25;color:#354469;font-weight:700}
+.mm-formula-latex{
+  display:flex;align-items:center;justify-content:flex-end;
+  white-space:nowrap;min-width:0;color:#242f69;
+  font-family:Georgia,serif;font-weight:700;font-size:1.04rem;
+}
+.mm-formula-latex .katex{font-size:1.1em}
+.mm-formula-nota{
+  grid-column:1/-1;color:#5d6b89;font-size:.66rem;line-height:1.3;
+}
+.mm-formula-latex[data-math-error]{color:#ae3333;white-space:normal;font-size:.78rem}
+@keyframes zenit-formula-aparece{
+  from{opacity:0;transform:translateY(5px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.hero .figura-hero-modo .mm-distribucion-horizontal.mm-matematicas .mm-profesor-cabecera{
+  grid-template-columns:minmax(140px,.73fr) minmax(0,1.27fr)!important;
+  align-items:center!important;
+}
+.hero .figura-hero-modo .mm-distribucion-horizontal.mm-matematicas .mm-avatar-slot{
+  max-width:205px!important;align-self:center!important;
+}
+.hero .figura-hero-modo .mm-distribucion-horizontal.mm-matematicas .mm-profesor-info{
+  gap:.26rem!important;min-width:0;
+}
+.hero .figura-hero-modo .mm-distribucion-horizontal.mm-matematicas .mm-caja-dialogo{
+  padding:.55rem .6rem!important;
+}
+.hero .figura-hero-modo .mm-distribucion-horizontal.mm-matematicas .mm-dialogo-texto{
+  font-size:.83rem;line-height:1.35;
+}
+.hero .figura-hero-modo .mm-distribucion-horizontal.mm-matematicas .mm-tablero-formulas{
+  margin-top:.3rem;gap:.26rem;
+}
+.hero .figura-hero-modo .mm-distribucion-horizontal.mm-matematicas .mm-formula-tarjeta{
+  padding:.3rem .45rem;gap:.1rem .45rem;
+}
+@media(max-width:1350px){
+  .hero .hero-tipos-prisma span{display:none}
+  .hero .figura-hero-modo .mm-distribucion-horizontal.mm-matematicas .mm-formula-latex .katex{font-size:.98em}
+  .hero .figura-hero-modo .mm-distribucion-horizontal.mm-matematicas .mm-formula-nota{font-size:.61rem}
+}
+@media(max-width:920px){
+  .hero .figura-hero-modo .mm-tablero-formulas{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .hero .figura-hero-modo .mm-formula-tarjeta{
+    grid-template-columns:1fr;gap:.25rem;
+  }
+  .hero .figura-hero-modo .mm-formula-latex{justify-content:flex-start}
+}
+@media(max-width:550px){
+  .hero .hero-tipos-prisma select{max-width:165px}
+  .hero .figura-hero-modo .mm-tablero-formulas{grid-template-columns:1fr}
+  .hero .figura-hero-modo .mm-formula-tarjeta{
+    grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);
+  }
+  .hero .figura-hero-modo .mm-formula-latex{justify-content:flex-end}
+}
+@media(prefers-reduced-motion:reduce){
+  .mm-formula-tarjeta{animation:none!important}
+}

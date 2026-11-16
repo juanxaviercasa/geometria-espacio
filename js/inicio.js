@@ -21,6 +21,10 @@
     try {
       var modelos = {
         prisma:'prisma-elementos',
+        'prisma-oblicuo':'paralelepipedo-oblicuo',
+        'prisma-hexagonal':'prisma-hexagonal',
+        'prisma-octagonal':'prisma-octagonal',
+        'prisma-irregular':'prisma-irregular',
         piramide:'piramide-elementos',
         cilindro:'cilindro',
         cono:'cono',
@@ -32,8 +36,19 @@
       var elegido = new URLSearchParams(window.location.search).get('solido') || 'prisma';
       if (!Object.prototype.hasOwnProperty.call(modelos,elegido)) elegido='prisma';
       document.querySelectorAll('.hero-solidos-links [data-solido]').forEach(function(a){
-        if (a.dataset.solido===elegido) a.setAttribute('aria-current','true');
+        if (a.dataset.solido===elegido ||
+            (a.dataset.solido==='prisma'&&elegido.indexOf('prisma-')===0))
+          a.setAttribute('aria-current','true');
       });
+      var selectorPrisma=document.getElementById('hero-tipo-prisma');
+      if(selectorPrisma){
+        selectorPrisma.value=elegido==='prisma'||elegido.indexOf('prisma-')===0
+          ?elegido:'prisma';
+        selectorPrisma.addEventListener('change',function(){
+          if(Object.prototype.hasOwnProperty.call(modelos,selectorPrisma.value))
+            window.location.href='?solido='+encodeURIComponent(selectorPrisma.value);
+        });
+      }
       window.Visor.montar(cont, modelos[elegido], { modoHero: true, sinAviso: true });
     } catch (e) {
       console.warn('Error al montar figura hero 3D:', e);

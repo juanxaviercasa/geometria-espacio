@@ -338,7 +338,7 @@ test('Fase 2: las 16 escenas curriculares tienen vértices, capas y guías váli
   const window={};
   vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/figuras.js'),'utf8'),{window});
   const F=window.Figuras;
-  assert.equal(Object.keys(F.spec).length,16);
+  assert.equal(Object.keys(F.spec).length,19);
   for(const id of Object.keys(F.spec)){
     const s=F.obtener(id),vs=s.vertices||{},layers=new Set((s.capas||[]).map(c=>c.id));
     Object.keys(vs).forEach(k=>assert.ok(vs[k].p.every(Number.isFinite),id+' vértice '+k));
@@ -972,4 +972,101 @@ test('La altura del prisma recto es OO₁ entre centros y perpendicular a ambas 
   assert.equal(fig.vertices.R0.etiqueta,'90°');
   assert.equal(fig.vertices.R1.etiqueta,'90°');
   assert.ok(fig.pasosGuia[3].texto.includes('noventa grados'));
+});
+
+
+test('Prismas regulares y de base irregular: geometría convexa y cálculo correcto',()=>{
+  const w={};
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/figuras.js'),'utf8'),{window:w});
+  for(const [id,n,regular] of [
+    ['prisma-hexagonal',6,true],
+    ['prisma-octagonal',8,true],
+    ['prisma-irregular',6,false]
+  ]){
+    const p=w.Figuras.obtener(id);
+    assert.ok(p,id+' existe');
+    assert.equal(p.caras.length,n+2);
+    assert.equal(p.aristas.length,3*n);
+    assert.equal(p.parametros.lados,n);
+    const lower=Array.from({length:n},(_,i)=>p.vertices['A'+(i+1)].p);
+    const upper=Array.from({length:n},(_,i)=>p.vertices['B'+(i+1)].p);
+    for(let i=0;i<n;i++){
+      const a=Array.from(lower[i]),b=Array.from(upper[i]);
+      assert.ok(Math.abs(b[0]-a[0])<1e-10&&Math.abs(b[2]-a[2])<1e-10);
+      assert.ok(Math.abs(b[1]-a[1]-p.parametros.altura)<1e-10);
+    }
+    const sides=lower.map((a,i)=>{
+      const b=lower[(i+1)%n];
+      return Math.hypot(a[0]-b[0],a[2]-b[2]);
+    });
+    assert.equal(sides.every(l=>Math.abs(l-sides[0])<1e-9),regular,'regularidad esperada');
+    // El área de Gauss comprueba que no se confundió el área de la base
+    // con su perímetro y que el volumen utiliza altura perpendicular.
+    const area=Math.abs(lower.reduce((sum,a,i)=>{
+      const b=lower[(i+1)%n];
+      return sum+a[0]*b[2]-b[0]*a[2];
+    },0))/2;
+    const per=sides.reduce((a,b)=>a+b,0);
+    assert.ok(Math.abs(area-p.parametros.areaBase)<1e-9);
+    assert.ok(Math.abs(per-p.parametros.perimetroBase)<1e-9);
+    assert.ok(Math.abs(area*p.parametros.altura-p.parametros.volumen)<1e-9);
+    assert.ok(Math.abs(per*p.parametros.altura-p.parametros.areaLateral)<1e-9);
+    const cross=lower.map((a,i)=>{
+      const b=lower[(i+1)%n],c=lower[(i+2)%n];
+      return (b[0]-a[0])*(c[2]-b[2])-(b[2]-a[2])*(c[0]-b[0]);
+    });
+    assert.ok(cross.every(x=>x>0)||cross.every(x=>x<0),'la base no es cóncava');
+    assert.equal(p.pasosGuia.length,3);
+    assert.ok(p.pasosGuia.at(-1).formulas.some(f=>f.latex.includes('V=')));
+  }
+});
+
+test('Área de un prisma oblicuo no reutiliza la fórmula exclusiva de prismas rectos',()=>{
+  const w={};
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/figuras.js'),'utf8'),{window:w});
+  const recto=w.Figuras.obtener('prisma-elementos');
+  const oblicuo=w.Figuras.obtener('paralelepipedo-oblicuo');
+  const F=recto.pasosGuia.at(-1).formulas;
+  assert.ok(F.some(f=>f.latex.includes('P_b')&&f.latex.includes('h')));
+  assert.ok(F.some(f=>f.latex.startsWith('V=')));
+  assert.ok(F.some(f=>f.latex.startsWith('A_T=')));
+  const G=oblicuo.pasosGuia.at(-1).formulas;
+  assert.ok(G.some(f=>f.latex.startsWith('V=')));
+  assert.ok(G.some(f=>f.latex.includes('sum')));
+  assert.ok(!G.some(f=>f.latex.includes('P_b')),'sin fórmula lateral de prisma recto');
+});
+
+test('KaTeX renderiza las fórmulas académicas de cada tipo de prisma',()=>{
+  const w={};
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/figuras.js'),'utf8'),{window:w});
+  const katex=require('./vendor/katex.min.js');
+  let total=0;
+  ['prisma-elementos','paralelepipedo-oblicuo',
+   'prisma-hexagonal','prisma-octagonal','prisma-irregular'].forEach(id=>{
+    w.Figuras.obtener(id).pasosGuia.forEach(p=>{
+      (p.formulas||[]).forEach(f=>{
+        const result=katex.renderToString(f.latex,{throwOnError:true,output:'htmlAndMathml'});
+        assert.ok(result.includes('katex-mathml'),id+' fórmula accesible');
+        total++;
+      });
+    });
+  });
+  assert.ok(total>=18,'fórmulas suficientes para todas las variantes');
+  const visor=fs.readFileSync(path.join(__dirname,'js/visor.js'),'utf8');
+  const styles=fs.readFileSync(path.join(__dirname,'css/aula-premium.css'),'utf8');
+  assert.ok(visor.includes("global.katex.render(f.latex,formula"));
+  assert.ok(visor.includes("renderizarTarjetasFormula(paso.formulas)"));
+  assert.ok(styles.includes('.mm-formula-tarjeta'));
+  assert.ok(styles.includes('prefers-reduced-motion'));
+});
+
+test('Portada ofrece selección accesible de cinco clases de prisma',()=>{
+  const html=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
+  const script=fs.readFileSync(path.join(__dirname,'js/inicio.js'),'utf8');
+  for(const v of ['prisma','prisma-oblicuo','prisma-hexagonal','prisma-octagonal','prisma-irregular']){
+    assert.ok(html.includes('value="'+v+'"'));
+    assert.ok(script.includes("'"+v+"'")||script.includes(v+":'prisma-elementos'"));
+  }
+  assert.ok(html.includes('aria-label="Elegir clase de prisma en 3D"'));
+  assert.ok(script.includes("selectorPrisma.addEventListener('change'"));
 });
