@@ -387,16 +387,27 @@
           accion3d=acciones3d.Idle || mixer.clipAction(resultado.animations[0]);
           accion3d.play();
         }
+        // Buscar por nombre normalizado: Rocketbox y KayKit usan rigs diferentes.
+        function buscarHueso(patron) {
+          var encontrado=null;
+          modelo.traverse(function(o){
+            if(encontrado||!o.isBone)return;
+            var nombre=(o.name||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+            if(patron.test(nombre))encontrado=o;
+          });
+          return encontrado;
+        }
         huesosGuia={
-          head:modelo.getObjectByName('head')||modelo.getObjectByName('Head'),
-          left:modelo.getObjectByName('upperarm.l')||modelo.getObjectByName('Wing1L'),
-          right:modelo.getObjectByName('upperarm.r')||modelo.getObjectByName('Wing1R')
+          head:buscarHueso(/head$/),
+          left:buscarHueso(/(leftupperarm|upperarmleft|upperarml|leftarm|armleft|arml$)/),
+          right:buscarHueso(/(rightupperarm|upperarmright|upperarmr|rightarm|armright|armr$)/)
         };
       }
       scene.add(modelo); cargadoId=p.id; pendienteId=null;
-      camera.position.set(0,p.realista?1.29:(p.modelo?1.18:1.15),
-        p.realista?2.75:(p.modelo?3.6:4.8));
-      camera.lookAt(0,p.realista?1.29:1.0,0);
+      // Medio cuerpo: rostro y brazos distinguibles sin alejar al profesor.
+      camera.position.set(0,p.realista?1.48:(p.modelo?1.18:1.15),
+        p.realista?2.15:(p.modelo?3.05:4.8));
+      camera.lookAt(0,p.realista?1.43:1.0,0);
       modelo.rotation.y=giro;
       if(mixer){mixer.update(0);cambiarGesto(hablando);}
       // La voz puede comenzar antes de que el modelo GLB termine de cargar.
@@ -459,7 +470,22 @@
       });
       if(huesosGuia){
         Object.keys(bases).forEach(function(k){huesosGuia[k].quaternion.copy(bases[k]);});
-        if(activa){if(huesosGuia.head){huesosGuia.head.rotateY(d.x*0.28);huesosGuia.head.rotateX(d.y*0.1);}var ala=d.x>0?huesosGuia.right:huesosGuia.left;if(ala)ala.rotateZ((d.x || -1)*0.22);}
+        if(huesosGuia.head){
+          if(activa){huesosGuia.head.rotateY(d.x*0.16);huesosGuia.head.rotateX(d.y*0.06);}
+          else if(hablando&&!quieto)huesosGuia.head.rotateX(Math.sin(t*2)*0.035);
+        }
+        // Señalar el sólido con el brazo próximo. Los ajustes son temporales:
+        // los huesos se restauran tras dibujar cada vista, sin acumular rotación.
+        if(activa){
+          var brazo=d.x<0?huesosGuia.right:huesosGuia.left;
+          if(brazo){
+            brazo.rotateZ((d.x<0?1:-1)*(quieto?0.5:0.72));
+            brazo.rotateX(-0.28+(hablando&&!quieto?Math.sin(t*3.5)*0.08:0));
+          }
+        } else if(hablando&&!quieto){
+          if(huesosGuia.left){huesosGuia.left.rotateZ(-0.16-0.10*Math.sin(t*2.4));huesosGuia.left.rotateX(-0.10);}
+          if(huesosGuia.right){huesosGuia.right.rotateZ(0.15+0.09*Math.sin(t*2.1+1));huesosGuia.right.rotateX(-0.1);}
+        }
       }
       renderer.render(scene,camera);copiar(v);
     });
