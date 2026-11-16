@@ -761,3 +761,10 @@ test('La elección explícita de docente SVG persiste y los perfiles están comp
  assert.ok(s.includes("if(!renderer)elegir('vertiz')"));
  assert.ok(!s.includes("['personaje','Voz de personaje']"));
 });
+
+
+test('Apertura de boca Rocketbox observable en las métricas locales del visor',()=>{
+ const source=fs.readFileSync(path.join(__dirname,'js/tutores.js'),'utf8');
+ assert.ok(source.includes('aperturaBoca:'));
+ assert.ok(source.includes('morphTargetInfluences[mallasLabios[0].aa]'));
+});
