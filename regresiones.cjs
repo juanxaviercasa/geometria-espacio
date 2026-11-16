@@ -828,9 +828,9 @@ test('Docentes humanos usan cámara de cuerpo completo y brazo elevado para señ
   const css=fs.readFileSync(path.join(__dirname,'css/avatares-3d.css'),'utf8');
   assert.ok(tutores.includes('renderer.setSize(420,600)'),'lienzo vertical para figura entera');
   assert.ok(tutores.includes('p.realista?4.2'),'cámara sin recorte de pies');
-  assert.ok(tutores.includes('new T.Vector3(lado*0.74,0.57+pulso,0.42)'),
+  assert.ok(tutores.includes('new T.Vector3(lado*0.78,(d.y>0?0.04:0.40)+pulso*0.20,0.48)'),
     'el codo se dirige hacia arriba y al lado del sólido');
-  assert.ok(tutores.includes('new T.Vector3(lado*0.82,0.49+pulso,0.28)'),
+  assert.ok(tutores.includes('new T.Vector3(lado*0.84,(d.y>0?-0.20:0.28)+pulso*0.35,0.35)'),
     'la mano prolonga la señal');
   assert.ok(css.includes('overflow:visible!important'),'escenario sin máscara de tarjeta');
 });
@@ -846,7 +846,15 @@ test('La publicación genera URLs de assets distintas para evitar CSS y JS antig
 });
 test('Mirada baja hacia el sólido y hombros gesticulan al hablar',()=>{
   const s=fs.readFileSync(path.join(__dirname,'js/tutores.js'),'utf8');
-  assert.ok(s.includes('huesosGuia.head.rotateX(miradaY*0.65'), 'ángulo vertical no invertido');
+  assert.ok(s.includes('huesosGuia.head.rotateX(-miradaY*0.65'), 'ángulo vertical no invertido');
   assert.ok(s.includes('0.34*Math.sin(t*2.25)'), 'gesto de brazos perceptible');
   assert.ok(s.includes('visual.height = 600'), 'renderizado vertical real');
+});
+
+test('La pose comienza antes de que la voz neural esté lista',()=>{
+  const tutor=fs.readFileSync(path.join(__dirname,'js/tutores.js'),'utf8');
+  assert.ok(tutor.includes('inicioAtencion:performance.now()'),'paso activa gesto de inmediato');
+  assert.ok(tutor.includes("estadoAudio.estado==='preparando'"),'el audio pendiente no bloquea brazos');
+  assert.ok(tutor.includes("var guiando=!!vistaObjetivo && (hablando||preparando||inicio)"),
+    'mirada y manos no esperan el MP3');
 });
