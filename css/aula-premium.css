@@ -60,15 +60,15 @@
   padding:clamp(.85rem,1.25vw,1.25rem); gap:.85rem; min-width:0;
 }
 .hero .figura-hero-modo .mm-profesor-cabecera {
-  display:grid; grid-template-columns:clamp(180px,17vw,226px) minmax(0,1fr)!important;
+  display:grid; grid-template-columns:clamp(185px,18vw,235px) minmax(0,1fr)!important;
   align-items:center; gap:1rem; padding:0 0 .95rem; margin:0;
   text-align:left; border-bottom:1px solid #dee4f5;
 }
 .hero .figura-hero-modo .mm-avatar-slot {
-  width:clamp(180px,17vw,226px)!important; height:clamp(210px,20vw,264px)!important;
-  min-height:0!important; border:1px solid #e0e5ff; border-radius:16px;
-  background:radial-gradient(circle at 50% 60%,#e6ebff 0%,#f6f8ff 72%,#fff 100%);
-  overflow:hidden;
+  width:clamp(185px,18vw,235px)!important; height:clamp(245px,25vw,326px)!important;
+  min-height:0!important; position:relative; border:0!important; border-radius:0!important;
+  background:transparent!important; box-shadow:none!important;
+  overflow:visible!important;
 }
 .hero .figura-hero-modo .vertiz-stage-mini .mini-escenario {
   width:100%!important; height:100%!important; margin:0!important;
@@ -125,7 +125,7 @@ body.con-visor-proyectado .hero .figura.modo-proyector { z-index:2147482000; }
   .hero .hero-toolbar .mm-controles-audio {gap:.3rem;}
   .hero .hero-toolbar :is(.btn-mm-chip-voz,.btn-fig-hud) {font-size:.75rem; padding:.45rem .55rem; min-height:42px;}
   .hero .figura-hero-modo .mm-profesor-cabecera {grid-template-columns:128px minmax(0,1fr)!important;gap:.75rem;padding-bottom:.75rem;}
-  .hero .figura-hero-modo .mm-avatar-slot {width:128px!important;height:160px!important;}
+  .hero .figura-hero-modo .mm-avatar-slot {width:128px!important;height:183px!important;}
   .hero .figura-hero-modo .mm-profesor-nombre {font-size:1.16rem;}
   .hero .figura-hero-modo .mm-profesor-subtitulo {font-size:.89rem;}
   .hero .figura-hero-modo .mm-dialogo-texto {font-size:1.04rem; line-height:1.65;}
@@ -135,7 +135,7 @@ body.con-visor-proyectado .hero .figura.modo-proyector { z-index:2147482000; }
 @media(max-width:360px){
   .hero .hero-toolbar {flex-wrap:wrap;}
   .hero .figura-hero-modo .mm-profesor-cabecera {grid-template-columns:100px minmax(0,1fr)!important;}
-  .hero .figura-hero-modo .mm-avatar-slot {width:100px!important;height:130px!important;}
+  .hero .figura-hero-modo .mm-avatar-slot {width:100px!important;height:148px!important;}
 }
 
 /* Los controles pasan a una segunda línea en móviles, nunca sobre Vértiz. */
