@@ -828,9 +828,9 @@ test('Docentes humanos usan cámara de cuerpo completo y brazo elevado para señ
   const css=fs.readFileSync(path.join(__dirname,'css/avatares-3d.css'),'utf8');
   assert.ok(tutores.includes('renderer.setSize(420,600)'),'lienzo vertical para figura entera');
   assert.ok(tutores.includes('p.realista?4.50'),'cámara sin recorte de pies');
-  assert.ok(tutores.includes('new T.Vector3(lado*0.72,(d.y>0?0.12:0.34)+pulso*0.15,0.58)'),
+  assert.ok(tutores.includes('new T.Vector3(lado*0.62,(d.y>0?-0.48:0.12)+pulso*0.10,0.62)'),
     'el codo se dirige hacia arriba y al lado del sólido');
-  assert.ok(tutores.includes('new T.Vector3(lado*0.38,(d.y>0?-0.30:0.06)+pulso*0.20,0.88)'),
+  assert.ok(tutores.includes('new T.Vector3(lado*0.84,(d.y>0?-0.08:0.23)+pulso*0.13,0.50)'),
     'la mano prolonga la señal');
   assert.ok(css.includes('overflow:visible!important'),'escenario sin máscara de tarjeta');
 });
@@ -887,4 +887,12 @@ test('Capas auxiliares manuales y pedagógicas coherentes en los dos visores',()
   assert.ok(v.includes('if(esCapaAuxiliar(c))estado.capasOcultas[c.id]=c.id!==paso.capaResaltada'));
   assert.ok(v2.includes('if(v.capa && !activa(v.capa))return'));
   assert.ok(v3.includes("self._registrar(v.capa || 'etiquetas', sp)"));
+});
+
+test('El maestro parte de brazos relajados, no de la pose en T del rig',()=>{
+  const js=fs.readFileSync(path.join(__dirname,'js/tutores.js'),'utf8');
+  assert.ok(js.includes("['right','rightForearm','rightHand',-1]"));
+  assert.ok(js.includes("['left','leftForearm','leftHand',1]"));
+  assert.ok(js.includes('new T.Vector3(ladoReposo*0.17,-0.97,0.18)'));
+  assert.ok(js.includes('new T.Vector3(lado*0.84,(d.y>0?-0.08:0.23)'));
 });

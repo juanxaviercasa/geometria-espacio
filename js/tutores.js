@@ -556,6 +556,19 @@
             girarMundo(huesosGuia[k],new T.Vector3(1,0,0),miradaY*0.16);
           }
         });
+        // Pose de reposo para ambos brazos: la base del rig Rocketbox deja
+        // los hombros abiertos; sin compensación parece un maniquí en T.
+        [['right','rightForearm','rightHand',-1],
+         ['left','leftForearm','leftHand',1]].forEach(function(partes){
+          var hombro=huesosGuia[partes[0]],codoReposo=huesosGuia[partes[1]],
+              manoReposo=huesosGuia[partes[2]],ladoReposo=partes[3];
+          if(hombro&&codoReposo)
+            orientarHueso(hombro,codoReposo,
+              new T.Vector3(ladoReposo*0.17,-0.97,0.18),0.86);
+          if(codoReposo&&manoReposo)
+            orientarHueso(codoReposo,manoReposo,
+              new T.Vector3(ladoReposo*0.10,-0.96,0.26),0.82);
+        });
         // En los Rocketbox, las articulaciones bip01*upperarm se verificaron
         // directamente en los GLB. El brazo elevado apunta hacia el visor.
         // Se modula la pose para no confundir un gesto con un espasmo repetido.
@@ -575,7 +588,7 @@
             // Se usan vectores en espacio mundial y se respeta la orientación
             // de la cámara para que la acción sea perceptible de frente.
             var orientado=orientarHueso(brazo,codo,
-              new T.Vector3(lado*0.72,(d.y>0?0.12:0.34)+pulso*0.15,0.58),0.90*fuerzaGesto);
+              new T.Vector3(lado*0.62,(d.y>0?-0.48:0.12)+pulso*0.10,0.62),0.86*fuerzaGesto);
             if(!orientado){
               brazo.rotateZ(lado*1.02*gestoNivel);
               brazo.rotateX(-0.48*gestoNivel);
@@ -583,7 +596,7 @@
           }
           var mano=haciaIzquierda?huesosGuia.rightHand:huesosGuia.leftHand;
           if(codo&&mano){
-            orientarHueso(codo,mano,new T.Vector3(lado*0.38,(d.y>0?-0.30:0.06)+pulso*0.20,0.88),0.87*fuerzaGesto);
+            orientarHueso(codo,mano,new T.Vector3(lado*0.84,(d.y>0?-0.08:0.23)+pulso*0.13,0.50),0.89*fuerzaGesto);
           }
         }else if(hablando&&!quieto){
           if(huesosGuia.left)huesosGuia.left.rotateZ(0.18+0.09*Math.sin(t*2.2));
