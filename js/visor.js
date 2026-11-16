@@ -91,6 +91,13 @@
     ];
   }
 
+  // Los trazos auxiliares aparecen solo cuando el paso los explica,
+  // o cuando el estudiante los activa manualmente.
+  function esCapaAuxiliar(c) {
+    return !!c && (c.auxiliar===true ||
+      /^(altura|diagonal(?:-|$)|seccion$|corte$|apotema$|generatriz$|radio$|interseccion$)/.test(c.id));
+  }
+
   function nombreCapa(spec, idCapa) {
     var lista = (spec && spec.capas) || [];
     for (var i = 0; i < lista.length; i++) {
@@ -111,8 +118,9 @@
     }
 
     var capasOcultas = {};
+    var idsAuxiliares=(spec.capas||[]).filter(esCapaAuxiliar).map(function(c){return c.id;});
     (spec.capas || []).forEach(function (c) {
-      if (c.activa === false) capasOcultas[c.id] = true;
+      if (c.activa===false || esCapaAuxiliar(c)) capasOcultas[c.id] = true;
     });
 
     var pasos = (spec.pasosGuia && spec.pasosGuia.length) ? spec.pasosGuia : generarPasosPorDefecto(spec);
@@ -229,10 +237,21 @@
       b.type = 'button';
       b.className = 'btn-fig btn-pildora-capa';
       b.setAttribute('data-capa', c.id);
-      b.setAttribute('aria-pressed', c.activa === false ? 'false' : 'true');
+      b.setAttribute('aria-pressed', capasOcultas[c.id] ? 'false' : 'true');
       b.innerHTML = '<span class="capa-color-dot" style="background:' + c.color + '"></span>' + c.nombre;
       capasBar.appendChild(b);
     });
+    var btnTodosAux=null;
+    if(idsAuxiliares.length){
+      btnTodosAux=document.createElement('button');
+      btnTodosAux.type='button';
+      btnTodosAux.className='btn-fig btn-pildora-capa btn-aux-todos';
+      btnTodosAux.setAttribute('data-aux-todos','');
+      btnTodosAux.setAttribute('aria-pressed','false');
+      btnTodosAux.title='Mostrar u ocultar todas las líneas auxiliares';
+      btnTodosAux.textContent='✦ Todos los trazos';
+      capasBar.appendChild(btnTodosAux);
+    }
 
     if (spec.medidas && spec.medidas.length) {
       var medWrap = document.createElement('div');
@@ -354,6 +373,15 @@
       iniciado: false,
       figura: figura
     };
+    function sincronizarCapas(){
+      capasBar.querySelectorAll('[data-capa]').forEach(function(b){
+        var id=b.getAttribute('data-capa');
+        b.setAttribute('aria-pressed',estado.capasOcultas[id]?'false':'true');
+        if(estado.api)estado.api.setCapa(id,!estado.capasOcultas[id]);
+      });
+      if(btnTodosAux)btnTodosAux.setAttribute('aria-pressed',
+        idsAuxiliares.every(function(id){return !estado.capasOcultas[id];})?'true':'false');
+    }
     var vistaDeseada=vistaPreferida();
     var visibleFigura=!(typeof IntersectionObserver!=='undefined');
     var solicitudVista=0;
@@ -516,18 +544,18 @@
       if(global.Tutores)global.Tutores.enfocar({figura:figura,lienzo:lienzo,nombre:estado.nombreAtencion,paso:idx+1});
       aviso.hidden=true;
       estado.camaraGuia = paso.camara;
-      // Mantener la selección y la capa visible en ambos motores.
-      if (paso.capaResaltada) estado.capasOcultas[paso.capaResaltada] = false;
-      if (paso.capasVisibles) {
-        (spec.capas || []).forEach(function (c) {
-          estado.capasOcultas[c.id] = paso.capasVisibles.indexOf(c.id) === -1;
+      // La lección dirige el foco y oculta construcciones ajenas al paso.
+      if(paso.capasVisibles){
+        (spec.capas||[]).forEach(function(c){
+          estado.capasOcultas[c.id]=paso.capasVisibles.indexOf(c.id)===-1;
+        });
+      }else{
+        (spec.capas||[]).forEach(function(c){
+          if(esCapaAuxiliar(c))estado.capasOcultas[c.id]=c.id!==paso.capaResaltada;
         });
       }
-      capasBar.querySelectorAll('[data-capa]').forEach(function (b) {
-        var id = b.getAttribute('data-capa');
-        b.setAttribute('aria-pressed', estado.capasOcultas[id] ? 'false' : 'true');
-        if (estado.api) estado.api.setCapa(id, !estado.capasOcultas[id]);
-      });
+      if(paso.capaResaltada)estado.capasOcultas[paso.capaResaltada]=false;
+      sincronizarCapas();
       if (estado.tipo === '2d') pintar2d();
 
       txtPasoNum.textContent = 'Paso ' + (idx + 1) + ' de ' + pasos.length;
@@ -738,8 +766,16 @@
         estado.capasOcultas[id] = activa;
         if (estado.tipo === '3d' && estado.api) estado.api.setCapa(id, !activa);
         else pintar2d();
+        sincronizarCapas();
         actualizarAtencion();
       });
+    });
+    if(btnTodosAux)btnTodosAux.addEventListener('click',function(){
+      var todos=idsAuxiliares.every(function(id){return !estado.capasOcultas[id];});
+      idsAuxiliares.forEach(function(id){estado.capasOcultas[id]=todos;});
+      sincronizarCapas();
+      if(estado.tipo==='2d')pintar2d();
+      actualizarAtencion();
     });
 
     /* Visor bajo demanda: liberar memoria GPU cuando deja de utilizarse. */

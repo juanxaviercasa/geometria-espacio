@@ -60,12 +60,12 @@
   padding:clamp(.85rem,1.25vw,1.25rem); gap:.85rem; min-width:0;
 }
 .hero .figura-hero-modo .mm-profesor-cabecera {
-  display:grid; grid-template-columns:clamp(185px,18vw,235px) minmax(0,1fr)!important;
+  display:grid; grid-template-columns:clamp(222px,20vw,265px) minmax(0,1fr)!important;
   align-items:center; gap:1rem; padding:0 0 .95rem; margin:0;
   text-align:left; border-bottom:1px solid #dee4f5;
 }
 .hero .figura-hero-modo .mm-avatar-slot {
-  width:clamp(185px,18vw,235px)!important; height:clamp(245px,25vw,326px)!important;
+  width:clamp(222px,20vw,265px)!important; height:clamp(315px,28vw,376px)!important;
   min-height:0!important; position:relative; border:0!important; border-radius:0!important;
   background:transparent!important; box-shadow:none!important;
   overflow:visible!important;
@@ -124,8 +124,8 @@ body.con-visor-proyectado .hero .figura.modo-proyector { z-index:2147482000; }
   .hero .hero-toolbar {justify-content:center;}
   .hero .hero-toolbar .mm-controles-audio {gap:.3rem;}
   .hero .hero-toolbar :is(.btn-mm-chip-voz,.btn-fig-hud) {font-size:.75rem; padding:.45rem .55rem; min-height:42px;}
-  .hero .figura-hero-modo .mm-profesor-cabecera {grid-template-columns:128px minmax(0,1fr)!important;gap:.75rem;padding-bottom:.75rem;}
-  .hero .figura-hero-modo .mm-avatar-slot {width:128px!important;height:183px!important;}
+  .hero .figura-hero-modo .mm-profesor-cabecera {grid-template-columns:142px minmax(0,1fr)!important;gap:.75rem;padding-bottom:.75rem;}
+  .hero .figura-hero-modo .mm-avatar-slot {width:142px!important;height:204px!important;}
   .hero .figura-hero-modo .mm-profesor-nombre {font-size:1.16rem;}
   .hero .figura-hero-modo .mm-profesor-subtitulo {font-size:.89rem;}
   .hero .figura-hero-modo .mm-dialogo-texto {font-size:1.04rem; line-height:1.65;}
@@ -148,3 +148,8 @@ body.con-visor-proyectado .hero .figura.modo-proyector { z-index:2147482000; }
   .hero .hero-toolbar{min-height:42px;justify-content:center;}
   .hero .hero-toolbar .figura-ajustes{top:calc(100% + .45rem);}
 }
+
+/* Un interruptor para todos los trazos: misma semántica que las capas individuales. */
+.figura-capas .btn-aux-todos{border:1px dashed #7b80ba;white-space:nowrap;font-weight:750;color:#28346b;background:#f8f8ff}
+.figura-capas .btn-aux-todos[aria-pressed="true"]{background:#dfe4ff;border-color:#5858c9;color:#252d76}
+.figura-capas .btn-aux-todos:focus-visible{outline:3px solid #6b64d9;outline-offset:2px}

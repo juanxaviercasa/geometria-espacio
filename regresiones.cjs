@@ -599,7 +599,7 @@ test('Aula premium: barra externa, avatar protagonista y controles separados',()
  assert.ok(visor.includes('controlesExternos.appendChild(barraSup)'));
  assert.ok(visor.includes('controlesExternos.appendChild(controlesVoz)'));
  assert.ok(visor.includes('panelAjustes.appendChild(preferencias)'));
- assert.ok(css.includes('grid-template-columns:clamp(185px,18vw,235px)'), 'retrato ampliado del profesor');
+ assert.ok(css.includes('grid-template-columns:clamp(222px,20vw,265px)'), 'retrato ampliado del profesor');
  assert.ok(css.includes('.hero .hero-toolbar .figura-ajustes[hidden]'));
  assert.ok(css.includes('.hero .hero-toolbar{flex-wrap:wrap'));
 });
@@ -827,10 +827,10 @@ test('Docentes humanos usan cámara de cuerpo completo y brazo elevado para señ
   const tutores=fs.readFileSync(path.join(__dirname,'js/tutores.js'),'utf8');
   const css=fs.readFileSync(path.join(__dirname,'css/avatares-3d.css'),'utf8');
   assert.ok(tutores.includes('renderer.setSize(420,600)'),'lienzo vertical para figura entera');
-  assert.ok(tutores.includes('p.realista?4.7'),'cámara sin recorte de pies');
-  assert.ok(tutores.includes('new T.Vector3(lado*0.78,(d.y>0?0.04:0.40)+pulso*0.20,0.48)'),
+  assert.ok(tutores.includes('p.realista?4.50'),'cámara sin recorte de pies');
+  assert.ok(tutores.includes('new T.Vector3(lado*0.72,(d.y>0?0.12:0.34)+pulso*0.15,0.58)'),
     'el codo se dirige hacia arriba y al lado del sólido');
-  assert.ok(tutores.includes('new T.Vector3(lado*0.84,(d.y>0?-0.20:0.28)+pulso*0.35,0.35)'),
+  assert.ok(tutores.includes('new T.Vector3(lado*0.38,(d.y>0?-0.30:0.06)+pulso*0.20,0.88)'),
     'la mano prolonga la señal');
   assert.ok(css.includes('overflow:visible!important'),'escenario sin máscara de tarjeta');
 });
@@ -847,7 +847,7 @@ test('La publicación genera URLs de assets distintas para evitar CSS y JS antig
 test('Mirada baja hacia el sólido y hombros gesticulan al hablar',()=>{
   const s=fs.readFileSync(path.join(__dirname,'js/tutores.js'),'utf8');
   assert.ok(s.includes('girarMundo(huesosGuia.head,new T.Vector3(1,0,0)'), 'mirada usa eje vertical coherente con el mundo');
-  assert.ok(s.includes('0.34*Math.sin(t*2.25)'), 'gesto de brazos perceptible');
+  assert.ok(s.includes('0.12*Math.sin(t*1.75)'), 'gesto de brazos perceptible');
   assert.ok(s.includes('visual.height = 600'), 'renderizado vertical real');
 });
 
@@ -865,4 +865,26 @@ test('La mirada usa coordenadas globales y evita ejes locales retorcidos del FBX
   assert.ok(js.includes('eje.clone().applyQuaternion(qPadre.invert()).normalize()'));
   assert.ok(js.includes('girarMundo(huesosGuia.head,new T.Vector3(0,1,0)'));
   assert.ok(js.includes('girarMundo(huesosGuia.neck,new T.Vector3(1,0,0)'));
+});
+
+test('El prisma comienza limpio y revela su altura solamente en el cuarto paso',()=>{
+  const window={};vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/figuras.js'),'utf8'),{window});
+  const p=window.Figuras.obtener('prisma-elementos');
+  assert.equal(p.capas.find(c=>c.id==='altura').activa,false);
+  assert.equal(p.vertices.H.capa,'altura');
+  assert.equal(p.pasosGuia.length,5);
+  assert.ok(p.pasosGuia.slice(0,3).every(s=>!s.capasVisibles.includes('altura')));
+  assert.ok(p.pasosGuia[3].capasVisibles.includes('altura'));
+  assert.ok(!p.pasosGuia[4].capasVisibles.includes('altura'));
+});
+test('Capas auxiliares manuales y pedagógicas coherentes en los dos visores',()=>{
+  const v=fs.readFileSync(path.join(__dirname,'js/visor.js'),'utf8');
+  const v2=fs.readFileSync(path.join(__dirname,'js/visor2d.js'),'utf8');
+  const v3=fs.readFileSync(path.join(__dirname,'js/visor3d.js'),'utf8');
+  assert.ok(v.includes('function esCapaAuxiliar(c)'));
+  assert.ok(v.includes("btnTodosAux.textContent='✦ Todos los trazos'"));
+  assert.ok(v.includes('idsAuxiliares.forEach(function(id){estado.capasOcultas[id]=todos;})'));
+  assert.ok(v.includes('if(esCapaAuxiliar(c))estado.capasOcultas[c.id]=c.id!==paso.capaResaltada'));
+  assert.ok(v2.includes('if(v.capa && !activa(v.capa))return'));
+  assert.ok(v3.includes("self._registrar(v.capa || 'etiquetas', sp)"));
 });

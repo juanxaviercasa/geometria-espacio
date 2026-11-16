@@ -387,7 +387,7 @@
     });
     var vs = Object.assign({}, pr.vertices);
     // arista lateral destacada y altura
-    vs.H = { p: v(0, 0, 1.05), etiqueta: 'h', sinEsfera: true };
+    vs.H = { p: v(0, 0, 1.05), etiqueta: 'h', sinEsfera: true, capa: 'altura' };
     registrar('prisma-elementos', {
       titulo: 'Prisma recto y sus elementos',
       alt: 'Prisma recto de base rectangular A B C D con bases paralelas y caras laterales rectangulares; se marca la altura h.',
@@ -404,7 +404,7 @@
         { id: 'bases', nombre: 'Bases', color: '#2c3c9e', activa: true, opacidad: 0.16 },
         { id: 'laterales', nombre: 'Caras laterales', color: '#b85c0d', activa: true, opacidad: 0.1 },
         { id: 'aristas', nombre: 'Aristas', color: '#131829', activa: true },
-        { id: 'altura', nombre: 'Altura', color: '#0c7367', activa: true },
+        { id: 'altura', nombre: 'Altura', color: '#0c7367', activa: false, auxiliar: true },
         { id: 'etiquetas', nombre: 'Nombres', color: '#6c748c', activa: true }
       ]
     });
@@ -755,30 +755,35 @@
         titulo: 'Identificación del prisma recto',
         texto: 'Un prisma recto es un poliedro con dos bases poligonales paralelas e idénticas, y caras laterales perpendiculares a ellas.',
         camara: { theta: -0.68, phi: 0.3 },
+        capasVisibles: ['bases', 'aristas', 'etiquetas'],
         capaResaltada: 'bases'
       },
       {
         titulo: 'Las bases superior e inferior',
         texto: 'Miren las dos bases en color azul. Al ser paralelas e iguales, definen el área basal que usaremos para el volumen.',
         camara: { theta: -0.68, phi: 0.65 },
+        capasVisibles: ['bases', 'aristas', 'etiquetas'],
         capaResaltada: 'bases'
       },
       {
         titulo: 'Caras laterales y aristas',
         texto: 'Las caras laterales en color ámbar son rectángulos perfectos. Cada arista lateral une vértices correspondientes de ambas bases.',
         camara: { theta: 0.35, phi: 0.2 },
+        capasVisibles: ['bases', 'laterales', 'aristas', 'etiquetas'],
         capaResaltada: 'laterales'
       },
       {
         titulo: 'La altura del prisma',
         texto: 'La línea verde vertical es la altura h. En todo prisma recto, la altura mide exactamente lo mismo que la arista lateral.',
         camara: { theta: -0.68, phi: 0.25 },
+        capasVisibles: ['bases', 'aristas', 'altura', 'etiquetas'],
         capaResaltada: 'altura'
       },
       {
         titulo: 'Fórmulas maestras de cálculo',
         texto: 'Área Total = Área Lateral + 2 veces el Área de la Base. Y el Volumen = Área de la base por la altura.',
         camara: { theta: -0.68, phi: 0.3 },
+        capasVisibles: ['bases', 'laterales', 'aristas', 'etiquetas'],
         capaResaltada: 'bases'
       }
     ],

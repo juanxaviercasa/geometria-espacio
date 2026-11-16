@@ -452,7 +452,8 @@
       sp.position.copy(p);
       self.grupo.add(sp);
       self.etiquetas.push(sp);
-      self._registrar('etiquetas', sp);
+      // La etiqueta de un trazo auxiliar se oculta con su capa.
+      self._registrar(v.capa || 'etiquetas', sp);
     });
   };
 

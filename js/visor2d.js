@@ -356,6 +356,7 @@
     if (spec.tipo !== 'esfera') {
       Object.keys(spec.vertices || {}).forEach(function (k) {
         var v = spec.vertices[k];
+        if(v.capa && !activa(v.capa))return;
         var q = aPantalla(v.p);
         if (mostrarVertices && !v.sinEsfera) {
           gEtiquetas.appendChild(el('circle', {
