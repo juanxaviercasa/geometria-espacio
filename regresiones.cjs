@@ -827,7 +827,7 @@ test('Docentes humanos usan cámara de cuerpo completo y brazo elevado para señ
   const tutores=fs.readFileSync(path.join(__dirname,'js/tutores.js'),'utf8');
   const css=fs.readFileSync(path.join(__dirname,'css/avatares-3d.css'),'utf8');
   assert.ok(tutores.includes('renderer.setSize(420,600)'),'lienzo vertical para figura entera');
-  assert.ok(tutores.includes('p.realista?4.2'),'cámara sin recorte de pies');
+  assert.ok(tutores.includes('p.realista?4.7'),'cámara sin recorte de pies');
   assert.ok(tutores.includes('new T.Vector3(lado*0.78,(d.y>0?0.04:0.40)+pulso*0.20,0.48)'),
     'el codo se dirige hacia arriba y al lado del sólido');
   assert.ok(tutores.includes('new T.Vector3(lado*0.84,(d.y>0?-0.20:0.28)+pulso*0.35,0.35)'),
