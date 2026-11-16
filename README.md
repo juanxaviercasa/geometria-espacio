@@ -263,3 +263,15 @@ Se incorporan **Marco y Elena**, modelos humanos ya terminados de Microsoft Rock
 
 
 **Tutor inicial actualizado:** Marco, profesor Rocketbox realista con mirada, parpadeo y boca guiada por la envolvente del audio. Se mantienen Ariel, Axel, Lía, Elena y Vértiz en el selector. La sincronización labial es aproximada por audio, no un alineamiento preciso de fonemas.
+
+
+## Zénit 3.0 — arquitectura de enseñanza por sólidos (16/11/2026)
+
+- **Portada `index.html`**: presentación del método, funcionalidades y acceso a catálogo. No carga Three.js ni reproduce un simulador al entrar.
+- **Catálogo `solidos.html`**: ocho familias de sólidos, cada una vinculada a `solido.html?tipo=<familia>`.
+- **Espacios de aprendizaje `solido.html`**: pestañas accesibles **Aprender**, **Experimentar** y **Resolver**. Mantienen los mismos parámetros y la misma especificación geométrica.
+- **Motor `js/zenit-solids.js`**: calcula el prisma regular/irregular y recto/oblicuo, pirámides poligonales con vértice desplazable, poliedros regulares y reutiliza `Parametricas` para cilindro, cono, esfera y cubo. Ofrece `spec`, `formulas`, `guide`, `values`. No separar fórmulas del modelo 3D.
+- **Orquestación `js/zenit-workspace.js`**: visor 2D inmediato si WebGL falla, carga diferida de Three.js, configuración persistida por tipo, controles de capas y proyección, clases guiadas con Profesor Xavier y resolución paso a paso. La voz guiada usa Speech Synthesis del dispositivo; no implica sincronización fonética de la voz neural.
+- **Compatibilidad**: `index.html?solido=prisma` y otros enlaces antiguos redirigen a su página individual; 17 lecciones y práctica se conservan.
+- **Calidad**: ejecutar `npm test && npm run build` y auditar Chrome desktop/móvil. No se equipara el éxito de build a la certificación visual de todas las combinaciones.
+

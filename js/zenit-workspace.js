@@ -198,6 +198,8 @@ function panelLearn(){
   element('span',null,'Observa, escucha y comprende cada sólido geométrico.'));
  teacher.append(caption);box.appendChild(teacher);
  if(w.Tutores && !teacherMounted){
+  if(w.Tutores.actual&&w.Tutores.actual()!=='profesor-realista')
+    w.Tutores.elegir('profesor-realista');
   w.Tutores.montar(teacherNode);teacherMounted=true;
  }
  var card=element('article','z-step-card');card.id='z-step-card';box.append(card);
@@ -359,6 +361,9 @@ function changeMode(next){
 function init(){
  w.UI.iniciar({avatar:false});
  $('z-title').textContent=Z.META[tipo].titulo;
+ document.title=Z.META[tipo].titulo+' | Laboratorio 3D · Sistema Zénit';
+ var canonical=$('z-canonical');
+ if(canonical)canonical.href='https://geometriaespacio.sistemazenit.com/solido.html?tipo='+tipo;
  $('z-crumb').textContent=Z.META[tipo].titulo;
  $('z-subtitle').textContent=Z.META[tipo].subtitulo;
  $('z-view-title').textContent=Z.META[tipo].singular+' interactivo';

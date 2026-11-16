@@ -541,10 +541,10 @@ test('Fase 6: dos Vértiz no comparten los ID ni los gradientes del SVG',()=>{
 test('Fase 6: sitemap de lecciones más páginas de sólidos',()=>{
  const xml=fs.readFileSync(path.join(__dirname,'sitemap.xml'),'utf8');
  const urls=[...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(x=>x[1]);
- assert.equal(urls.length,25);
+ assert.equal(urls.length,32);
  assert.ok(urls.some(u=>u.endsWith('/solidos.html')));
  assert.ok(urls.some(u=>u.includes('/solido.html?tipo=prisma')));
- assert.equal(new Set(urls).size,25);
+ assert.equal(new Set(urls).size,32);
  assert.ok(urls.includes('https://geometriaespacio.sistemazenit.com/'));
  const datos=JSON.parse(fs.readFileSync(path.join(__dirname,'QA-FASE6/matriz.json'),'utf8'));
  assert.equal(datos.lecciones.length,17);
@@ -1168,4 +1168,15 @@ test('La compilación incluye portada, catálogo y laboratorios individuales',()
  assert.ok(solid.includes('css/zenit-workspace.css'));
  assert.ok(solid.includes('js/zenit-solids.js'));
  assert.ok(solid.includes('js/zenit-workspace.js'));
+});
+
+test('Todas las rutas de los ocho sólidos figuran en sitemap',()=>{
+ const s=fs.readFileSync(path.join(__dirname,'sitemap.xml'),'utf8');
+ const html=fs.readFileSync(path.join(__dirname,'solido.html'),'utf8');
+ const app=fs.readFileSync(path.join(__dirname,'js/zenit-workspace.js'),'utf8');
+ for(const tipo of ['prisma','piramide','cilindro','cono','esfera','cubo','tetraedro','octaedro']){
+   assert.ok(s.includes('/solido.html?tipo='+tipo),tipo+' en sitemap');
+ }
+ assert.ok(html.includes('id="z-canonical"'));
+ assert.ok(app.includes("canonical.href="));
 });
