@@ -585,6 +585,16 @@
       if(conAudio!==false) {
         if(global.Avatar && global.Avatar.hablarVoz)
           global.Avatar.hablarVoz(paso.texto,null,{origen:origenNarracion,figura:idFigura,paso:idx});
+        // Dos pasos siguientes se descargan mientras se oye el actual.
+        // Sin precarga de otros módulos para limitar uso de Workers AI.
+        if(global.VozNeural && global.VozNeural.precargar &&
+           global.Avatar && global.Avatar.getMotorVoz &&
+           global.Avatar.getMotorVoz()==='neural' &&
+           global.Avatar.getVozHabilitada && global.Avatar.getVozHabilitada()) {
+          for(var siguiente=idx+1;siguiente<Math.min(idx+3,pasos.length);siguiente++)
+            global.VozNeural.precargar({figura:idFigura,paso:siguiente,
+              voz:global.Avatar.getVozNeural?global.Avatar.getVozNeural():'javier'});
+        }
       } else if(narrador) {
         narrador.detenerSiPropio();
       }
