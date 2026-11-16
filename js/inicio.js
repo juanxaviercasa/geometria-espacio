@@ -7,52 +7,25 @@
   var P = window.Progreso;
 
   function iniciar() {
+    var viejo=new URLSearchParams(window.location.search).get('solido');
+    if(viejo){
+      var destinos={prisma:'prisma','prisma-oblicuo':'prisma','prisma-hexagonal':'prisma','prisma-octagonal':'prisma','prisma-irregular':'prisma',piramide:'piramide',cilindro:'cilindro',cono:'cono',esfera:'esfera',cubo:'cubo',tetraedro:'tetraedro',octaedro:'octaedro'};
+      if(destinos[viejo]){
+        var qs=new URLSearchParams({tipo:destinos[viejo]});
+        if(viejo==='prisma-oblicuo')qs.set('angulo','60');
+        if(viejo==='prisma-hexagonal')qs.set('lados','6');
+        if(viejo==='prisma-octagonal')qs.set('lados','8');
+        if(viejo==='prisma-irregular'){qs.set('lados','6');qs.set('base','irregular');}
+        window.location.replace('solido.html?'+qs.toString());
+        return;
+      }
+    }
     pintarRuta();
     pintarContinuar();
     // La portada es un aula de sólidos, no un escaparate de personajes.
     UI.iniciar({avatar:false});
-    montarHero3D();
+    // La portada presenta el catálogo: el visor solo se carga en cada laboratorio.
     document.getElementById('bloque-continuar').hidden = false;
-  }
-
-  function montarHero3D() {
-    var cont = document.getElementById('hero-figura-contenedor');
-    if (!cont || !window.Visor) return;
-    try {
-      var modelos = {
-        prisma:'prisma-elementos',
-        'prisma-oblicuo':'paralelepipedo-oblicuo',
-        'prisma-hexagonal':'prisma-hexagonal',
-        'prisma-octagonal':'prisma-octagonal',
-        'prisma-irregular':'prisma-irregular',
-        piramide:'piramide-elementos',
-        cilindro:'cilindro',
-        cono:'cono',
-        esfera:'esfera',
-        tetraedro:'tetraedro',
-        octaedro:'octaedro',
-        cubo:'cubo-seccion'
-      };
-      var elegido = new URLSearchParams(window.location.search).get('solido') || 'prisma';
-      if (!Object.prototype.hasOwnProperty.call(modelos,elegido)) elegido='prisma';
-      document.querySelectorAll('.hero-solidos-links [data-solido]').forEach(function(a){
-        if (a.dataset.solido===elegido ||
-            (a.dataset.solido==='prisma'&&elegido.indexOf('prisma-')===0))
-          a.setAttribute('aria-current','true');
-      });
-      var selectorPrisma=document.getElementById('hero-tipo-prisma');
-      if(selectorPrisma){
-        selectorPrisma.value=elegido==='prisma'||elegido.indexOf('prisma-')===0
-          ?elegido:'prisma';
-        selectorPrisma.addEventListener('change',function(){
-          if(Object.prototype.hasOwnProperty.call(modelos,selectorPrisma.value))
-            window.location.href='?solido='+encodeURIComponent(selectorPrisma.value);
-        });
-      }
-      window.Visor.montar(cont, modelos[elegido], { modoHero: true, sinAviso: true });
-    } catch (e) {
-      console.warn('Error al montar figura hero 3D:', e);
-    }
   }
 
   function etiquetaEstado(est) {

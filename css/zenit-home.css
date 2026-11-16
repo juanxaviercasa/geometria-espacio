@@ -1,0 +1,60 @@
+
+/* Zénit 3.0 — Home editorial y catálogo, sin simulador dentro de la portada */
+.zenit-intro{background:radial-gradient(ellipse at 83% 24%,rgba(120,100,231,.18),transparent 40%),linear-gradient(160deg,#fbfaff,#f3f5ff 68%,#fafbff);border-bottom:1px solid #e5e7fa;padding:clamp(3.2rem,7vw,7rem) 0 4rem;overflow:hidden}
+.zenit-intro-grid{display:grid;grid-template-columns:minmax(0,1.04fr) minmax(0,.96fr);align-items:center;gap:clamp(2rem,4vw,5rem)}
+.zenit-intro-copy{position:relative;z-index:1}
+.zenit-kicker,.zenit-eyebrow{display:inline-flex;align-items:center;gap:.65rem;color:#5548b9;font-size:.79rem;font-weight:800;letter-spacing:.13em}
+.zenit-kicker-dot{height:9px;width:9px;background:#d2ad56;border-radius:100%;box-shadow:0 0 0 5px #eee5cb}
+.zenit-intro-copy h1{font-size:clamp(2.9rem,5.1vw,5.2rem);font-weight:750;line-height:1.06;letter-spacing:-.045em;color:#1f2250;max-width:13ch;margin:1.25rem 0}
+.zenit-intro-copy h1 em{font-family:Newsreader,Georgia,serif;color:#6551cb;font-weight:500}
+.zenit-intro-copy p{max-width:565px;color:#525b7e;font-size:clamp(1.03rem,1.4vw,1.2rem);line-height:1.75}
+.zenit-cta-row{display:flex;gap:.8rem;flex-wrap:wrap;margin:2rem 0 1.7rem}
+.zenit-primary,.zenit-secondary{display:inline-flex;align-items:center;justify-content:center;gap:.65rem;text-decoration:none;font-weight:750;border-radius:14px;padding:1rem 1.35rem;min-height:52px;transition:transform .2s,box-shadow .2s}
+.zenit-primary{background:linear-gradient(110deg,#5142c5,#745be2);color:white!important;box-shadow:0 12px 25px #544ac62e}
+.zenit-secondary{background:white;color:#30315d!important;border:1px solid #d7d9ed}
+.zenit-primary:hover,.zenit-secondary:hover{transform:translateY(-2px)}
+.zenit-trust-row{display:flex;flex-wrap:wrap;gap:.65rem 1.4rem;color:#616985;font-size:.84rem;font-weight:600}
+.zenit-intro-visual{min-height:465px;position:relative;display:grid;place-items:center;background:radial-gradient(ellipse at 50% 55%,#ddd7ff 0%,rgba(233,229,255,.26) 49%,transparent 70%)}
+.zenit-orbit{position:absolute;border:1px solid #a5a0e35e;border-radius:50%;width:86%;height:71%;transform:rotate(-25deg)}
+.zenit-orbit-b{width:72%;height:95%;transform:rotate(40deg)}
+.zenit-hero-solid{width:min(100%,530px);max-height:445px;filter:drop-shadow(0 18px 25px #2f287e21);animation:zenit-float 6s ease-in-out infinite}
+.zenit-float{position:absolute;z-index:2;display:flex;align-items:center;gap:.7rem;padding:.75rem .95rem;border-radius:17px;border:1px solid #ffffffd9;box-shadow:0 18px 45px #343b8620;background:#ffffffd9;backdrop-filter:blur(15px);color:#292c60}
+.zenit-float strong{display:block;font-size:.86rem}.zenit-float small{display:block;font-size:.76rem;color:#707691;margin-top:2px}
+.zenit-float-icon{width:34px;height:34px;border-radius:11px;background:#ebe9ff;display:grid;place-items:center;font-size:1.45rem;color:#6356ce;font-weight:800}
+.zenit-float-top{top:5%;right:0}.zenit-float-bottom{bottom:7%;left:0}
+@keyframes zenit-float{50%{transform:translateY(-9px)}}
+.zenit-how{background:white;padding-block:4rem 4.5rem}
+.zenit-section-top{text-align:center;max-width:650px;margin:0 auto 2rem}.zenit-section-top h2,.zenit-preview-header h2{font-size:clamp(1.85rem,3vw,2.9rem);letter-spacing:-.035em;line-height:1.15;color:#29274f;margin:.7rem 0}
+.zenit-section-top p,.zenit-preview-header p{color:#6c718a;line-height:1.6;margin:0}
+.zenit-mode-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
+.zenit-mode-card{position:relative;border:1px solid #e4e5f2;border-radius:22px;padding:1.7rem;box-shadow:0 12px 25px #313d7f08;background:linear-gradient(160deg,#fff,#fafaff)}
+.zenit-mode-num{font-family:'JetBrains Mono',monospace;color:#aca4df;font-size:.85rem}
+.zenit-mode-symbol{display:block;width:59px;height:59px;line-height:59px;text-align:center;border-radius:18px;background:#edeaff;color:#6052c5;font-size:1.8rem;margin:1rem 0}
+.zenit-mode-card h3{font-size:1.35rem;color:#2c2c59;margin-bottom:.5rem}.zenit-mode-card p{color:#626b82;font-size:.96rem;line-height:1.7;margin:0}
+.zenit-preview{padding-block:4rem 4.8rem;background:#f7f8ff}
+.zenit-preview-header{display:flex;align-items:end;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1.6rem}
+.zenit-link{color:#4e42b7;font-weight:750;text-decoration:none;white-space:nowrap}.zenit-link:hover{text-decoration:underline}
+.zenit-preview-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem}
+.zenit-preview-card{background:#fff;border:1px solid #e0e3f2;border-radius:20px;padding:1.25rem;display:grid;align-content:start;gap:.5rem;color:#262957;text-decoration:none;position:relative;min-height:210px;transition:transform .2s,box-shadow .2s}
+.zenit-preview-card:hover{transform:translateY(-4px);box-shadow:0 18px 36px #323d831a}
+.zenit-preview-art{display:grid;place-items:center;font-size:3.65rem;font-family:Georgia,serif;color:#776bde;background:radial-gradient(circle,#f2f0ff,#fff 75%);height:102px}
+.zenit-preview-card strong{font-size:1.13rem}.zenit-preview-card small{color:#6c738c;font-size:.8rem;line-height:1.4}
+.zenit-preview-card>span:last-child{position:absolute;right:1.2rem;bottom:1.1rem;color:#6551c3}
+.zenit-catalog{padding:3.8rem 0 5.5rem;background:linear-gradient(#f8f9ff,#fff)}
+.zenit-catalog-header{max-width:760px;margin-bottom:2.2rem}
+.zenit-catalog-header h1{font-size:clamp(2.4rem,5vw,4rem);line-height:1.1;letter-spacing:-.04em;color:#252550;margin:.8rem 0}
+.zenit-catalog-header p{font-size:1.13rem;line-height:1.7;color:#6a7188}
+.zenit-catalog-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1.1rem}
+.zenit-catalog-card{display:flex;flex-direction:column;position:relative;text-decoration:none!important;color:#232752!important;min-height:300px;background:white;border:1px solid #e2e5f3;border-radius:24px;padding:1rem;box-shadow:0 14px 38px #2325640b;transition:transform .2s,box-shadow .2s}
+.zenit-catalog-card:hover,.zenit-catalog-card:focus-visible{transform:translateY(-4px);box-shadow:0 20px 45px #433a9430}
+.zenit-catalog-visual{height:145px;display:grid;place-items:center;background:radial-gradient(ellipse,#e9e4ff,#f8f9ff 70%);border-radius:17px;margin-bottom:1rem}
+.zenit-catalog-visual svg{width:73%;height:125px;filter:drop-shadow(0 10px 8px #26235d17)}
+.zenit-catalog-card h2{font-size:1.25rem;color:#292b59;margin:.2rem .2rem .3rem}
+.zenit-catalog-card p{font-size:.85rem;color:#68728c;line-height:1.55;margin:.15rem .2rem 1.2rem}
+.zenit-catalog-card .zenit-open{margin-top:auto;color:#5a4ac5;font-size:.85rem;font-weight:750}
+.zenit-catalog-actions{margin-top:2.5rem;padding:1.4rem 1.6rem;border:1px solid #dcdff0;border-radius:20px;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;background:#f7f6ff}
+.zenit-catalog-actions p{margin:0;color:#515a77;font-size:.94rem;line-height:1.6;max-width:650px}
+@media(max-width:1050px){.zenit-intro-grid{grid-template-columns:1fr 1fr;gap:1rem}.zenit-catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.zenit-preview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.zenit-intro-visual{min-height:360px}.zenit-float{display:none}}
+@media(max-width:700px){.zenit-intro{padding:2.5rem 0 3rem}.zenit-intro-grid{grid-template-columns:1fr}.zenit-intro-copy h1{font-size:clamp(2.7rem,10vw,3.6rem)}.zenit-intro-visual{min-height:300px;max-height:350px}.zenit-hero-solid{max-height:345px}.zenit-mode-grid{grid-template-columns:1fr}.zenit-preview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.zenit-preview-card{min-height:190px}.zenit-catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.zenit-catalog-card{min-height:270px}.zenit-catalog-visual{height:120px}.zenit-catalog-visual svg{height:100px}}
+@media(max-width:470px){.zenit-preview-grid,.zenit-catalog-grid{grid-template-columns:1fr}.zenit-preview-card{min-height:180px}.zenit-catalog-card{min-height:250px}.zenit-catalog-visual{height:135px}.zenit-cta-row{display:grid}.zenit-primary,.zenit-secondary{width:100%}.zenit-trust-row{font-size:.75rem;gap:.5rem}}
+@media(prefers-reduced-motion:reduce){.zenit-hero-solid{animation:none}.zenit-preview-card,.zenit-catalog-card,.zenit-primary,.zenit-secondary{transition:none}}

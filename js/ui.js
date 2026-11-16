@@ -38,7 +38,9 @@
             '<span><small>SISTEMA ZÉNIT · LABORATORIO</small><b>Geometría del espacio</b></span></a>' +
           '<button type="button" class="nav-toggle" aria-controls="nav-geo" aria-expanded="false" aria-label="Abrir menú de navegación"><span aria-hidden="true">☰</span><span>Menú</span></button>' +
           '<nav class="nav-principal" id="nav-geo" aria-label="Navegación principal">' +
-            '<a href="index.html#ruta" data-nav="inicio">Módulos</a>' +
+            '<a href="index.html" data-nav="inicio">Inicio</a>' +
+            '<a href="solidos.html" data-nav="solidos">Sólidos 3D</a>' +
+            '<a href="index.html#ruta" data-nav="modulos">Lecciones</a>' +
             '<a href="practica.html" data-nav="practica">Práctica</a>' +
             '<a href="laboratorio.html" data-nav="laboratorio">Laboratorio 3D</a>' +
             '<a href="acerca.html" data-nav="acerca">Cómo aprender</a>' +
@@ -72,7 +74,7 @@
     if (pie) pie.innerHTML =
       '<div class="wrap pie-grid">' +
         '<div class="pie-identidad"><p class="pie-marca">Geometría del espacio <span>· Piensa en 3D</span></p><p>Aprende a ver, razonar y resolver problemas del espacio con una ruta guiada y modelos interactivos.</p></div>' +
-        '<div><h2>Aprender</h2><a href="index.html#ruta">Ruta de módulos</a><a href="laboratorio.html">Laboratorio interactivo</a><a href="practica.html">Práctica y retos</a></div>' +
+        '<div><h2>Aprender</h2><a href="solidos.html">Catálogo 3D</a><a href="index.html#ruta">Ruta de módulos</a><a href="practica.html">Práctica y retos</a></div>' +
         '<div><h2>Tu experiencia</h2><a href="acerca.html">Método de estudio</a><a href="acerca.html#datos">Gestionar mi progreso</a><a href="leccion.html?id=m12l1">Simulacro tipo UNI</a></div>' +
         '<div class="legal"><span>© <span id="anio">2026</span> Geometría del espacio · Sistema Zénit</span><span>Tu progreso se conserva en este dispositivo · Sin registro</span></div>' +
       '</div>';

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es-PE">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#4338ca">
+<title>Laboratorio de sólidos 3D | Sistema Zénit</title>
+<meta name="description" content="Explora, modifica y resuelve problemas de prismas, pirámides, cilindros, conos, esferas, cubos, tetraedros y octaedros.">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/estilos.css">
+<link rel="stylesheet" href="css/rediseño-visual.css">
+<link rel="stylesheet" href="css/avatares-3d.css">
+<link rel="stylesheet" href="vendor/katex.min.css">
+<link rel="stylesheet" href="css/zenit-workspace.css?v=zenit3">
+<script defer src="vendor/katex.min.js"></script>
+</head>
+<body data-pagina="solidos">
+<a class="salto-contenido" href="#z-main">Saltar al laboratorio</a>
+<header class="sitio-head"></header>
+<main class="z-main" id="z-main">
+  <div class="wrap">
+    <nav class="z-breadcrumb" aria-label="Ruta de navegación"><a href="index.html">Inicio</a><span aria-hidden="true">/</span><a href="solidos.html">Catálogo de sólidos</a><span aria-hidden="true">/</span><span id="z-crumb">Laboratorio</span></nav>
+    <div class="z-head">
+      <div><span class="z-kicker">LABORATORIO 3D · SISTEMA ZÉNIT</span>
+        <h1 id="z-title">Prismas</h1>
+        <p id="z-subtitle">Explora los conceptos con modelos interactivos y cálculos verificados.</p>
+      </div>
+      <div class="z-head-actions"><label for="z-type">Cambiar de sólido</label><select id="z-type" aria-label="Elegir sólido para estudiar">
+        <option value="prisma">Prismas</option><option value="piramide">Pirámides</option>
+        <option value="cilindro">Cilindros</option><option value="cono">Conos</option>
+        <option value="esfera">Esferas</option><option value="cubo">Cubos</option>
+        <option value="tetraedro">Tetraedros</option><option value="octaedro">Octaedros</option>
+      </select></div>
+    </div>
+    <div class="z-tabs" role="tablist" aria-label="Forma de aprendizaje">
+      <button type="button" role="tab" id="z-tab-aprender" aria-controls="z-panel" aria-selected="true" data-z-mode="aprender"><span aria-hidden="true">01</span> Aprender</button>
+      <button type="button" role="tab" id="z-tab-experimentar" aria-controls="z-panel" aria-selected="false" tabindex="-1" data-z-mode="experimentar"><span aria-hidden="true">02</span> Experimentar</button>
+      <button type="button" role="tab" id="z-tab-resolver" aria-controls="z-panel" aria-selected="false" tabindex="-1" data-z-mode="resolver"><span aria-hidden="true">03</span> Resolver</button>
+    </div>
+    <div class="z-workspace">
+      <section class="z-visual" aria-labelledby="z-view-title">
+        <div class="z-visual-top">
+          <div><span class="z-mini-eyebrow">VISUALIZACIÓN INTERACTIVA</span><h2 id="z-view-title">Modelo geométrico</h2></div>
+          <div class="z-view-toggle" role="group" aria-label="Tipo de representación">
+            <button type="button" data-z-render="3d" aria-pressed="false">3D</button>
+            <button type="button" data-z-render="2d" aria-pressed="true">2D</button>
+          </div>
+        </div>
+        <div class="z-stage" id="z-stage" role="group" aria-label="Visor de sólidos geométricos">
+          <p id="z-status" class="z-stage-status" role="status">Preparando el modelo geométrico…</p>
+        </div>
+        <div class="z-view-tools" role="group" aria-label="Orientación de la figura">
+          <span>Vista</span>
+          <button type="button" data-z-camera="iso" aria-pressed="true">Isométrica</button>
+          <button type="button" data-z-camera="front" aria-pressed="false">Frontal</button>
+          <button type="button" data-z-camera="side" aria-pressed="false">Lateral</button>
+          <button type="button" data-z-camera="top" aria-pressed="false">Superior</button>
+          <button type="button" id="z-reset" title="Restaurar la orientación de la figura">Recentrar</button>
+        </div>
+        <fieldset class="z-layers" id="z-layers"><legend>Capas de la figura</legend></fieldset>
+        <p class="z-stage-tip">Arrastra el modelo para girarlo. En la vista 2D puedes cambiar la orientación con los botones.</p>
+      </section>
+      <aside class="z-sidebar" id="z-panel" role="tabpanel" aria-labelledby="z-tab-aprender" tabindex="0">
+        <div id="z-side-content"><p>Cargando explicación…</p></div>
+      </aside>
+    </div>
+    <div class="z-bottom">
+      <div><span class="z-kicker">SIGUE EXPLORANDO</span><h2>Una figura, muchas formas de comprenderla.</h2><p>Los tres modos comparten las mismas dimensiones y resultados. Puedes cambiar de modo sin perder tu modelo.</p></div>
+      <div class="z-bottom-links">
+        <a href="solidos.html">Ver otros sólidos ↗</a>
+        <a href="index.html#ruta">Ruta completa de lecciones ↗</a>
+        <a href="practica.html">Práctica y retos ↗</a>
+      </div>
+    </div>
+  </div>
+</main>
+<footer class="sitio-pie"></footer>
+<script src="js/progreso.js"></script>
+<script src="js/catalogo-ligero.js"></script>
+<script src="js/figuras.js"></script>
+<script src="js/parametricas.js"></script>
+<script src="js/visor2d.js"></script>
+<script src="js/cargador3d.js"></script>
+<script src="js/tutores.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/zenit-solids.js?v=zenit3"></script>
+<script src="js/zenit-workspace.js?v=zenit3"></script>
+</body></html>

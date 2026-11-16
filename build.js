@@ -8,6 +8,8 @@ const DIST = path.join(ROOT, 'dist');
 
 const ITEMS = [
   'index.html',
+  'solidos.html',
+  'solido.html',
   'laboratorio.html',
   'leccion.html',
   'practica.html',
@@ -59,7 +61,7 @@ const version=(process.env.CF_PAGES_COMMIT_SHA||process.env.GITHUB_SHA||
     fs.readFileSync(path.join(ROOT,'js','tutores.js'))+
     fs.readFileSync(path.join(ROOT,'css','aula-premium.css'))
   ).digest('hex')).slice(0,12);
-for(const page of ['index.html','leccion.html','laboratorio.html','practica.html','acerca.html','descarga.html','verificacion.html']){
+for(const page of ['index.html','solidos.html','solido.html','leccion.html','laboratorio.html','practica.html','acerca.html','descarga.html','verificacion.html']){
   const dest=path.join(DIST,page);
   if(!fs.existsSync(dest))continue;
   const updated=fs.readFileSync(dest,'utf8').replace(

@@ -573,36 +573,33 @@ test('Fase 6: el ZIP y el build incluyen recursos y evidencias del cierre',()=>{
 });
 
 
-test('Portada de sólidos: ocho opciones, sin franja Aula 3D ni sección de dragón',()=>{
-  const html=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
-  const js=fs.readFileSync(path.join(__dirname,'js/inicio.js'),'utf8');
-  const css=fs.readFileSync(path.join(__dirname,'css/portada-limpia.css'),'utf8');
-  assert.equal((html.match(/data-solido="/g)||[]).length,8);
-  assert.ok(html.includes('aria-label="Elegir sólido geométrico"'));
-  assert.ok(!html.includes('class="seccion banda-vertiz"'));
-  assert.ok(js.includes("prisma:'prisma-elementos'"));
-  assert.ok(js.includes("esfera:'esfera'"));
-  assert.ok(css.includes('.hero::before'));
-  assert.ok(css.includes('content:none'));
-  assert.ok(css.includes('.mm-dialogo-texto'));
-  assert.ok(!html.includes('id="btn-continuar-hero"'), 'sin bloque promocional oculto');
-  assert.ok(!fs.readFileSync(path.join(__dirname,'js/visor.js'),'utf8').includes('✨ AULA 3D'), 'sin franja de Aula 3D ni en el DOM');
+test('Portada 3.0 presenta el producto antes del laboratorio y conserva la ruta',()=>{
+ const html=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
+ const js=fs.readFileSync(path.join(__dirname,'js/inicio.js'),'utf8');
+ assert.ok(html.includes('id="zenit-h1"'));
+ assert.ok(html.includes('href="solidos.html"'));
+ assert.ok(html.includes('id="como-funciona"'));
+ assert.ok(html.includes('id="ruta"'));
+ assert.ok(html.includes('id="lista-modulos"'));
+ assert.ok(!html.includes('id="hero-figura-contenedor"'),'nada de simulador antes del aprendizaje');
+ assert.ok(!html.includes('id="hero-tipo-prisma"'),'sin selector horizontal saturado');
+ assert.ok(!html.includes('js/visor.js'),'no cargar el motor 3D en la portada');
+ assert.ok(js.includes("window.location.replace('solido.html?'"),'los enlaces históricos se redirigen');
 });
 
-
-test('Aula premium: barra externa, avatar protagonista y controles separados',()=>{
- const html=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
+test('Aula premium existente se conserva para las lecciones narradas',()=>{
  const visor=fs.readFileSync(path.join(__dirname,'js/visor.js'),'utf8');
  const css=fs.readFileSync(path.join(__dirname,'css/aula-premium.css'),'utf8');
- assert.ok(html.includes('id="hero-aula-controles"'));
- assert.ok(html.includes('css/aula-premium.css'));
+ const solid=fs.readFileSync(path.join(__dirname,'solido.html'),'utf8');
  assert.ok(visor.includes('controlesExternos.appendChild(barraSup)'));
  assert.ok(visor.includes('controlesExternos.appendChild(controlesVoz)'));
- assert.ok(visor.includes('panelAjustes.appendChild(preferencias)'));
- assert.ok(css.includes('grid-template-columns:clamp(222px,20vw,265px)'), 'retrato ampliado del profesor');
- assert.ok(css.includes('.hero .hero-toolbar .figura-ajustes[hidden]'));
- assert.ok(css.includes('.hero .hero-toolbar{flex-wrap:wrap'));
+ assert.ok(css.includes('grid-template-columns:clamp(222px,20vw,265px)'));
+ assert.ok(solid.includes('id="z-stage"'));
+ assert.ok(solid.includes('data-z-mode="aprender"'));
+ assert.ok(solid.includes('data-z-mode="experimentar"'));
+ assert.ok(solid.includes('data-z-mode="resolver"'));
 });
+
 test('Servicio de voz neural: catálogo cerrado, estado y audio sin exponer texto libre',async()=>{
  const js=fs.readFileSync(path.join(__dirname,'functions/api/tts.js'),'utf8');
  const ctx={Response,Request,URL,URLSearchParams,console};
@@ -699,7 +696,7 @@ test('Vértiz reproduce MP3 neural con pausa/reanuda y libera audio al cambiar d
 
 test('Profesor 3D: el navegador utiliza GLTFLoader, gestos por voz y fallback 2D',()=>{
   const js=fs.readFileSync(path.join(__dirname,'js/tutores.js'),'utf8');
-  const html=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
+  const html=fs.readFileSync(path.join(__dirname,'solido.html'),'utf8');
   assert.ok(js.includes("if(!p.modelo)return bloques(p.id)"));
   assert.ok(js.includes("loader.load(url(p.modelo)"),"cargador reutilizable con Meshopt");
   assert.ok(js.includes("cambiarGesto(hablando)"));
@@ -1060,17 +1057,20 @@ test('KaTeX renderiza las fórmulas académicas de cada tipo de prisma',()=>{
   assert.ok(styles.includes('prefers-reduced-motion'));
 });
 
-test('Portada ofrece selección accesible de cinco clases de prisma',()=>{
-  const html=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
-  const script=fs.readFileSync(path.join(__dirname,'js/inicio.js'),'utf8');
-  for(const v of ['prisma','prisma-oblicuo','prisma-hexagonal','prisma-octagonal','prisma-irregular']){
-    assert.ok(html.includes('value="'+v+'"'));
-    assert.ok(script.includes("'"+v+"'")||script.includes(v+":'prisma-elementos'"));
-  }
-  assert.ok(html.includes('aria-label="Elegir clase de prisma en 3D"'));
-  assert.ok(script.includes("selectorPrisma.addEventListener('change'"));
+test('El catálogo muestra ocho rutas individuales sin scroll horizontal de pestañas',()=>{
+ const catalog=fs.readFileSync(path.join(__dirname,'solidos.html'),'utf8');
+ const solid=fs.readFileSync(path.join(__dirname,'solido.html'),'utf8');
+ const ui=fs.readFileSync(path.join(__dirname,'js/ui.js'),'utf8');
+ const home=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
+ for(const tipo of ['prisma','piramide','cilindro','cono','esfera','cubo','tetraedro','octaedro']){
+  assert.ok(catalog.includes('href="solido.html?tipo='+tipo+'"'),tipo+' con ruta dedicada');
+  assert.ok(solid.includes('value="'+tipo+'"'),tipo+' configurable');
+ }
+ assert.ok(home.includes('href="solidos.html"'));
+ assert.ok(ui.includes('data-nav="solidos"'));
+ assert.ok(solid.includes('id="z-stage"'));
+ assert.ok(solid.includes('id="z-layers"'));
 });
-
 
 test('Prisma oblicuo: la altura es perpendicular, interior y más corta que la arista lateral',()=>{
   const w={};
@@ -1093,4 +1093,75 @@ test('Prisma oblicuo: la altura es perpendicular, interior y más corta que la a
   assert.equal(Array.from(a[0].v).join(','),'O,H');
   assert.ok(p.pasosGuia[1].texto.includes('perpendicular'));
   assert.ok(p.pasosGuia[1].capasVisibles.includes('altura'));
+});
+
+
+test('Motor 3.0 mantiene fórmulas y poliedros 2D/3D consistentes',()=>{
+ const w={};
+ vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/parametricas.js'),'utf8'),{window:w});
+ vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/zenit-solids.js'),'utf8'),{window:w});
+ for(const tipo of ['prisma','piramide','cilindro','cono','esfera','cubo','tetraedro','octaedro']){
+  const m=w.ZSolidos.generar(tipo,{});
+  assert.ok(m.spec&&m.guide.length>=3,tipo+' tiene lecciones');
+  assert.equal(m.formulas.length,4,tipo+' muestra cuatro resultados');
+  assert.ok(m.formulas.every(x=>Number.isFinite(x.value)&&x.value>0),tipo+' valores reales');
+  assert.ok(m.formulas.some(x=>x.label==='Volumen'));
+  assert.ok(m.spec.capas?.length>=1);
+ }
+ const prism=w.ZSolidos.generar('prisma',{lados:8,base:'irregular',angulo:60,a:4,b:3,h:5});
+ assert.equal(prism.spec.caras.length,10);
+ assert.equal(prism.spec.aristas.length,24);
+ const vec=(id)=>prism.spec.vertices[id].p;
+ const H=vec('H'),O1=vec('O1');
+ assert.ok(Math.abs(H[0]-O1[0])<1e-10&&Math.abs(H[2]-O1[2])<1e-10);
+ assert.ok(Math.abs(O1[1]-H[1]-5)<1e-10);
+ assert.ok(Math.abs(prism.values.V-prism.values.Ab*5)<1e-10);
+ assert.ok(prism.values.Al>0);
+ const straight=w.ZSolidos.generar('prisma',{lados:8,base:'irregular',angulo:90,a:4,b:3,h:5});
+ assert.ok(prism.values.Al>=straight.values.Al-1e-9);
+ const poly=w.ZSolidos.generar('piramide',{lados:7,base:'irregular',desplazamiento:.5});
+ assert.equal(poly.spec.caras.length,8);
+ assert.ok(Math.abs(poly.values.V-poly.values.Ab*poly.params.h/3)<1e-10);
+});
+test('Modelos paramétricos accesibles desde tres modos y con KaTeX correcto',()=>{
+ const html=fs.readFileSync(path.join(__dirname,'solido.html'),'utf8');
+ const app=fs.readFileSync(path.join(__dirname,'js/zenit-workspace.js'),'utf8');
+ const katex=require('./vendor/katex.min.js');
+ const w={};vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/parametricas.js'),'utf8'),{window:w});
+ vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/zenit-solids.js'),'utf8'),{window:w});
+ let count=0;
+ for(const tipo of Object.keys(w.ZSolidos.META)){
+  for(const f of w.ZSolidos.generar(tipo,{}).formulas){
+   assert.ok(katex.renderToString(f.latex,{throwOnError:true,output:'htmlAndMathml'}).includes('katex-mathml'));
+   count++;
+  }
+ }
+ assert.equal(count,32);
+ assert.ok(app.includes('renderizar')===false||app.includes('writeMath'),'render matemático centralizado');
+ assert.ok(app.includes('w.Cargador3D.cargar()'));
+ assert.ok(app.includes('w.Visor2D.render('));
+ assert.ok(app.includes('w.speechSynthesis.speak(u)'));
+ assert.ok(app.includes('localStorage.setItem(key'));
+ assert.ok(html.includes('role="tablist"'));
+ assert.ok(html.includes('aria-controls="z-panel"'));
+});
+test('Las ocho familias tienen controles configurables específicos',()=>{
+ const w={};vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/parametricas.js'),'utf8'),{window:w});
+ vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/zenit-solids.js'),'utf8'),{window:w});
+ const c=w.ZSolidos.CONTROLES;
+ assert.ok(['lados','base','angulo','h'].every(k=>c.prisma.includes(k)));
+ assert.ok(['lados','desplazamiento'].every(k=>c.piramide.includes(k)));
+ assert.deepEqual(Array.from(c.cilindro),['r','h']);
+ assert.deepEqual(Array.from(c.esfera),['r']);
+ assert.deepEqual(Array.from(c.cubo),['arista']);
+});
+test('La compilación incluye portada, catálogo y laboratorios individuales',()=>{
+ const build=fs.readFileSync(path.join(__dirname,'build.js'),'utf8');
+ ['solidos.html','solido.html'].forEach(p=>assert.ok(build.includes("'"+p+"'")));
+ const html=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
+ assert.ok(html.includes('css/zenit-home.css'));
+ const solid=fs.readFileSync(path.join(__dirname,'solido.html'),'utf8');
+ assert.ok(solid.includes('css/zenit-workspace.css'));
+ assert.ok(solid.includes('js/zenit-solids.js'));
+ assert.ok(solid.includes('js/zenit-workspace.js'));
 });

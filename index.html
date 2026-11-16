@@ -31,9 +31,10 @@
   <link rel="stylesheet" href="css/avatares-3d.css?v=20261116-zenit-fix2">
   <link rel="stylesheet" href="css/portada-limpia.css?v=20261116-zenit-fix2">
   <link rel="stylesheet" href="css/aula-premium.css?v=20261116-zenit-fix2">
+  <link rel="stylesheet" href="css/zenit-home.css?v=zenit3">
 </head>
 <body data-pagina="inicio">
-<a class="salto-contenido" href="#ruta">Saltar a la ruta de módulos</a>
+<a class="salto-contenido" href="#zenit-h1">Saltar al contenido principal</a>
 
 <header class="sitio-head">
   <div class="wrap">
@@ -66,83 +67,74 @@
 </header>
 
 <main>
-  <!-- Portada -->
-  <section class="hero">
-    <div class="wrap">
-      <div class="hero-explorador">
-        <nav class="hero-solidos-nav" aria-label="Elegir sólido geométrico">
-          <span class="hero-solidos-etiqueta">Explora un sólido</span>
-          <div class="hero-solidos-links">
-            <a href="?solido=prisma" data-solido="prisma">Prisma</a>
-            <label class="hero-tipos-prisma" for="hero-tipo-prisma">
-              <span>Tipo de prisma</span>
-              <select id="hero-tipo-prisma" aria-label="Elegir clase de prisma en 3D">
-                <option value="prisma">Rectangular recto</option>
-                <option value="prisma-oblicuo">Oblicuo</option>
-                <option value="prisma-hexagonal">Hexagonal regular</option>
-                <option value="prisma-octagonal">Octagonal regular</option>
-                <option value="prisma-irregular">Hexagonal irregular</option>
-              </select>
-            </label>
-            <a href="?solido=piramide" data-solido="piramide">Pirámide</a>
-            <a href="?solido=cilindro" data-solido="cilindro">Cilindro</a>
-            <a href="?solido=cono" data-solido="cono">Cono</a>
-            <a href="?solido=esfera" data-solido="esfera">Esfera</a>
-            <a href="?solido=tetraedro" data-solido="tetraedro">Tetraedro</a>
-            <a href="?solido=octaedro" data-solido="octaedro">Octaedro</a>
-            <a href="?solido=cubo" data-solido="cubo">Cubo</a>
-          </div>
-          <div class="hero-toolbar" id="hero-aula-controles" role="group" aria-label="Controles de proyección y narración"></div>
-        </nav>
-        <div class="hero-figura" id="hero-figura-contenedor" role="group" aria-label="Laboratorio geométrico: prisma interactivo 3D o 2D">
-        <svg viewBox="0 0 380 320" role="img" aria-label="Prisma recto de base rectangular con su diagonal espacial, una diagonal de cara y la altura marcadas.">
-          <defs>
-            <linearGradient id="gCara" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#5b6bd6" stop-opacity=".16"/>
-              <stop offset="1" stop-color="#5b6bd6" stop-opacity=".04"/>
-            </linearGradient>
-            <linearGradient id="gSup" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#b85c0d" stop-opacity=".16"/>
-              <stop offset="1" stop-color="#b85c0d" stop-opacity=".05"/>
-            </linearGradient>
-          </defs>
-          <!-- Caras -->
-          <path d="M62 214 L172 168 L292 214 L182 260 Z" fill="url(#gCara)" stroke="#1b2033" stroke-width="1.7" stroke-linejoin="round"/>
-          <path d="M62 92 L172 46 L292 92 L182 138 Z" fill="url(#gCara)" stroke="#1b2033" stroke-width="1.7" stroke-linejoin="round"/>
-          <path d="M62 92 L62 214 L182 260 L182 138 Z" fill="url(#gSup)" stroke="#1b2033" stroke-width="1.5" stroke-linejoin="round"/>
-          <path d="M182 138 L292 92 L292 214 L182 260 Z" fill="#fdfcf9" fill-opacity=".55" stroke="#1b2033" stroke-width="1.5" stroke-linejoin="round"/>
-          <!-- Aristas ocultas -->
-          <path d="M62 214 L62 92" stroke="#1b2033" stroke-width="1.2" stroke-dasharray="4 4" opacity=".5"/>
-          <path d="M62 92 L182 138" stroke="#1b2033" stroke-width="1.2" stroke-dasharray="4 4" opacity=".5"/>
-          <!-- Diagonal espacial -->
-          <path d="M62 214 L292 92" stroke="#a8271f" stroke-width="2.6" stroke-linecap="round"/>
-          <!-- Diagonal de cara -->
-          <path d="M62 92 L292 92" stroke="#b85c0d" stroke-width="2" stroke-linecap="round" stroke-dasharray="6 4"/>
-          <!-- Altura -->
-          <path d="M62 92 L62 214" stroke="#0c7367" stroke-width="2.4" stroke-linecap="round"/>
-          <!-- Vértices -->
-          <g fill="#fdfcf9" stroke="#131829" stroke-width="1.6">
-            <circle cx="62" cy="214" r="3.4"/><circle cx="172" cy="168" r="3.4"/>
-            <circle cx="292" cy="214" r="3.4"/><circle cx="182" cy="260" r="3.4"/>
-            <circle cx="62" cy="92" r="3.4"/><circle cx="172" cy="46" r="3.4"/>
-            <circle cx="292" cy="92" r="3.4"/><circle cx="182" cy="138" r="3.4"/>
-          </g>
-          <g font-family="'JetBrains Mono', monospace" font-size="12" font-weight="600" fill="#414a63">
-            <text x="46" y="228">A</text><text x="288" y="232">C</text>
-            <text x="46" y="86">A₁</text><text x="298" y="86">C₁</text>
-            <text x="180" y="34">B₁</text>
-          </g>
-          <g font-family="'JetBrains Mono', monospace" font-size="11.5">
-            <text x="176" y="160" fill="#a8271f">diagonal espacial AC₁</text>
-            <text x="176" y="80" fill="#b85c0d">diagonal de cara</text>
-            <text x="30" y="158" fill="#0c7367" transform="rotate(-90 30 158)">altura h</text>
-          </g>
-        </svg>
-        <p class="figura-pie-referencia" id="hf-cap">
-          Prisma recto: la altura coincide con la arista lateral, la diagonal de cara usa dos
-          dimensiones y la diagonal espacial, las tres.
-        </p>
+
+  <!-- Nueva portada: información primero, exploración al elegir un sólido -->
+  <section class="zenit-intro" aria-labelledby="zenit-h1">
+    <div class="wrap zenit-intro-grid">
+      <div class="zenit-intro-copy">
+        <span class="zenit-kicker"><span class="zenit-kicker-dot"></span> SISTEMA ZÉNIT · GEOMETRÍA INTERACTIVA</span>
+        <h1 id="zenit-h1">La geometría del espacio se <em>comprende viendo.</em></h1>
+        <p>Explora prismas, pirámides y otros sólidos con modelos que puedes girar y transformar. Aprende con el Profesor Xavier, descubre las fórmulas y resuelve problemas paso a paso.</p>
+        <div class="zenit-cta-row">
+          <a class="zenit-primary" href="solidos.html">Explorar sólidos 3D <span aria-hidden="true">↗</span></a>
+          <a class="zenit-secondary" href="#como-funciona">Descubrir cómo funciona <span aria-hidden="true">↓</span></a>
         </div>
+        <div class="zenit-trust-row" aria-label="Ventajas de la plataforma">
+          <span>✓ Modelos 2D y 3D</span><span>✓ Fórmulas con KaTeX</span><span>✓ Progreso guardado</span>
+        </div>
+      </div>
+      <div class="zenit-intro-visual" aria-label="Ilustración de un prisma geométrico en tres dimensiones">
+        <span class="zenit-orbit zenit-orbit-a" aria-hidden="true"></span>
+        <span class="zenit-orbit zenit-orbit-b" aria-hidden="true"></span>
+        <svg class="zenit-hero-solid" viewBox="0 0 480 430" role="img" aria-label="Prisma recto con bases sombreadas y aristas visibles">
+          <defs><linearGradient id="zenit-p-top" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#cfccff"/><stop offset="1" stop-color="#7468dc"/></linearGradient>
+          <linearGradient id="zenit-p-side" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#b1abf7" stop-opacity=".6"/><stop offset="1" stop-color="#5c52bf" stop-opacity=".18"/></linearGradient></defs>
+          <polygon points="90,263 235,203 378,261 233,327" fill="#786de5" fill-opacity=".18" stroke="#4d438f" stroke-width="3"/>
+          <polygon points="90,125 235,65 378,123 233,189" fill="url(#zenit-p-top)" stroke="#4338a0" stroke-width="3"/>
+          <polygon points="90,125 233,189 233,327 90,263" fill="url(#zenit-p-side)" stroke="#5147a1" stroke-width="2.8"/>
+          <polygon points="233,189 378,123 378,261 233,327" fill="#c0b9ff" fill-opacity=".38" stroke="#5147a1" stroke-width="2.8"/>
+          <path d="M235 65V203M235 203L90 263M235 203L378 261" stroke="#615b98" stroke-dasharray="7 7" stroke-width="2" opacity=".7"/>
+          <path d="M235 134V271" stroke="#0e9b8e" stroke-width="5" stroke-linecap="round"/>
+          <path d="M226 253h18v18" fill="none" stroke="#0e9b8e" stroke-width="3"/>
+          <g fill="#f4d889" stroke="#403c82" stroke-width="2"><circle cx="90" cy="125" r="5"/><circle cx="235" cy="65" r="5"/><circle cx="378" cy="123" r="5"/><circle cx="233" cy="189" r="5"/></g>
+          <text x="247" y="205" fill="#0f827b" font-size="22" font-family="Outfit,sans-serif" font-weight="700">h</text>
+          <text x="84" y="103" fill="#504692" font-size="15" font-family="Outfit,sans-serif">A₁</text>
+        </svg>
+        <div class="zenit-float zenit-float-top"><span class="zenit-float-icon">∠</span><span><strong>Observa la geometría</strong><small>Caras · aristas · alturas</small></span></div>
+        <div class="zenit-float zenit-float-bottom"><span class="zenit-float-icon">V</span><span><strong>Comprende el volumen</strong><small>De la figura a la fórmula</small></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="zenit-how seccion" id="como-funciona" aria-labelledby="zenit-how-title">
+    <div class="wrap">
+      <div class="zenit-section-top"><span class="zenit-eyebrow">UNA FORMA DIFERENTE DE APRENDER</span>
+        <h2 id="zenit-how-title">Tres maneras de dominar cada sólido.</h2>
+        <p>Primero entiende la forma, después experimenta con sus dimensiones y finalmente aplica las fórmulas.</p>
+      </div>
+      <div class="zenit-mode-grid">
+        <article class="zenit-mode-card"><span class="zenit-mode-num">01</span><span class="zenit-mode-symbol" aria-hidden="true">◎</span><h3>Aprender</h3>
+          <p>Avanza por explicaciones claras del Profesor Xavier. Cada paso destaca las partes importantes de la figura.</p></article>
+        <article class="zenit-mode-card"><span class="zenit-mode-num">02</span><span class="zenit-mode-symbol" aria-hidden="true">◇</span><h3>Experimentar</h3>
+          <p>Modifica lados, alturas e inclinaciones. Observa en vivo los cambios geométricos y matemáticos.</p></article>
+        <article class="zenit-mode-card"><span class="zenit-mode-num">03</span><span class="zenit-mode-symbol" aria-hidden="true">∑</span><h3>Resolver</h3>
+          <p>Aplica área y volumen en problemas desarrollados paso a paso, con fórmulas matemáticas legibles.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="zenit-preview seccion" aria-labelledby="zenit-preview-title">
+    <div class="wrap">
+      <div class="zenit-preview-header">
+        <div><span class="zenit-eyebrow">LABORATORIO 3D</span><h2 id="zenit-preview-title">Empieza por una figura.</h2>
+          <p>Cada familia de sólidos tiene su propio laboratorio y controles específicos.</p></div>
+        <a class="zenit-link" href="solidos.html">Ver el catálogo completo <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="zenit-preview-grid">
+        <a href="solido.html?tipo=prisma" class="zenit-preview-card"><span class="zenit-preview-art" aria-hidden="true">▱</span><strong>Prismas</strong><small>Rectos, oblicuos y bases poligonales</small><span aria-hidden="true">↗</span></a>
+        <a href="solido.html?tipo=piramide" class="zenit-preview-card"><span class="zenit-preview-art" aria-hidden="true">△</span><strong>Pirámides</strong><small>Vértice, apotema y caras laterales</small><span aria-hidden="true">↗</span></a>
+        <a href="solido.html?tipo=cilindro" class="zenit-preview-card"><span class="zenit-preview-art" aria-hidden="true">◉</span><strong>Cilindros</strong><small>Radio, altura y desarrollo lateral</small><span aria-hidden="true">↗</span></a>
+        <a href="solido.html?tipo=esfera" class="zenit-preview-card"><span class="zenit-preview-art" aria-hidden="true">◯</span><strong>Esferas</strong><small>Superficie y volumen</small><span aria-hidden="true">↗</span></a>
       </div>
     </div>
   </section>
@@ -272,16 +264,7 @@
 <script src="js/contenido-c.js"></script>
 <script src="js/contenido-d.js"></script>
 <script src="js/contenido-uni.js?v=20261114"></script>
-<script src="js/figuras.js?v=20261116-zenit-fix2"></script>
-<script src="js/visor2d.js?v=20261114-3"></script>
-<script src="js/cargador3d.js?v=20261114-5b"></script>
-<script src="js/tutores.js?v=20261116-zenit-fix2"></script>
-<script src="js/voz-matematica.js?v=20261114-4"></script>
-<script src="js/voz-neural.js?v=20261116-zenit-fix2"></script>
-<script src="js/avatar.js?v=20261116-zenit-fix2"></script>
 <script src="js/ui.js?v=20261114-2"></script>
-<script src="js/narracion-ui.js?v=20261115-3"></script>
-<script src="js/visor.js?v=20261116-zenit-fix2"></script>
 <script src="js/inicio.js?v=20261115-2"></script>
 </body>
 </html>
