@@ -419,11 +419,11 @@
       // Medio cuerpo: rostro y brazos distinguibles sin alejar al profesor.
       // En los humanos se conserva todo el cuerpo con margen inferior,
       // evitando cortar los zapatos al cambiar de pose.
-      camera.position.set(p.realista?-0.14:0,p.realista?1.00:(p.modelo?1.18:1.15),
-        p.realista?4.2:(p.modelo?3.85:4.8));
+      camera.position.set(p.realista?-0.08:0,p.realista?1.00:(p.modelo?1.18:1.15),
+        p.realista?4.7:(p.modelo?3.85:4.8));
       // Desplazar ligeramente el cuerpo a la derecha dentro del lienzo:
       // la mano que señala hacia el cubo no queda cortada por el canvas.
-      camera.lookAt(p.realista?-0.14:0,p.realista?0.95:1.0,0);
+      camera.lookAt(p.realista?-0.08:0,p.realista?0.95:1.0,0);
       modelo.rotation.y=giro;
       if(mixer){mixer.update(0);cambiarGesto(hablando);}
       // La voz puede comenzar antes de que el modelo GLB termine de cargar.
