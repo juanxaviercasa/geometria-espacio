@@ -768,3 +768,22 @@ test('Apertura de boca Rocketbox observable en las métricas locales del visor',
  assert.ok(source.includes('aperturaBoca:'));
  assert.ok(source.includes('morphTargetInfluences[mallasLabios[0].aa]'));
 });
+
+test('el cubo inicia limpio y su sección de seis puntos es un hexágono regular', () => {
+  const contexto = { window: {} };
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname, 'js/figuras.js'), 'utf8'), contexto);
+  const cubo = contexto.window.Figuras.obtener('cubo-seccion');
+  const paso = cubo.pasosGuia;
+  const ocultables = Object.fromEntries(cubo.capas.map(c => [c.id, c.activa]));
+  assert.equal(ocultables.seccion, false);
+  assert.equal(ocultables['diagonal-espacial'], false);
+  assert.deepEqual(Array.from(paso[0].capasVisibles), ['caras', 'aristas']);
+  assert.ok(paso[1].capasVisibles.includes('seccion'));
+  const vertices = Array.from({length:6}, (_,i) => cubo.vertices['H'+i].p);
+  const longitud = (a,b) => Math.hypot(...a.map((v,i)=>v-b[i]));
+  const lados = vertices.map((v,i)=>longitud(v,vertices[(i+1)%6]));
+  assert.ok(lados.every(v=>Math.abs(v-lados[0])<1e-9), 'seis lados iguales');
+  const plano = vertices[0].reduce((s,v)=>s+v,0);
+  assert.ok(vertices.every(v=>Math.abs(v.reduce((s,x)=>s+x,0)-plano)<1e-9), 'seis puntos coplanares');
+  assert.ok(lados[0]>0);
+});
