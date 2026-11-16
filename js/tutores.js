@@ -166,7 +166,7 @@
     });
   }
   function enfocar(info) {
-    foco=info;
+    foco=Object.assign({},info,{inicioAtencion:performance.now()});
     document.dispatchEvent(new CustomEvent('tutor-enfocando',{detail:{figura:info.figura}}));
     var panel=info.figura.querySelector('.mm-profesor-info');
     var mensaje=panel.querySelector('.tutor-consigna');
@@ -497,10 +497,15 @@
     // durante la explicación sigue el objetivo de atención del visor.
     // Alternar la atención entre el sólido y el estudiante:
     // al hablar mira el punto señalado; al detenerse vuelve al frente.
-    var siguiendo=!!vistaObjetivo && hablando;
-    miradaX+=((siguiendo?dir.x*0.42:0)-miradaX)*factor;
-    miradaY+=((siguiendo?dir.y*0.22:0)-miradaY)*factor;
-    gestoNivel+=((vistaObjetivo?(hablando?1:0.30):0)-gestoNivel)*factor;
+    // La explicación no debe esperar a que el TTS descargue y empiece.
+    // Al pulsar el paso, orientar la mirada y el brazo inmediatamente.
+    var inicio=!!foco && performance.now()-(foco.inicioAtencion||0)<3500;
+    var estadoAudio=global.Avatar&&global.Avatar.getEstadoVoz?global.Avatar.getEstadoVoz():null;
+    var preparando=estadoAudio&&estadoAudio.estado==='preparando';
+    var guiando=!!vistaObjetivo && (hablando||preparando||inicio);
+    miradaX+=((guiando?dir.x*0.42:0)-miradaX)*factor;
+    miradaY+=((guiando?dir.y*0.22:0)-miradaY)*factor;
+    gestoNivel+=((vistaObjetivo?(guiando?1:0.30):0)-gestoNivel)*factor;
     lista.forEach(function(v){
       if(!v.canvas)return;
       var activa=participa(v),d=activa?direccion(v):{x:0,y:0};
