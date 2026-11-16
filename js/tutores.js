@@ -507,6 +507,8 @@
       vistas:vistas.length,visibles:vistas.filter(function(v){return v.visible;}).length,
       conectadas:vistas.filter(function(v){return v.nodo.isConnected;}).length,
       gesto:acciones3d && accion3d===acciones3d.Spellcast_Shoot?'explicando':'reposo',
-      visemas:mallasLabios.length,decoder:!!global.MeshoptDecoder};}
+      visemas:mallasLabios.length,decoder:!!global.MeshoptDecoder,
+      aperturaBoca:mallasLabios.length&&mallasLabios[0].mesh.morphTargetInfluences?
+        Number(mallasLabios[0].mesh.morphTargetInfluences[mallasLabios[0].aa].toFixed(3)):null};}
   };
 })(window);
