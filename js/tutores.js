@@ -3,19 +3,18 @@
    Una sola escena/contexto WebGL compartida por todos los tutores visibles. */
 (function (global) {
   'use strict';
+  /* Modelos existentes de KayKit, CC0. Archivos GLB alojados en vendor/avatares.
+     Tienen esqueleto y clips Idle/Spellcast/Walking, pero NO visemas faciales:
+     gesticulan al hablar; no se presenta como lipsync fonético exacto. */
   var CATALOGO = [
-    { id: 'capibara', nombre: 'Capibara', tipo: '3D', emoji: '🦫' },
-    { id: 'aguila', nombre: 'Águila', tipo: '3D', emoji: '🦅' },
-    { id: 'zorro', nombre: 'Zorro', tipo: '3D', emoji: '🦊' },
-    { id: 'gato', nombre: 'Gato', tipo: '3D', emoji: '🐱' },
-    { id: 'panda', nombre: 'Panda', tipo: '3D', emoji: '🐼' },
-    { id: 'conejo', nombre: 'Conejo', tipo: '3D', emoji: '🐰' },
-    { id: 'lobo', nombre: 'Lobo', tipo: '3D', emoji: '🐺' },
-    { id: 'pikachu', nombre: 'Pikachu', tipo: 'Pokémon 2D', pokemon: 25 },
-    { id: 'charizard', nombre: 'Charizard', tipo: 'Pokémon 2D', pokemon: 6 },
-    { id: 'eevee', nombre: 'Eevee', tipo: 'Pokémon 2D', pokemon: 133 },
-    { id: 'dragonite', nombre: 'Dragonite', tipo: 'Pokémon 2D', pokemon: 149 },
-    { id: 'vertiz', nombre: 'Vértiz', tipo: 'Ilustración' }
+    {id:'maestro-arcano',nombre:'Ariel · Maestro 3D',tipo:'3D',modelo:'vendor/avatares/player_priest.glb',
+      descripcion:'Profesor de estilo anime-aventura, con gestos de enseñanza'},
+    {id:'guardian-zenit',nombre:'Axel · Guardián 3D',tipo:'3D',modelo:'vendor/avatares/player_swordsman.glb',
+      descripcion:'Profesor estilo videojuego, con animaciones corporales'},
+    {id:'exploradora-zenit',nombre:'Lía · Exploradora 3D',tipo:'3D',modelo:'vendor/avatares/player_archer.glb',
+      descripcion:'Guía 3D con gestos y movimientos'},
+    {id:'vertiz',nombre:'Vértiz · 2D ligero',tipo:'Ilustración',
+      descripcion:'Alternativa ligera sin WebGL'}
   ];
   var clave = 'geo3d.tutor.v1';
   var estiloVoz = 'natural';
@@ -37,11 +36,16 @@
     ,lobo:{pitch:0.79,rate:0.98,descripcion:'Grave y segura'}
     ,'dragon-alado':{pitch:0.72,rate:0.93,descripcion:'Grave y aventurera'}
   };
-  var elegido = 'vertiz';
-  try { var valor = localStorage.getItem(clave); if (buscar(valor)) elegido = valor; } catch (e) {}
+  var elegido = 'maestro-arcano';
+  try {
+    var valor = localStorage.getItem(clave);
+    // Actualización visual del tutor clásico: migración a un personaje GLB real.
+    if(buscar(valor) && valor!=='vertiz')elegido=valor;
+  } catch (e) {}
   var vistas = [], selectores = [], cargas = {}, T, renderer, scene, camera, modelo, mixer, alas = [], cabeza;
   var revision = 0, animacion = 0, ultimo = 0, hablando = false, giro = 0.35, arrastrando = false;
-  var foco=null, huesosGuia=null;
+  var foco=null, huesosGuia=null,acciones3d=null,accion3d=null;
+  var erroresModelo=0;
   var baseURL = new URL('../', document.currentScript.src);
   function url(ruta) { return new URL(ruta, baseURL).href; }
   function buscar(id) { return CATALOGO.find(function (p) { return p.id === id; }); }
@@ -82,8 +86,9 @@
     var label = document.createElement('label'); label.className = 'tutor-selector';
     var nombre = document.createElement('span'); nombre.textContent = 'Elige tu tutor';
     var select = document.createElement('select'); select.setAttribute('aria-label', 'Elige tu tutor');
-    ['3D', 'Pokémon 2D', 'Ilustración'].forEach(function (tipo) {
-      var grupo = document.createElement('optgroup'); grupo.label = tipo==='3D'?'Animales 3D · estilo de bloques':tipo;
+    ['3D', 'Ilustración'].forEach(function (tipo) {
+      var grupo = document.createElement('optgroup');
+      grupo.label=tipo==='3D'?'Profesores 3D animados · KayKit CC0':'Alternativa ligera';
       CATALOGO.filter(function (p) { return p.tipo === tipo; }).forEach(function (p) {
         var option = document.createElement('option'); option.value = p.id; option.textContent = p.nombre; grupo.appendChild(option);
       });
@@ -156,7 +161,15 @@
       visual.addEventListener('pointermove', function (e) { if (!arrastrando) return; giro += (e.clientX-x)*0.012; x=e.clientX; despertar(); });
       function soltar() { arrastrando = false; }
       visual.addEventListener('pointerup', soltar); visual.addEventListener('pointercancel', soltar);
-      var ctx=visual.getContext('2d'); if(ctx) { ctx.font='80px sans-serif'; ctx.textAlign='center'; ctx.fillText(p.emoji,210,240); }
+      // No dibujamos emojis como sustitutos del profesor.
+      var ctx=visual.getContext('2d');
+      if(ctx) {
+        var grad=ctx.createLinearGradient(0,0,0,420);
+        grad.addColorStop(0,'#e7edff');grad.addColorStop(1,'#f8faff');
+        ctx.fillStyle=grad;ctx.fillRect(0,0,420,420);
+        ctx.fillStyle='#343d70';ctx.font='600 24px sans-serif';
+        ctx.textAlign='center';ctx.fillText('Cargando profesor 3D…',210,355);
+      }
     }
     v.nodo.appendChild(visual);
     if(p.pokemon){var mano=document.createElement('span');mano.className='tutor-mano tutor-visual';mano.textContent='☝';mano.setAttribute('aria-hidden','true');v.nodo.appendChild(mano);}
@@ -243,7 +256,7 @@
       modelo.traverse(function (o) { if(o.geometry)o.geometry.dispose(); if(o.material) (Array.isArray(o.material)?o.material:[o.material]).forEach(function(m){Object.keys(m).forEach(function(k){if(m[k]&&m[k].isTexture)m[k].dispose();});m.dispose();}); });
       modelo=null;
     }
-    alas=[]; cabeza=null;huesosGuia=null;
+    alas=[]; cabeza=null;huesosGuia=null;acciones3d=null;accion3d=null;
   }
   function iniciarMotor() {
     if(renderer) return;
@@ -274,20 +287,25 @@
     motor().then(function () {
       if(token!==revision)return;
       liberarModelo(); vistas.forEach(function(v){v.nodo.dataset.carga="modelo";});
-      if(p.id!=='dragon-alado')return bloques(p.id);
+      if(!p.modelo)return bloques(p.id);
       return (T.GLTFLoader?Promise.resolve():script('vendor/GLTFLoader.js?v=160-1')).then(function(){
-        return new Promise(function(resolve,reject){new T.GLTFLoader().load(url('vendor/tutor-dragon.glb'),function(gltf){resolve(gltf);},undefined,reject);});
+        return new Promise(function(resolve,reject){
+          new T.GLTFLoader().load(url(p.modelo),resolve,undefined,reject);
+        });
       });
     }).then(function (resultado) {
       if(token!==revision || !resultado)return;
       modelo=resultado.scene || resultado;
       if(resultado.scene) {
-        modelo.traverse(function(o){if(o.isMesh){
-          o.frustumCulled=false;o.material.side=T.DoubleSide;
-          var paleta={Main:'#6bc8b1',Belly:'#ffe1a4',Wings:'#b8a0df',Claws:'#fff6e6',Eyes:'#172033'};
-          if(paleta[o.material.name])o.material.color.set(paleta[o.material.name]);
-          o.material.metalness=0;o.material.roughness=0.68;
-        }});
+        modelo.traverse(function(o){
+          if(!o.isMesh)return;
+          o.frustumCulled=false;
+          var mats=Array.isArray(o.material)?o.material:[o.material];
+          mats.filter(Boolean).forEach(function(m){
+            m.side=T.FrontSide;
+            if('roughness' in m)m.roughness=Math.max(.58,m.roughness||.6);
+          });
+        });
         // Los huesos deben actualizarse antes de medir: el FBX convertido
         // tiene una escala de armadura distinta a la geometría sin deformar.
         modelo.updateMatrixWorld(true);
@@ -296,11 +314,25 @@
         var escala=1.9/Math.max(tam.x,tam.y,tam.z); modelo.scale.setScalar(escala);
         modelo.position.set(-centro.x*escala,-caja.min.y*escala,-centro.z*escala);
         var cont=new T.Group(); cont.add(modelo); modelo=cont;
-        if(resultado.animations.length) { mixer=new T.AnimationMixer(modelo); var clip=resultado.animations.find(function(a){return /flying/i.test(a.name);}) || resultado.animations[0]; mixer.clipAction(clip).play(); }
-        huesosGuia={head:modelo.getObjectByName('Head'),left:modelo.getObjectByName('Wing1L'),right:modelo.getObjectByName('Wing1R')};
+        if(resultado.animations&&resultado.animations.length){
+          mixer=new T.AnimationMixer(modelo);
+          acciones3d={};
+          resultado.animations.forEach(function(clip){
+            if(/^(Idle|Spellcast_Shoot|Walking_A)$/.test(clip.name))
+              acciones3d[clip.name]=mixer.clipAction(clip);
+          });
+          accion3d=acciones3d.Idle || mixer.clipAction(resultado.animations[0]);
+          accion3d.play();
+        }
+        huesosGuia={
+          head:modelo.getObjectByName('head')||modelo.getObjectByName('Head'),
+          left:modelo.getObjectByName('upperarm.l')||modelo.getObjectByName('Wing1L'),
+          right:modelo.getObjectByName('upperarm.r')||modelo.getObjectByName('Wing1R')
+        };
       }
       scene.add(modelo); cargadoId=p.id; pendienteId=null;
-      camera.position.set(0,p.id==='conejo'?1.4:1.15,p.id==='conejo'?5.5:4.8);camera.lookAt(0,p.id==='conejo'?1.2:0.96,0);
+      camera.position.set(0,p.modelo?1.18:1.15,p.modelo?3.6:4.8);
+      camera.lookAt(0,1.0,0);
       modelo.rotation.y=giro;
       if(mixer)mixer.update(0);
       dibujarVistas(vistas,performance.now()/1000,reducido());
@@ -308,9 +340,20 @@
     }).catch(function (error) {
       if(token!==revision)return;
       pendienteId=null;
-      vistas.forEach(function(v){v.nodo.dataset.carga=error.message;});
+      erroresModelo++;
+      vistas.forEach(function(v){v.nodo.dataset.carga='error';});
       vistas.forEach(function(v){if(v.canvas){v.canvas.setAttribute('aria-label',p.nombre+': 3D no disponible. Elige otro tutor.');}});
     });
+  }
+  function cambiarGesto(estaHablando) {
+    if(!acciones3d||!mixer)return;
+    var claveAccion=estaHablando?'Spellcast_Shoot':'Idle';
+    var proxima=acciones3d[claveAccion]||acciones3d.Idle;
+    if(!proxima||accion3d===proxima)return;
+    proxima.reset().fadeIn(.28).play();
+    if(accion3d)accion3d.fadeOut(.28);
+    accion3d=proxima;
+    despertar();
   }
   function despertar() { if(!animacion && renderer && modelo && !document.hidden) animacion=requestAnimationFrame(frame); }
   function dibujarVistas(lista,t,quieto) {
@@ -348,7 +391,11 @@
     dibujarVistas(visibles,t,quieto);
     if(!quieto)despertar();
   }
-  document.addEventListener('avatar-hablando',function(e){hablando=!!(e.detail&&e.detail.activo);despertar();});
+  document.addEventListener('avatar-hablando',function(e){
+    hablando=!!(e.detail&&e.detail.activo);
+    cambiarGesto(hablando);
+    despertar();
+  });
   document.addEventListener('movimiento-cambiado',function(){if(buscar(elegido).pokemon)vistas.forEach(pintar);despertar();});
   document.addEventListener('visibilitychange',despertar);
   global.addEventListener('pagehide',function(){
@@ -363,5 +410,10 @@
       renderer=null;scene=null;camera=null;T=null;preparando=null;
     }
   });
-  global.Tutores={catalogo:CATALOGO,actual:function(){return elegido;},elegir:elegir,montar:montar,selector:selector,perfilVoz:perfilVoz,enfocar:enfocar,orientar:orientar,suspender:suspender};
+  global.Tutores={catalogo:CATALOGO,actual:function(){return elegido;},
+    elegir:elegir,montar:montar,selector:selector,perfilVoz:perfilVoz,
+    enfocar:enfocar,orientar:orientar,suspender:suspender,
+    estadisticas:function(){return{cargado:cargadoId,pendiente:pendienteId,
+      reproduciendo:!!(mixer&&accion3d),fallos:erroresModelo};}
+  };
 })(window);
