@@ -814,3 +814,22 @@ test('Los docentes 3D señalan con huesos reales de Rocketbox y KayKit', () => {
   assert.ok(codigo.includes('gestoNivel'));
   assert.ok(codigo.includes('huesosGuia.neck.rotateY'));
 });
+
+test('Navegación del visor permite retroceder y volver a oír el paso anterior',()=>{
+  const visor=fs.readFileSync(path.join(__dirname,'js/visor.js'),'utf8');
+  assert.ok(visor.includes('btnAnt.disabled = false'), 'Anterior siempre accesible');
+  assert.ok(!visor.includes('data-mm-accion="ant" disabled'),'Anterior no arranca bloqueado');
+  assert.ok(visor.includes('estado.pasoActual>0 ? estado.pasoActual-1 : pasos.length-1'), 'Anterior circula al final');
+  assert.ok(visor.includes('irAPaso(estado.pasoActual>0 ? estado.pasoActual-1 : pasos.length-1, true)'),
+    'Al retroceder vuelve a escuchar la narración');
+});
+test('Docentes humanos usan cámara de cuerpo completo y brazo elevado para señalar',()=>{
+  const tutores=fs.readFileSync(path.join(__dirname,'js/tutores.js'),'utf8');
+  const css=fs.readFileSync(path.join(__dirname,'css/avatares-3d.css'),'utf8');
+  assert.ok(tutores.includes('p.realista?4.75'),'cámara alejada para no recortar piernas');
+  assert.ok(tutores.includes('new T.Vector3(lado*0.74,0.52,0.44)'),
+    'el codo se dirige hacia arriba y al lado del sólido');
+  assert.ok(tutores.includes('new T.Vector3(lado*0.87,0.40,0.28)'),
+    'la mano prolonga la señal');
+  assert.ok(css.includes('overflow:visible!important'),'escenario sin máscara de tarjeta');
+});
