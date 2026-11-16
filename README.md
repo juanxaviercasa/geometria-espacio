@@ -241,3 +241,12 @@ Se comprobaron **49 combinaciones de las siete páginas** en 320–1440 px y **5
 ## Fase 6 — Auditoría integral, pruebas y despliegue (2026-11-14)
 
 Se verificaron 7 páginas con 7 anchos (49 combinaciones), 17 lecciones con 3 anchos (51 combinaciones), 107 ejercicios y 18 retos. La auditoría publicada documenta corrección de desbordamiento a 320 px, IDs SVG únicos, contraste de controles y 174/174 autocomprobaciones del navegador. **Cloudflare Pages ejecutó con éxito `npm test && npm run build`: 40/40 pruebas Node y despliegue de producción confirmado** (commit `5828e1f`). La validación continúa limitada a Chromium remoto; Safari, Firefox, hardware real y lectores de pantalla requieren pruebas externas adicionales. Evidencias: [informe Fase 6](FASE6-REPORTE-2026-11-14.md) y [matriz de QA](QA-FASE6/matriz.json).
+
+
+## Rediseño de aula y voz neural (15/11/2026)
+
+La portada es un aula de **ocho sólidos geométricos** con los controles de Proyectar, Ajustes, voz, repetición y pausa en la **franja azul exterior**. El panel blanco presenta a **Vértiz más grande**, el paso, el texto y los botones Anterior/Siguiente sin solapamientos. Los controles secundarios 2D/3D, fondo, giro, medidas, preferencias de tutor y voz siguen dentro de Ajustes. El visor de las lecciones no comparte este cambio de distribución.
+
+**Narración neural:** se implementó [Cloudflare Pages Function `/api/tts`](functions/api/tts.js), con Workers AI/Deepgram Aura-2 español, voz masculina **Javier** predeterminada; en Ajustes puede elegirse también **Álvaro** o **Néstor**, o la voz del dispositivo como alternativa. El audio se pide al iniciar o repetir un paso, permite pausar/reanudar, y se cancela cuando se cambia de paso. La voz neural cubre 45 explicaciones de 16 modelos geométricos del catálogo, no las 107 preguntas de práctica. El servicio **no admite texto libre**; recibe solo figura, paso y voz permitidos, sin claves del proveedor en el navegador. Una capa de caché de Cloudflare reutiliza los MP3. **Workers AI puede generar cargos por caracteres sintetizados**. Si la voz no está disponible, la explicación escrita permanece.
+
+**Verificación:** Cloudflare produjo un MP3 válido de 56.736 bytes para el primer paso del prisma, el panel y la navegación de proyección se comprobaron a 390 y 320 px sin scroll horizontal, y el despliegue ejecutó **46/46 pruebas Node**, `npm run build` y publicación sin fallos. Esto verifica la entrega técnica del audio, **no certifica una evaluación subjetiva de su timbre o calidad acústica en los dispositivos de los estudiantes**.
