@@ -51,7 +51,7 @@
   } catch (e) {}
   var vistas = [], selectores = [], cargas = {}, T, renderer, scene, camera, modelo, mixer, alas = [], cabeza;
   var revision = 0, animacion = 0, ultimo = 0, hablando = false, giro = 0.08, arrastrando = false;
-  var foco=null, huesosGuia=null,acciones3d=null,accion3d=null;
+  var foco=null, huesosGuia=null,acciones3d=null,accion3d=null,ultimaPose=null;
    var miradaX=0,miradaY=0,gestoNivel=0;
   var mallasLabios=[],elementoAudio=null,envolventeAudio=null,pasoAudio=.05;
   function limpiarAudioVisual(){elementoAudio=null;envolventeAudio=null;}
@@ -300,7 +300,7 @@
       modelo.traverse(function (o) { if(o.geometry)o.geometry.dispose(); if(o.material) (Array.isArray(o.material)?o.material:[o.material]).forEach(function(m){Object.keys(m).forEach(function(k){if(m[k]&&m[k].isTexture)m[k].dispose();});m.dispose();}); });
       modelo=null;
     }
-    alas=[]; cabeza=null;huesosGuia=null;acciones3d=null;accion3d=null;
+    alas=[]; cabeza=null;huesosGuia=null;acciones3d=null;accion3d=null;ultimaPose=null;
     miradaX=0;miradaY=0;gestoNivel=0;
     mallasLabios=[];limpiarAudioVisual();
   }
@@ -570,6 +570,18 @@
           if(huesosGuia.right)huesosGuia.right.rotateZ(-0.18-0.08*Math.sin(t*2.1+1));
         }
       }
+      // Telemetría local para certificar que los huesos realmente cambian.
+      if(activa&&huesosGuia){
+        var bElegido=d.x<0?huesosGuia.right:huesosGuia.left;
+        var baseElegida=d.x<0?bases.right:bases.left;
+        ultimaPose={objetivo:foco&&foco.nombre,hablando:hablando,
+          mirada:Math.round(miradaX*100)/100,
+          elevacion:Math.round(miradaY*100)/100,
+          gesto:Math.round(gestoNivel*100)/100,
+          brazo:!!bElegido,
+          grados:bElegido&&baseElegida?Math.round(bElegido.quaternion.angleTo(baseElegida)*180/Math.PI):0,
+          momento:Math.round(t*1000)};
+      }
       renderer.render(scene,camera);copiar(v);
     });
     if(huesosGuia)Object.keys(bases).forEach(function(k){
@@ -619,6 +631,8 @@
       conectadas:vistas.filter(function(v){return v.nodo.isConnected;}).length,
       gesto:acciones3d && accion3d===acciones3d.Spellcast_Shoot?'explicando':'reposo',
       visemas:mallasLabios.length,decoder:!!global.MeshoptDecoder,
+      huesos:huesosGuia?Object.keys(huesosGuia).filter(function(k){return !!huesosGuia[k];}):[],
+      pose:ultimaPose,
       aperturaBoca:mallasLabios.length&&mallasLabios[0].mesh.morphTargetInfluences?
         Number(mallasLabios[0].mesh.morphTargetInfluences[mallasLabios[0].aa].toFixed(3)):null};}
   };
