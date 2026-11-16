@@ -31,3 +31,18 @@
 @media(prefers-reduced-motion:reduce){
   .tutor-canvas{transition:none!important;animation:none!important;}
 }
+
+/* La escena del avatar se ancla al alto del marco; evita canvas de 0 px. */
+.figura-col-maestro .mm-avatar-slot > .vertiz-stage-mini {
+  display:block; width:100%!important; height:100%!important;
+  min-height:100%!important; position:relative;
+}
+.figura-col-maestro .mm-avatar-slot > .vertiz-stage-mini > .mini-escenario {
+  display:block; width:100%!important; height:100%!important;
+  min-height:100%!important; position:relative;
+}
+.figura-col-maestro .mm-avatar-slot .avatar-escena.tutor-personalizado {
+  width:100%!important; height:100%!important; min-height:100%!important;
+  left:0!important; right:0!important; top:0!important; bottom:0!important;
+  margin:0!important; transform:none!important;
+}
