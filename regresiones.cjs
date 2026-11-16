@@ -826,10 +826,27 @@ test('Navegación del visor permite retroceder y volver a oír el paso anterior'
 test('Docentes humanos usan cámara de cuerpo completo y brazo elevado para señalar',()=>{
   const tutores=fs.readFileSync(path.join(__dirname,'js/tutores.js'),'utf8');
   const css=fs.readFileSync(path.join(__dirname,'css/avatares-3d.css'),'utf8');
-  assert.ok(tutores.includes('p.realista?4.75'),'cámara alejada para no recortar piernas');
-  assert.ok(tutores.includes('new T.Vector3(lado*0.74,0.52+pulso*0.5,0.44)'),
+  assert.ok(tutores.includes('renderer.setSize(420,600)'),'lienzo vertical para figura entera');
+  assert.ok(tutores.includes('p.realista?4.2'),'cámara sin recorte de pies');
+  assert.ok(tutores.includes('new T.Vector3(lado*0.74,0.57+pulso,0.42)'),
     'el codo se dirige hacia arriba y al lado del sólido');
-  assert.ok(tutores.includes('new T.Vector3(lado*0.87,0.40+pulso,0.28)'),
+  assert.ok(tutores.includes('new T.Vector3(lado*0.82,0.49+pulso,0.28)'),
     'la mano prolonga la señal');
   assert.ok(css.includes('overflow:visible!important'),'escenario sin máscara de tarjeta');
+});
+
+test('La publicación genera URLs de assets distintas para evitar CSS y JS antiguos',()=>{
+  const build=fs.readFileSync(path.join(__dirname,'build.js'),'utf8');
+  const headers=fs.readFileSync(path.join(__dirname,'_headers'),'utf8');
+  assert.ok(build.includes('CF_PAGES_COMMIT_SHA'), 'versión derivada del commit publicado');
+  assert.ok(build.includes("file.split('?')[0]"), 'limpia números de versión obsoletos');
+  assert.ok(headers.includes('Cache-Control: no-store'), 'no almacenar HTML antiguo');
+  assert.ok(headers.includes('/js/*'), 'revalidar Javascript');
+  assert.ok(headers.includes('/css/*'), 'revalidar CSS');
+});
+test('Mirada baja hacia el sólido y hombros gesticulan al hablar',()=>{
+  const s=fs.readFileSync(path.join(__dirname,'js/tutores.js'),'utf8');
+  assert.ok(s.includes('huesosGuia.head.rotateX(miradaY*0.65'), 'ángulo vertical no invertido');
+  assert.ok(s.includes('0.34*Math.sin(t*2.25)'), 'gesto de brazos perceptible');
+  assert.ok(s.includes('visual.height = 600'), 'renderizado vertical real');
 });
