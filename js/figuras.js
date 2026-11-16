@@ -444,19 +444,15 @@
     var L = 2.6;
     var pr = prismaRecto({ a: L, b: L, h: L });
     var vs = Object.assign({}, pr.vertices);
-    // Sección: hexágono por los puntos medios de seis aristas
-    var mid = {
-      M1: v(0, 0, L / 2), M2: v(L / 2, 0, 0), M3: v(L / 2, L / 2, -0), M4: v(0, L, -L / 2),
-      M5: v(-L / 2, L, 0), M6: v(-L / 2, L / 2, 0)
-    };
-    // hexágono regular en el plano x + z = 0 ... usamos puntos medios reales:
+    // El plano x + y + z = L/2 pasa por el centro y corta seis aristas
+    // exactamente en sus puntos medios. Los seis lados miden L/sqrt(2).
+    // El orden recorre el perímetro sin cruces, formando un hexágono regular.
     var hex = [
-      v(L / 2, 0, 0), v(0, 0, -L / 2), v(-L / 2, L / 2, 0),
-      v(0, L, L / 2), v(L / 2, L, 0), v(L / 2, L / 2, -L / 2)
+      v(L / 2, L / 2, -L / 2), v(L / 2, 0, 0),
+      v(0, 0, L / 2), v(-L / 2, L / 2, L / 2),
+      v(-L / 2, L, 0), v(0, L, -L / 2)
     ];
     hex.forEach(function (p, i) { vs['H' + i] = { p: p, etiqueta: 'H' + (i + 1) }; });
-    vs.A = { p: v(-L / 2, 0, L / 2), etiqueta: 'A' };
-    vs.G = { p: v(L / 2, L, -L / 2), etiqueta: 'G' };
     registrar('cubo-seccion', {
       titulo: 'Sección plana de un cubo',
       alt: 'Cubo cortado por un plano que pasa por seis puntos medios de aristas, produciendo un hexágono; además se marca una diagonal espacial.',
@@ -470,7 +466,7 @@
       ],
       aristas: pr.aristas.map(function (p) { return { a: p[0], b: p[1], capa: 'aristas' }; }),
       lineas: [
-        { v: ['A', 'G'], capa: 'diagonal-espacial', estilo: 'fuerte', grosor: 2.6 },
+        { v: ['D', 'B1'], capa: 'diagonal-espacial', estilo: 'fuerte', grosor: 2.6 },
         { pts: [vs.H0.p, vs.H1.p, vs.H2.p, vs.H3.p, vs.H4.p, vs.H5.p], capa: 'seccion', estilo: 'fuerte', grosor: 2.4, cerrado: true }
       ],
       capas: [
