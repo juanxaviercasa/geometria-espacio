@@ -135,13 +135,13 @@ function tutores(guardado) {
   vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/tutores.js'),'utf8'),{window,document,URL,localStorage:{getItem:k=>datos[k],setItem:(k,v)=>{datos[k]=v;}},CustomEvent:function(){}});
   return {api:window.Tutores,datos};
 }
-test('tutor inicial: maestro KayKit 3D y alternativa accesible SVG',()=>{
+test('tutor inicial: humano Rocketbox realista con alternativa SVG accesible',()=>{
   const {api}=tutores('desconocido');
-  assert.equal(api.actual(),'maestro-arcano');
+  assert.equal(api.actual(),'profesor-realista');
   for(const id of ['dragon','dragon-alado','pikachu','charizard'])
     assert.equal(api.elegir(id),false);
   assert.equal(api.elegir('inexistente'),false);
-  assert.equal(api.actual(),'maestro-arcano');
+  assert.equal(api.actual(),'profesor-realista');
   assert.ok(api.catalogo.some(p=>p.id==='vertiz'&&p.tipo==='Ilustración'));
 });
 test('cambiar de profesor recuerda el personaje 3D con la voz neural preservada',()=>{
@@ -738,4 +738,14 @@ test('Rocketbox: decoder MIT, boca guiada por MP3 y licencia reproducida',()=>{
  assert.equal(win.MeshoptDecoder.supported,true);
  assert.equal(typeof win.MeshoptDecoder.decodeGltfBuffer,'function');
  assert.ok(lic.includes('Copyright (c) 2020 Microsoft'));
+});
+
+
+test('Humano 3D inicial parpadea y conserva sincronización guiada por amplitud',()=>{
+  const tutor=fs.readFileSync(path.join(__dirname,'js/tutores.js'),'utf8');
+  assert.ok(tutor.includes("var elegido = 'profesor-realista'"));
+  assert.ok(tutor.includes('morphTargetDictionary.eyeBlinkLeft'));
+  assert.ok(tutor.includes('morphTargetDictionary.eyeBlinkRight'));
+  assert.ok(tutor.includes('nivelDeVoz(t)'));
+  assert.ok(tutor.includes('if(!mallasLabios.length)return'));
 });

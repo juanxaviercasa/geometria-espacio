@@ -260,3 +260,6 @@ Se incorporaron tres personajes KayKit terminados, no generados por IA: **Ariel 
 ### Profesores humanos Rocketbox (15/11/2026)
 
 Se incorporan **Marco y Elena**, modelos humanos ya terminados de Microsoft Rocketbox, en GLB optimizados distribuidos bajo MIT por Talking Avatar. Cada uno incluye 15 visemas Oculus y expresiones ARKit; el frontend los carga bajo demanda con Meshopt. Al sonar el MP3 neural, la apertura de la boca se guía por una envolvente de audio calculada localmente, **no por reconocimiento fonético exacto**. Los tres KayKit y Vértiz se conservan como opciones más ligeras. La licencia MIT de Microsoft se adjunta en `vendor/avatares/ROCKETBOX-LICENSE.txt`.
+
+
+**Tutor inicial actualizado:** Marco, profesor Rocketbox realista con mirada, parpadeo y boca guiada por la envolvente del audio. Se mantienen Ariel, Axel, Lía, Elena y Vértiz en el selector. La sincronización labial es aproximada por audio, no un alineamiento preciso de fonemas.

@@ -1,11 +1,11 @@
-/* Tutores intercambiables: Three.js + dragón animado CC0 de Quaternius,
-   criaturas originales y sprites Pokémon de PokeAPI/sprites.
-   Una sola escena/contexto WebGL compartida por todos los tutores visibles. */
+/* Profesorado 3D preexistente, licenciado y alojado localmente:
+   dos humanos Rocketbox MIT y tres personajes KayKit CC0. Carga WebGL
+   diferida, visemas guiados por amplitud y gestos de enseñanza.
+   Vértiz SVG permanece como alternativa cuando falla el 3D. */
 (function (global) {
   'use strict';
-  /* Modelos existentes de KayKit, CC0. Archivos GLB alojados en vendor/avatares.
-     Tienen esqueleto y clips Idle/Spellcast/Walking, pero NO visemas faciales:
-     gesticulan al hablar; no se presenta como lipsync fonético exacto. */
+  /* Rocketbox tiene visemas Oculus; KayKit tiene animaciones esqueléticas
+     pero no visemas. Ninguno se presenta como lipsync fonético exacto. */
   var CATALOGO = [
     {id:'profesor-realista',nombre:'Marco · Profesor realista',tipo:'3D',
       modelo:'vendor/avatares/rocketbox_male.glb',meshopt:true,realista:true,
@@ -42,7 +42,7 @@
     ,lobo:{pitch:0.79,rate:0.98,descripcion:'Grave y segura'}
     ,'dragon-alado':{pitch:0.72,rate:0.93,descripcion:'Grave y aventurera'}
   };
-  var elegido = 'maestro-arcano';
+  var elegido = 'profesor-realista';
   try {
     var valor = localStorage.getItem(clave);
     // Actualización visual del tutor clásico: migración a un personaje GLB real.
@@ -55,6 +55,7 @@
   function limpiarAudioVisual(){elementoAudio=null;envolventeAudio=null;}
   function procesarAudio(blob,elemento){
     limpiarAudioVisual();elementoAudio=elemento;
+    if(!mallasLabios.length)return;
     var Contexto=global.AudioContext||global.webkitAudioContext;
     if(!Contexto||!blob||!blob.arrayBuffer)return;
     var contexto;
@@ -354,7 +355,9 @@
           if(o.morphTargetDictionary&&o.morphTargetDictionary.viseme_aa!==undefined)
             mallasLabios.push({
               mesh:o,aa:o.morphTargetDictionary.viseme_aa,
-              sil:o.morphTargetDictionary.viseme_sil
+              sil:o.morphTargetDictionary.viseme_sil,
+              blinkL:o.morphTargetDictionary.eyeBlinkLeft,
+              blinkR:o.morphTargetDictionary.eyeBlinkRight
             });
           var mats=Array.isArray(o.material)?o.material:[o.material];
           mats.filter(Boolean).forEach(function(m){
@@ -424,11 +427,15 @@
   function dibujarVistas(lista,t,quieto) {
     if(mallasLabios.length){
       var apertura=quieto?0:nivelDeVoz(t);
+      var fase=t%5.3;
+      var parpadeo=quieto?0:(fase<.16?Math.sin(Math.PI*fase/.16):0);
       mallasLabios.forEach(function(item){
         var weights=item.mesh.morphTargetInfluences;
         if(!weights)return;
         weights[item.aa]=apertura;
         if(item.sil!==undefined)weights[item.sil]=1-apertura;
+        if(item.blinkL!==undefined)weights[item.blinkL]=parpadeo;
+        if(item.blinkR!==undefined)weights[item.blinkR]=parpadeo;
       });
     }
     var bases={};
