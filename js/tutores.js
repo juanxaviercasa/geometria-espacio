@@ -417,9 +417,9 @@
       }
       scene.add(modelo); cargadoId=p.id; pendienteId=null;
       // Medio cuerpo: rostro y brazos distinguibles sin alejar al profesor.
-      camera.position.set(0,p.realista?1.48:(p.modelo?1.18:1.15),
-        p.realista?2.15:(p.modelo?3.05:4.8));
-      camera.lookAt(0,p.realista?1.43:1.0,0);
+      camera.position.set(0,p.realista?1.1:(p.modelo?1.18:1.15),
+        p.realista?4.2:(p.modelo?3.65:4.8));
+      camera.lookAt(0,p.realista?0.95:1.0,0);
       modelo.rotation.y=giro;
       if(mixer){mixer.update(0);cambiarGesto(hablando);}
       // La voz puede comenzar antes de que el modelo GLB termine de cargar.
@@ -490,7 +490,7 @@
     // Interpolar evita que ojos y brazos salten entre los pasos.
     var vistaObjetivo=lista.find(function(v){return v.canvas && participa(v);});
     var dir=vistaObjetivo?direccion(vistaObjetivo):{x:0,y:0};
-    var factor=quieto?1:0.18;
+    var factor=quieto?1:0.24;
     miradaX+=( (vistaObjetivo?dir.x*0.32:0)-miradaX)*factor;
     miradaY+=( (vistaObjetivo?dir.y*0.12:0)-miradaY)*factor;
     gestoNivel+=((vistaObjetivo?1:0)-gestoNivel)*factor;
