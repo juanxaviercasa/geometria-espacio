@@ -1220,7 +1220,7 @@ test('El sistema visual Zénit entrega ilustraciones con fuentes locales válida
  const home=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
  const catalog=fs.readFileSync(path.join(__dirname,'solidos.html'),'utf8');
  const lab=fs.readFileSync(path.join(__dirname,'solido.html'),'utf8');
- assert.ok(home.includes('hero-laboratorio.svg'));
+ assert.ok(home.includes('prisma-ai.webp'),'el hero utiliza ilustración optimizada');
  assert.equal((catalog.match(/class="zenit-catalog-visual"/g)||[]).length,8);
  assert.equal((catalog.match(/src="assets\/zenit\/[^"]+\.svg"/g)||[]).length,8);
  assert.ok(lab.includes('id="z-family-art"'));
