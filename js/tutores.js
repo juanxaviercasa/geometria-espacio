@@ -325,6 +325,9 @@
             if(/^(Idle|Spellcast_Shoot|Walking_A)$/.test(clip.name))
               acciones3d[clip.name]=mixer.clipAction(clip);
           });
+          // El gesto didáctico debe sostenerse mientras dura la locución;
+          // los clips de hechizo suelen terminar tras una sola reproducción.
+          if(acciones3d.Spellcast_Shoot)acciones3d.Spellcast_Shoot.setLoop(T.LoopRepeat,Infinity);
           accion3d=acciones3d.Idle || mixer.clipAction(resultado.animations[0]);
           accion3d.play();
         }
@@ -338,7 +341,9 @@
       camera.position.set(0,p.modelo?1.18:1.15,p.modelo?3.6:4.8);
       camera.lookAt(0,1.0,0);
       modelo.rotation.y=giro;
-      if(mixer)mixer.update(0);
+      if(mixer){mixer.update(0);cambiarGesto(hablando);}
+      // La voz puede comenzar antes de que el modelo GLB termine de cargar.
+      // Recuperar el gesto vigente evita que el profesor quede inmóvil mientras habla.
       dibujarVistas(vistas,performance.now()/1000,reducido());
       vistas.forEach(function(v){v.nodo.dataset.carga="listo";}); despertar();
     }).catch(function (error) {
