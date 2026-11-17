@@ -393,13 +393,23 @@ function conceptCards(){
   return {src:'assets/zenit/lote-2/'+name+'.webp',title:title,text:description,
     latex:latex||'',alt:alt,generated:true,portrait:true};
  };
+ var diagram=function(name,title,description,latex,alt){
+  return {src:'assets/zenit/lote-3/'+name+'.svg',title:title,text:description,
+    latex:latex||'',alt:alt,diagram:true};
+ };
  var concepts={
   prisma:[
    old('prisma-bases','Bases paralelas','Dos polígonos congruentes en planos paralelos.'),
    old('prisma-altura','Altura perpendicular','La distancia entre bases se mide perpendicularmente a sus planos.'),
    old('prisma-oblicuo','Prisma oblicuo','Las aristas inclinadas no son la altura.'),
    old('prisma-seccion','Sección transversal','Un plano paralelo a las bases genera una sección congruente.'),
-   old('prisma-volumen','Volumen','Área de la base por altura perpendicular.','V=A_bh')
+   old('prisma-volumen','Volumen','Área de la base por altura perpendicular.','V=A_bh'),
+   diagram('prisma-caras-laterales','Caras laterales de un prisma recto',
+      'Las caras laterales del prisma rectangular son rectángulos y sus aristas verticales son perpendiculares a las bases.',
+      'A_L=P_bh','Prisma 3D con una cara lateral resaltada en verde turquesa.'),
+   diagram('prisma-diagonales-comparacion','Diagonal de cara y diagonal espacial',
+      'La diagonal de una cara permanece sobre esa cara; la diagonal espacial une vértices opuestos atravesando el interior del prisma.',
+      'D=\\sqrt{a^2+b^2+h^2}','Prisma rectangular transparente con una diagonal de cara naranja y otra espacial turquesa.')
   ],
   piramide:[
    ai('piramide-altura-apotema','Altura y apotema lateral',
@@ -413,7 +423,15 @@ function conceptCards(){
    ai('piramide-truncada','Tronco de pirámide',
       'Se obtiene al cortar una pirámide por un plano paralelo a la base y retirar la parte superior. Conserva dos bases semejantes.',
       'V=\\frac{h}{3}(A_1+A_2+\\sqrt{A_1A_2})',
-      'Tronco de pirámide violeta de cristal con la punta original representada por aristas discontinuas.')
+      'Tronco de pirámide violeta de cristal con la punta original representada por aristas discontinuas.'),
+   diagram('piramide-regular-irregular','Bases regulares e irregulares',
+      'Un prisma o una pirámide puede tener base regular o irregular. La pirámide regular recta tiene una base poligonal regular y el vértice alineado con su centro.',
+      '',
+      'Comparación de pirámides con base poligonal regular e irregular.'),
+   diagram('piramide-volumen-tercio','Volumen: la tercera parte de un prisma',
+      'Una pirámide representa un tercio del volumen de un prisma que tenga exactamente la misma área de base y altura perpendicular.',
+      'V=\\frac{A_bh}{3}',
+      'Comparación conceptual de un prisma y una pirámide con idéntica base y altura.')
   ],
   cilindro:[
    ai('cilindro-radio-diametro','Radio, diámetro y altura',
@@ -427,7 +445,13 @@ function conceptCards(){
    ai('cilindro-recto-oblicuo','Cilindro recto y oblicuo',
       'Compara las generatrices perpendiculares e inclinadas. En ambos casos, el volumen se calcula con la altura perpendicular.',
       'V=A_bh',
-      'Dos cilindros translúcidos violetas: uno vertical y otro inclinado, con alturas resaltadas.')
+      'Dos cilindros translúcidos violetas: uno vertical y otro inclinado, con alturas resaltadas.'),
+   diagram('cilindro-seccion-axial','Sección axial del cilindro',
+      'Un plano que contiene el eje de un cilindro circular recto corta el sólido en un rectángulo de altura h y ancho 2r.',
+      'A_{axial}=2rh','Cilindro transparente cortado verticalmente por un plano que muestra un rectángulo.'),
+   diagram('cilindro-corte-paralelo','Corte paralelo a las bases',
+      'Un plano paralelo a las bases del cilindro circular produce una sección circular congruente con ellas.',
+      'A_s=\\pi r^2','Cilindro 3D con un círculo transversal interior iluminado en turquesa.')
   ],
   cono:[
    ai('cono-generatriz','Radio, altura y generatriz',
@@ -441,7 +465,15 @@ function conceptCards(){
    ai('cono-truncado','Plano de corte y tronco de cono',
       'Un plano paralelo a la base divide el cono en un cono pequeño y un tronco de cono. La figura ilustra el corte antes de separar las partes.',
       'V=\\frac{\\pi h}{3}(R^2+Rr+r^2)',
-      'Cono violeta transparente atravesado horizontalmente por un plano que marca dónde se obtendría un tronco de cono.')
+      'Cono violeta transparente atravesado horizontalmente por un plano que marca dónde se obtendría un tronco de cono.'),
+   diagram('cono-volumen-tercio','Volumen: relación con el cilindro',
+      'Un cono circular recto ocupa exactamente un tercio del volumen de un cilindro con el mismo radio basal y la misma altura.',
+      'V=\\frac{\\pi r^2h}{3}',
+      'Cono y cilindro rectos con igual radio y altura, colocados uno junto al otro.'),
+   diagram('cono-seccion-paralela','Secciones circulares semejantes',
+      'Al cortar un cono circular recto con un plano paralelo a su base se obtiene un círculo de menor radio, proporcional a la distancia desde el vértice.',
+      'r_s=\\frac{z}{h}R',
+      'Cono transparente con una sección circular interior turquesa paralela a la base.')
   ],
   esfera:[
    ai2('esfera-radio-diametro','Radio y diámetro',
@@ -450,11 +482,11 @@ function conceptCards(){
      'Esfera translúcida con diámetro horizontal turquesa y radio naranja desde el centro a la superficie.'),
    ai2('esfera-circulo-maximo','Círculo máximo de la esfera',
      'Un plano que pasa por el centro corta la esfera en un círculo cuyo radio coincide con el de la esfera.',
-     'A_c=\\\\pi R^2',
+     'A_c=\\pi R^2',
      'Esfera translúcida atravesada horizontalmente por un círculo central turquesa.'),
    ai2('esfera-superficie','Superficie y volumen',
      'La superficie curva de radio R tiene área 4πR² y el espacio interior encerrado tiene volumen 4πR³/3.',
-     'V=\\\\frac43\\\\pi R^3',
+     'V=\\frac43\\pi R^3',
      'Esfera violeta con meridianos y paralelos dibujados sobre su superficie y sombreado interior.'),
    ai('esfera-plano-secante','Plano secante fuera del centro',
      'Si el plano no pasa por el centro, el círculo de sección tiene un radio menor que R y cumple el teorema de Pitágoras.',
@@ -464,15 +496,15 @@ function conceptCards(){
   cubo:[
    ai2('cubo-vertices-aristas','Caras, aristas y vértices',
      'Un cubo tiene seis caras cuadradas iguales, doce aristas y ocho vértices.',
-     'N_c=6,\\\\;N_a=12,\\\\;N_v=8',
+     'N_c=6,\\;N_a=12,\\;N_v=8',
      'Cubo violeta translúcido con vértices y aristas resaltados en colores turquesa y violeta.'),
    ai2('cubo-diagonal-cara','Diagonal de una cara',
      'La diagonal de una cara cuadrada conecta dos vértices opuestos del mismo cuadrado y se calcula por Pitágoras.',
-     'd_c=a\\\\sqrt2',
+     'd_c=a\\sqrt2',
      'Cubo translúcido con segmento turquesa que une vértices opuestos de una cara.'),
    ai2('cubo-diagonal-espacial','Diagonal espacial del cubo',
      'La diagonal espacial une dos vértices opuestos del cubo pasando por su interior, no por una cara.',
-     'd_e=a\\\\sqrt3',
+     'd_e=a\\sqrt3',
      'Cubo transparente con diagonal turquesa que atraviesa su interior entre vértices opuestos.'),
    ai2('cubo-desarrollo-plano','Desarrollo plano del cubo',
      'El cubo puede desplegarse en seis cuadrados congruentes que se pliegan para reconstruir el sólido.',
@@ -482,28 +514,36 @@ function conceptCards(){
   tetraedro:[
    ai2('tetraedro-caras','Tetraedro regular: cuatro caras',
      'En un tetraedro regular, todas las caras son triángulos equiláteros congruentes y todas sus seis aristas miden a.',
-     'A_T=\\\\sqrt3\\,a^2',
+     'A_T=\\sqrt3\\,a^2',
      'Tetraedro regular violeta con cuatro caras triangulares y aristas visibles.'),
    ai2('tetraedro-altura','Altura perpendicular del tetraedro',
      'Desde un vértice, la altura llega perpendicularmente al plano de la cara opuesta. En el tetraedro regular pasa por su centro.',
-     'h=a\\\\sqrt{\\\\frac23}',
-     'Tetraedro de cristal con segmento naranja de altura perpendicular y una marca de ángulo recto.')
+     'h=a\\sqrt{\\frac23}',
+     'Tetraedro de cristal con segmento naranja de altura perpendicular y una marca de ángulo recto.'),
+   diagram('tetraedro-desarrollo','Desarrollo plano del tetraedro',
+      'La red de un tetraedro regular consiste en cuatro triángulos equiláteros congruentes: uno central y tres unidos a sus lados.',
+      'A_T=\\sqrt{3}a^2',
+      'Desarrollo plano exacto con cuatro triángulos equiláteros dispuestos alrededor del central.')
   ],
   octaedro:[
    ai2('octaedro-simetria','Eje de simetría y vértices opuestos',
      'El octaedro regular tiene ocho caras triangulares. Los vértices superior e inferior están alineados sobre un eje de simetría.',
-     'd=\\\\sqrt2\\,a',
-     'Octaedro translúcido formado por dos pirámides cuadradas unidas por sus bases, con eje vertical punteado.')
+     'd=\\sqrt2\\,a',
+     'Octaedro translúcido formado por dos pirámides cuadradas unidas por sus bases, con eje vertical punteado.'),
+   diagram('octaedro-dos-piramides','Octaedro: dos pirámides cuadradas',
+      'Un octaedro regular puede descomponerse en dos pirámides cuadradas congruentes unidas por sus bases. Se calcula el volumen sumando los dos.',
+      'V=\\frac{\\sqrt{2}}{3}a^3',
+      'Octaedro transparente con dos pirámides trianguladas unidas por su base cuadrada central.')
   ]
  };
  (concepts[tipo]||[]).forEach(function(entry,i){
   var card=element('article','z-concept-card');
   var btn=element('button','z-concept-open');
   btn.type='button';btn.setAttribute('aria-label','Ampliar: '+entry.title);
-  var art=element('img','z-concept-art'+(entry.portrait?' z-concept-art-portrait':''));art.src=entry.src;art.alt=entry.alt;
+  var art=element('img','z-concept-art'+(entry.portrait?' z-concept-art-portrait':'')+(entry.diagram?' z-concept-art-diagram':''));art.src=entry.src;art.alt=entry.alt;
   art.loading='lazy';art.decoding='async';
-  art.width=entry.portrait?292:entry.generated?960:680;
-  art.height=entry.portrait?498:entry.generated?720:460;
+  art.width=entry.portrait?292:(entry.generated||entry.diagram)?960:680;
+  art.height=entry.portrait?498:(entry.generated||entry.diagram)?720:460;
   btn.append(art,element('span','z-concept-zoom','Ampliar imagen'));
   btn.addEventListener('click',function(){openConcept(entry);});
   var caption=element('div','z-concept-copy');

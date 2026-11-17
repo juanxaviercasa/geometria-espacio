@@ -301,3 +301,15 @@ Diez escenas de geometría producidas con IA y optimizadas a WebP se guardan en 
 ### Galería didáctica — lote 2 (10 escenas individuales)
 
 Se generó una segunda lámina con coherencia de iluminación y material, se separó en diez ilustraciones WebP independientes y se incorporó a `assets/zenit/lote-2/`. Cubre Esferas (3), Cubos (4), Tetraedros (2) y Octaedros (1), con sus textos, fórmulas KaTeX y visualización ampliada. La geometría interactiva sigue siendo el medio de validación matemática. Todas las imágenes son decorativas/pedagógicas y no sustituyen los modelos exactos.
+
+
+### Galería didáctica — lote 3 (10 diagramas matemáticos nuevos)
+Se incorporaron **diez ilustraciones SVG individuales originales** en `assets/zenit/lote-3/`:
+dos de Prismas (caras, diagonales), dos de Pirámides (bases y relación de volúmenes),
+dos de Cilindros (sección axial y paralela), dos de Conos (relación con cilindro y
+secciones paralelas), una de Tetraedro (desarrollo plano) y una de Octaedro
+(dos pirámides de base cuadrada). Cada tarjeta se integra con lectura pedagógica,
+fórmulas KaTeX y modal de ampliación. Los SVG no son imágenes generadas por IA:
+son diagramas vectoriales construidos con coordenadas y composición de diseño.
+El modelo interactivo sigue siendo la fuente de verdad para dimensiones,
+inclinaciones y áreas. Para visualizar secciones exactas, usar el visor del sólido.

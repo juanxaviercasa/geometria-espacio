@@ -181,3 +181,11 @@
 .z-concept-open:focus-visible .z-concept-art-portrait{transform:scale(1.025)}
 @media(max-width:900px){.z-concept-art-portrait{height:250px}}
 @media(max-width:520px){.z-concept-art-portrait{height:270px}}
+
+/* Lote 3: ilustraciones matemáticas vectoriales originales. */
+.z-concept-art-diagram{object-fit:contain;object-position:center;height:225px;
+ background:linear-gradient(135deg,#fbfaff,#f1efff)}
+.z-concept-open:focus-visible .z-concept-art-diagram{outline:3px solid #a08ce9;outline-offset:2px}
+.z-concept-open:hover .z-concept-art-diagram{transform:scale(1.025)}
+@media(max-width:900px){.z-concept-art-diagram{height:240px}}
+@media(max-width:520px){.z-concept-art-diagram{height:255px}}

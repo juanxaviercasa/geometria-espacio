@@ -1314,3 +1314,38 @@ test('KaTeX: diez expresiones de las escenas del lote 2 se pueden renderizar',()
   assert.ok(katex.renderToString(actual,{throwOnError:true}).includes('katex'));
  }
 });
+
+test('Lote 3: diez escenas SVG reales conectadas con explicación y KaTeX',()=>{
+ const fs=require('fs'),path=require('path');
+ const names=[
+  'prisma-caras-laterales','prisma-diagonales-comparacion',
+  'piramide-regular-irregular','piramide-volumen-tercio',
+  'cilindro-seccion-axial','cilindro-corte-paralelo',
+  'cono-volumen-tercio','cono-seccion-paralela',
+  'tetraedro-desarrollo','octaedro-dos-piramides'
+ ];
+ const code=fs.readFileSync(path.join(__dirname,'js/zenit-workspace.js'),'utf8');
+ const css=fs.readFileSync(path.join(__dirname,'css/zenit-workspace.css'),'utf8');
+ for(const name of names){
+  const file=path.join(__dirname,'assets','zenit','lote-3',name+'.svg');
+  const svg=fs.readFileSync(file,'utf8');
+  assert.ok(svg.startsWith('<svg ')&&svg.trimEnd().endsWith('</svg>'),name+' SVG válido');
+  assert.ok(svg.includes('aria-label')&&svg.includes('viewBox="0 0 960 720"'),name+' accesible');
+  assert.ok(svg.length>=6000&&svg.length<50000,name+' optimizado');
+  assert.ok(code.includes("diagram('"+name+"'"),name+' enlazado');
+ }
+ assert.ok(code.includes('z-concept-art-diagram'));
+ assert.ok(css.includes('.z-concept-art-diagram'));
+ assert.ok(code.includes('setupConceptModal()'));
+ assert.ok(code.includes('writeMath(formula,entry.latex)'));
+});
+test('Lote 3: KaTeX de diez conceptos (con barra correcta) es válida',()=>{
+ const katex=require('./vendor/katex.min.js');
+ for(const tex of [
+  'A_L=P_bh','D=\\sqrt{a^2+b^2+h^2}','V=\\frac{A_bh}{3}',
+  'A_{axial}=2rh','A_s=\\pi r^2','V=\\frac{\\pi r^2h}{3}',
+  'r_s=\\frac{z}{h}R','A_T=\\sqrt{3}a^2',
+  'V=\\frac{\\sqrt{2}}{3}a^3']){
+  assert.ok(katex.renderToString(tex,{throwOnError:true}).includes('katex'));
+ }
+});
