@@ -296,3 +296,8 @@ La imagen fotorealista de la portada `assets/zenit/prisma-ai.webp` se generó me
 ### Galería didáctica — lote 1 (10 imágenes)
 
 Diez escenas de geometría producidas con IA y optimizadas a WebP se guardan en `assets/zenit/lote-1/`. Se presentan en galerías asociadas a Pirámides (3), Cilindros (3), Conos (3) y Esferas (1), con ampliación accesible mediante `<dialog>`, textos docentes y relaciones escritas con KaTeX. Las imágenes son apoyo ilustrativo; la geometría exacta se obtiene de `ZSolidos` y de los visores interactivos. El corte horizontal del cono representa el *plano que originaría* un tronco al retirar la parte superior, no la pieza físicamente separada. La imagen del tronco de pirámide muestra la cúspide original como referencia punteada.
+
+
+### Galería didáctica — lote 2 (10 escenas individuales)
+
+Se generó una segunda lámina con coherencia de iluminación y material, se separó en diez ilustraciones WebP independientes y se incorporó a `assets/zenit/lote-2/`. Cubre Esferas (3), Cubos (4), Tetraedros (2) y Octaedros (1), con sus textos, fórmulas KaTeX y visualización ampliada. La geometría interactiva sigue siendo el medio de validación matemática. Todas las imágenes son decorativas/pedagógicas y no sustituyen los modelos exactos.

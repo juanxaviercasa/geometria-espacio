@@ -1275,3 +1275,27 @@ test('Galería individual: las diez escenas reales del lote 1 están presentes y
  assert.ok(app.includes('writeMath(math,entry.latex)'));
  assert.ok(html.includes('Para comprobar medidas y relaciones exactas'));
 });
+
+
+test('Lote 2: diez ilustraciones WebP individuales cubren esfera, cubo, tetraedro y octaedro',()=>{
+ const fs=require('fs'),path=require('path');
+ const names=[
+  'esfera-radio-diametro','esfera-circulo-maximo','esfera-superficie',
+  'cubo-vertices-aristas','cubo-diagonal-cara','cubo-diagonal-espacial',
+  'cubo-desarrollo-plano','tetraedro-caras','tetraedro-altura','octaedro-simetria'
+ ];
+ const code=fs.readFileSync(path.join(__dirname,'js/zenit-workspace.js'),'utf8');
+ const css=fs.readFileSync(path.join(__dirname,'css/zenit-workspace.css'),'utf8');
+ for(const name of names){
+  const file=path.join(__dirname,'assets','zenit','lote-2',name+'.webp');
+  const data=fs.readFileSync(file);
+  assert.equal(data.toString('ascii',0,4),'RIFF',name);
+  assert.equal(data.toString('ascii',8,12),'WEBP',name);
+  assert.ok(data.length>1800&&data.length<70000,name+' optimized');
+  assert.ok(code.includes("ai2('"+name+"'"),name+' connected');
+ }
+ assert.ok(code.includes('z-concept-art-portrait'));
+ assert.ok(css.includes('.z-concept-art-portrait'));
+ assert.ok(code.includes('writeMath(formula,entry.latex)'));
+ assert.ok(code.includes('setupConceptModal()'));
+});

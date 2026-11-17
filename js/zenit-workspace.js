@@ -389,6 +389,10 @@ function conceptCards(){
   return {src:'assets/zenit/lote-1/'+name+'.webp',title:title,text:description,
     latex:latex||'',alt:alt,generated:true};
  };
+ var ai2=function(name,title,description,latex,alt){
+  return {src:'assets/zenit/lote-2/'+name+'.webp',title:title,text:description,
+    latex:latex||'',alt:alt,generated:true,portrait:true};
+ };
  var concepts={
   prisma:[
    old('prisma-bases','Bases paralelas','Dos polígonos congruentes en planos paralelos.'),
@@ -440,32 +444,66 @@ function conceptCards(){
       'Cono violeta transparente atravesado horizontalmente por un plano que marca dónde se obtendría un tronco de cono.')
   ],
   esfera:[
-   old('esfera','Radio y diámetro','Todos los puntos de la superficie equidistan del centro.','d=2R'),
-   ai('esfera-plano-secante','Sección circular de la esfera',
-      'Un plano secante forma una circunferencia en la superficie y un círculo en el sólido. Su radio depende de la distancia al centro.',
-      'r_s=\\sqrt{R^2-d^2}',
-      'Esfera violeta transparente atravesada por un plano inclinado, con su sección circular resaltada en magenta.')
+   ai2('esfera-radio-diametro','Radio y diámetro',
+     'El radio une el centro con un punto de la superficie; el diámetro une dos puntos opuestos pasando por el centro.',
+     'd=2R',
+     'Esfera translúcida con diámetro horizontal turquesa y radio naranja desde el centro a la superficie.'),
+   ai2('esfera-circulo-maximo','Círculo máximo de la esfera',
+     'Un plano que pasa por el centro corta la esfera en un círculo cuyo radio coincide con el de la esfera.',
+     'A_c=\\\\pi R^2',
+     'Esfera translúcida atravesada horizontalmente por un círculo central turquesa.'),
+   ai2('esfera-superficie','Superficie y volumen',
+     'La superficie curva de radio R tiene área 4πR² y el espacio interior encerrado tiene volumen 4πR³/3.',
+     'V=\\\\frac43\\\\pi R^3',
+     'Esfera violeta con meridianos y paralelos dibujados sobre su superficie y sombreado interior.'),
+   ai('esfera-plano-secante','Plano secante fuera del centro',
+     'Si el plano no pasa por el centro, el círculo de sección tiene un radio menor que R y cumple el teorema de Pitágoras.',
+     'r_s=\\sqrt{R^2-d^2}',
+     'Esfera translúcida atravesada por plano inclinado; su sección circular está resaltada.')
   ],
   cubo:[
-   old('cubo','Las seis caras','Cada cara es un cuadrado congruente.'),
-   old('modo-resolver','Diagonales','Distingue la diagonal de una cara de la diagonal espacial.','d_e=a\\sqrt3')
+   ai2('cubo-vertices-aristas','Caras, aristas y vértices',
+     'Un cubo tiene seis caras cuadradas iguales, doce aristas y ocho vértices.',
+     'N_c=6,\\\\;N_a=12,\\\\;N_v=8',
+     'Cubo violeta translúcido con vértices y aristas resaltados en colores turquesa y violeta.'),
+   ai2('cubo-diagonal-cara','Diagonal de una cara',
+     'La diagonal de una cara cuadrada conecta dos vértices opuestos del mismo cuadrado y se calcula por Pitágoras.',
+     'd_c=a\\\\sqrt2',
+     'Cubo translúcido con segmento turquesa que une vértices opuestos de una cara.'),
+   ai2('cubo-diagonal-espacial','Diagonal espacial del cubo',
+     'La diagonal espacial une dos vértices opuestos del cubo pasando por su interior, no por una cara.',
+     'd_e=a\\\\sqrt3',
+     'Cubo transparente con diagonal turquesa que atraviesa su interior entre vértices opuestos.'),
+   ai2('cubo-desarrollo-plano','Desarrollo plano del cubo',
+     'El cubo puede desplegarse en seis cuadrados congruentes que se pliegan para reconstruir el sólido.',
+     'A_T=6a^2',
+     'Red de seis cuadrados violetas en forma de cruz junto a un cubo ensamblado.')
   ],
   tetraedro:[
-   old('tetraedro','Cuatro triángulos','Cuatro caras equiláteras congruentes en el tetraedro regular.'),
-   old('modo-aprender','Altura','Una perpendicular entre el vértice y la base opuesta.')
+   ai2('tetraedro-caras','Tetraedro regular: cuatro caras',
+     'En un tetraedro regular, todas las caras son triángulos equiláteros congruentes y todas sus seis aristas miden a.',
+     'A_T=\\\\sqrt3\,a^2',
+     'Tetraedro regular violeta con cuatro caras triangulares y aristas visibles.'),
+   ai2('tetraedro-altura','Altura perpendicular del tetraedro',
+     'Desde un vértice, la altura llega perpendicularmente al plano de la cara opuesta. En el tetraedro regular pasa por su centro.',
+     'h=a\\\\sqrt{\\\\frac23}',
+     'Tetraedro de cristal con segmento naranja de altura perpendicular y una marca de ángulo recto.')
   ],
   octaedro:[
-   old('octaedro','Ocho triángulos','Ocho caras equiláteras congruentes en el octaedro regular.'),
-   old('modo-resolver','Simetría y volumen','Relaciona la arista con el área y el volumen.')
+   ai2('octaedro-simetria','Eje de simetría y vértices opuestos',
+     'El octaedro regular tiene ocho caras triangulares. Los vértices superior e inferior están alineados sobre un eje de simetría.',
+     'd=\\\\sqrt2\,a',
+     'Octaedro translúcido formado por dos pirámides cuadradas unidas por sus bases, con eje vertical punteado.')
   ]
  };
  (concepts[tipo]||[]).forEach(function(entry,i){
   var card=element('article','z-concept-card');
   var btn=element('button','z-concept-open');
   btn.type='button';btn.setAttribute('aria-label','Ampliar: '+entry.title);
-  var art=element('img','z-concept-art');art.src=entry.src;art.alt=entry.alt;
-  art.loading='lazy';art.decoding='async';art.width=entry.generated?960:680;
-  art.height=entry.generated?720:460;
+  var art=element('img','z-concept-art'+(entry.portrait?' z-concept-art-portrait':''));art.src=entry.src;art.alt=entry.alt;
+  art.loading='lazy';art.decoding='async';
+  art.width=entry.portrait?292:entry.generated?960:680;
+  art.height=entry.portrait?498:entry.generated?720:460;
   btn.append(art,element('span','z-concept-zoom','Ampliar imagen'));
   btn.addEventListener('click',function(){openConcept(entry);});
   var caption=element('div','z-concept-copy');

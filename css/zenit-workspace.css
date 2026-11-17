@@ -172,3 +172,12 @@
 @media(max-width:520px){.z-concept-art{height:220px}.z-concept-modal-img{max-height:56dvh}
   .z-concept-modal-caption{font-size:.86rem}.z-concept-copy p{min-height:0}}
 @media(prefers-reduced-motion:reduce){.z-concept-art{transition:none!important}}
+
+
+/* Lote 2: renders individuales verticales de esfera, cubo, tetraedro y octaedro. */
+.z-concept-art-portrait{object-fit:contain;object-position:center;height:230px;
+  background:linear-gradient(145deg,#fbf9ff,#f3f0ff)}
+.z-concept-open:hover .z-concept-art-portrait,
+.z-concept-open:focus-visible .z-concept-art-portrait{transform:scale(1.025)}
+@media(max-width:900px){.z-concept-art-portrait{height:250px}}
+@media(max-width:520px){.z-concept-art-portrait{height:270px}}
