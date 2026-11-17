@@ -397,8 +397,16 @@ function conceptCards(){
   return {src:'assets/zenit/lote-3/'+name+'.svg',title:title,text:description,
     latex:latex||'',alt:alt,diagram:true};
  };
+ var newVisual=function(lote,name,title,description,latex,alt){
+  return {src:'assets/zenit/lote-'+lote+'/'+name+'.svg',title:title,text:description,latex:latex||'',alt:alt,diagram:true,visualLot:lote};
+ };
  var concepts={
   prisma:[
+   newVisual(4,"prisma-oblicuo-altura","Altura y arista en el prisma oblicuo","En un prisma oblicuo la arista lateral está inclinada. La altura verdadera es la distancia perpendicular entre los planos de las bases.","h\\perp\\text{ bases}","Prisma hexagonal oblicuo: altura perpendicular turquesa y arista lateral dorada."),
+   newVisual(4,"prisma-hexagonal-desarrollo","Desarrollo de un prisma hexagonal","Un prisma hexagonal recto de base regular se desarrolla en seis rectángulos laterales y dos hexágonos congruentes.","A_L=P_bh","Prisma hexagonal junto a una tira de seis rectángulos y dos hexágonos."),
+   newVisual(4,"prisma-seccion-paralela","Sección paralela a las bases","El corte por un plano paralelo a las bases del prisma forma un polígono congruente con las bases, sin importar su altura.","A_s=A_b","Prisma con sección hexagonal intermedia resaltada en turquesa."),
+   newVisual(5,"prismas-mismo-volumen","Prismas recto y oblicuo: igual volumen","Dos prismas de bases congruentes y de igual altura perpendicular tienen el mismo volumen, aunque sus aristas laterales tengan diferente inclinación.","V=A_bh","Dos prismas, uno recto y otro oblicuo, con alturas perpendiculares iguales."),
+   newVisual(5,"prisma-triangular-red","Desarrollo del prisma triangular","El prisma triangular recto se despliega en tres rectángulos y dos triángulos congruentes. Su área lateral es la suma de las caras rectangulares.","A_L=P_bh","Prisma triangular y red con tres rectángulos y dos triángulos."),
    old('prisma-bases','Bases paralelas','Dos polígonos congruentes en planos paralelos.'),
    old('prisma-altura','Altura perpendicular','La distancia entre bases se mide perpendicularmente a sus planos.'),
    old('prisma-oblicuo','Prisma oblicuo','Las aristas inclinadas no son la altura.'),
@@ -412,6 +420,10 @@ function conceptCards(){
       'D=\\sqrt{a^2+b^2+h^2}','Prisma rectangular transparente con una diagonal de cara naranja y otra espacial turquesa.')
   ],
   piramide:[
+   newVisual(4,"piramide-altura-apotemas","Altura y apotemas en una pirámide regular","No confundas altura perpendicular, apotema de la base y apotema lateral. En una pirámide regular recta forman un triángulo rectángulo.","l^2=h^2+a_b^2","Pirámide cuadrangular con altura, apotema basal y apotema lateral de distintos colores."),
+   newVisual(4,"piramide-seccion-axial","Sección axial triangular","Un plano que pasa por el vértice y la diagonal de una base cuadrada determina una sección triangular cuya altura es la de la pirámide.","A_{\\mathrm{axial}}=\\frac{dh}{2}","Pirámide de base cuadrada con sección triangular por el eje."),
+   newVisual(5,"piramide-semejanza-secciones","Secciones semejantes y áreas","Las secciones paralelas a la base en una pirámide son polígonos semejantes. Si la longitud se reduce por un factor k, el área se reduce por k al cuadrado.","A_s=k^2A_b","Pirámide con tres secciones paralelas de tamaño decreciente."),
+   newVisual(5,"tronco-piramide-volumen","Volumen del tronco de pirámide","El tronco de pirámide con bases de áreas A₁ y A₂ y altura perpendicular h se obtiene retirando una pirámide pequeña de una mayor.","V=\\frac{h}{3}(A_1+A_2+\\sqrt{A_1A_2})","Tronco de pirámide con base grande, base menor y prolongaciones al vértice original."),
    ai('piramide-altura-apotema','Altura y apotema lateral',
       'En una pirámide regular recta, la altura baja perpendicularmente al centro de la base; el apotema lateral llega al punto medio de un lado.',
       'l^2=h^2+a_p^2',
@@ -434,6 +446,9 @@ function conceptCards(){
       'Comparación conceptual de un prisma y una pirámide con idéntica base y altura.')
   ],
   cilindro:[
+   newVisual(4,"cilindro-desarrollo-completo","Desarrollo completo del cilindro recto","Su desarrollo está formado por un rectángulo lateral de ancho igual a la circunferencia y dos círculos de radio r.","A_T=2\\pi r(r+h)","Cilindro junto a rectángulo lateral y dos bases circulares."),
+   newVisual(5,"cilindro-volumen-liquido","Volumen de líquido en un cilindro","En un tanque cilíndrico vertical, la cantidad de líquido depende de la altura alcanzada, no de la altura total del recipiente.","V_{\\ell}=\\pi r^2h_{\\ell}","Recipiente cilíndrico vertical con líquido turquesa hasta una altura intermedia."),
+   newVisual(5,"cilindro-seccion-oblicua","Sección oblicua: una elipse","Cuando un plano oblicuo corta toda la superficie lateral de un cilindro circular recto, la sección interior es una elipse.","\\text{Sección: elipse}","Cilindro transparente atravesado por plano oblicuo y sección elíptica."),
    ai('cilindro-radio-diametro','Radio, diámetro y altura',
       'Distingue la distancia del centro al borde, el diámetro completo y la altura perpendicular entre bases.',
       'd=2r',
@@ -454,6 +469,8 @@ function conceptCards(){
       'A_s=\\pi r^2','Cilindro 3D con un círculo transversal interior iluminado en turquesa.')
   ],
   cono:[
+   newVisual(4,"cono-desarrollo-sector","Desarrollo lateral del cono","La superficie lateral de un cono circular recto se desarrolla en un sector circular cuyo radio es la generatriz y cuya longitud de arco es 2πr.","A_L=\\pi rg","Cono y desarrollo en sector circular con círculo de base."),
+   newVisual(5,"cono-radios-semejantes","Semejanza entre secciones del cono","Un plano paralelo a la base produce un círculo menor. Los radios son proporcionales a las distancias desde el vértice.","\\frac{r}{R}=\\frac{z}{h}","Cono transparente con un corte circular paralelo a la base y eje vertical."),
    ai('cono-generatriz','Radio, altura y generatriz',
       'En un cono circular recto, el radio, la altura y la generatriz forman un triángulo rectángulo.',
       'g=\\sqrt{r^2+h^2}',
@@ -476,6 +493,8 @@ function conceptCards(){
       'Cono transparente con una sección circular interior turquesa paralela a la base.')
   ],
   esfera:[
+   newVisual(4,"esfera-casquete-zona","Casquete y zona esférica","Dos planos paralelos delimitan una zona esférica. Su área curva depende del radio R de la esfera y de la altura h de la zona.","A_{\\mathrm{zona}}=2\\pi Rh","Esfera con dos secciones circulares paralelas y casquete superior."),
+   newVisual(5,"esfera-hemisferio","Hemisferio: volumen y superficie curva","Un hemisferio tiene la mitad del volumen de la esfera. Su área curva no incluye el disco de su base.","V_{\\mathrm{hemi}}=\\frac{2}{3}\\pi R^3","Esfera completa junto a hemisferio con corte circular."),
    ai2('esfera-radio-diametro','Radio y diámetro',
      'El radio une el centro con un punto de la superficie; el diámetro une dos puntos opuestos pasando por el centro.',
      'd=2R',
@@ -494,6 +513,8 @@ function conceptCards(){
      'Esfera translúcida atravesada por plano inclinado; su sección circular está resaltada.')
   ],
   cubo:[
+   newVisual(4,"cubo-seccion-hexagonal","Sección hexagonal central del cubo","Un plano oblicuo que corta las seis caras de un cubo por sus puntos medios puede generar un hexágono regular.","A_s=\\frac{3\\sqrt3}{4}a^2","Cubo transparente con sección hexagonal regular central."),
+   newVisual(5,"cubo-escala-area-volumen","Escalas del cubo: área y volumen","Si duplicas la longitud de la arista de un cubo, su superficie se multiplica por cuatro y su volumen se multiplica por ocho.","a'=2a,\\quad V'=8V","Cubo pequeño comparado con otro que tiene aristas de doble longitud."),
    ai2('cubo-vertices-aristas','Caras, aristas y vértices',
      'Un cubo tiene seis caras cuadradas iguales, doce aristas y ocho vértices.',
      'N_c=6,\\;N_a=12,\\;N_v=8',
@@ -526,6 +547,8 @@ function conceptCards(){
       'Desarrollo plano exacto con cuatro triángulos equiláteros dispuestos alrededor del central.')
   ],
   octaedro:[
+   newVisual(4,"octaedro-red-triangular","Ocho triángulos del octaedro","El octaedro regular tiene ocho caras equiláteras congruentes. Estudia cómo se disponen al desplegarlo.","A_T=2\\sqrt3\\,a^2","Octaedro montado junto a una tira esquemática de triángulos."),
+   newVisual(5,"octaedro-seccion-cuadrada","La sección cuadrada del octaedro","Al cortar un octaedro regular por el plano que pasa por sus cuatro vértices ecuatoriales, aparece un cuadrado de lado igual a la arista.","A_s=a^2","Octaedro con sección ecuatorial cuadrada turquesa."),
    ai2('octaedro-simetria','Eje de simetría y vértices opuestos',
      'El octaedro regular tiene ocho caras triangulares. Los vértices superior e inferior están alineados sobre un eje de simetría.',
      'd=\\sqrt2\\,a',

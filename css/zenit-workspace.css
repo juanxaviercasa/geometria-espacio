@@ -189,3 +189,12 @@
 .z-concept-open:hover .z-concept-art-diagram{transform:scale(1.025)}
 @media(max-width:900px){.z-concept-art-diagram{height:240px}}
 @media(max-width:520px){.z-concept-art-diagram{height:255px}}
+
+/* Escenas de los lotes 4 y 5: gráficos exactos en SVG.
+   Secciones visuales de apoyo; los visores mantienen medidas editables. */
+.z-concept-card:has(.z-concept-art-diagram){border-color:#dedcf5}
+.z-concept-art-diagram{width:100%;object-fit:contain;background:linear-gradient(145deg,#faf9ff,#eeeaff)}
+.z-concept-card .z-concept-formula{font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion:reduce){
+ .z-concept-art-diagram{transition:none!important;transform:none!important}
+}

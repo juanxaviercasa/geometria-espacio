@@ -1349,3 +1349,32 @@ test('Lote 3: KaTeX de diez conceptos (con barra correcta) es válida',()=>{
   assert.ok(katex.renderToString(tex,{throwOnError:true}).includes('katex'));
  }
 });
+
+test('Lotes 4 y 5: veinte diagramas individuales conectados y sin rutas rotas',()=>{
+ const fs=require('fs'),path=require('path');
+ const files=[[4,"prisma-oblicuo-altura"],[4,"prisma-hexagonal-desarrollo"],[4,"prisma-seccion-paralela"],[5,"prismas-mismo-volumen"],[5,"prisma-triangular-red"],[4,"piramide-altura-apotemas"],[4,"piramide-seccion-axial"],[5,"piramide-semejanza-secciones"],[5,"tronco-piramide-volumen"],[4,"cilindro-desarrollo-completo"],[5,"cilindro-volumen-liquido"],[5,"cilindro-seccion-oblicua"],[4,"cono-desarrollo-sector"],[5,"cono-radios-semejantes"],[4,"esfera-casquete-zona"],[5,"esfera-hemisferio"],[4,"cubo-seccion-hexagonal"],[5,"cubo-escala-area-volumen"],[4,"octaedro-red-triangular"],[5,"octaedro-seccion-cuadrada"]];
+ const app=fs.readFileSync(path.join(__dirname,'js/zenit-workspace.js'),'utf8');
+ const css=fs.readFileSync(path.join(__dirname,'css/zenit-workspace.css'),'utf8');
+ const seen=new Set();
+ for(const [lote,name] of files){
+  const target=path.join(__dirname,'assets','zenit','lote-'+lote,name+'.svg');
+  assert.ok(fs.existsSync(target),'falta imagen: '+target);
+  const svg=fs.readFileSync(target,'utf8');
+  assert.ok(svg.startsWith('<svg ')&&svg.trimEnd().endsWith('</svg>'),'SVG inválido '+name);
+  assert.ok(svg.length>=4000&&svg.length<65000,'tamaño inesperado '+name);
+  assert.ok(svg.includes('role="img"')&&svg.includes('aria-label='),name+' accesibilidad');
+  assert.ok(app.includes('"'+name+'"'),'recurso no enlazado: '+name);
+  assert.ok(!seen.has(name),'ilustración duplicada: '+name);
+  seen.add(name);
+ }
+ assert.equal(files.length,20);
+ assert.ok(app.includes("visualLot:lote"));
+ assert.ok(app.includes('writeMath(formula,entry.latex)'));
+ assert.ok(css.includes('.z-concept-art-diagram'));
+});
+test('KaTeX: fórmulas nuevas de los lotes 4 y 5 se renderizan correctamente',()=>{
+ const katex=require('./vendor/katex.min.js');
+ const formulas=["h\\perp\\text{ bases}","A_L=P_bh","A_s=A_b","V=A_bh","A_L=P_bh","l^2=h^2+a_b^2","A_{\\mathrm{axial}}=\\frac{dh}{2}","A_s=k^2A_b","V=\\frac{h}{3}(A_1+A_2+\\sqrt{A_1A_2})","A_T=2\\pi r(r+h)","V_{\\ell}=\\pi r^2h_{\\ell}","\\text{Sección: elipse}","A_L=\\pi rg","\\frac{r}{R}=\\frac{z}{h}","A_{\\mathrm{zona}}=2\\pi Rh","V_{\\mathrm{hemi}}=\\frac{2}{3}\\pi R^3","A_s=\\frac{3\\sqrt3}{4}a^2","a'=2a,\\quad V'=8V","A_T=2\\sqrt3\\,a^2","A_s=a^2"];
+ assert.equal(formulas.length,20);
+ for(const tex of formulas)assert.ok(katex.renderToString(tex,{throwOnError:true}).includes('katex'),tex);
+});

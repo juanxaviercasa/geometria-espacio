@@ -313,3 +313,17 @@ fórmulas KaTeX y modal de ampliación. Los SVG no son imágenes generadas por I
 son diagramas vectoriales construidos con coordenadas y composición de diseño.
 El modelo interactivo sigue siendo la fuente de verdad para dimensiones,
 inclinaciones y áreas. Para visualizar secciones exactas, usar el visor del sólido.
+
+
+### Lotes 4 y 5 — 20 escenas vectoriales educativas individuales
+Se incorporaron dos colecciones ilustradas `assets/zenit/lote-4/` y
+`assets/zenit/lote-5/`, con diez escenas cada una (Prismas, Pirámides,
+Cilindros, Conos, Esfera, Cubo y Octaedro), además de las primeras treinta
+ilustraciones ya publicadas. Los SVG contienen geometría construida por
+coordenadas y acabados Zénit Aurora (violeta, índigo, turquesa y oro).
+Cada ilustración tiene tarjeta pedagógica, explicación, fórmula KaTeX
+cuando corresponde, texto alternativo y ampliación accesible.
+El despliegue Cloudflare Pages existente copia `assets` mediante
+`build.js`. No se altera la geometría paramétrica ni las lecciones.
+**Nota didáctica**: los diagramas ilustrados sirven de referencia,
+mientras que el visor 2D/3D proporciona el modelo matemático editable.
