@@ -482,7 +482,7 @@ function conceptCards(){
   tetraedro:[
    ai2('tetraedro-caras','Tetraedro regular: cuatro caras',
      'En un tetraedro regular, todas las caras son triángulos equiláteros congruentes y todas sus seis aristas miden a.',
-     'A_T=\\\\sqrt3\,a^2',
+     'A_T=\\\\sqrt3\\,a^2',
      'Tetraedro regular violeta con cuatro caras triangulares y aristas visibles.'),
    ai2('tetraedro-altura','Altura perpendicular del tetraedro',
      'Desde un vértice, la altura llega perpendicularmente al plano de la cara opuesta. En el tetraedro regular pasa por su centro.',
@@ -492,7 +492,7 @@ function conceptCards(){
   octaedro:[
    ai2('octaedro-simetria','Eje de simetría y vértices opuestos',
      'El octaedro regular tiene ocho caras triangulares. Los vértices superior e inferior están alineados sobre un eje de simetría.',
-     'd=\\\\sqrt2\,a',
+     'd=\\\\sqrt2\\,a',
      'Octaedro translúcido formado por dos pirámides cuadradas unidas por sus bases, con eje vertical punteado.')
   ]
  };

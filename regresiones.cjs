@@ -1299,3 +1299,18 @@ test('Lote 2: diez ilustraciones WebP individuales cubren esfera, cubo, tetraedr
  assert.ok(code.includes('writeMath(formula,entry.latex)'));
  assert.ok(code.includes('setupConceptModal()'));
 });
+
+test('KaTeX: diez expresiones de las escenas del lote 2 se pueden renderizar',()=>{
+ const fs=require('fs'),path=require('path');
+ const katex=require('./vendor/katex.min.js');
+ const code=fs.readFileSync(path.join(__dirname,'js/zenit-workspace.js'),'utf8');
+ const names=['esfera-radio-diametro','esfera-circulo-maximo','esfera-superficie',
+   'cubo-vertices-aristas','cubo-diagonal-cara','cubo-diagonal-espacial',
+   'cubo-desarrollo-plano','tetraedro-caras','tetraedro-altura','octaedro-simetria'];
+ for(const name of names)assert.ok(code.includes("ai2('"+name+"'"));
+ for(const tex of ['d=2R','A_c=\\\\pi R^2','V=\\\\frac43\\\\pi R^3',
+   'd_c=a\\\\sqrt2','d_e=a\\\\sqrt3','h=a\\\\sqrt{\\\\frac23}']){
+  const actual=tex.replace(/\\\\/g,'\\');
+  assert.ok(katex.renderToString(actual,{throwOnError:true}).includes('katex'));
+ }
+});
