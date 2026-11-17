@@ -327,3 +327,17 @@ El despliegue Cloudflare Pages existente copia `assets` mediante
 `build.js`. No se altera la geometría paramétrica ni las lecciones.
 **Nota didáctica**: los diagramas ilustrados sirven de referencia,
 mientras que el visor 2D/3D proporciona el modelo matemático editable.
+
+
+### Cierre del inventario visual, lote 6 (4 escenas)
+Se añadieron cuatro ilustraciones **vectoriales de ambientación** en
+`assets/zenit/lote-6/`: `portada-aurora.svg` (cabecera principal),
+`catalogo-cristal.svg` (separador visual de las ocho familias),
+`laboratorio-planos.svg` (encabezados pedagógicos) y
+`zenit-horizonte.svg` (cierres y llamadas a la acción).
+Son imágenes editoriales, no diagramas utilizados para enseñar mediciones.
+Se integran en portada, catálogo, ocho laboratorios y la cabecera
+de la sección de laboratorio anterior, manteniendo intactos los
+visores 2D/3D, el Profesor Xavier y las fórmulas.
+La versión no usa llamadas externas para descargar las ilustraciones;
+se sirven desde Cloudflare Pages como recursos estáticos locales.

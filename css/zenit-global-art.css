@@ -33,7 +33,7 @@ body[data-pagina="verificacion"] .leccion-cabeza::after{
  background-image:url('../assets/zenit/modo-experimentar.svg');
 }
 body[data-pagina="laboratorio"] .lab-intro::after{
- background-image:url('../assets/zenit/hero-laboratorio.svg');
+ background-image:url('../assets/zenit/lote-6/laboratorio-planos.svg');
  width:clamp(180px,26vw,330px);opacity:.55;
 }
 body[data-pagina="leccion"] .leccion-cabeza>h1,

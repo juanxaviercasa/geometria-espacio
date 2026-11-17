@@ -198,3 +198,18 @@
 @media (prefers-reduced-motion:reduce){
  .z-concept-art-diagram{transition:none!important;transform:none!important}
 }
+
+/* Lote 6: marco visual del laboratorio fuera del canvas geométrico. */
+.z-concept-heading{display:flex;align-items:center;justify-content:space-between;gap:1.2rem;min-width:0}
+.z-concept-heading>div{min-width:0;max-width:670px;flex:1}
+.z-ambiente-art{display:block;flex:0 0 min(31%,340px);width:min(31%,340px);height:147px;object-fit:cover;object-position:center;border-radius:16px;border:1px solid #e3def5;box-shadow:0 8px 25px #45399b12}
+.z-bottom{background-image:linear-gradient(90deg,rgba(26,25,73,.98) 0%,rgba(42,32,112,.9) 65%,rgba(40,28,103,.82) 100%),url('../assets/zenit/lote-6/zenit-horizonte.svg');background-position:center;background-size:cover}
+.z-bottom h2,.z-bottom p,.z-bottom a{position:relative;z-index:1}
+@media(max-width:700px){
+ .z-ambiente-art{height:120px;flex-basis:33%;width:33%}
+}
+@media(max-width:520px){
+ .z-concept-heading{display:block}
+ .z-ambiente-art{display:none}
+ .z-concept-heading>div{max-width:none}
+}

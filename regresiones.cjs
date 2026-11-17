@@ -1220,7 +1220,7 @@ test('El sistema visual Zénit entrega ilustraciones con fuentes locales válida
  const home=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
  const catalog=fs.readFileSync(path.join(__dirname,'solidos.html'),'utf8');
  const lab=fs.readFileSync(path.join(__dirname,'solido.html'),'utf8');
- assert.ok(home.includes('prisma-ai.webp'),'el hero utiliza ilustración optimizada');
+ assert.ok(home.includes('lote-6/portada-aurora.svg'),'el hero utiliza la nueva escena de Zénit Aurora');
  assert.equal((catalog.match(/class="zenit-catalog-visual"/g)||[]).length,8);
  assert.equal((catalog.match(/src="assets\/zenit\/[^"]+\.svg"/g)||[]).length,8);
  assert.ok(lab.includes('id="z-family-art"'));
@@ -1237,7 +1237,7 @@ test('Profesor Xavier: el aula recupera figura completa y gestos de enfoque',()=
  assert.ok(tutor.includes("giro = 0.24"),'vista inicial tres cuartos');
 });
 
-test('Hero generado con IA tiene versión WebP ligera en producción',()=>{
+test('La ilustración WebP anterior sigue disponible como recurso histórico',()=>{
  const fs=require('fs'),path=require('path');
  const filename=path.join(__dirname,'assets/zenit/prisma-ai.webp');
  const buf=fs.readFileSync(filename);
@@ -1245,7 +1245,7 @@ test('Hero generado con IA tiene versión WebP ligera en producción',()=>{
  assert.equal(buf.toString('ascii',8,12),'WEBP');
  assert.ok(buf.length<20000,'imagen optimizada');
  const home=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
- assert.ok(home.includes('src="assets/zenit/prisma-ai.webp"'));
+ assert.ok(home.includes('src="assets/zenit/lote-6/portada-aurora.svg"'));
 });
 
 
@@ -1377,4 +1377,34 @@ test('KaTeX: fórmulas nuevas de los lotes 4 y 5 se renderizan correctamente',()
  const formulas=["h\\perp\\text{ bases}","A_L=P_bh","A_s=A_b","V=A_bh","A_L=P_bh","l^2=h^2+a_b^2","A_{\\mathrm{axial}}=\\frac{dh}{2}","A_s=k^2A_b","V=\\frac{h}{3}(A_1+A_2+\\sqrt{A_1A_2})","A_T=2\\pi r(r+h)","V_{\\ell}=\\pi r^2h_{\\ell}","\\text{Sección: elipse}","A_L=\\pi rg","\\frac{r}{R}=\\frac{z}{h}","A_{\\mathrm{zona}}=2\\pi Rh","V_{\\mathrm{hemi}}=\\frac{2}{3}\\pi R^3","A_s=\\frac{3\\sqrt3}{4}a^2","a'=2a,\\quad V'=8V","A_T=2\\sqrt3\\,a^2","A_s=a^2"];
  assert.equal(formulas.length,20);
  for(const tex of formulas)assert.ok(katex.renderToString(tex,{throwOnError:true}).includes('katex'),tex);
+});
+
+
+test('Lote 6: cuatro escenas atmosféricas originales distribuidas por el sitio',()=>{
+ const fs=require('fs'),path=require('path');
+ const names=['portada-aurora','catalogo-cristal','laboratorio-planos','zenit-horizonte'];
+ for(const name of names){
+   const file=path.join(__dirname,'assets','zenit','lote-6',name+'.svg');
+   const svg=fs.readFileSync(file,'utf8');
+   assert.ok(svg.startsWith('<svg ')&&svg.trimEnd().endsWith('</svg>'),name);
+   assert.ok(svg.includes('role="img"')&&svg.includes('<title '),name+' descripción accesible');
+   assert.ok(svg.length>2500&&svg.length<55000,name+' optimizado');
+ }
+ const home=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
+ const catalog=fs.readFileSync(path.join(__dirname,'solidos.html'),'utf8');
+ const solid=fs.readFileSync(path.join(__dirname,'solido.html'),'utf8');
+ const hc=fs.readFileSync(path.join(__dirname,'css/zenit-home.css'),'utf8');
+ const wc=fs.readFileSync(path.join(__dirname,'css/zenit-workspace.css'),'utf8');
+ const shared=fs.readFileSync(path.join(__dirname,'css/zenit-global-art.css'),'utf8');
+ const build=fs.readFileSync(path.join(__dirname,'build.js'),'utf8');
+ assert.ok(home.includes('assets/zenit/lote-6/portada-aurora.svg'));
+ assert.ok(home.includes('assets/zenit/lote-6/zenit-horizonte.svg'));
+ assert.ok(home.includes('id="zenit-culminacion-titulo"'));
+ assert.ok(catalog.includes('assets/zenit/lote-6/catalogo-cristal.svg'));
+ assert.ok(catalog.includes('zenit-catalog-showcase'));
+ assert.ok(solid.includes('assets/zenit/lote-6/laboratorio-planos.svg'));
+ assert.ok(wc.includes('lote-6/zenit-horizonte.svg'));
+ assert.ok(shared.includes('lote-6/laboratorio-planos.svg'));
+ assert.ok(hc.includes('.zenit-culminacion-acciones'));
+ assert.ok(build.includes("'assets'"));
 });
