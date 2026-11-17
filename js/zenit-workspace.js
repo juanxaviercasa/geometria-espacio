@@ -380,30 +380,118 @@ function changeMode(next){
 function conceptCards(){
  var root=$('z-concept-grid');if(!root)return;
  root.replaceChildren();
+ // Each image is a locally hosted instructional illustration, NOT the
+ // geometric source of truth. Measurements come from ZSolidos.
+ var old=function(name,title,description,latex){
+  return {src:'assets/zenit/'+name+'.svg',title:title,text:description,latex:latex||'',alt:title+'. Ilustración conceptual en tonos violeta.'};
+ };
+ var ai=function(name,title,description,latex,alt){
+  return {src:'assets/zenit/lote-1/'+name+'.webp',title:title,text:description,
+    latex:latex||'',alt:alt,generated:true};
+ };
  var concepts={
   prisma:[
-   ['prisma-bases','Bases paralelas','Dos polígonos congruentes en planos paralelos.'],
-   ['prisma-altura','Altura perpendicular','La distancia entre bases es perpendicular a sus planos.'],
-   ['prisma-oblicuo','Prisma oblicuo','La inclinación de las aristas no cambia qué es la altura.'],
-   ['prisma-seccion','Sección transversal','Un plano paralelo a las bases produce una sección congruente.'],
-   ['prisma-volumen','Volumen','Área de la base por altura perpendicular.']
+   old('prisma-bases','Bases paralelas','Dos polígonos congruentes en planos paralelos.'),
+   old('prisma-altura','Altura perpendicular','La distancia entre bases se mide perpendicularmente a sus planos.'),
+   old('prisma-oblicuo','Prisma oblicuo','Las aristas inclinadas no son la altura.'),
+   old('prisma-seccion','Sección transversal','Un plano paralelo a las bases genera una sección congruente.'),
+   old('prisma-volumen','Volumen','Área de la base por altura perpendicular.','V=A_bh')
   ],
-  piramide:[['piramide','Vértice y base','Las caras laterales triangulares comparten un vértice.'],['modo-aprender','La altura','Se mide perpendicularmente hasta el plano de la base.']],
-  cilindro:[['cilindro','Radio y altura','Dos bases circulares paralelas y una superficie lateral curva.'],['modo-experimentar','Desarrollo lateral','La superficie lateral de un cilindro recto se extiende en un rectángulo.']],
-  cono:[['cono','Radio y generatriz','Radio, altura y generatriz forman un triángulo rectángulo.'],['modo-resolver','Volumen','Un tercio del cilindro con la misma base y altura.']],
-  esfera:[['esfera','Radio y diámetro','Todos los puntos de la superficie están a la misma distancia del centro.'],['modo-experimentar','Planos de corte','Una sección plana de la esfera es un círculo.']],
-  cubo:[['cubo','Las seis caras','Cada cara es un cuadrado congruente.'],['modo-resolver','Diagonales','Distingue la diagonal de una cara de la diagonal espacial.']],
-  tetraedro:[['tetraedro','Cuatro triángulos','Cuatro caras equiláteras congruentes en el tetraedro regular.'],['modo-aprender','Altura','Una perpendicular entre el vértice y la base opuesta.']],
-  octaedro:[['octaedro','Ocho triángulos','Ocho caras equiláteras congruentes en el octaedro regular.'],['modo-resolver','Simetría y volumen','Relaciona la arista con el área y el volumen.']]
+  piramide:[
+   ai('piramide-altura-apotema','Altura y apotema lateral',
+      'En una pirámide regular recta, la altura baja perpendicularmente al centro de la base; el apotema lateral llega al punto medio de un lado.',
+      'l^2=h^2+a_p^2',
+      'Pirámide violeta transparente: segmento naranja vertical de altura y segmento turquesa oblicuo hacia el punto medio de un lado de la base.'),
+   ai('piramide-seccion-paralela','Sección paralela a la base',
+      'Un plano paralelo a la base produce un polígono semejante a ella. El tamaño disminuye al acercarse al vértice.',
+      'A_s=k^2A_b',
+      'Pirámide violeta atravesada horizontalmente por un plano turquesa, con una sección poligonal interior.'),
+   ai('piramide-truncada','Tronco de pirámide',
+      'Se obtiene al cortar una pirámide por un plano paralelo a la base y retirar la parte superior. Conserva dos bases semejantes.',
+      'V=\\frac{h}{3}(A_1+A_2+\\sqrt{A_1A_2})',
+      'Tronco de pirámide violeta de cristal con la punta original representada por aristas discontinuas.')
+  ],
+  cilindro:[
+   ai('cilindro-radio-diametro','Radio, diámetro y altura',
+      'Distingue la distancia del centro al borde, el diámetro completo y la altura perpendicular entre bases.',
+      'd=2r',
+      'Cilindro violeta transparente con segmentos destacados en naranja y turquesa para altura y radio.'),
+   ai('cilindro-desarrollo','Desarrollo lateral del cilindro',
+      'Al desplegar la superficie lateral de un cilindro circular recto aparece un rectángulo de ancho 2πr y alto h.',
+      'A_L=2\\pi rh',
+      'Cilindro transparente que se despliega visualmente hacia un rectángulo, con dos círculos para las bases.'),
+   ai('cilindro-recto-oblicuo','Cilindro recto y oblicuo',
+      'Compara las generatrices perpendiculares e inclinadas. En ambos casos, el volumen se calcula con la altura perpendicular.',
+      'V=A_bh',
+      'Dos cilindros translúcidos violetas: uno vertical y otro inclinado, con alturas resaltadas.')
+  ],
+  cono:[
+   ai('cono-generatriz','Radio, altura y generatriz',
+      'En un cono circular recto, el radio, la altura y la generatriz forman un triángulo rectángulo.',
+      'g=\\sqrt{r^2+h^2}',
+      'Cono violeta transparente con una altura naranja, radio turquesa horizontal y generatriz turquesa inclinada.'),
+   ai('cono-seccion-axial','Sección axial del cono',
+      'Un plano que pasa por el eje del cono circular recto determina un triángulo isósceles. Su altura coincide con la del cono.',
+      'A_{\\triangle}=rh',
+      'Cono violeta atravesado por un plano vertical turquesa que contiene el eje y genera un triángulo axial.'),
+   ai('cono-truncado','Plano de corte y tronco de cono',
+      'Un plano paralelo a la base divide el cono en un cono pequeño y un tronco de cono. La figura ilustra el corte antes de separar las partes.',
+      'V=\\frac{\\pi h}{3}(R^2+Rr+r^2)',
+      'Cono violeta transparente atravesado horizontalmente por un plano que marca dónde se obtendría un tronco de cono.')
+  ],
+  esfera:[
+   old('esfera','Radio y diámetro','Todos los puntos de la superficie equidistan del centro.','d=2R'),
+   ai('esfera-plano-secante','Sección circular de la esfera',
+      'Un plano secante forma una circunferencia en la superficie y un círculo en el sólido. Su radio depende de la distancia al centro.',
+      'r_s=\\sqrt{R^2-d^2}',
+      'Esfera violeta transparente atravesada por un plano inclinado, con su sección circular resaltada en magenta.')
+  ],
+  cubo:[
+   old('cubo','Las seis caras','Cada cara es un cuadrado congruente.'),
+   old('modo-resolver','Diagonales','Distingue la diagonal de una cara de la diagonal espacial.','d_e=a\\sqrt3')
+  ],
+  tetraedro:[
+   old('tetraedro','Cuatro triángulos','Cuatro caras equiláteras congruentes en el tetraedro regular.'),
+   old('modo-aprender','Altura','Una perpendicular entre el vértice y la base opuesta.')
+  ],
+  octaedro:[
+   old('octaedro','Ocho triángulos','Ocho caras equiláteras congruentes en el octaedro regular.'),
+   old('modo-resolver','Simetría y volumen','Relaciona la arista con el área y el volumen.')
+  ]
  };
- (concepts[tipo]||[]).forEach(function(entry){
+ (concepts[tipo]||[]).forEach(function(entry,i){
   var card=element('article','z-concept-card');
-  var art=element('img','z-concept-art');
-  art.src='assets/zenit/'+entry[0]+'.svg';art.alt='';
-  art.loading='lazy';art.decoding='async';art.width=680;art.height=460;
-  card.append(art,element('h3',null,entry[1]),element('p',null,entry[2]));
-  root.append(card);
+  var btn=element('button','z-concept-open');
+  btn.type='button';btn.setAttribute('aria-label','Ampliar: '+entry.title);
+  var art=element('img','z-concept-art');art.src=entry.src;art.alt=entry.alt;
+  art.loading='lazy';art.decoding='async';art.width=entry.generated?960:680;
+  art.height=entry.generated?720:460;
+  btn.append(art,element('span','z-concept-zoom','Ampliar imagen'));
+  btn.addEventListener('click',function(){openConcept(entry);});
+  var caption=element('div','z-concept-copy');
+  caption.append(element('h3',null,entry.title),element('p',null,entry.text));
+  if(entry.latex){var formula=element('div','z-concept-formula');
+   formula.setAttribute('aria-label','Relación matemática');writeMath(formula,entry.latex);caption.appendChild(formula);}
+  card.append(btn,caption);root.append(card);
  });
+}
+function openConcept(entry){
+ var modal=$('z-concept-modal');
+ if(!modal){window.open(entry.src,'_blank','noopener');return;}
+ var img=$('z-concept-modal-img'),title=$('z-concept-modal-title'),
+  caption=$('z-concept-modal-caption'),math=$('z-concept-modal-math');
+ img.src=entry.src;img.alt=entry.alt;
+ title.textContent=entry.title;caption.textContent=entry.text;
+ math.replaceChildren();math.hidden=!entry.latex;
+ if(entry.latex)writeMath(math,entry.latex);
+ if(typeof modal.showModal==='function'){if(!modal.open)modal.showModal();}
+ else window.open(entry.src,'_blank','noopener');
+}
+function setupConceptModal(){
+ var modal=$('z-concept-modal');if(!modal)return;
+ var close=$('z-concept-modal-close');
+ if(close)close.addEventListener('click',function(){modal.close();});
+ modal.addEventListener('click',function(e){if(e.target===modal)modal.close();});
 }
 function init(){
  w.UI.iniciar({avatar:false});
@@ -417,6 +505,7 @@ function init(){
  $('z-subtitle').textContent=Z.META[tipo].subtitulo;
  $('z-view-title').textContent=Z.META[tipo].singular+' interactivo';
  conceptCards();
+ setupConceptModal();
  $('z-type').value=tipo;
  $('z-type').addEventListener('change',function(){location.href='solido.html?tipo='+encodeURIComponent(this.value);});
  document.querySelectorAll('[data-z-mode]').forEach(function(b){

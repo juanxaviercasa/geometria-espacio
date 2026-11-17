@@ -1247,3 +1247,31 @@ test('Hero generado con IA tiene versión WebP ligera en producción',()=>{
  const home=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
  assert.ok(home.includes('src="assets/zenit/prisma-ai.webp"'));
 });
+
+
+test('Galería individual: las diez escenas reales del lote 1 están presentes y son WebP válidos',()=>{
+ const fs=require('fs'),path=require('path'),assert=require('node:assert/strict');
+ const names=[
+  'piramide-altura-apotema','piramide-seccion-paralela','piramide-truncada',
+  'cilindro-radio-diametro','cilindro-desarrollo','cilindro-recto-oblicuo',
+  'cono-generatriz','cono-seccion-axial','cono-truncado','esfera-plano-secante'
+ ];
+ const app=fs.readFileSync(path.join(__dirname,'js/zenit-workspace.js'),'utf8');
+ const html=fs.readFileSync(path.join(__dirname,'solido.html'),'utf8');
+ for(const name of names){
+  const file=path.join(__dirname,'assets','zenit','lote-1',name+'.webp');
+  const bytes=fs.readFileSync(file);
+  assert.equal(bytes.toString('ascii',0,4),'RIFF',name+' RIFF');
+  assert.equal(bytes.toString('ascii',8,12),'WEBP',name+' WEBP');
+  assert.ok(bytes.length>2500&&bytes.length<100000,name+' ligero');
+  assert.ok(app.includes("ai('"+name+"'"),name+' vinculado a la galería');
+ }
+ assert.ok(html.includes('id="z-concept-modal"'));
+ assert.ok(html.includes('id="z-concept-modal-close"'));
+ assert.ok(app.includes("modal.showModal()"));
+ assert.ok(app.includes("modal.close()"));
+ assert.ok(app.includes("setupConceptModal()"));
+ assert.ok(app.includes('art.loading='));
+ assert.ok(app.includes('writeMath(math,entry.latex)'));
+ assert.ok(html.includes('Para comprobar medidas y relaciones exactas'));
+});
