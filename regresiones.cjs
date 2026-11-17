@@ -1222,7 +1222,7 @@ test('El sistema visual Zénit entrega ilustraciones con fuentes locales válida
  const lab=fs.readFileSync(path.join(__dirname,'solido.html'),'utf8');
  assert.ok(home.includes('lote-6/portada-aurora.svg'),'el hero utiliza la nueva escena de Zénit Aurora');
  assert.equal((catalog.match(/class="zenit-catalog-visual"/g)||[]).length,8);
- assert.equal((catalog.match(/src="assets\/zenit\/[^"]+\.svg"/g)||[]).length,8);
+  assert.equal((catalog.match(/<span class="zenit-catalog-visual"><img src="assets\/zenit\/[^"]+\.svg"/g)||[]).length,8);
  assert.ok(lab.includes('id="z-family-art"'));
  assert.ok(lab.includes('id="z-concept-grid"'));
 });
