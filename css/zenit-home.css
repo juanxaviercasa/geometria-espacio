@@ -98,3 +98,24 @@
  .zenit-culminacion-acciones{display:grid;grid-template-columns:1fr}
  .zenit-culminacion-copy p{font-size:.92rem}
 }
+
+/* Zénit 2026 · tarjetas de sólidos con renders premium reales. */
+.zenit-preview-grid{gap:1.2rem}
+.zenit-preview-card{min-height:354px;padding:0 0 1.15rem;border-radius:24px;overflow:hidden;gap:.48rem;background:#fff;border-color:#e3d8f5;box-shadow:0 17px 34px #4738801c}
+.zenit-preview-card .zenit-preview-art{width:100%;height:249px;max-height:none;max-width:100%;aspect-ratio:auto;object-fit:cover;object-position:center;display:block;border-radius:23px 23px 12px 12px;background:#ead8f7;filter:saturate(1.08);transition:transform .28s ease,filter .28s ease}
+.zenit-preview-card strong{font-size:1.24rem;line-height:1.24;padding:.2rem 1.05rem 0}
+.zenit-preview-card small{font-size:.83rem;line-height:1.45;padding:0 1.75rem 0 1.05rem}
+.zenit-preview-card>span:last-child{right:1rem;bottom:1.08rem}
+.zenit-preview-card:hover .zenit-preview-art,.zenit-preview-card:focus-visible .zenit-preview-art{transform:scale(1.03);filter:saturate(1.16)}
+.zenit-catalog-grid{gap:1.25rem}
+.zenit-catalog-card{min-height:391px;padding:0 0 1.24rem;border-radius:24px;overflow:hidden;background:#fff;border-color:#e3d7f1;box-shadow:0 14px 35px #41388018}
+.zenit-catalog-visual{width:100%;height:247px;min-height:247px;overflow:hidden;display:block;margin-bottom:.8rem;border-radius:22px 22px 12px 12px;background:#e9d8f6}
+.zenit-catalog-visual img{width:100%;height:100%;display:block;object-fit:cover;object-position:center;filter:saturate(1.07);transition:transform .3s ease,filter .3s ease}
+.zenit-catalog-card:hover .zenit-catalog-visual img,.zenit-catalog-card:focus-visible .zenit-catalog-visual img{transform:scale(1.035);filter:saturate(1.16)}
+.zenit-catalog-card h2{margin:.25rem 1.1rem .32rem;font-size:1.3rem}
+.zenit-catalog-card p{margin:.12rem 1.1rem 1.15rem;font-size:.89rem}
+.zenit-catalog-card .zenit-open{margin:auto 1.1rem 0}
+@media(max-width:1050px){.zenit-preview-card{min-height:325px}.zenit-preview-card .zenit-preview-art{height:220px}.zenit-catalog-visual{height:235px;min-height:235px}.zenit-catalog-card{min-height:366px}}
+@media(max-width:700px){.zenit-preview-card .zenit-preview-art{height:211px}.zenit-preview-card{min-height:307px}.zenit-catalog-visual{height:220px;min-height:220px}.zenit-catalog-card{min-height:345px}}
+@media(max-width:470px){.zenit-preview-card .zenit-preview-art{height:272px}.zenit-preview-card{min-height:365px}.zenit-catalog-visual{height:263px;min-height:263px}.zenit-catalog-card{min-height:386px}}
+@media(prefers-reduced-motion:reduce){.zenit-preview-card .zenit-preview-art,.zenit-catalog-visual img{transition:none;transform:none!important}}

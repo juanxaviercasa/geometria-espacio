@@ -598,7 +598,7 @@ function init(){
  w.UI.iniciar({avatar:false});
  $('z-title').textContent=Z.META[tipo].titulo;
  var familyArt=$('z-family-art');
- if(familyArt)familyArt.src='assets/zenit/'+tipo+'.svg';
+ if(familyArt)familyArt.src='assets/zenit/premium/'+tipo+'.webp';
  document.title=Z.META[tipo].titulo+' | Laboratorio 3D · Sistema Zénit';
  var canonical=$('z-canonical');
  if(canonical)canonical.href='https://geometriaespacio.sistemazenit.com/solido.html?tipo='+tipo;

@@ -213,3 +213,8 @@
  .z-ambiente-art{display:none}
  .z-concept-heading>div{max-width:none}
 }
+
+/* Foto de cada familia en cabecera de su laboratorio. */
+.z-family-art{width:min(248px,23vw);height:168px;object-fit:cover;right:220px;border-radius:17px;box-shadow:0 9px 23px #5643aa18;filter:none;opacity:.87}
+@media(max-width:900px){.z-family-art{width:146px;height:112px;right:9px;opacity:.35}}
+@media(max-width:620px){.z-family-art{width:112px;height:87px;right:-7px;top:45px;opacity:.23}}

@@ -341,3 +341,6 @@ de la sección de laboratorio anterior, manteniendo intactos los
 visores 2D/3D, el Profesor Xavier y las fórmulas.
 La versión no usa llamadas externas para descargar las ilustraciones;
 se sirven desde Cloudflare Pages como recursos estáticos locales.
+
+### Catálogo premium de sólidos (17/11/2026)
+Se han integrado ocho imágenes hiperrealistas individuales generadas previamente como `assets/zenit/premium/{tipo}.webp`, de 760 × 570 px (16–21 KB). Se visualizan en el catálogo completo, en las tarjetas de la portada y en los encabezados de cada laboratorio. Se amplió el espacio visual hasta 247 px de altura en escritorio, conservando opciones responsivas y accesibilidad. Los visores interactivos no se sustituyen por fotografías.

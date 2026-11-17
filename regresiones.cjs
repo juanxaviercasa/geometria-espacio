@@ -1222,7 +1222,7 @@ test('El sistema visual Zénit entrega ilustraciones con fuentes locales válida
  const lab=fs.readFileSync(path.join(__dirname,'solido.html'),'utf8');
  assert.ok(home.includes('lote-6/portada-aurora.svg'),'el hero utiliza la nueva escena de Zénit Aurora');
  assert.equal((catalog.match(/class="zenit-catalog-visual"/g)||[]).length,8);
-  assert.equal((catalog.match(/<span class="zenit-catalog-visual"><img src="assets\/zenit\/[^"]+\.svg"/g)||[]).length,8);
+ assert.ok(catalog.includes('assets/zenit/premium/prisma.webp'),'el catálogo muestra el nuevo render');
  assert.ok(lab.includes('id="z-family-art"'));
  assert.ok(lab.includes('id="z-concept-grid"'));
 });
@@ -1407,4 +1407,28 @@ test('Lote 6: cuatro escenas atmosféricas originales distribuidas por el sitio'
  assert.ok(shared.includes('lote-6/laboratorio-planos.svg'));
  assert.ok(hc.includes('.zenit-culminacion-acciones'));
  assert.ok(build.includes("'assets'"));
+});
+
+test('Catálogo Zénit premium: ocho imágenes hiperrealistas presentes y enlazadas',()=>{
+ const fs=require('fs'),path=require('path');
+ const types=['prisma','piramide','cilindro','cono','esfera','cubo','tetraedro','octaedro'];
+ const home=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
+ const catalog=fs.readFileSync(path.join(__dirname,'solidos.html'),'utf8');
+ const solid=fs.readFileSync(path.join(__dirname,'solido.html'),'utf8');
+ const js=fs.readFileSync(path.join(__dirname,'js/zenit-workspace.js'),'utf8');
+ const css=fs.readFileSync(path.join(__dirname,'css/zenit-home.css'),'utf8');
+ for(const type of types){
+  const filename='assets/zenit/premium/'+type+'.webp';
+  const b=fs.readFileSync(path.join(__dirname,filename));
+  assert.equal(b.toString('ascii',0,4),'RIFF',type);
+  assert.equal(b.toString('ascii',8,12),'WEBP',type);
+  assert.ok(b.length>9000&&b.length<40000,type);
+  assert.ok(catalog.includes('src="'+filename+'"'),type);
+ }
+ for(const type of ['prisma','piramide','cilindro','esfera'])
+  assert.ok(home.includes('assets/zenit/premium/'+type+'.webp'),type);
+ assert.equal((catalog.match(/class="zenit-catalog-visual"/g)||[]).length,8);
+ assert.ok(js.includes("familyArt.src='assets/zenit/premium/'+tipo+'.webp'"));
+ assert.ok(solid.includes('assets/zenit/premium/prisma.webp'));
+ assert.ok(css.includes('height:247px'));
 });
