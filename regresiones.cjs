@@ -1398,7 +1398,7 @@ test('Lote 6: cuatro escenas atmosféricas originales distribuidas por el sitio'
  const shared=fs.readFileSync(path.join(__dirname,'css/zenit-global-art.css'),'utf8');
  const build=fs.readFileSync(path.join(__dirname,'build.js'),'utf8');
  assert.ok(home.includes('assets/zenit/video/hero-icosaedro.mp4'));
- assert.ok(home.includes('assets/zenit/video/catalogo-arquitectura-poster.webp'));
+ assert.ok(home.includes('assets/zenit/fase4/cierre.webp'),'cierre cinematográfico 16:9 sin bordes');
  assert.ok(home.includes('id="zenit-culminacion-titulo"'));
  assert.ok(catalog.includes('assets/zenit/video/catalogo-arquitectura.mp4'));
  assert.ok(catalog.includes('zenit-catalog-showcase'));
@@ -1492,7 +1492,7 @@ test('Fase 2 Zénit: portada de ocho sólidos, ruta motivadora y cierre cinemato
  assert.ok(js.includes('Contenido.progresoModulo(m)'));
  assert.ok(js.includes('var estadoModulo =')&&js.includes('Tu siguiente paso'),'etiquetas ligadas al progreso');
  assert.ok(home.includes('class="zenit-method-grid"'));
- assert.ok(home.includes('catalogo-arquitectura-poster.webp'),'cierre con imagen cinematográfica');
+ assert.ok(home.includes('assets/zenit/fase4/cierre.webp'),'cierre con imagen HD cinematográfica');
  assert.ok(css.includes('prefers-reduced-motion:reduce'),'accesibilidad en movimiento');
 });
 
