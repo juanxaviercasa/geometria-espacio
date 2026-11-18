@@ -1538,3 +1538,16 @@ test('Visual HD: la portada no utiliza los SVG pedagógicos genéricos ni el mar
  assert.ok(css.includes('aspect-ratio:16/9')&&css.includes('aspect-ratio:4/3'));
  assert.ok(css.includes('transform:scale(1.15)'));
 });
+
+
+test('Visual HD: activación de ocho imágenes generadas sin romper el sitio antes de subir recursos',()=>{
+ const fs=require('fs'),path=require('path');
+ const html=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
+ const js=fs.readFileSync(path.join(__dirname,'js/zenit-hd-assets.js'),'utf8');
+ const css=fs.readFileSync(path.join(__dirname,'css/zenit-visual-2026.css'),'utf8');
+ for(const n of ['aprender','experimentar','resolver','ruta','entender','error','verificar','cierre'])assert.ok(html.includes('data-zenit-hd-src="assets/zenit/fase4/'+n+'.webp"'),n);
+ assert.equal((html.match(/data-zenit-hd-src=/g)||[]).length,8);
+ assert.ok(html.includes('js/zenit-hd-assets.js'));
+ assert.ok(js.includes('catalog.json')&&js.includes('swap.onload')&&js.includes('manifest.ready!==true'));
+ assert.ok(css.includes('zenit-hd-ready="true"'));
+});

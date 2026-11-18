@@ -97,3 +97,6 @@ body[data-pagina="inicio"] .zenit-culminacion-visual::after{
  body[data-pagina="inicio"] .zenit-mode-card{transition:none}
  body[data-pagina="inicio"] .zenit-mode-card:hover{transform:none}
 }
+
+/* El original generado ocupa exactamente 16:9, sin zoom correctivo. */
+body[data-pagina="inicio"] .zenit-culminacion-art[data-zenit-hd-ready="true"]{transform:none!important;object-position:center}
