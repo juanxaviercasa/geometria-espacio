@@ -1551,3 +1551,18 @@ test('Visual HD: activación de ocho imágenes generadas sin romper el sitio ant
  assert.ok(js.includes('catalog.json')&&js.includes('swap.onload')&&js.includes('manifest.ready!==true'));
  assert.ok(css.includes('zenit-hd-ready="true"'));
 });
+
+test('Zénit: módulos cerrados no se estiran ni exponen contenido al teclado',()=>{
+ const fs=require('fs'),path=require('path');
+ const js=fs.readFileSync(path.join(__dirname,'js/inicio.js'),'utf8');
+ const css=fs.readFileSync(path.join(__dirname,'css/zenit-visual-2026.css'),'utf8');
+ const html=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
+ assert.ok(js.includes("id=\"cuerpo-' + m.id + '\" hidden>"),'Los paneles parten cerrados');
+ assert.ok(js.includes('if (cuerpo) cuerpo.hidden = !abrir'),'Un único estado gobierna contenido y aria');
+ assert.ok(js.includes("btn.setAttribute('aria-expanded', abrir ? 'true' : 'false')"));
+ assert.ok(css.includes('grid-auto-rows:max-content'),'Alto de fila dependiente del contenido');
+ assert.ok(css.includes('align-items:start'),'No estirar fichas cerradas');
+ assert.ok(css.includes('.modulo-cuerpo[hidden]'),'Ocultar paneles cerrados a pesar de CSS heredado');
+ assert.ok(css.includes('scale(1.36)'),'Recorte correctivo de bandas antiguas');
+ assert.ok(html.includes('zenit-accordion-20261118'),'Actualizar JS en la portada');
+});

@@ -91,7 +91,7 @@
         '<svg class="chevron" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6l5 5 5-5"/></svg>' +
         '</span>' +
         '</button>' +
-        '<div class="modulo-cuerpo" id="cuerpo-' + m.id + '">' + lecciones + '</div>' +
+        '<div class="modulo-cuerpo" id="cuerpo-' + m.id + '" hidden>' + lecciones + '</div>' +
         '</article>';
     }).join('');
 
@@ -110,8 +110,13 @@
   }
 
   function alternar(art, abrir) {
-    art.classList.toggle('abierto', abrir);
+    if (!art) return;
     var btn = art.querySelector('.modulo-cabeza');
+    var cuerpo = art.querySelector('.modulo-cuerpo');
+    // Sincroniza estado visual, contenido y accesibilidad en cada interacción.
+    // [hidden] evita que los enlaces del panel cerrado reciban el foco con Tab.
+    if (cuerpo) cuerpo.hidden = !abrir;
+    art.classList.toggle('abierto', abrir);
     if (btn) btn.setAttribute('aria-expanded', abrir ? 'true' : 'false');
   }
 
