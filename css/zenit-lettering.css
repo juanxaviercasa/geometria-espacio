@@ -1,0 +1,116 @@
+/* Sistema Zénit · Fase 3: lettering expresivo y copy editorial legible.
+   Acentos intencionales, no texto ornamental en los controles de aprendizaje. */
+body[data-pagina="inicio"]{
+  --zenit-script-ink:#5b42ba;
+  --zenit-script-gold:#dfb967;
+}
+body[data-pagina="inicio"] .zenit-intro-copy h1,
+body[data-pagina="inicio"] .zenit-section-top h2,
+body[data-pagina="inicio"] .zenit-preview-heading h2,
+body[data-pagina="inicio"] .zenit-route-copy h2,
+body[data-pagina="inicio"] .zenit-method-header h2,
+body[data-pagina="inicio"] .zenit-culminacion-copy h2{
+  text-wrap:balance;
+  overflow-wrap:break-word;
+}
+body[data-pagina="inicio"] .zenit-lettering{
+  font-family:"Caveat","Newsreader",Georgia,serif;
+  font-style:normal;
+  font-weight:700;
+  font-size:1.19em;
+  line-height:.95;
+  letter-spacing:-.035em;
+  color:var(--zenit-script-ink);
+  background-image:linear-gradient(90deg,transparent 0%,#dfbb69 16%,#eacb83 68%,transparent 100%);
+  background-repeat:no-repeat;
+  background-position:0 96%;
+  background-size:100% .105em;
+  padding:0 .035em .035em;
+  -webkit-box-decoration-break:clone;
+  box-decoration-break:clone;
+}
+body[data-pagina="inicio"] .zenit-intro-copy h1 .zenit-lettering{
+  font-size:1.16em;
+  color:#5a40b2;
+}
+body[data-pagina="inicio"] .zenit-how .zenit-section-top{max-width:740px}
+body[data-pagina="inicio"] .zenit-how .zenit-section-top h2{
+  font-size:clamp(2rem,3.5vw,3.35rem);
+  line-height:1.14;
+}
+body[data-pagina="inicio"] .zenit-how .zenit-section-top p{
+  font-size:1.02rem;
+  max-width:630px;
+  margin-inline:auto;
+}
+body[data-pagina="inicio"] .zenit-mode-card h3{
+  font-size:clamp(1.2rem,1.5vw,1.42rem);
+  line-height:1.27;
+  letter-spacing:-.018em;
+}
+body[data-pagina="inicio"] .zenit-mode-card p{font-size:.97rem;line-height:1.67}
+body[data-pagina="inicio"] .zenit-mode-card{
+  border-color:#dedaf0;
+  box-shadow:0 14px 26px #3c2b8b10;
+}
+body[data-pagina="inicio"] .zenit-eyebrow,
+body[data-pagina="inicio"] .zenit-kicker{line-height:1.45}
+body[data-pagina="inicio"] .zenit-preview-heading p,
+body[data-pagina="inicio"] .zenit-route-copy p,
+body[data-pagina="inicio"] .zenit-method-header p,
+body[data-pagina="inicio"] .zenit-culminacion-copy p{
+  line-height:1.72;
+}
+body[data-pagina="inicio"] .zenit-route-copy h2{
+  max-width:20ch;
+}
+body[data-pagina="inicio"] .zenit-route-invitation{
+  color:#545b76;
+  font-size:.99rem;
+  line-height:1.6;
+  margin:0 0 1.1rem;
+  border-left:3px solid #c7ab6b;
+  padding:.28rem .85rem;
+  max-width:840px;
+}
+body[data-pagina="inicio"] #bloque-continuar h2{
+  text-wrap:pretty;
+  font-weight:750;
+}
+body[data-pagina="inicio"] #bloque-continuar p{
+  max-width:660px;
+  line-height:1.52;
+}
+body[data-pagina="inicio"] #bloque-continuar a.btn{
+  font-weight:760;
+  white-space:normal;
+  text-align:center;
+}
+body[data-pagina="inicio"] .zenit-method-copy h3{text-wrap:pretty}
+body[data-pagina="inicio"] .zenit-culminacion-copy h2{
+  max-width:20ch;
+}
+body[data-pagina="inicio"] .zenit-primary:focus-visible,
+body[data-pagina="inicio"] .zenit-secondary:focus-visible,
+body[data-pagina="inicio"] .zenit-link:focus-visible{
+  outline:3px solid #4e3ba9;
+  outline-offset:4px;
+}
+@media (max-width:750px){
+ body[data-pagina="inicio"] .zenit-lettering{font-size:1.10em;line-height:1.02}
+ body[data-pagina="inicio"] .zenit-intro-copy h1 .zenit-lettering{font-size:1.09em}
+ body[data-pagina="inicio"] .zenit-how .zenit-section-top h2{font-size:clamp(2rem,7vw,2.9rem)}
+}
+@media (max-width:470px){
+ body[data-pagina="inicio"] .zenit-lettering{font-size:1.065em;letter-spacing:-.02em}
+ body[data-pagina="inicio"] .zenit-intro-copy h1 .zenit-lettering{font-size:1.065em}
+ body[data-pagina="inicio"] .zenit-intro-copy h1{line-height:1.14}
+ body[data-pagina="inicio"] .zenit-preview-heading h2,
+ body[data-pagina="inicio"] .zenit-route-copy h2,
+ body[data-pagina="inicio"] .zenit-method-header h2,
+ body[data-pagina="inicio"] .zenit-culminacion-copy h2{line-height:1.19}
+ body[data-pagina="inicio"] .zenit-route-invitation{font-size:.93rem}
+}
+@media (prefers-reduced-motion:reduce){
+ body[data-pagina="inicio"] .zenit-lettering{animation:none;transition:none}
+}

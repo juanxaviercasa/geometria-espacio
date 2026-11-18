@@ -1495,3 +1495,30 @@ test('Fase 2 Zénit: portada de ocho sólidos, ruta motivadora y cierre cinemato
  assert.ok(home.includes('catalogo-arquitectura-poster.webp'),'cierre con imagen cinematográfica');
  assert.ok(css.includes('prefers-reduced-motion:reduce'),'accesibilidad en movimiento');
 });
+
+test('Fase 3 Zénit: lettering selectivo, mensajes motivadores y continuidad coherente',()=>{
+ const fs=require('fs'),path=require('path');
+ const home=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
+ const css=fs.readFileSync(path.join(__dirname,'css/zenit-lettering.css'),'utf8');
+ const js=fs.readFileSync(path.join(__dirname,'js/inicio.js'),'utf8');
+ const tittles=['zenit-h1','zenit-how-title','zenit-preview-title','titulo-ruta','titulo-enfoque','zenit-culminacion-titulo'];
+ assert.ok(home.includes('css/zenit-lettering.css'),'hoja de lettering conectada');
+ assert.ok(home.includes('family=Caveat:wght@600;700'),'fuente manuscrita con carga no bloqueante');
+ for(const id of tittles){
+   const start=home.indexOf('id="'+id+'"');
+   const end=home.indexOf('</h',start);
+   assert.ok(start>=0&&end>=0,'encabezado existente: '+id);
+   const heading=home.slice(start,end);
+   assert.equal((heading.match(/class="zenit-lettering"/g)||[]).length,1,'un solo acento en '+id);
+ }
+ assert.ok(css.includes('body[data-pagina="inicio"] .zenit-lettering'),'solo home');
+ assert.ok(css.includes('max-width:470px'),'móvil');
+ assert.ok(home.includes('Empezar mi ruta'),'no se anuncia continuidad antes del inicio');
+ assert.ok(js.includes("tit = 'Tu primer paso empieza aquí'"));
+ assert.ok(js.includes("tit = '¡Completaste la ruta!'"));
+ assert.ok(js.includes('ultima ? Contenido.obtenerLeccion(ultima.leccion) : null'),'uso seguro sin última lección');
+ assert.ok(home.includes('La ruta está abierta')||home.includes('la ruta está abierta'),'ruta sin bloqueos ficticios');
+ assert.ok(home.includes('Avance guardado en tu dispositivo'),'transparencia sobre progreso local');
+ assert.ok(home.includes('data-start-at="2"'),'mantener video recortado');
+ assert.equal((home.match(/class="zenit-preview-card"/g)||[]).length,8);
+});

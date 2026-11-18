@@ -133,20 +133,20 @@
 
     if (!ultima && glob.hechas === 0) {
       destino = pendiente ? 'leccion.html?id=' + pendiente.id : 'index.html#ruta';
-      texto = 'Empezar la ruta';
-      tit = 'Continúa donde lo dejaste';
-      detalleTxt = 'Aún no has empezado. La ruta comienza con puntos, rectas y planos.';
+      texto = 'Empezar mi ruta';
+      tit = 'Tu primer paso empieza aquí';
+      detalleTxt = 'Comienza con puntos, rectas y planos: las ideas que te ayudarán a comprender todo lo demás.';
     } else if (glob.hechas >= glob.total) {
       destino = 'practica.html';
-      texto = 'Repasar con práctica';
-      tit = 'Ruta completada';
-      detalleTxt = 'Completaste las ' + glob.total + ' lecciones. Vuelve a los retos en una semana: lo que recuerdes sin mirar es lo que de verdad aprendiste.';
+      texto = 'Ponerme a prueba';
+      tit = '¡Completaste la ruta!';
+      detalleTxt = 'Terminaste las ' + glob.total + ' lecciones. Refuerza lo aprendido con nuevos ejercicios y comprueba cuánto recuerdas.';
     } else {
-      var ultimaLeccion = Contenido.obtenerLeccion(ultima.leccion);
+      var ultimaLeccion = ultima ? Contenido.obtenerLeccion(ultima.leccion) : null;
       var mod = ultimaLeccion ? Contenido.moduloDeLeccion(ultima.leccion) : null;
       destino = pendiente ? 'leccion.html?id=' + pendiente.id : 'practica.html';
-      texto = 'Continuar';
-      tit = 'Retoma en: ' + (pendiente ? pendiente.leccion.titulo : 'práctica libre');
+      texto = 'Seguir mi ruta';
+      tit = 'Tu siguiente desafío: ' + (pendiente ? pendiente.leccion.titulo : 'práctica libre');
       detalleTxt = mod
         ? 'Módulo ' + mod.numero + ' · ' + glob.hechas + ' de ' + glob.total +
           ' lecciones completadas (' + glob.pct + ' %).'
