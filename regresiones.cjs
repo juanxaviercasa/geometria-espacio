@@ -1563,6 +1563,23 @@ test('Zénit: módulos cerrados no se estiran ni exponen contenido al teclado',(
  assert.ok(css.includes('grid-auto-rows:max-content'),'Alto de fila dependiente del contenido');
  assert.ok(css.includes('align-items:start'),'No estirar fichas cerradas');
  assert.ok(css.includes('.modulo-cuerpo[hidden]'),'Ocultar paneles cerrados a pesar de CSS heredado');
- assert.ok(css.includes('scale(1.36)'),'Recorte correctivo de bandas antiguas');
+ assert.ok(css.includes('transform:none!important'),'La imagen final HD no debe necesitar zoom correctivo');
  assert.ok(html.includes('zenit-accordion-20261118'),'Actualizar JS en la portada');
+});
+
+test('Zénit Aurora: los ocho WebP originales se incluyen sin redirecciones ni bandas negras',()=>{
+ const fs=require('fs'),path=require('path');
+ const root=__dirname;
+ const archive=fs.readFileSync(path.join(root,'media/zenit-fase4-webp.zip'));
+ assert.ok(archive.length>1000000,'paquete real de ocho imágenes optimizadas');
+ assert.equal(archive.toString('ascii',0,2),'PK','paquete ZIP válido');
+ const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
+ const builder=fs.readFileSync(path.join(root,'build.js'),'utf8');
+ const css=fs.readFileSync(path.join(root,'css/zenit-visual-2026.css'),'utf8');
+ for(const name of ['aprender','experimentar','resolver','ruta','entender','error','verificar','cierre']){
+  assert.ok(html.includes('src="assets/zenit/fase4/'+name+'.webp"'),'imagen original directa: '+name);
+ }
+ assert.ok(builder.includes('zlib.inflateRawSync'),'extracción local al compilar');
+ assert.ok(builder.includes('extracted.size !== expectedFiles.size'),'fallar si falta alguna imagen');
+ assert.ok(css.includes('transform:none!important'),'cierre 16:9 sin recorte artificial');
 });

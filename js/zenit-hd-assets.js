@@ -16,6 +16,10 @@ function start(){
       if(!src)return;
       const file=src.split('/').pop().replace(/\.webp$/,'');
       if(manifest.assets.indexOf(file)<0)return;
+      if(img.getAttribute('src')===src){
+        img.setAttribute('data-zenit-hd-ready','true');
+        return;
+      }
       const swap=new Image();
       swap.decoding='async';
       swap.onload=function(){
