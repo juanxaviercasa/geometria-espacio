@@ -119,3 +119,75 @@
 @media(max-width:700px){.zenit-preview-card .zenit-preview-art{height:211px}.zenit-preview-card{min-height:307px}.zenit-catalog-visual{height:220px;min-height:220px}.zenit-catalog-card{min-height:345px}}
 @media(max-width:470px){.zenit-preview-card .zenit-preview-art{height:272px}.zenit-preview-card{min-height:365px}.zenit-catalog-visual{height:263px;min-height:263px}.zenit-catalog-card{min-height:386px}}
 @media(prefers-reduced-motion:reduce){.zenit-preview-card .zenit-preview-art,.zenit-catalog-visual img{transition:none;transform:none!important}}
+
+/* Videos cinematográficos Veo/Flow. Poster siempre disponible; solo un video
+   se reproduce si entra en pantalla. No oculta texto ni botones principales. */
+.zenit-ambient-frame{
+  position:relative;isolation:isolate;overflow:hidden;display:block;width:100%;
+  border:1px solid rgba(227,218,251,.85);background:linear-gradient(140deg,#eee7ff,#d7c9f1);
+  box-shadow:0 18px 38px rgba(54,42,121,.17);
+}
+.zenit-ambient-video,.zenit-ambient-poster{
+  position:absolute;inset:0;display:block;width:100%;height:100%;
+  object-fit:cover;object-position:center;user-select:none;pointer-events:none;
+}
+.zenit-ambient-video{opacity:0;z-index:1;transition:opacity .35s ease}
+.zenit-ambient-poster{opacity:1;z-index:0;transition:opacity .35s ease}
+.zenit-ambient-frame[data-playing="true"] .zenit-ambient-video{opacity:1}
+.zenit-ambient-frame[data-playing="true"] .zenit-ambient-poster{opacity:0}
+.zenit-home-film{
+  width:min(100%,640px);height:auto;aspect-ratio:16/9;
+  border-radius:23px;z-index:1;
+}
+.zenit-home-film .zenit-ambient-video,.zenit-home-film .zenit-ambient-poster{
+  object-position:54% 50%;
+}
+.zenit-float{pointer-events:none}
+.zenit-video-showcase{
+  position:relative;height:clamp(260px,31vw,430px);
+  margin:0 0 2.2rem;overflow:hidden;border-radius:24px;
+  border:1px solid rgba(228,218,248,.9);background:#d9c9ef;
+  box-shadow:0 22px 45px rgba(65,52,140,.14);
+}
+.zenit-catalog-film{border:0;border-radius:inherit;height:100%;box-shadow:none}
+.zenit-catalog-film .zenit-ambient-video,.zenit-catalog-film .zenit-ambient-poster{
+  object-position:50% 53%;
+}
+.zenit-video-caption{
+  position:absolute;left:1.25rem;bottom:1.15rem;z-index:2;
+  background:rgba(29,26,67,.62);color:#fff;border:1px solid rgba(255,255,255,.24);
+  padding:.48rem .78rem;border-radius:9px;font-weight:700;font-size:.84rem;
+  backdrop-filter:blur(8px);text-shadow:0 1px 4px rgba(0,0,0,.24);
+  max-width:calc(100% - 7.5rem);pointer-events:none;
+}
+.zenit-video-toggle{
+  position:absolute;right:.95rem;bottom:.95rem;z-index:4;
+  width:42px;height:42px;border-radius:12px;
+  display:grid;place-items:center;border:1px solid rgba(255,255,255,.58);
+  background:rgba(30,27,67,.66);backdrop-filter:blur(8px);color:white;
+  font-size:1rem;line-height:1;cursor:pointer;
+  box-shadow:0 4px 14px rgba(20,16,65,.25);
+}
+.zenit-video-toggle[hidden]{display:none!important}
+.zenit-video-toggle:hover,.zenit-video-toggle:focus-visible{
+  background:rgba(68,50,150,.94);outline:2px solid #f6e7a9;outline-offset:2px;
+}
+@media(max-width:1050px){
+  .zenit-video-showcase{height:clamp(235px,35vw,350px)}
+}
+@media(max-width:700px){
+  .zenit-intro-visual{min-height:0;max-height:none;padding:1rem 0}
+  .zenit-home-film{width:min(100%,620px);border-radius:17px}
+  .zenit-video-showcase{height:clamp(200px,53vw,315px);border-radius:16px}
+  .zenit-video-caption{left:.65rem;bottom:.7rem;font-size:.71rem;max-width:calc(100% - 6rem);padding:.35rem .45rem}
+  .zenit-video-toggle{width:39px;height:39px;right:.65rem;bottom:.65rem}
+}
+@media(max-width:470px){
+  .zenit-video-showcase{height:220px}
+  .zenit-video-caption{font-size:.68rem;max-width:calc(100% - 5rem)}
+}
+@media(prefers-reduced-motion:reduce){
+  .zenit-ambient-video{display:none!important;opacity:0!important;transition:none!important}
+  .zenit-ambient-poster{opacity:1!important;transition:none!important}
+  .zenit-video-toggle{display:none!important}
+}

@@ -344,3 +344,7 @@ se sirven desde Cloudflare Pages como recursos estáticos locales.
 
 ### Catálogo premium de sólidos (17/11/2026)
 Se han integrado ocho imágenes hiperrealistas individuales generadas previamente como `assets/zenit/premium/{tipo}.webp`, de 760 × 570 px (16–21 KB). Se visualizan en el catálogo completo, en las tarjetas de la portada y en los encabezados de cada laboratorio. Se amplió el espacio visual hasta 247 px de altura en escritorio, conservando opciones responsivas y accesibilidad. Los visores interactivos no se sustituyen por fotografías.
+
+### Videos originales de Google Flow (portada y catálogo, 18/11/2026)
+
+Se integraron los videos proporcionados por el propietario, optimizados a MP4 H.264 de 1024×576, ~8 s, sin audio, `faststart`, con poster WebP. El principal, `assets/zenit/video/hero-icosaedro.mp4`, se sitúa en el hero de `index.html`. El secundario, `assets/zenit/video/catalogo-arquitectura.mp4`, ocupa el banner de `solidos.html`. La orquestación `js/zenit-videos.js` evita descargar y reproducir videos fuera de pantalla, pausa al cambiar de pestaña, ofrece botón reproducir/pausar, respeta `prefers-reduced-motion` y muestra el poster ante errores o bloqueo de autoplay. No se modificaron los visores 3D, las fórmulas ni el catálogo individual de tarjetas.

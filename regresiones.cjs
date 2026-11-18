@@ -1220,7 +1220,7 @@ test('El sistema visual Zénit entrega ilustraciones con fuentes locales válida
  const home=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
  const catalog=fs.readFileSync(path.join(__dirname,'solidos.html'),'utf8');
  const lab=fs.readFileSync(path.join(__dirname,'solido.html'),'utf8');
- assert.ok(home.includes('lote-6/portada-aurora.svg'),'el hero utiliza la nueva escena de Zénit Aurora');
+ assert.ok(home.includes('assets/zenit/video/hero-icosaedro.mp4'),'la portada contiene el video principal');
  assert.equal((catalog.match(/class="zenit-catalog-visual"/g)||[]).length,8);
  assert.ok(catalog.includes('assets/zenit/premium/prisma.webp'),'el catálogo muestra el nuevo render');
  assert.ok(lab.includes('id="z-family-art"'));
@@ -1245,7 +1245,7 @@ test('La ilustración WebP anterior sigue disponible como recurso histórico',()
  assert.equal(buf.toString('ascii',8,12),'WEBP');
  assert.ok(buf.length<20000,'imagen optimizada');
  const home=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
- assert.ok(home.includes('src="assets/zenit/lote-6/portada-aurora.svg"'));
+ assert.ok(home.includes('src="assets/zenit/video/hero-icosaedro.mp4"'));
 });
 
 
@@ -1397,10 +1397,10 @@ test('Lote 6: cuatro escenas atmosféricas originales distribuidas por el sitio'
  const wc=fs.readFileSync(path.join(__dirname,'css/zenit-workspace.css'),'utf8');
  const shared=fs.readFileSync(path.join(__dirname,'css/zenit-global-art.css'),'utf8');
  const build=fs.readFileSync(path.join(__dirname,'build.js'),'utf8');
- assert.ok(home.includes('assets/zenit/lote-6/portada-aurora.svg'));
+ assert.ok(home.includes('assets/zenit/video/hero-icosaedro.mp4'));
  assert.ok(home.includes('assets/zenit/lote-6/zenit-horizonte.svg'));
  assert.ok(home.includes('id="zenit-culminacion-titulo"'));
- assert.ok(catalog.includes('assets/zenit/lote-6/catalogo-cristal.svg'));
+ assert.ok(catalog.includes('assets/zenit/video/catalogo-arquitectura.mp4'));
  assert.ok(catalog.includes('zenit-catalog-showcase'));
  assert.ok(solid.includes('assets/zenit/lote-6/laboratorio-planos.svg'));
  assert.ok(wc.includes('lote-6/zenit-horizonte.svg'));
@@ -1431,4 +1431,36 @@ test('Catálogo Zénit premium: ocho imágenes hiperrealistas presentes y enlaza
  assert.ok(js.includes("familyArt.src='assets/zenit/premium/'+tipo+'.webp'"));
  assert.ok(solid.includes('assets/zenit/premium/prisma.webp'));
  assert.ok(css.includes('height:247px'));
+});
+
+test('Videos ambientales originales: home y catálogo tienen fuentes MP4 y posters WebP locales',()=>{
+ const fs=require('fs'),path=require('path');
+ const home=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
+ const catalog=fs.readFileSync(path.join(__dirname,'solidos.html'),'utf8');
+ const js=fs.readFileSync(path.join(__dirname,'js/zenit-videos.js'),'utf8');
+ const css=fs.readFileSync(path.join(__dirname,'css/zenit-home.css'),'utf8');
+ const cases=[
+  {html:home,id:'hero-icosaedro'},
+  {html:catalog,id:'catalogo-arquitectura'}
+ ];
+ for(const scene of cases){
+   const base='assets/zenit/video/'+scene.id;
+   const mp4=fs.readFileSync(path.join(__dirname,base+'.mp4'));
+   const poster=fs.readFileSync(path.join(__dirname,base+'-poster.webp'));
+   assert.ok(scene.html.includes('src="'+base+'.mp4"'));
+   assert.ok(scene.html.includes('src="'+base+'-poster.webp"'));
+   assert.ok(mp4.length>100000&&mp4.length<1500000,'MP4 optimizado');
+   assert.equal(mp4.toString('ascii',4,8),'ftyp');
+   assert.equal(poster.toString('ascii',0,4),'RIFF');
+   assert.equal(poster.toString('ascii',8,12),'WEBP');
+   assert.ok(scene.html.includes('muted loop playsinline preload="none"'));
+   assert.ok(scene.html.includes('data-zenit-ambient'));
+   assert.ok(scene.html.includes('js/zenit-videos.js'));
+ }
+ assert.ok(home.includes('zenit-home-film'));
+ assert.ok(catalog.includes('zenit-catalog-film'));
+ assert.ok(css.includes('prefers-reduced-motion:reduce'));
+ assert.ok(js.includes('IntersectionObserver')&&js.includes('visibilitychange'));
+ assert.ok(js.includes('video.pause()')&&js.includes('video.play()'));
+ assert.ok(js.includes('aria-pressed'));
 });
