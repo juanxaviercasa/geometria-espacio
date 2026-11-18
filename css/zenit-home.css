@@ -142,6 +142,12 @@
 .zenit-home-film .zenit-ambient-video,.zenit-home-film .zenit-ambient-poster{
   object-position:54% 50%;
 }
+/* Oculta bandas negras integradas en el MP4, solo en la portada. */
+.zenit-home-film .zenit-ambient-video{
+  transform:scale(1.10);
+  transform-origin:center center;
+}
+
 .zenit-float{pointer-events:none}
 .zenit-video-showcase{
   position:relative;height:clamp(260px,31vw,430px);
