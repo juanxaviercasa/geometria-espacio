@@ -1522,3 +1522,19 @@ test('Fase 3 Zénit: lettering selectivo, mensajes motivadores y continuidad coh
  assert.ok(home.includes('data-start-at="2"'),'mantener video recortado');
  assert.equal((home.match(/class="zenit-preview-card"/g)||[]).length,8);
 });
+
+
+test('Visual HD: la portada no utiliza los SVG pedagógicos genéricos ni el marco negro del CTA',()=>{
+ const fs=require('fs'),path=require('path');
+ const home=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
+ const css=fs.readFileSync(path.join(__dirname,'css/zenit-visual-2026.css'),'utf8');
+ assert.ok(home.includes('css/zenit-visual-2026.css'));
+ assert.ok(!home.includes('src="assets/zenit/modo-aprender.svg"'));
+ assert.ok(!home.includes('src="assets/zenit/modo-experimentar.svg"'));
+ assert.ok(!home.includes('src="assets/zenit/modo-resolver.svg"'));
+ assert.ok(!home.includes('src="assets/zenit/lote-7/ruta-maestria.svg"'));
+ assert.ok(!home.includes('<picture>') || !home.slice(home.indexOf('<section class="zenit-culminacion')).includes('<source'));
+ for(const p of ['prisma','cubo','tetraedro','esfera'])assert.ok(home.includes('assets/zenit/premium/'+p+'.webp'));
+ assert.ok(css.includes('aspect-ratio:16/9')&&css.includes('aspect-ratio:4/3'));
+ assert.ok(css.includes('transform:scale(1.15)'));
+});

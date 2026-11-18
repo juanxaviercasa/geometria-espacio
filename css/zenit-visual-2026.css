@@ -1,0 +1,99 @@
+/* Zénit Aurora – Visual HD · 2026-11-18.
+ * Reemplaza mini-SVG genéricos por composiciones fotográficas y proporciones coherentes.
+ * Los recursos WebP actuales del repositorio funcionan como respaldo mientras se incorporan
+ * los originales hiperrealistas, entregados en el paquete de imágenes. */
+body[data-pagina="inicio"] .zenit-mode-grid{align-items:stretch;gap:clamp(1rem,1.8vw,1.55rem)}
+body[data-pagina="inicio"] .zenit-mode-card{
+  padding:0!important;
+  display:flex;flex-direction:column;
+  overflow:hidden;
+  min-height:0;
+  border:1px solid #dedaf0;
+  border-radius:24px;
+  background:#fff;
+  box-shadow:0 15px 32px #342b8319;
+  transition:transform .25s ease,box-shadow .25s ease;
+}
+body[data-pagina="inicio"] .zenit-mode-card .zenit-mode-num{
+  z-index:1;position:absolute;top:1rem;left:1rem;
+  padding:.35rem .58rem;border-radius:9px;
+  color:#3a3270;background:#ffffffeb;
+  font-size:.76rem;font-weight:800;letter-spacing:.05em;
+  box-shadow:0 4px 16px #2d226d28;
+}
+body[data-pagina="inicio"] .zenit-mode-card .zenit-mode-art{
+  display:block;width:100%;height:auto;aspect-ratio:4/3;
+  max-width:none;min-height:0;max-height:none;
+  margin:0!important;padding:0!important;
+  object-fit:cover;object-position:center;border-radius:0;
+  background:#c2a6ed;filter:saturate(1.05);
+}
+body[data-pagina="inicio"] .zenit-mode-card h3{
+  padding:1.25rem 1.35rem .15rem;
+  font-size:clamp(1.22rem,1.6vw,1.5rem);
+  line-height:1.25;
+  margin:0!important;
+}
+body[data-pagina="inicio"] .zenit-mode-card p{
+  padding:.45rem 1.35rem 1.45rem;
+  font-size:.97rem;line-height:1.65;
+  margin:0!important;
+}
+body[data-pagina="inicio"] .zenit-mode-card:hover,
+body[data-pagina="inicio"] .zenit-mode-card:focus-within{
+  transform:translateY(-4px);
+  box-shadow:0 23px 42px #342b8323;
+}
+/* La ruta ahora muestra una escena reconocible en vez de un diagrama abstracto. */
+body[data-pagina="inicio"] .zenit-route-art{aspect-ratio:16/9;overflow:hidden;background:#ddc8f0}
+body[data-pagina="inicio"] .zenit-route-art img{
+  display:block;width:100%;height:100%;aspect-ratio:16/9;
+  object-fit:cover;object-position:center;
+}
+/* Metodología: fotografías completas, sin padding interior ni cortes de símbolos. */
+body[data-pagina="inicio"] .zenit-method-grid{gap:clamp(1rem,1.8vw,1.45rem)}
+body[data-pagina="inicio"] .zenit-method-card{overflow:hidden;display:flex;flex-direction:column}
+body[data-pagina="inicio"] .zenit-method-figure{
+  display:block;flex:0 0 auto;width:100%;height:auto;aspect-ratio:4/3;
+  min-height:0;background:#dcc9f0;overflow:hidden;
+}
+body[data-pagina="inicio"] .zenit-method-figure img{
+  display:block;width:100%;height:100%;max-width:none;
+  object-fit:cover;object-position:center;
+  padding:0!important;border-radius:0;
+}
+body[data-pagina="inicio"] .zenit-method-copy{padding:1.4rem 1.5rem 1.6rem;flex:1}
+body[data-pagina="inicio"] .zenit-method-copy h3{font-size:clamp(1.2rem,1.7vw,1.5rem)}
+body[data-pagina="inicio"] .zenit-method-copy p{font-size:.96rem;line-height:1.7}
+/* Póster existente: oculta las bandas negras horneadas en el fotograma.
+   Sustituir por 'cierre.webp' original 16:9 permite retirar el recorte. */
+body[data-pagina="inicio"] .zenit-culminacion-visual{
+  display:block;position:relative;width:100%;aspect-ratio:16/9;
+  border-radius:20px;background:#dbc8f5;overflow:hidden;
+}
+body[data-pagina="inicio"] .zenit-culminacion-art{
+  display:block;width:100%;height:100%!important;max-height:none!important;
+  aspect-ratio:16/9;
+  object-fit:cover;object-position:center;
+  border-radius:0!important;
+  transform:scale(1.15);transform-origin:50% 50%;
+}
+body[data-pagina="inicio"] .zenit-culminacion-visual::after{
+  height:23%;background:linear-gradient(transparent,#271b587a);
+}
+@media(max-width:750px){
+ body[data-pagina="inicio"] .zenit-mode-card .zenit-mode-art{aspect-ratio:4/3;height:auto}
+ body[data-pagina="inicio"] .zenit-method-card{display:flex;flex-direction:column}
+ body[data-pagina="inicio"] .zenit-method-figure{height:auto;min-height:0;aspect-ratio:4/3}
+ body[data-pagina="inicio"] .zenit-method-figure img{width:100%;height:100%}
+ body[data-pagina="inicio"] .zenit-culminacion-visual{aspect-ratio:16/9}
+}
+@media(max-width:470px){
+ body[data-pagina="inicio"] .zenit-method-card{display:flex;flex-direction:column}
+ body[data-pagina="inicio"] .zenit-method-figure{height:auto;aspect-ratio:4/3;min-height:0}
+ body[data-pagina="inicio"] .zenit-culminacion-art{height:100%!important}
+}
+@media(prefers-reduced-motion:reduce){
+ body[data-pagina="inicio"] .zenit-mode-card{transition:none}
+ body[data-pagina="inicio"] .zenit-mode-card:hover{transform:none}
+}
