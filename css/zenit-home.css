@@ -197,3 +197,130 @@
   .zenit-ambient-poster{opacity:1!important;transition:none!important}
   .zenit-video-toggle{display:none!important}
 }
+
+
+/* Sistema Zénit · Fase 2: exploración, ruta de progreso y cierre inspirador.
+   Reglas acotadas a la portada, sin alterar laboratorios ni el catálogo. */
+body[data-pagina="inicio"] .zenit-preview{padding-block:clamp(3.4rem,6vw,6.2rem);background:linear-gradient(180deg,#f7f5ff 0%,#f5f7ff 70%,#fdfbff 100%)}
+body[data-pagina="inicio"] .zenit-preview-header{align-items:end;gap:1.5rem;margin-bottom:2rem}
+body[data-pagina="inicio"] .zenit-preview-heading{max-width:800px}
+body[data-pagina="inicio"] .zenit-preview-heading h2{max-width:24ch;font-size:clamp(2rem,3.6vw,3.5rem);line-height:1.08;letter-spacing:-.045em;margin:.85rem 0}
+body[data-pagina="inicio"] .zenit-preview-heading h2 em,
+body[data-pagina="inicio"] .zenit-route-copy h2 em,
+body[data-pagina="inicio"] .zenit-method-header h2 em,
+body[data-pagina="inicio"] .zenit-culminacion-copy h2 em{
+  font-family:Newsreader,Georgia,serif;font-weight:500;font-style:italic;color:#6650c9;letter-spacing:-.035em;
+}
+body[data-pagina="inicio"] .zenit-preview-heading p{max-width:680px;font-size:1.02rem}
+body[data-pagina="inicio"] .zenit-preview-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(.85rem,1.4vw,1.3rem)}
+body[data-pagina="inicio"] .zenit-preview-card{display:flex;flex-direction:column;min-width:0;min-height:0;padding:0;border-radius:22px;overflow:hidden;gap:0;border:1px solid #ded9ed;box-shadow:0 12px 26px #52418c13;background:white;color:#26264d;transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
+body[data-pagina="inicio"] .zenit-preview-media{position:relative;display:block;aspect-ratio:4/3;width:100%;overflow:hidden;background:#e9d8fa}
+body[data-pagina="inicio"] .zenit-preview-card .zenit-preview-art{width:100%;height:100%;aspect-ratio:4/3;border-radius:0;object-fit:cover;display:block;transform:scale(1);filter:saturate(1.03);transition:transform .35s ease,filter .35s ease}
+body[data-pagina="inicio"] .zenit-preview-index{position:absolute;top:.75rem;left:.75rem;background:#fffefaeb;color:#50438a;border:1px solid #ffffffa8;font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.04em;font-weight:650;padding:.3rem .55rem;border-radius:8px;box-shadow:0 4px 12px #41337215}
+body[data-pagina="inicio"] .zenit-preview-card>.zenit-preview-body{position:relative;right:auto;bottom:auto;display:flex;flex:1;flex-direction:column;gap:.5rem;padding:1.08rem 1.05rem 1.2rem;color:inherit;min-width:0}
+body[data-pagina="inicio"] .zenit-preview-body strong{font-size:1.24rem;font-weight:760;padding:0;line-height:1.15}
+body[data-pagina="inicio"] .zenit-preview-body small{font-size:.89rem;color:#646b86;padding:0;line-height:1.5;min-height:2.8em}
+body[data-pagina="inicio"] .zenit-preview-enter{margin-top:auto;display:inline-flex;align-items:center;justify-content:space-between;gap:.5rem;font-weight:760;font-size:.85rem;color:#5846b9;padding-top:.5rem}
+body[data-pagina="inicio"] .zenit-preview-card:hover,
+body[data-pagina="inicio"] .zenit-preview-card:focus-visible{transform:translateY(-5px);border-color:#b8a4ed;box-shadow:0 20px 36px #4f3d902b}
+body[data-pagina="inicio"] .zenit-preview-card:hover .zenit-preview-art,
+body[data-pagina="inicio"] .zenit-preview-card:focus-visible .zenit-preview-art{transform:scale(1.035);filter:saturate(1.1)}
+body[data-pagina="inicio"] .zenit-preview-card:focus-visible{outline:3px solid #5942b8;outline-offset:3px}
+body[data-pagina="inicio"] .zenit-preview-foot{display:flex;align-items:center;gap:.9rem;margin-top:1.45rem;border:1px solid #e8def6;border-radius:16px;padding:1rem 1.25rem;background:#ffffffd6}
+body[data-pagina="inicio"] .zenit-preview-foot-icon{display:grid;place-items:center;flex:0 0 40px;width:40px;height:40px;border-radius:13px;background:#ede8ff;color:#6850ca;font-size:1.4rem}
+body[data-pagina="inicio"] .zenit-preview-foot p{margin:0;color:#515877;line-height:1.6;font-size:.94rem}
+body[data-pagina="inicio"] .zenit-preview-foot strong{color:#2b2957}
+
+/* Continuidad: protege la lógica existente de progreso local. */
+body[data-pagina="inicio"] #ruta{background:linear-gradient(180deg,#fff 0%,#fafaff 100%);padding-block:clamp(3.4rem,6vw,6rem)}
+body[data-pagina="inicio"] #bloque-continuar{margin-bottom:clamp(2rem,4vw,4rem);border-radius:20px;min-height:92px;background:linear-gradient(110deg,#2f285b,#4838a8 64%,#634cce);box-shadow:0 18px 38px #3025642b}
+body[data-pagina="inicio"] #bloque-continuar .btn{border-radius:14px;min-height:44px}
+body[data-pagina="inicio"] .zenit-route-intro{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.88fr);gap:clamp(1.4rem,4vw,4rem);align-items:center;padding:clamp(1.2rem,2.3vw,2.15rem);margin-bottom:1.9rem;border-radius:26px;background:linear-gradient(125deg,#f5f2ff,#fcfbff 70%);border:1px solid #e7ddf8;box-shadow:0 13px 29px #58458a0c}
+body[data-pagina="inicio"] .zenit-route-copy h2{font-size:clamp(2rem,3.6vw,3.3rem);line-height:1.13;letter-spacing:-.042em;color:#24224b;margin:.85rem 0;max-width:18ch}
+body[data-pagina="inicio"] .zenit-route-copy p{font-size:1.02rem;line-height:1.72;max-width:610px;color:#59617c}
+body[data-pagina="inicio"] .zenit-route-metrics{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:1.3rem}
+body[data-pagina="inicio"] .zenit-route-metrics span{display:inline-flex;gap:.38rem;align-items:center;border:1px solid #ded7f6;background:#fff;border-radius:999px;padding:.44rem .75rem;color:#4e5376;font-size:.84rem}
+body[data-pagina="inicio"] .zenit-route-metrics strong{color:#4f3eb6;font-size:1rem}
+body[data-pagina="inicio"] .zenit-route-art{position:relative;min-width:0;border-radius:19px;overflow:hidden;background:#e7dafa;box-shadow:0 12px 28px #59499e1b}
+body[data-pagina="inicio"] .zenit-route-art img{display:block;width:100%;aspect-ratio:16/9;height:auto;object-fit:cover}
+body[data-pagina="inicio"] .zenit-route-art-note{position:absolute;bottom:.8rem;left:.8rem;right:.8rem;width:max-content;max-width:calc(100% - 1.6rem);padding:.55rem .8rem;border-radius:11px;color:#242454;background:#fffdf0e8;box-shadow:0 4px 16px #4c357731;font-size:.84rem;font-weight:760}
+body[data-pagina="inicio"] #lista-modulos{gap:1rem}
+body[data-pagina="inicio"] #lista-modulos .modulo{border:1px solid #e3def1;border-radius:17px;background:white;box-shadow:0 9px 24px #302a6b0b;overflow:hidden;min-width:0;transition:border-color .2s ease,box-shadow .2s ease}
+body[data-pagina="inicio"] #lista-modulos .modulo.actual{border-color:#a99ae7;box-shadow:0 13px 29px #6454b322}
+body[data-pagina="inicio"] #lista-modulos .modulo.completo{border-color:#a7d5c0}
+body[data-pagina="inicio"] #lista-modulos .modulo-cabeza{width:100%;min-height:113px;display:flex;align-items:center;gap:.82rem;padding:1.08rem;text-align:left}
+body[data-pagina="inicio"] #lista-modulos .modulo-num{flex:0 0 42px;width:42px;height:42px;display:grid;place-items:center;border-radius:13px;font-size:.97rem}
+body[data-pagina="inicio"] #lista-modulos .zenit-modulo-main{display:flex;flex:1 1 auto;flex-direction:column;gap:.28rem;min-width:0}
+body[data-pagina="inicio"] #lista-modulos .zenit-modulo-etiquetas{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap;margin:0 0 .18rem}
+body[data-pagina="inicio"] #lista-modulos .zenit-modulo-categoria{display:inline-flex;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:#6851b9}
+body[data-pagina="inicio"] #lista-modulos .zenit-modulo-estado{display:inline-flex;font-size:.71rem;font-weight:760;padding:.15rem .42rem;border-radius:6px;background:#f0eef8;color:#646782}
+body[data-pagina="inicio"] #lista-modulos .zenit-modulo-estado.siguiente{background:#f5e9c4;color:#6b4f15}
+body[data-pagina="inicio"] #lista-modulos .zenit-modulo-estado.avance{background:#e7eafa;color:#394a94}
+body[data-pagina="inicio"] #lista-modulos .zenit-modulo-estado.hecho{background:#e5f6ea;color:#216244}
+body[data-pagina="inicio"] #lista-modulos .modulo-titulo{font-size:clamp(.96rem,1.3vw,1.08rem);line-height:1.35;color:#2a285b}
+body[data-pagina="inicio"] #lista-modulos .modulo-desc{line-height:1.48;font-size:.84rem;overflow-wrap:anywhere;color:#666e86}
+body[data-pagina="inicio"] #lista-modulos .modulo-meta{min-width:84px;flex:0 0 86px}
+body[data-pagina="inicio"] #lista-modulos .modulo-cabeza:focus-visible{outline:3px solid #6851d4;outline-offset:-3px;border-radius:14px}
+
+/* Tres decisiones pedagógicas, convertidas en piezas editoriales. */
+body[data-pagina="inicio"] .zenit-metodo{background:linear-gradient(165deg,#f5f4ff,#fafaff);padding-block:clamp(3rem,5vw,5rem)}
+body[data-pagina="inicio"] .zenit-method-header{max-width:770px;margin-bottom:1.8rem}
+body[data-pagina="inicio"] .zenit-method-header h2{font-size:clamp(2rem,3.4vw,3.1rem);line-height:1.15;letter-spacing:-.04em;color:#282552;margin:.8rem 0}
+body[data-pagina="inicio"] .zenit-method-header p{color:#616984;font-size:1.03rem;line-height:1.65;margin:0}
+body[data-pagina="inicio"] .zenit-method-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.05rem}
+body[data-pagina="inicio"] .zenit-method-card{background:#fff;border:1px solid #e4deef;border-radius:23px;overflow:hidden;box-shadow:0 14px 29px #39317e0d;min-width:0}
+body[data-pagina="inicio"] .zenit-method-figure{height:170px;display:grid;place-items:center;background:linear-gradient(160deg,#ece6fb,#faf3ff);overflow:hidden}
+body[data-pagina="inicio"] .zenit-method-figure img{display:block;width:100%;height:100%;object-fit:contain;padding:.65rem}
+body[data-pagina="inicio"] .zenit-method-copy{padding:1.4rem}
+body[data-pagina="inicio"] .zenit-method-step{display:inline-block;font-size:.74rem;font-weight:800;letter-spacing:.08em;color:#6854b8}
+body[data-pagina="inicio"] .zenit-method-copy h3{font-size:clamp(1.15rem,1.65vw,1.45rem);line-height:1.25;margin:.75rem 0 .5rem;color:#292758}
+body[data-pagina="inicio"] .zenit-method-copy p{font-size:.92rem;line-height:1.65;margin:0;color:#626982}
+
+/* Cierre emocional con una escena geométrica cinematográfica. */
+body[data-pagina="inicio"] .zenit-culminacion{padding-block:clamp(3rem,6vw,6rem);background:linear-gradient(180deg,#fafaff,#f0eaff)}
+body[data-pagina="inicio"] .zenit-culminacion-inner{grid-template-columns:minmax(0,1fr) minmax(0,.98fr);gap:clamp(1.2rem,3vw,3.5rem);padding:clamp(1.5rem,3vw,3.5rem);border-radius:29px}
+body[data-pagina="inicio"] .zenit-culminacion-copy h2{max-width:17ch;font-size:clamp(2rem,3.5vw,3.4rem);line-height:1.1}
+body[data-pagina="inicio"] .zenit-culminacion-copy p{font-size:1.02rem}
+body[data-pagina="inicio"] .zenit-culminacion-visual{position:relative;min-width:0;border-radius:20px;overflow:hidden;background:#dbc8f5;box-shadow:0 15px 30px #4d378b24}
+body[data-pagina="inicio"] .zenit-culminacion-visual picture{display:block}
+body[data-pagina="inicio"] .zenit-culminacion-art{display:block;width:100%;height:clamp(260px,28vw,380px);max-height:none;border-radius:0;object-fit:cover;object-position:center}
+body[data-pagina="inicio"] .zenit-culminacion-visual::after{content:"";position:absolute;inset:auto 0 0;height:30%;background:linear-gradient(transparent,#251e5e65);pointer-events:none}
+body[data-pagina="inicio"] .zenit-culminacion-seal{position:absolute;bottom:1rem;left:1rem;z-index:1;max-width:calc(100% - 2rem);font-size:.88rem;font-weight:750;color:#fff;background:#282052b8;border:1px solid #ffffff69;border-radius:12px;padding:.58rem .85rem;backdrop-filter:blur(8px)}
+
+@media(max-width:1050px){
+ body[data-pagina="inicio"] .zenit-preview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ body[data-pagina="inicio"] .zenit-route-intro{grid-template-columns:minmax(0,1fr) minmax(0,.9fr);gap:1.2rem}
+}
+@media(max-width:750px){
+ body[data-pagina="inicio"] .zenit-route-intro,
+ body[data-pagina="inicio"] .zenit-culminacion-inner{grid-template-columns:1fr}
+ body[data-pagina="inicio"] .zenit-method-grid{grid-template-columns:1fr}
+ body[data-pagina="inicio"] .zenit-method-card{display:grid;grid-template-columns:140px minmax(0,1fr);align-items:stretch}
+ body[data-pagina="inicio"] .zenit-method-figure{height:100%;min-height:172px}
+ body[data-pagina="inicio"] .zenit-preview-card .zenit-preview-art{height:100%}
+}
+@media(max-width:470px){
+ body[data-pagina="inicio"] .zenit-preview-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:.7rem}
+ body[data-pagina="inicio"] .zenit-preview-body{padding:.85rem!important}
+ body[data-pagina="inicio"] .zenit-preview-body strong{font-size:1.04rem}
+ body[data-pagina="inicio"] .zenit-preview-body small{font-size:.83rem}
+ body[data-pagina="inicio"] .zenit-preview-enter{font-size:.78rem}
+ body[data-pagina="inicio"] .zenit-preview-media{aspect-ratio:1/1}
+ body[data-pagina="inicio"] #lista-modulos .modulo-cabeza{display:grid;grid-template-columns:42px minmax(0,1fr);gap:.65rem}
+ body[data-pagina="inicio"] #lista-modulos .modulo-meta{grid-column:2;min-width:0;flex:none;width:100%;display:flex;align-items:center;gap:.6rem}
+ body[data-pagina="inicio"] .zenit-method-card{grid-template-columns:100px minmax(0,1fr)}
+ body[data-pagina="inicio"] .zenit-method-copy{padding:1rem}
+ body[data-pagina="inicio"] .zenit-method-figure{min-height:145px}
+ body[data-pagina="inicio"] .zenit-culminacion-art{height:230px}
+}
+@media(max-width:365px){
+ body[data-pagina="inicio"] .zenit-preview-grid{grid-template-columns:1fr}
+ body[data-pagina="inicio"] .zenit-preview-media{aspect-ratio:4/3}
+ body[data-pagina="inicio"] .zenit-method-card{display:block}
+ body[data-pagina="inicio"] .zenit-method-figure{height:150px}
+}
+@media(prefers-reduced-motion:reduce){
+ body[data-pagina="inicio"] .zenit-preview-card,
+ body[data-pagina="inicio"] .zenit-preview-card .zenit-preview-art,
+ body[data-pagina="inicio"] #lista-modulos .modulo{transition:none!important;transform:none!important}
+}

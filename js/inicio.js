@@ -45,6 +45,12 @@
       if (prog.pct === 100) clases.push('completo');
       if (m.lecciones.indexOf(idActual) !== -1) clases.push('actual');
 
+      // Etiquetas de orientación sin bloquear módulos: toda la ruta sigue disponible.
+      var categoria = m.numero<=4?'Fundamentos':m.numero<=6?'Construcción':m.numero<=10?'Exploración':'Reto de admisión';
+      var recomendado = m.lecciones.indexOf(idActual)!==-1;
+      var estadoModulo = prog.pct===100?'Completado':recomendado?'Tu siguiente paso':prog.hechas>0?'En progreso':'Disponible';
+      var claseEstado = prog.pct===100?'hecho':recomendado?'siguiente':prog.hechas>0?'avance':'disponible';
+
       var lecciones = m.lecciones.map(function (id) {
         var l = Contenido.obtenerLeccion(id);
         if (!l) return '';
@@ -74,7 +80,8 @@
       return '<article class="' + clases.join(' ') + '" id="mod-' + m.id + '">' +
         '<button type="button" class="modulo-cabeza" aria-expanded="false" aria-controls="cuerpo-' + m.id + '">' +
         '<span class="modulo-num" aria-hidden="true">' + m.numero + '</span>' +
-        '<span>' +
+        '<span class="zenit-modulo-main">' +
+        '<span class="zenit-modulo-etiquetas"><span class="zenit-modulo-categoria">' + categoria + '</span><span class="zenit-modulo-estado ' + claseEstado + '">' + estadoModulo + '</span></span>' +
         '<span class="modulo-titulo" role="heading" aria-level="3">' + m.titulo + '</span>' +
         '<span class="modulo-desc">' + m.desc + '</span>' +
         '</span>' +

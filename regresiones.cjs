@@ -1473,3 +1473,25 @@ test('Videos ambientales originales: home y catálogo tienen fuentes MP4 y poste
  assert.ok(js.includes("video.addEventListener('ended'"),'El video recortado vuelve al inicio limpio');
  assert.ok(css.includes('transform:scale(1.10)'),'El zoom recorta las bandas del MP4 en la home');
 });
+
+
+test('Fase 2 Zénit: portada de ocho sólidos, ruta motivadora y cierre cinematográfico',()=>{
+ const fs=require('fs'),path=require('path');
+ const home=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
+ const js=fs.readFileSync(path.join(__dirname,'js/inicio.js'),'utf8');
+ const css=fs.readFileSync(path.join(__dirname,'css/zenit-home.css'),'utf8');
+ assert.equal((home.match(/class="zenit-preview-card"/g)||[]).length,8,'8 tarjetas de acceso en la home');
+ for(const tipo of ['prisma','piramide','cilindro','cono','esfera','cubo','tetraedro','octaedro']){
+   assert.ok(home.includes('href="solido.html?tipo='+tipo+'"'),tipo+' mantiene el enlace al laboratorio');
+   assert.ok(home.includes('assets/zenit/premium/'+tipo+'.webp'),tipo+' tiene ilustración local');
+ }
+ assert.ok(home.includes('class="zenit-route-intro"'));
+ assert.ok(home.includes('assets/zenit/lote-7/ruta-maestria.svg'));
+ assert.ok(fs.existsSync(path.join(__dirname,'assets/zenit/lote-7/ruta-maestria.svg')));
+ assert.ok(home.includes('id="lista-modulos"')&&home.includes('id="btn-continuar"'),'conservar progreso');
+ assert.ok(js.includes('Contenido.progresoModulo(m)'));
+ assert.ok(js.includes('var estadoModulo =')&&js.includes('Tu siguiente paso'),'etiquetas ligadas al progreso');
+ assert.ok(home.includes('class="zenit-method-grid"'));
+ assert.ok(home.includes('catalogo-arquitectura-poster.webp'),'cierre con imagen cinematográfica');
+ assert.ok(css.includes('prefers-reduced-motion:reduce'),'accesibilidad en movimiento');
+});
