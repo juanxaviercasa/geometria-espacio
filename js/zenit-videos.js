@@ -12,7 +12,7 @@
      var startAt=Number(frame.getAttribute('data-start-at')||0);
      if(!Number.isFinite(startAt)||startAt<0)startAt=0;
      var trimmed=startAt>0;
-     var visible=false,userPaused=false,broken=false,primed=!trimmed,seeking=false;
+     var visible=false,userPaused=false,broken=false,primed=!trimmed,seeking=false,metadataRequested=false;
      video.muted=true;video.defaultMuted=true;video.playsInline=true;
      // El loop nativo vuelve a 0. El video recortado debe volver al punto de corte.
      video.loop=!trimmed;
@@ -42,8 +42,11 @@
        }
        if(!primed){
          if(video.readyState<1){
-           video.preload='metadata';
-           if(video.networkState===video.NETWORK_EMPTY)video.load();
+           if(!metadataRequested){
+             metadataRequested=true;
+             video.preload='metadata';
+             video.load();
+           }
          }else seekToIntroEnd();
          return;
        }
