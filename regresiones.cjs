@@ -1453,7 +1453,13 @@ test('Videos ambientales originales: home y catálogo tienen fuentes MP4 y poste
    assert.equal(mp4.toString('ascii',4,8),'ftyp');
    assert.equal(poster.toString('ascii',0,4),'RIFF');
    assert.equal(poster.toString('ascii',8,12),'WEBP');
-   assert.ok(scene.html.includes('muted loop playsinline preload="none"'));
+   if(scene.id==='hero-icosaedro'){
+     assert.ok(scene.html.includes('data-start-at="2"'),'La home debe omitir la intro del video');
+     assert.ok(scene.html.includes('muted playsinline preload="none"'),'La home no usa loop nativo');
+     assert.ok(!scene.html.includes('muted loop playsinline preload="none"'),'La home reinicia desde el recorte');
+   }else{
+     assert.ok(scene.html.includes('muted loop playsinline preload="none"'),'El catálogo conserva loop normal');
+   }
    assert.ok(scene.html.includes('data-zenit-ambient'));
    assert.ok(scene.html.includes('js/zenit-videos.js'));
  }
@@ -1463,4 +1469,7 @@ test('Videos ambientales originales: home y catálogo tienen fuentes MP4 y poste
  assert.ok(js.includes('IntersectionObserver')&&js.includes('visibilitychange'));
  assert.ok(js.includes('video.pause()')&&js.includes('video.play()'));
  assert.ok(js.includes('aria-pressed'));
+ assert.ok(js.includes('video.loop=!trimmed'),'Reinicio sin loop nativo cuando hay recorte');
+ assert.ok(js.includes("video.addEventListener('ended'"),'El video recortado vuelve al inicio limpio');
+ assert.ok(css.includes('transform:scale(1.10)'),'El zoom recorta las bandas del MP4 en la home');
 });
