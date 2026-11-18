@@ -1398,7 +1398,7 @@ test('Lote 6: cuatro escenas atmosféricas originales distribuidas por el sitio'
  const shared=fs.readFileSync(path.join(__dirname,'css/zenit-global-art.css'),'utf8');
  const build=fs.readFileSync(path.join(__dirname,'build.js'),'utf8');
  assert.ok(home.includes('assets/zenit/video/hero-icosaedro.mp4'));
- assert.ok(home.includes('assets/zenit/lote-6/zenit-horizonte.svg'));
+ assert.ok(home.includes('assets/zenit/video/catalogo-arquitectura-poster.webp'));
  assert.ok(home.includes('id="zenit-culminacion-titulo"'));
  assert.ok(catalog.includes('assets/zenit/video/catalogo-arquitectura.mp4'));
  assert.ok(catalog.includes('zenit-catalog-showcase'));
@@ -1486,7 +1486,7 @@ test('Fase 2 Zénit: portada de ocho sólidos, ruta motivadora y cierre cinemato
    assert.ok(home.includes('assets/zenit/premium/'+tipo+'.webp'),tipo+' tiene ilustración local');
  }
  assert.ok(home.includes('class="zenit-route-intro"'));
- assert.ok(home.includes('assets/zenit/lote-7/ruta-maestria.svg'));
+ assert.ok(home.includes('assets/zenit/premium/octaedro.webp'));
  assert.ok(fs.existsSync(path.join(__dirname,'assets/zenit/lote-7/ruta-maestria.svg')));
  assert.ok(home.includes('id="lista-modulos"')&&home.includes('id="btn-continuar"'),'conservar progreso');
  assert.ok(js.includes('Contenido.progresoModulo(m)'));
