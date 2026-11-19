@@ -1771,6 +1771,8 @@ test('Aula sin huecos: modal de pantalla, controles laterales y regreso seguro',
  assert.ok(js.includes("enfocarAula(false)"),'cerrar por escape');
  assert.ok(!js.includes('window.scrollTo({'),'sin movimiento del documento al activar');
  assert.ok(css.includes('position:fixed!important;inset:0!important'),'aula inmersiva sobre toda la ventana');
+ assert.ok(css.includes('z-index:10000!important'),'la cabecera sticky no puede tapar la barra superior del aula');
+ assert.ok(css.includes('.con-visor-aula,.con-visor-proyectado'),'el arreglo cubre modo aula y proyector');
  assert.ok(css.includes('height:100dvh!important'),'alto real de la ventana');
  assert.ok(css.includes('minmax(0,1.9fr) minmax(380px,.83fr)'),'panel de profesor dimensionado');
  assert.ok(css.includes('>.figura-capas'),'las capas se presentan en el panel');
