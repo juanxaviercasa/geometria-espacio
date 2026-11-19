@@ -402,6 +402,32 @@
     reorganizarProfesor();
     window.addEventListener('resize',reorganizarProfesor);
 
+    /* Distribución real del aula: en vista inmersiva los controles
+       pertenecen al panel del profesor, no consumen una franja bajo el dibujo.
+       Se mueve EL MISMO nodo: capas, eventos y estados no se duplican. */
+    function reubicarControles(){
+      var inmersivo = figura.classList.contains('modo-aula-enfocada') ||
+        figura.classList.contains('modo-proyector');
+      var destino = inmersivo ? colMaestro : colLienzo;
+      if (capasBar.parentNode !== destino) destino.appendChild(capasBar);
+      figura.classList.toggle('aula-controles-laterales',inmersivo);
+      if (inmersivo) {
+        figura.setAttribute('role','dialog');
+        figura.setAttribute('aria-modal','true');
+      } else {
+        figura.removeAttribute('role');
+        figura.removeAttribute('aria-modal');
+      }
+    }
+
+    function actualizarLienzoAula(){
+      requestAnimationFrame(function(){
+        if(estado.api && estado.api._resize)estado.api._resize();
+        else if(estado.tipo === '2d')pintar2d();
+        actualizarAtencion();
+      });
+    }
+
     /* Pie descriptivo en lecciones */
     if (!esHero && spec.pie) {
       var pie = document.createElement('figcaption');
@@ -978,49 +1004,56 @@
       document.body.classList.toggle('con-visor-proyectado', proyectando);
       btnProyectar.setAttribute('aria-pressed', proyectando ? 'true' : 'false');
       if (txtProyectar) txtProyectar.textContent = proyectando ? '✕ Salir' : '⛶ Proyectar';
+      reubicarControles();
 
       if (proyectando) {
-        // La portada conserva la barra de controles externa y no usa
-        // fullscreen nativo del subárbol del visor (la ocultaría).
+        // El proyector tiene las mismas regiones que Vista aula.
+        // Fullscreen nativo es opcional, pero la maquetación fija ya funciona.
         if (!esHero && figura.requestFullscreen) {
           figura.requestFullscreen().catch(function () {});
         }
-        if(!esHero)figura.focus();
-      } else {
-        if (document.fullscreenElement && document.exitFullscreen) {
-          document.exitFullscreen().catch(function () {});
-        }
+        if(!esHero)figura.focus({preventScroll:true});
+      } else if (document.fullscreenElement && document.exitFullscreen) {
+        document.exitFullscreen().catch(function () {});
       }
-      setTimeout(function () {
-        if (estado.api && estado.api._resize) estado.api._resize();
-        else if (estado.tipo === '2d') pintar2d();
-      }, 60);
+      actualizarLienzoAula();
     }
 
-    /* Vista aula: ajuste al tamaño de la pantalla en la página (sin obligar a
-       activar el fullscreen del navegador). Proyectar conserva el fullscreen. */
+    /* Vista aula funciona como un escenario fijo en la ventana.
+       No se desplaza la página ni se requiere hacer zoom o scroll manual. */
     var btnEnfocar = barraSup.querySelector('[data-accion="enfocar"]');
+    var focoAnteriorAula = null;
     function enfocarAula(activar) {
       if (!esLeccion || !btnEnfocar) return;
       var mostrar = activar === undefined
         ? !figura.classList.contains('modo-aula-enfocada') : !!activar;
+      if (mostrar && !figura.classList.contains('modo-aula-enfocada')) {
+        focoAnteriorAula = document.activeElement;
+      }
       figura.classList.toggle('modo-aula-enfocada', mostrar);
+      document.body.classList.toggle('con-visor-aula', mostrar);
       btnEnfocar.setAttribute('aria-pressed',String(mostrar));
-      btnEnfocar.textContent = mostrar ? '↩ Vista normal' : '◉ Vista aula';
-      if (mostrar) figura.scrollIntoView({block:'start',behavior:'instant'});
-      requestAnimationFrame(function() {
-        // El alto cambia al activar la vista: alinear tras el reflow y no
-        // dejar el párrafo anterior flotando encima del laboratorio.
-        if (mostrar) window.scrollTo({
-          top:Math.max(0,window.scrollY+figura.getBoundingClientRect().top-8),
-          behavior:'instant'
-        });
-        if (estado.api && estado.api._resize) estado.api._resize();
-        else if (estado.tipo === '2d') pintar2d();
-      });
+      btnEnfocar.textContent = mostrar ? '✕ Cerrar aula' : '◉ Vista aula';
+      btnEnfocar.setAttribute('aria-label',mostrar
+        ? 'Cerrar el aula y volver a la lección' : 'Abrir el aula ajustada a toda la pantalla');
+      reubicarControles();
+      actualizarLienzoAula();
+      if (mostrar) {
+        figura.focus({preventScroll:true});
+      } else if (focoAnteriorAula && focoAnteriorAula.isConnected) {
+        focoAnteriorAula.focus({preventScroll:true});
+      }
     }
     if (btnEnfocar) btnEnfocar.addEventListener('click',function() {
       enfocarAula();
+    });
+    // Esc vuelve a la lectura normal sin desplazar el documento.
+    figura.addEventListener('keydown',function(e) {
+      if (e.key === 'Escape' && figura.classList.contains('modo-aula-enfocada') &&
+          !figura.classList.contains('modo-proyector') && panelAjustes.hidden) {
+        e.preventDefault();
+        enfocarAula(false);
+      }
     });
 
     btnProyectar.addEventListener('click', alternarProyector);
@@ -1031,9 +1064,8 @@
         document.body.classList.remove('con-visor-proyectado');
         btnProyectar.setAttribute('aria-pressed', 'false');
         if (txtProyectar) txtProyectar.textContent = '⛶ Proyectar';
-        setTimeout(function () {
-          if (estado.api && estado.api._resize) estado.api._resize();
-        }, 60);
+        reubicarControles();
+        actualizarLienzoAula();
       }
     });
 
@@ -1081,6 +1113,8 @@
     }
 
     window.addEventListener('pagehide',function(){
+      // Nunca dejar el documento bloqueado si se sale de la lección.
+      document.body.classList.remove('con-visor-aula');
       solicitudVista++;
       if(liberarSiFuera)clearTimeout(liberarSiFuera);
       if(observadorFigura)observadorFigura.disconnect();

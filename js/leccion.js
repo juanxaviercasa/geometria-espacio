@@ -275,7 +275,10 @@
         if (!btn) return; // En ausencia del visor, el ancla funciona igualmente.
         ev.preventDefault();
         if (btn.getAttribute('aria-pressed') !== 'true') btn.click();
-        else destino.scrollIntoView({block:'start',behavior:'smooth'});
+        else {
+          var cuadro = destino.querySelector('.figura');
+          if (cuadro) cuadro.focus({preventScroll:true});
+        }
       });
       document.getElementById('cabecera-leccion').appendChild(irAlAula);
     }

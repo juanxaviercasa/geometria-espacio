@@ -520,7 +520,7 @@
     var ojo = [cp*st,sp,cp*ct];
     var derecha = [ct,0,-st];
     var arriba = [-sp*st,cp,-sp*ct];
-    var seguro = 0.78; // margen para etiquetas sin perder presencia en el aula
+    var seguro = 0.88; // vértices grandes y legibles, con margen para los nombres
     var d = 0;
     for (var i=0; i<puntos.length; i++) {
       var p=puntos[i], x=p[0]-this.centro.x,y=p[1]-this.centro.y,z=p[2]-this.centro.z;
@@ -606,6 +606,12 @@
       ultimoY = p.clientY;
       self.theta -= dx * 0.008;
       self.phi = Math.max(-1.45, Math.min(1.45, self.phi + dy * 0.006));
+      // En modo aula, girar no debe cortar el sólido por los bordes.
+      if (self.opciones.ajusteAula && !self._zoomManual) {
+        self.zoomBase = self._zoomParaAula(self.theta,self.phi);
+        self.zoom = self.zoomBase;
+        self.dist = self.distBase * self.zoom;
+      }
       self._actualizarCamara();
       if (e.cancelable) e.preventDefault();
     };
@@ -663,6 +669,11 @@
       else if (e.key === '-') { self._fijarZoom(self.zoom * 1.1); }
       else if (e.key === 'r' || e.key === 'R') { self.reset(); }
       else return;
+      if (self.opciones.ajusteAula && !self._zoomManual) {
+        self.zoomBase = self._zoomParaAula(self.theta,self.phi);
+        self.zoom = self.zoomBase;
+        self.dist = self.distBase * self.zoom;
+      }
       self._actualizarCamara();
       e.preventDefault();
     });

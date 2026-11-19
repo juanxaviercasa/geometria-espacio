@@ -1,0 +1,230 @@
+/* Sistema Zénit · Aula sin espacios muertos.
+   Un solo visor, un solo profesor, un único sistema de coordenadas:
+   las capas se trasladan al panel derecho en pantalla completa.
+   Esta hoja es deliberadamente la última para resolver la cascada anterior. */
+body[data-pagina="leccion"].con-visor-aula{
+  overflow:hidden!important;
+  overscroll-behavior:none;
+}
+body[data-pagina="leccion"] .bloque-figura .figura-barra-sup{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:.65rem;padding:.65rem .8rem;
+}
+body[data-pagina="leccion"] .bloque-figura .figura-barra-sup .hud-titulo-wrap{
+  flex:0 1 auto;min-width:0;display:flex;align-items:center;gap:.45rem;
+}
+body[data-pagina="leccion"] .bloque-figura .figura-barra-sup .acciones-fig{
+  display:flex;align-items:center;justify-content:flex-end;
+  flex:0 1 auto;min-width:0;gap:.4rem;
+  flex-wrap:wrap!important;
+}
+body[data-pagina="leccion"] .bloque-figura .figura-barra-sup .btn-fig-hud{
+  white-space:nowrap;flex:0 0 auto;
+  min-height:44px;padding:.45rem .75rem;
+}
+body[data-pagina="leccion"] .bloque-figura .figura-escenario-clase{
+  min-height:0;
+}
+body[data-pagina="leccion"] .bloque-figura .figura-lienzo{
+  height:clamp(370px,52vh,550px);
+  min-height:370px;
+}
+body[data-pagina="leccion"] .bloque-figura .figura-col-maestro{
+  min-height:0;min-width:0;
+}
+body[data-pagina="leccion"] .bloque-figura .figura-leyenda-angulos{
+  max-width:100%;overflow-wrap:anywhere;
+}
+/* La presentación inmersiva se ve desde CUALQUIER posición de scroll.
+   El navegador no debe mostrar el contenido que está detrás del visor. */
+body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector){
+  position:fixed!important;inset:0!important;
+  box-sizing:border-box!important;
+  z-index:9999!important;
+  width:100vw!important;height:100dvh!important;
+  min-width:0!important;max-width:none!important;
+  min-height:0!important;max-height:none!important;
+  margin:0!important;border:0!important;border-radius:0!important;
+  display:grid!important;
+  grid-template-rows:auto minmax(0,1fr)!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  overflow:hidden!important;
+  background:#f9f8ff;
+}
+body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+  >.figura-barra-sup{
+  min-height:0;
+  width:100%;box-sizing:border-box;
+  padding:clamp(.45rem,1vh,.75rem) clamp(.65rem,1vw,1rem);
+  flex:0 0 auto;
+  position:relative;z-index:50;
+}
+body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+  >.figura-escenario-clase{
+  display:grid!important;
+  grid-template-columns:minmax(0,1.9fr) minmax(380px,.83fr)!important;
+  grid-template-rows:minmax(0,1fr)!important;
+  width:100%;height:100%!important;
+  min-width:0;min-height:0!important;
+  overflow:hidden!important;
+  margin:0;
+}
+body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+  .figura-col-lienzo{
+  display:flex;flex-direction:column;
+  min-width:0!important;min-height:0!important;
+  height:100%;overflow:hidden;
+  background:#f7f6ff;
+}
+body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+  .figura-stage-wrap{
+  position:relative!important;
+  width:100%;height:100%!important;
+  min-height:0!important;
+  flex:1 1 0!important;
+  overflow:hidden;
+}
+body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+  .figura-lienzo{
+  position:absolute!important;inset:0!important;
+  width:100%!important;height:100%!important;
+  min-height:0!important;max-height:none!important;
+  padding:0!important;
+}
+body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+  .figura-col-maestro{
+  box-sizing:border-box;display:flex;flex-direction:column;
+  height:100%!important;min-height:0!important;min-width:0;
+  max-height:100%!important;overflow-y:auto!important;
+  overscroll-behavior:contain;
+  padding:clamp(.65rem,1.2vh,1rem);
+  justify-content:flex-start;
+  gap:clamp(.35rem,.85vh,.8rem);
+  background:linear-gradient(160deg,#f7f6ff,#fff);
+}
+body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+  .figura-col-maestro>.mm-profesor-cabecera{
+  flex:0 0 auto;
+  padding-bottom:clamp(.3rem,.75vh,.6rem);
+}
+body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+  .figura-col-maestro>.mm-acciones-fila{
+  flex:0 0 auto;margin:0;
+  position:static!important;bottom:auto!important;
+  padding:.4rem 0!important;
+  background:transparent!important;
+}
+body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+  .figura-col-maestro>.figura-capas{
+  display:flex;flex-wrap:wrap;
+  gap:.3rem;padding:clamp(.55rem,.9vh,.8rem);
+  margin-top:auto;
+  border:1px solid #ded8f0;border-radius:14px;
+  background:#f5f2ff;
+  width:100%;box-sizing:border-box;
+  flex:0 0 auto!important;
+  max-height:none!important;overflow:visible!important;
+}
+body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+  .figura-col-maestro>.figura-capas .figura-medidas-chips{
+  margin-left:0;gap:.25rem;
+}
+body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+  .figura-col-maestro>.figura-capas .btn-pildora-capa{
+  min-height:39px;padding:.4rem .6rem;font-size:.79rem;
+  white-space:normal;line-height:1.15;
+}
+body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+  >.figura-pie{display:none!important;}
+body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+  .mm-profesor-cabecera{
+  grid-template-columns:minmax(126px,38%) minmax(0,1fr)!important;
+  align-items:center;
+  gap:.8rem;
+}
+body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+  .mm-avatar-slot,
+body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+  .vertiz-stage-mini .mini-escenario{
+  width:100%;height:clamp(145px,23vh,240px);
+  min-height:145px;max-width:none;
+}
+body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+  .vertiz-stage-mini .avatar-escena{
+  width:100%;height:clamp(145px,23vh,240px);
+  margin-left:-50%;
+}
+body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+  .mm-profesor-info{
+  align-items:flex-start;text-align:left;
+}
+body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+  .mm-controles-audio{
+  justify-content:flex-start;gap:.3rem;
+}
+body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+  .mm-rol-tag{font-size:.67rem;}
+body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+  .mm-dialogo-texto{font-size:clamp(.98rem,1.15vw,1.18rem);line-height:1.5;}
+body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+  .mm-puntos-lista{flex-wrap:wrap;justify-content:flex-end;gap:.4rem;}
+body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+  .mm-punto-paso{width:34px;height:34px;font-size:.84rem;}
+/* Móvil: la ventana también es inmersiva; canvas superior con altura definida,
+   controles del profesor debajo en un panel de lectura desplazable si hace falta. */
+@media(max-width:1080px){
+ body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+  >.figura-escenario-clase{
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-template-rows:minmax(220px,48%) minmax(0,1fr)!important;
+  }
+ body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+  .figura-col-lienzo{height:100%!important;min-height:0!important;}
+ body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+  .figura-col-maestro{height:100%!important;min-height:0!important;}
+ body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+  .mm-profesor-cabecera{grid-template-columns:100px minmax(0,1fr)!important;}
+ body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+  .mm-avatar-slot,
+ body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+  .vertiz-stage-mini .mini-escenario,
+ body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+  .vertiz-stage-mini .avatar-escena{
+    height:120px;min-height:120px;
+  }
+}
+@media(max-width:680px){
+ body[data-pagina="leccion"] .bloque-figura .figura-barra-sup{
+   align-items:flex-start;flex-direction:column;
+ }
+ body[data-pagina="leccion"] .bloque-figura .figura-barra-sup .acciones-fig{
+   width:100%;display:grid!important;
+   grid-template-columns:repeat(2,minmax(0,1fr));
+   gap:.36rem;justify-content:stretch;
+ }
+ body[data-pagina="leccion"] .bloque-figura .figura-barra-sup .acciones-fig .btn-fig-hud{
+   justify-content:center;flex:1 1 auto;
+   width:100%;min-width:0;min-height:43px;
+   padding:.5rem .35rem;font-size:.79rem;
+ }
+ body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+  >.figura-escenario-clase{
+   grid-template-rows:minmax(195px,45%) minmax(0,1fr)!important;
+ }
+ body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+  .mm-avatar-slot{height:115px;min-height:115px;}
+ body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+  .mm-profesor-cabecera{grid-template-columns:84px minmax(0,1fr)!important;}
+}
+@media(min-width:740px) and (max-height:600px) and (orientation:landscape){
+ body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+ >.figura-escenario-clase{
+  grid-template-columns:minmax(0,1.7fr) minmax(290px,.8fr)!important;
+  grid-template-rows:minmax(0,1fr)!important;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector) *{
+  scroll-behavior:auto!important;
+ }
+}
