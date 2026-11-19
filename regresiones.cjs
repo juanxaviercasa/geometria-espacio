@@ -1694,6 +1694,7 @@ test('Aula visual a pantalla: triedro con tres marcas rectas y control de ángul
  const window={};vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/figuras.js'),'utf8'),{window});
  const s=window.Figuras.obtener('triedro');
  assert.equal(s.vertices.O.etiqueta,'O');
+ assert.equal(s.presentacion.encuadre,true,'el triedro debe activar explícitamente el autoencuadre');
  assert.equal(s.lineas.filter(l=>l.capa==='angulos').length,3);
  for (const l of s.lineas.filter(l=>l.capa==='angulos')){
    assert.equal(l.pts.length,3);
