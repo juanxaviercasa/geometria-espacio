@@ -25,6 +25,7 @@
   <link rel="stylesheet" href="css/rediseño-visual.css?v=20261114-8">
 <link rel="stylesheet" href="css/zenit-global-art.css?v=visual3">
   <link rel="stylesheet" href="css/avatares-3d.css?v=20261115-3">
+  <link rel="stylesheet" href="css/leccion-aula-2.css?v=20261118-1">
 </head>
 <body data-pagina="leccion">
 <a class="salto-contenido" href="#cuerpo-leccion">Saltar al contenido de la lección</a>
@@ -69,30 +70,32 @@
 
   <nav class="atajos-leccion" aria-label="Accesos rápidos"><a href="index.html#ruta">← Ruta de módulos</a><a href="practica.html">Banco de práctica ↗</a><a href="laboratorio.html">Experimentar en 3D ↗</a></nav>
   <div class="leccion-layout">
-    <article class="contenido" id="cuerpo-leccion">
-      <p class="vacio-aviso">Cargando el contenido de la lección.</p>
-    </article>
-
-    <aside class="aside-leccion" aria-label="Ayuda y navegación de la lección">
-      <div class="tarjeta-aside" id="avatar-guia" aria-label="Vértiz, el personaje guía"></div>
-
-      <div class="tarjeta-aside">
-        <h3>En esta lección</h3>
+    <aside class="aside-leccion" aria-label="Orientación y progreso de la lección">
+      <details class="tarjeta-aside leccion-indice-panel">
+        <summary><span>Contenido de la lección</span><span class="leccion-indice-ayuda">Ir a una sección</span></summary>
         <ul class="indice-leccion" id="indice-leccion"></ul>
-      </div>
+      </details>
 
-      <div class="tarjeta-aside">
-        <h3>Tu avance</h3>
+      <div class="tarjeta-aside leccion-progreso-panel">
+        <h2>Tu avance en esta lección</h2>
         <div class="progreso-leccion">
           <div class="barra" id="progreso-leccion-barra" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
             <i style="width:0%"></i>
           </div>
           <p id="progreso-leccion-texto" style="margin:.2rem 0 0">0 de 0 actividades resueltas</p>
         </div>
-        <div id="avance-leccion" style="margin-top:.6rem;display:grid;gap:.45rem"></div>
-        
+        <div id="avance-leccion" class="leccion-avance-lista"></div>
       </div>
+
+      <details class="tarjeta-aside leccion-consejos-panel">
+        <summary>Consejos adicionales</summary>
+        <div id="avatar-guia" aria-label="Vértiz, el personaje guía"></div>
+      </details>
     </aside>
+
+    <article class="contenido" id="cuerpo-leccion">
+      <p class="vacio-aviso">Cargando el contenido de la lección.</p>
+    </article>
   </div>
 
   <nav class="nav-leccion" id="nav-leccion" aria-label="Lección anterior y siguiente"></nav>

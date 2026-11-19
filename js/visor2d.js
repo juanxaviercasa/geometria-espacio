@@ -106,7 +106,11 @@
     var ys = muestras.map(function (m) { return m.y; });
     var x0 = Math.min.apply(null, xs), x1 = Math.max.apply(null, xs);
     var y0 = Math.min.apply(null, ys), y1 = Math.max.apply(null, ys);
-    var pad = 46; // margen para las etiquetas
+    // Margen proporcional en la nueva aula: gana área útil para la figura
+    // sin recortar vértices ni sus etiquetas. Otras páginas mantienen 46px.
+    var pad = opciones.aulaAmpliada
+      ? Math.max(32, Math.min(44, Math.round(Math.min(ancho, alto) * 0.07)))
+      : 46;
     var esc = Math.min((ancho - pad * 2) / Math.max(0.001, x1 - x0), (alto - pad * 2) / Math.max(0.001, y1 - y0));
     var cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
 
@@ -376,7 +380,9 @@
       var n = el('text', {
         x: x.toFixed(1), y: y.toFixed(1),
         fill: color || '#414a63',
-        'font-size': '12',
+        'font-size': opciones.aulaAmpliada
+          ? String(Math.max(12, Math.min(16, Math.round(Math.min(ancho, alto) * 0.027))))
+          : '12',
         'font-family': '"JetBrains Mono", ui-monospace, monospace',
         'font-weight': negrita ? '600' : '400',
         'text-anchor': 'middle',

@@ -1,0 +1,294 @@
+/* Sistema Zénit · Aula Interactiva 2.0 · Fases 1 y 2
+ * Solo /leccion. Teoría de lectura estrecha, laboratorio a ancho completo.
+ * El profesor del visor conserva pasos, narración y controles actuales.
+ */
+body[data-pagina="leccion"]{
+  --aula-violeta:#5747bd;
+  --aula-borde:#dedbf0;
+  --aula-tinta:#262451;
+}
+body[data-pagina="leccion"] main.wrap{
+  width:min(1460px,calc(100% - clamp(1.25rem,4.5vw,5rem)));
+  max-width:1460px;
+}
+body[data-pagina="leccion"] .leccion-cabeza{
+  max-width:100%;
+  margin-bottom:1.15rem;
+}
+body[data-pagina="leccion"] .leccion-cabeza h1{
+  text-wrap:balance;
+  line-height:1.13;
+}
+body[data-pagina="leccion"] .leccion-layout{
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  align-items:start;
+  gap:clamp(1.25rem,2.5vw,2.25rem);
+  padding-bottom:clamp(2rem,4vw,3.25rem);
+}
+body[data-pagina="leccion"] .aside-leccion{
+  position:static;
+  top:auto;
+  display:grid;
+  grid-template-columns:minmax(0,1.5fr) minmax(230px,1fr) minmax(160px,.55fr);
+  align-items:start;
+  gap:.8rem;
+  width:100%;
+  min-width:0;
+}
+body[data-pagina="leccion"] .aside-leccion .tarjeta-aside{
+  min-width:0;
+  margin:0;
+  padding:.9rem 1rem;
+  border-radius:15px;
+  box-shadow:0 6px 18px rgba(39,30,105,.06);
+  border-color:var(--aula-borde);
+}
+body[data-pagina="leccion"] .aside-leccion details>summary{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:.65rem;
+  min-height:44px;
+  font-weight:760;
+  color:var(--aula-tinta);
+  cursor:pointer;
+  list-style:none;
+  line-height:1.35;
+}
+body[data-pagina="leccion"] .aside-leccion details>summary::-webkit-details-marker{display:none}
+body[data-pagina="leccion"] .aside-leccion details>summary::after{
+  content:"⌄";
+  display:inline-block;
+  color:var(--aula-violeta);
+  font-size:1.3rem;
+  font-weight:700;
+  transform-origin:center;
+  transition:transform .18s ease;
+}
+body[data-pagina="leccion"] .aside-leccion details[open]>summary::after{transform:rotate(180deg)}
+body[data-pagina="leccion"] .aside-leccion details>summary:focus-visible{
+  outline:3px solid #7d70d4;
+  outline-offset:3px;
+  border-radius:8px;
+}
+body[data-pagina="leccion"] .leccion-indice-ayuda{
+  margin-left:auto;
+  color:#6d7193;
+  font-size:.79rem;
+  font-weight:500;
+}
+body[data-pagina="leccion"] .leccion-indice-panel .indice-leccion{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:.25rem .45rem;
+  max-height:260px;
+  overflow:auto;
+  padding:.65rem 0 .25rem;
+  border-top:1px solid #ebe7f5;
+}
+body[data-pagina="leccion"] .leccion-indice-panel .indice-leccion a{
+  display:flex;
+  align-items:center;
+  min-height:40px;
+  padding:.45rem .55rem;
+  font-size:.91rem;
+  line-height:1.35;
+  overflow-wrap:anywhere;
+}
+body[data-pagina="leccion"] .leccion-progreso-panel{
+  display:flex;
+  flex-direction:column;
+  min-height:80px;
+  gap:.45rem;
+}
+body[data-pagina="leccion"] .leccion-progreso-panel h2{
+  font-size:.93rem;
+  letter-spacing:0;
+  line-height:1.4;
+  color:var(--aula-tinta);
+  margin:0;
+  font-weight:750;
+}
+body[data-pagina="leccion"] .leccion-progreso-panel p{font-size:.82rem;margin:.15rem 0}
+body[data-pagina="leccion"] .leccion-avance-lista{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.35rem .8rem;
+  margin-top:.25rem;
+}
+body[data-pagina="leccion"] .leccion-avance-lista .fila-progreso{min-width:115px;flex:1 1 115px}
+body[data-pagina="leccion"] .leccion-consejos-panel>summary{
+  font-size:.89rem;
+  overflow-wrap:anywhere;
+}
+body[data-pagina="leccion"] .leccion-consejos-panel[open]{
+  grid-column:1/-1;
+}
+body[data-pagina="leccion"] .leccion-consejos-panel[open] #avatar-guia{
+  max-width:420px;
+  margin:.8rem auto 0;
+}
+/* Teoría con medida de lectura controlada, pero visor a ancho real. */
+body[data-pagina="leccion"] .contenido{
+  width:100%;
+  max-width:none;
+  min-width:0;
+  font-size:clamp(1.03rem,1.15vw,1.1rem);
+  line-height:1.78;
+}
+body[data-pagina="leccion"] .contenido>:not(.bloque-figura):not(.bloque-ancho):not(.ejercicio):not(.reto){
+  width:100%;
+  max-width:min(100%,830px);
+  margin-inline:auto;
+}
+body[data-pagina="leccion"] .contenido>.bloque-figura{
+  width:100%;
+  max-width:none;
+  min-width:0;
+  margin:clamp(2rem,4vw,3.2rem) 0;
+}
+body[data-pagina="leccion"] .contenido>.bloque-ancho,
+body[data-pagina="leccion"] .contenido>.reto,
+body[data-pagina="leccion"] .contenido>.ejercicio{
+  width:100%;
+  max-width:min(100%,900px);
+  margin-inline:auto;
+}
+body[data-pagina="leccion"] .contenido .guia-razonamiento{
+  max-width:min(100%,940px);
+}
+body[data-pagina="leccion"] .contenido .bloque-figura .figura{
+  width:100%;
+  max-width:none;
+  margin:0;
+  border:1px solid #d9d9ec;
+  border-radius:24px;
+  overflow:hidden;
+  box-shadow:0 22px 46px rgba(46,37,108,.13);
+}
+body[data-pagina="leccion"] .bloque-figura .figura-escenario-clase{
+  display:grid;
+  grid-template-columns:minmax(0,1.78fr) minmax(300px,.78fr);
+  gap:0;
+  min-height:0;
+  align-items:stretch;
+}
+body[data-pagina="leccion"] .bloque-figura .figura-col-lienzo{
+  min-width:0;
+  min-height:0;
+  overflow:hidden;
+  background:#f8f9ff;
+}
+body[data-pagina="leccion"] .bloque-figura .figura-stage-wrap{
+  min-width:0;
+  min-height:0;
+  background:radial-gradient(circle at 48% 42%,#fff 0%,#f5f3ff 63%,#eae8fa 100%);
+}
+body[data-pagina="leccion"] .bloque-figura .figura-lienzo{
+  width:100%;
+  height:clamp(470px,45vw,690px);
+  min-height:470px;
+  max-width:none;
+  padding:0;
+}
+body[data-pagina="leccion"] .bloque-figura .figura-lienzo svg,
+body[data-pagina="leccion"] .bloque-figura .figura-lienzo canvas{
+  display:block;
+  width:100%;
+  height:100%;
+}
+body[data-pagina="leccion"] .bloque-figura .figura-col-maestro{
+  min-width:0;
+  padding:clamp(.9rem,1.6vw,1.35rem);
+  gap:.75rem;
+  justify-content:flex-start;
+  background:linear-gradient(155deg,#f8f7ff,#fff);
+}
+body[data-pagina="leccion"] .bloque-figura .figura-barra-sup{
+  padding:.85rem 1.1rem;
+}
+body[data-pagina="leccion"] .bloque-figura .figura-barra-sup .acciones-fig{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.45rem;
+}
+body[data-pagina="leccion"] .bloque-figura .btn-fig-hud,
+body[data-pagina="leccion"] .bloque-figura .btn-mm-nav,
+body[data-pagina="leccion"] .bloque-figura .btn-pildora-capa{
+  min-height:42px;
+}
+body[data-pagina="leccion"] .bloque-figura .figura-capas{
+  padding:.8rem 1rem;
+  gap:.45rem;
+  min-width:0;
+}
+body[data-pagina="leccion"] .contenido .katex-display{
+  max-width:100%;
+  overflow-x:auto;
+  overflow-y:hidden;
+}
+/* La vista proyectada conserva las reglas propias del visor a pantalla completa. */
+body[data-pagina="leccion"] .bloque-figura .figura.modo-proyector .figura-escenario-clase{
+  grid-template-columns:minmax(0,1.6fr) minmax(290px,380px);
+  height:100%;
+  min-height:0;
+}
+body[data-pagina="leccion"] .bloque-figura .figura.modo-proyector .figura-lienzo{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%!important;
+  min-height:0;
+}
+@media(max-width:1080px){
+  body[data-pagina="leccion"] .bloque-figura .figura-escenario-clase{
+    grid-template-columns:minmax(0,1fr);
+  }
+  body[data-pagina="leccion"] .bloque-figura .figura-lienzo{
+    height:clamp(430px,60vw,620px);
+    min-height:410px;
+  }
+  body[data-pagina="leccion"] .bloque-figura .figura-col-maestro{
+    border-left:0;
+    border-top:1px solid #e0ddf2;
+  }
+  body[data-pagina="leccion"] .aside-leccion{
+    grid-template-columns:minmax(0,1fr) minmax(230px,.7fr);
+  }
+  body[data-pagina="leccion"] .leccion-consejos-panel{
+    grid-column:1/-1;
+  }
+  body[data-pagina="leccion"] .bloque-figura .figura.modo-proyector .figura-escenario-clase{
+    grid-template-columns:minmax(0,1fr);
+  }
+}
+@media(max-width:680px){
+  body[data-pagina="leccion"] main.wrap{width:calc(100% - 1.2rem)}
+  body[data-pagina="leccion"] .leccion-layout{gap:1.25rem}
+  body[data-pagina="leccion"] .aside-leccion{grid-template-columns:minmax(0,1fr);gap:.6rem}
+  body[data-pagina="leccion"] .aside-leccion .tarjeta-aside{padding:.65rem .82rem}
+  body[data-pagina="leccion"] .leccion-indice-panel .indice-leccion{grid-template-columns:1fr;max-height:230px}
+  body[data-pagina="leccion"] .leccion-indice-ayuda{font-size:.75rem}
+  body[data-pagina="leccion"] .leccion-consejos-panel{grid-column:auto}
+  body[data-pagina="leccion"] .bloque-figura .figura{border-radius:17px}
+  body[data-pagina="leccion"] .bloque-figura .figura-lienzo{
+    height:clamp(330px,88vw,490px);
+    min-height:320px;
+  }
+  body[data-pagina="leccion"] .bloque-figura .figura-barra-sup{padding:.7rem}
+  body[data-pagina="leccion"] .bloque-figura .figura-col-maestro{padding:1rem}
+  body[data-pagina="leccion"] .bloque-figura .figura-capas{gap:.38rem;padding:.65rem}
+  body[data-pagina="leccion"] .bloque-figura .figura-capas button{min-height:42px}
+  body[data-pagina="leccion"] .bloque-figura .figura.modo-proyector .figura-lienzo{min-height:0}
+}
+@media(max-width:380px){
+  body[data-pagina="leccion"] .leccion-indice-ayuda{display:none}
+  body[data-pagina="leccion"] .bloque-figura .figura-lienzo{height:clamp(300px,93vw,390px);min-height:295px}
+  body[data-pagina="leccion"] .bloque-figura .figura-col-maestro{padding:.78rem}
+}
+@media(prefers-reduced-motion:reduce){
+  body[data-pagina="leccion"] .aside-leccion details>summary::after{
+    transition:none;
+  }
+}

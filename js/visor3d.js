@@ -476,7 +476,10 @@
     vista = vista || {};
     this.theta = vista.theta != null ? vista.theta : (cam.theta != null ? cam.theta : 0.7);
     this.phi = vista.phi != null ? vista.phi : (cam.phi != null ? cam.phi : 0.3);
-    this.zoom = vista.zoom != null ? vista.zoom : 1;
+    // Una ampliación ligera y segura solo cuando la lección la solicita.
+    // Conserva el margen de las etiquetas y respeta la vista guardada.
+    this.zoom = vista.zoom != null ? vista.zoom
+      : (this.opciones.zoomInicial != null ? this.opciones.zoomInicial : 1);
     this._ajustarDistancia();
     this._actualizarCamara();
   };

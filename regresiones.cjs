@@ -1604,3 +1604,27 @@ test('Catálogo responsive: video 16:9 junto al título, sin banda estirada y na
  assert.ok(globalCss.includes('.sitio-pie .pie-grid h2')&&globalCss.includes('.sitio-pie .pie-grid a'),'footer con enlaces separados');
  assert.ok(ui.includes('function setMenuOpen(abierto)')&&ui.includes("setMenuOpen(false)"),'interacción y cierre real del menú');
 });
+
+test('Aula Zénit 2.0: laboratorio a ancho completo sin columnas anidadas',()=>{
+ const fs=require('fs'),path=require('path');
+ const doc=fs.readFileSync(path.join(__dirname,'leccion.html'),'utf8');
+ const css=fs.readFileSync(path.join(__dirname,'css/leccion-aula-2.css'),'utf8');
+ const visor=fs.readFileSync(path.join(__dirname,'js/visor.js'),'utf8');
+ const v2d=fs.readFileSync(path.join(__dirname,'js/visor2d.js'),'utf8');
+ const v3d=fs.readFileSync(path.join(__dirname,'js/visor3d.js'),'utf8');
+ assert.ok(doc.includes('css/leccion-aula-2.css'),'CSS propio de lección enlazado');
+ assert.ok(doc.indexOf('css/leccion-aula-2.css')>doc.indexOf('css/rediseño-visual.css'),'CSS cargado al final');
+ assert.ok(doc.indexOf('class="aside-leccion"')<doc.indexOf('id="cuerpo-leccion"'),'navegación compacta antes de lectura');
+ assert.ok(doc.includes('id="indice-leccion"')&&doc.includes('id="avance-leccion"')&&doc.includes('id="avatar-guia"'),'IDs de navegación, progreso y tutor intactos');
+ assert.ok(doc.includes('<details class="tarjeta-aside leccion-indice-panel">'),'índice plegable accesible');
+ assert.ok(css.includes('grid-template-columns:minmax(0,1fr);'),'la página ya no reserva columna lateral permanente');
+ assert.ok(css.includes('body[data-pagina="leccion"] .contenido>.bloque-figura'),'solo el laboratorio usa ancho total');
+ assert.ok(css.includes('grid-template-columns:minmax(0,1.78fr) minmax(300px,.78fr)'),'lienzo geométrico más grande en escritorio');
+ assert.ok(css.includes('@media(max-width:1080px)')&&css.includes('@media(max-width:680px)'),'laboratorio se apila en tablet y móvil');
+ assert.ok(css.includes('.figura.modo-proyector'),'proyector no pierde pantalla completa');
+ assert.ok(visor.includes('aulaAmpliada: document.body.getAttribute'),'2D se ajusta solo en la lección');
+ assert.ok(visor.includes('zoomInicial: document.body.getAttribute'),'3D se ajusta solo en la lección');
+ assert.ok(visor.includes('var roLeccion = new ResizeObserver'),'reencuadre automático del SVG');
+ assert.ok(v2d.includes('opciones.aulaAmpliada'),'márgenes y etiquetas de 2D responsive');
+ assert.ok(v3d.includes('this.opciones.zoomInicial'),'3D respeta ampliación inicial sin cambiar catálogo');
+});

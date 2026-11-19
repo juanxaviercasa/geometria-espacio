@@ -584,7 +584,11 @@
     function pintar2d() {
       estado.tipo = '2d';
       lienzo.innerHTML = '';
-      estado.proyeccion2d=global.Visor2D.render(lienzo, spec, { capasOcultas: estado.capasOcultas, camara: estado.camaraGuia });
+      estado.proyeccion2d=global.Visor2D.render(lienzo, spec, {
+        capasOcultas: estado.capasOcultas,
+        camara: estado.camaraGuia,
+        aulaAmpliada: document.body.getAttribute('data-pagina') === 'leccion'
+      });
       aviso.hidden = true;
       actualizarAtencion();
     }
@@ -618,6 +622,7 @@
         try{
           estado.api=new Clase(lienzo,spec,{
             capasOcultas:estado.capasOcultas,reducido:estado.reducido,
+            zoomInicial: document.body.getAttribute('data-pagina') === 'leccion' ? 0.94 : 1,
             alMoverCamara:actualizarAtencion
           });
           estado.tipo='3d';
@@ -1020,6 +1025,23 @@
     figura.addEventListener('focusin', function () {
       visorActivo = instanciaPublica;
     });
+
+    // Al abrir/cerrar paneles y cambiar el ancho disponible no siempre
+    // se dispara resize de ventana. Reencuadrar la vista SVG según su área real.
+    if (document.body.getAttribute('data-pagina') === 'leccion' &&
+        'ResizeObserver' in window) {
+      var tam2d = { ancho: lienzo.clientWidth, alto: lienzo.clientHeight };
+      var roLeccion = new ResizeObserver(function () {
+        if (estado.tipo !== '2d') return; // Three.js tiene su propio observador.
+        var ancho = lienzo.clientWidth, alto = lienzo.clientHeight;
+        if (!ancho || !alto || (tam2d.ancho === ancho && tam2d.alto === alto)) return;
+        tam2d.ancho = ancho;
+        tam2d.alto = alto;
+        pintar2d();
+      });
+      roLeccion.observe(lienzo);
+      window.addEventListener('pagehide', function () { roLeccion.disconnect(); }, { once: true });
+    }
 
     window.addEventListener('resize', function () {
       if (estado.tipo === '2d') pintar2d();
