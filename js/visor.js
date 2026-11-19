@@ -410,6 +410,18 @@
         figura.classList.contains('modo-proyector');
       var destino = inmersivo ? colMaestro : colLienzo;
       if (capasBar.parentNode !== destino) destino.appendChild(capasBar);
+      // En celular, el botón «Explicar» va antes del texto del paso: debe
+      // estar visible sin desplazar el panel del profesor.
+      var accionesDocente = colMaestro.querySelector('.mm-acciones-fila');
+      var progresoDocente = colMaestro.querySelector('.mm-progreso-fila');
+      var titulosDocente = colMaestro.querySelector('.mm-pasos-titulos');
+      if (accionesDocente && progresoDocente && titulosDocente) {
+        if (inmersivo && window.matchMedia('(max-width:680px)').matches) {
+          progresoDocente.insertAdjacentElement('afterend',accionesDocente);
+        } else {
+          titulosDocente.insertAdjacentElement('afterend',accionesDocente);
+        }
+      }
       figura.classList.toggle('aula-controles-laterales',inmersivo);
       if (inmersivo) {
         figura.setAttribute('role','dialog');
@@ -1046,6 +1058,10 @@
     }
     if (btnEnfocar) btnEnfocar.addEventListener('click',function() {
       enfocarAula();
+    });
+    window.addEventListener('resize',function() {
+      if (figura.classList.contains('modo-aula-enfocada') ||
+          figura.classList.contains('modo-proyector')) reubicarControles();
     });
     // Esc vuelve a la lectura normal sin desplazar el documento.
     figura.addEventListener('keydown',function(e) {

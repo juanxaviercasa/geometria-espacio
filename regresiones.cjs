@@ -1767,6 +1767,8 @@ test('Aula sin huecos: modal de pantalla, controles laterales y regreso seguro',
  assert.ok(js.includes("document.body.classList.toggle('con-visor-aula', mostrar)"),'bloquear scroll detrás del aula');
  assert.ok(js.includes("figura.setAttribute('role','dialog')"),'vista inmersiva accesible');
  assert.ok(js.includes('destino.appendChild(capasBar)'), 'capas pasan al panel del profesor');
+ assert.ok(js.includes("progresoDocente.insertAdjacentElement('afterend',accionesDocente)"),'explicar accesible antes de la descripción en móvil');
+ assert.ok(css.includes('grid-template-columns:repeat(6,minmax(0,1fr))'),'botonera compacta móvil en dos filas');
  assert.ok(js.includes('capasBar.parentNode !== destino'),'no duplicar eventos ni controles');
  assert.ok(js.includes("enfocarAula(false)"),'cerrar por escape');
  assert.ok(!js.includes('window.scrollTo({'),'sin movimiento del documento al activar');

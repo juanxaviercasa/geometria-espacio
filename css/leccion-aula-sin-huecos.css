@@ -236,3 +236,44 @@ body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-
   scroll-behavior:auto!important;
  }
 }
+
+/* Aula móvil: prioridad al botón «Explicar» y a la figura visible. */
+@media(max-width:680px){
+ body[data-pagina="leccion"] .bloque-figura[data-figura="triedro"]
+ .figura-barra-sup .acciones-fig{
+  display:grid!important;
+  grid-template-columns:repeat(6,minmax(0,1fr))!important;
+ }
+ body[data-pagina="leccion"] .bloque-figura[data-figura="triedro"]
+ .figura-barra-sup .acciones-fig>.btn-fig-hud:nth-child(-n+3){
+  grid-column:span 2;
+ }
+ body[data-pagina="leccion"] .bloque-figura[data-figura="triedro"]
+ .figura-barra-sup .acciones-fig>.btn-fig-hud:nth-child(n+4){
+  grid-column:span 3;
+ }
+ body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+ .mm-profesor-cabecera{
+  grid-template-columns:76px minmax(0,1fr)!important;
+ }
+ body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+ .mm-profesor-cabecera .mm-avatar-slot,
+ body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+ .mm-profesor-cabecera .vertiz-stage-mini .mini-escenario{
+  height:102px!important;min-height:102px!important;
+ }
+ body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+ .mm-profesor-cabecera .vertiz-stage-mini .avatar-escena{
+  height:102px!important;
+ }
+ body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+ .mm-profesor-cabecera .mm-profesor-info{gap:.18rem}
+ body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+ .mm-profesor-cabecera .btn-mm-chip-voz{
+  white-space:nowrap;padding:.4rem .48rem;font-size:.76rem;
+ }
+ body[data-pagina="leccion"] .bloque-figura .figura:is(.modo-aula-enfocada,.modo-proyector)
+ .mm-acciones-fila{
+  margin:.1rem 0!important;
+ }
+}
