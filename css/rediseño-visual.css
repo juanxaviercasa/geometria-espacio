@@ -387,3 +387,80 @@ body { background:var(--studio-paper); }
   .figura-ajustes .btn-fig-hud { flex:1 1 auto; }
   .figura-col-maestro .tutor-canvas { transform:scale(1.95); }
 }
+
+
+/* Navegación compartida Zénit · desktop limpio, menú móvil real. */
+.sitio-head .nav-toggle{
+ display:none;align-items:center;justify-content:center;gap:.4rem;
+ min-height:44px;border:1px solid #d8ddf0;border-radius:12px;
+ padding:.6rem .85rem;background:#fff;color:#2e315c;
+ font:600 .88rem/1.2 "Outfit",system-ui,sans-serif;
+ cursor:pointer;box-shadow:0 4px 13px #3a31890d;
+}
+.sitio-head .nav-toggle:focus-visible{
+ outline:3px solid #6655c8;outline-offset:3px;
+}
+.sitio-head .nav-toggle[aria-expanded="true"]{background:#f1ecff;border-color:#b4a4e8}
+/* Footer compartido: los enlaces son bloques legibles, no líneas pegadas. */
+.sitio-pie .wrap.pie-grid{
+ display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,.7fr) minmax(0,.8fr);
+ align-items:start;column-gap:clamp(1.5rem,5vw,5rem);row-gap:2.2rem;
+}
+.sitio-pie .pie-grid>div:not(.legal){
+ display:flex;flex-direction:column;align-items:flex-start;
+ min-width:0;gap:.5rem;
+}
+.sitio-pie .pie-marca{margin:0 0 .25rem;color:#fff;font-size:1.06rem;font-weight:760;line-height:1.4}
+.sitio-pie .pie-marca span{color:#c9b3fb}
+.sitio-pie .pie-grid h2{
+ color:#fff;font-size:1rem;line-height:1.4;letter-spacing:0;
+ font-weight:750;margin:0 0 .4rem;
+}
+.sitio-pie .pie-grid a{
+ display:inline-flex;align-items:center;min-height:32px;
+ color:#dfe3f9;text-decoration:none;font-size:.91rem;line-height:1.55;
+}
+.sitio-pie .pie-grid a:hover,.sitio-pie .pie-grid a:focus-visible{
+ color:#fff;text-decoration:underline;text-underline-offset:3px;
+}
+.sitio-pie .pie-identidad p:not(.pie-marca){
+ margin:0;color:#dce1f5;font-size:.94rem;line-height:1.75;max-width:43ch;
+}
+.sitio-pie .pie-grid>.legal{
+ display:flex;grid-column:1/-1;flex-wrap:wrap;justify-content:space-between;gap:.65rem 1.5rem;
+ border-top:1px solid #ffffff33;padding-top:1.1rem;color:#b4bed9;line-height:1.5;
+}
+@media(max-width:920px){
+ .sitio-head .nav-toggle{display:inline-flex;order:2;margin-left:auto}
+ .sitio-head .marca{order:1;margin-right:0;flex:1 1 auto;min-width:0}
+ .sitio-head .insignia-progreso{order:3}
+ .sitio-head .btn-movimiento{order:4}
+ .sitio-head .nav-principal{
+   display:none;order:5;width:100%;flex:1 0 100%;
+   grid-template-columns:repeat(2,minmax(0,1fr));gap:.45rem;
+   margin:0;padding:.85rem;border:1px solid #e1dbf2;
+   border-radius:17px;background:#fff;box-shadow:0 16px 32px #35257720;
+   overflow:visible;
+ }
+ .sitio-head .nav-principal.nav-abierta{display:grid}
+ .sitio-head .nav-principal a{
+   display:flex;align-items:center;min-height:44px;
+   padding:.65rem .8rem;font-size:.94rem;white-space:normal;
+ }
+ .sitio-pie .wrap.pie-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .sitio-pie .pie-identidad{grid-column:1/-1}
+}
+@media(max-width:530px){
+ .sitio-head .wrap.sitio-head-inner{gap:.5rem;justify-content:space-between}
+ .sitio-head .marca{flex:1 1 calc(100% - 110px)}
+ .sitio-head .marca svg{width:34px;height:34px}
+ .sitio-head .marca span b{font-size:.93rem}
+ .sitio-head .marca span small{font-size:.61rem;letter-spacing:.06em}
+ .sitio-head .nav-toggle{padding:.55rem .67rem}
+ .sitio-head .nav-principal{grid-template-columns:1fr}
+ .sitio-head .insignia-progreso{margin-right:auto}
+ .sitio-head .btn-movimiento{min-height:40px}
+ .sitio-pie .wrap.pie-grid{grid-template-columns:1fr;row-gap:1.6rem}
+ .sitio-pie .pie-identidad{grid-column:auto}
+ .sitio-pie .pie-grid>.legal{flex-direction:column}
+}

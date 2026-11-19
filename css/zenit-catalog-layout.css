@@ -1,0 +1,192 @@
+/* Zénit Aurora /solidos · composición editorial 16:9 sin recortes
+   Mantiene las ocho tarjetas y el video Veo original; no modifica la home. */
+body[data-pagina="solidos"] .zenit-catalog{
+  padding:clamp(2.2rem,5.2vw,5.3rem) 0 clamp(3.2rem,5vw,5.5rem);
+  background:radial-gradient(ellipse 70% 38% at 100% 6%,rgba(209,230,251,.42),transparent 75%),
+    linear-gradient(180deg,#f7f7ff 0%,#fff 58%,#fcfbff 100%);
+}
+body[data-pagina="solidos"] .zenit-catalog-intro{
+  display:grid;
+  grid-template-columns:minmax(0,.93fr) minmax(0,1.07fr);
+  align-items:center;
+  gap:clamp(1.5rem,4vw,4.1rem);
+  margin-bottom:clamp(2rem,4vw,3.2rem);
+}
+body[data-pagina="solidos"] .zenit-catalog-header{
+  margin:0;
+  padding:clamp(.4rem,1vw,1.2rem) 0;
+  min-width:0;
+  max-width:none;
+}
+body[data-pagina="solidos"] .zenit-catalog-header h1{
+  font-size:clamp(2.2rem,3.6vw,4.2rem);
+  line-height:1.075;
+  letter-spacing:-.047em;
+  max-width:13.8ch;
+  color:#242454;
+  text-wrap:balance;
+  margin:.9rem 0 1.05rem;
+}
+body[data-pagina="solidos"] .zenit-catalog-header p{
+  font-size:clamp(1rem,1.18vw,1.15rem);
+  line-height:1.72;
+  color:#5c6583;
+  max-width:51ch;
+  margin:0;
+}
+body[data-pagina="solidos"] .zenit-catalog-jump{
+  margin-top:1.65rem;
+  display:inline-flex;
+  align-items:center;
+  gap:.9rem;
+  justify-content:space-between;
+  padding:.84rem 1.1rem;
+  min-height:46px;
+  border:1px solid #d6cef1;
+  border-radius:13px;
+  color:#4e3cad;
+  background:#fff;
+  box-shadow:0 8px 20px #493d9410;
+  font-weight:760;
+  text-decoration:none;
+}
+body[data-pagina="solidos"] .zenit-catalog-jump:hover,
+body[data-pagina="solidos"] .zenit-catalog-jump:focus-visible{
+  background:#eee8ff;
+  border-color:#a793e4;
+}
+body[data-pagina="solidos"] .zenit-catalog-showcase{
+  display:block;
+  width:100%;
+  height:auto;
+  min-width:0;
+  margin:0;
+  overflow:visible;
+  border:0;
+  border-radius:0;
+  box-shadow:none;
+  background:transparent;
+}
+body[data-pagina="solidos"] .zenit-catalog-film{
+  display:block;
+  width:100%;
+  aspect-ratio:16/9;
+  height:auto;
+  position:relative;
+  overflow:hidden;
+  border-radius:23px;
+  border:1px solid #e1d5ed;
+  box-shadow:0 20px 38px #31267021;
+  background:#ddd0ed;
+}
+body[data-pagina="solidos"] .zenit-catalog-film .zenit-ambient-video,
+body[data-pagina="solidos"] .zenit-catalog-film .zenit-ambient-poster{
+  object-fit:contain;
+  object-position:center;
+}
+body[data-pagina="solidos"] .zenit-catalog-figcaption{
+  position:static;
+  display:flex;
+  align-items:center;
+  gap:.55rem;
+  margin:.85rem .2rem 0;
+  border:0;
+  background:transparent;
+  box-shadow:none;
+  backdrop-filter:none;
+  padding:0;
+  color:#666c8b;
+  font-size:.89rem;
+  font-weight:600;
+  line-height:1.45;
+  text-shadow:none;
+  max-width:none;
+}
+body[data-pagina="solidos"] .zenit-catalog-figcaption::before{
+  content:"✦"; color:#b48a47; font-size:1.1rem;
+}
+body[data-pagina="solidos"] .zenit-catalog-grid{
+  scroll-margin-top:6rem;
+  gap:clamp(.9rem,1.5vw,1.35rem);
+}
+body[data-pagina="solidos"] .zenit-catalog-card{
+  transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease;
+}
+body[data-pagina="solidos"] .zenit-catalog-card:focus-visible{
+  outline:3px solid #5140b8;
+  outline-offset:4px;
+}
+body[data-pagina="solidos"] .zenit-catalog-card .zenit-open{
+  display:inline-flex;
+  align-items:center;
+  min-height:44px;
+  padding:0;
+}
+body[data-pagina="solidos"] .zenit-catalog-actions{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:nowrap;
+  gap:2rem;
+  margin-top:clamp(2.2rem,4vw,3.3rem);
+  padding:clamp(1.3rem,2.5vw,2.2rem);
+  border:1px solid #ddd6f0;
+  border-radius:23px;
+  background:linear-gradient(114deg,#f7f3ff 0%,#eeeafa 100%);
+  box-shadow:0 11px 25px #5742a010;
+}
+body[data-pagina="solidos"] .zenit-catalog-actions-copy{max-width:670px;min-width:0}
+body[data-pagina="solidos"] .zenit-actions-eyebrow{
+  color:#6750bd;letter-spacing:.08em;font-size:.7rem;font-weight:800;
+}
+body[data-pagina="solidos"] .zenit-catalog-actions h2{
+  margin:.48rem 0 .4rem;
+  color:#242454;
+  font-size:clamp(1.25rem,2vw,1.8rem);
+  letter-spacing:-.025em;line-height:1.25;
+}
+body[data-pagina="solidos"] .zenit-catalog-actions p{
+  font-size:.96rem;line-height:1.58;max-width:56ch;margin:0;
+}
+body[data-pagina="solidos"] .zenit-catalog-actions .zenit-primary{
+  flex:0 0 auto;
+  white-space:nowrap;
+}
+@media(max-width:980px){
+  body[data-pagina="solidos"] .zenit-catalog-intro{
+    grid-template-columns:minmax(0,1fr);
+    gap:1.5rem;
+  }
+  body[data-pagina="solidos"] .zenit-catalog-header h1{max-width:18ch}
+  body[data-pagina="solidos"] .zenit-catalog-film{max-width:840px;margin-inline:auto}
+  body[data-pagina="solidos"] .zenit-catalog-figcaption{justify-content:center}
+}
+@media(max-width:700px){
+  body[data-pagina="solidos"] .zenit-catalog{padding-top:2rem}
+  body[data-pagina="solidos"] .zenit-catalog-header h1{
+    font-size:clamp(2rem,7.8vw,3.1rem);
+    line-height:1.12;
+    max-width:19ch;
+  }
+  body[data-pagina="solidos"] .zenit-catalog-showcase{height:auto}
+  body[data-pagina="solidos"] .zenit-catalog-film{border-radius:17px}
+  body[data-pagina="solidos"] .zenit-catalog-actions{
+    flex-direction:column;
+    align-items:stretch;
+    gap:1.1rem;
+  }
+  body[data-pagina="solidos"] .zenit-catalog-actions .zenit-primary{width:100%;white-space:normal}
+}
+@media(max-width:470px){
+  body[data-pagina="solidos"] .zenit-catalog-intro{gap:1.2rem}
+  body[data-pagina="solidos"] .zenit-catalog-header p{font-size:1rem}
+  body[data-pagina="solidos"] .zenit-catalog-figcaption{font-size:.8rem;text-align:center}
+  body[data-pagina="solidos"] .zenit-catalog-visual{
+    height:auto;min-height:0;aspect-ratio:4/3;
+  }
+  body[data-pagina="solidos"] .zenit-catalog-card{min-height:0}
+  body[data-pagina="solidos"] .zenit-catalog-grid{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){
+  body[data-pagina="solidos"] .zenit-catalog-card{transition:none}
+}

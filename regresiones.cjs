@@ -1583,3 +1583,24 @@ test('Zénit Aurora: los ocho WebP originales se incluyen sin redirecciones ni b
  assert.ok(builder.includes('extracted.size !== expectedFiles.size'),'fallar si falta alguna imagen');
  assert.ok(css.includes('transform:none!important'),'cierre 16:9 sin recorte artificial');
 });
+
+test('Catálogo responsive: video 16:9 junto al título, sin banda estirada y navegación móvil operativa',()=>{
+ const fs=require('fs'),path=require('path');
+ const page=fs.readFileSync(path.join(__dirname,'solidos.html'),'utf8');
+ const css=fs.readFileSync(path.join(__dirname,'css/zenit-catalog-layout.css'),'utf8');
+ const globalCss=fs.readFileSync(path.join(__dirname,'css/rediseño-visual.css'),'utf8');
+ const ui=fs.readFileSync(path.join(__dirname,'js/ui.js'),'utf8');
+ const intro=page.slice(page.indexOf('class="zenit-catalog-intro"'),page.indexOf('class="zenit-catalog-grid"'));
+ assert.ok(intro.includes('class="zenit-catalog-header"')&&intro.includes('class="zenit-catalog-showcase"'),'video y título en el mismo layout');
+ assert.ok(page.includes('href="#familias"')&&page.includes('id="familias"'),'acceso directo al catálogo');
+ assert.ok(page.includes('css/zenit-catalog-layout.css'),'estilos específicos del catálogo');
+ assert.ok(css.includes('grid-template-columns:minmax(0,.93fr) minmax(0,1.07fr)'),'composición lateral desktop');
+ assert.ok(css.includes('aspect-ratio:16/9')&&css.includes('object-fit:contain'),'video sin recorte artificial');
+ assert.ok(css.includes('@media(max-width:980px)')&&css.includes('@media(max-width:470px)'),'adaptación tablet y móvil');
+ assert.ok(css.includes('zenit-catalog-figcaption')&&!page.includes('class="zenit-video-caption"'),'caption fuera del video y sin pill superpuesta');
+ assert.equal((page.match(/class="zenit-catalog-card"/g)||[]).length,8);
+ assert.ok(globalCss.includes('.sitio-head .nav-toggle{')&&globalCss.includes('display:none'),'oculta el menú en desktop');
+ assert.ok(globalCss.includes('.sitio-head .nav-principal.nav-abierta{display:grid}'),'despliega menú accesible en móvil');
+ assert.ok(globalCss.includes('.sitio-pie .pie-grid h2')&&globalCss.includes('.sitio-pie .pie-grid a'),'footer con enlaces separados');
+ assert.ok(ui.includes('function setMenuOpen(abierto)')&&ui.includes("setMenuOpen(false)"),'interacción y cierre real del menú');
+});
