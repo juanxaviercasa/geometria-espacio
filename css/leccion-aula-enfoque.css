@@ -139,7 +139,9 @@ body[data-pagina="leccion"] .bloque-figura .figura.modo-proyector > .figura-pie{
 }
 @media(max-width:680px){
   body[data-pagina="leccion"] .bloque-figura .figura.modo-aula-enfocada .figura-lienzo{
-    height:clamp(280px,57dvh,480px);min-height:280px;
+    /* En móvil el lienzo se aproxima al tamaño de la figura; evita
+       una banda vacía de 200+ px debajo del triedro. */
+    height:clamp(310px,85vw,420px);min-height:310px;
   }
 }
 @media(prefers-reduced-motion:reduce){

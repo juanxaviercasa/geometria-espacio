@@ -1748,6 +1748,8 @@ test('Aula UX: botón de enfoque, navegación directa y profesor a un lado',()=>
  assert.ok(l.includes('leccion-abrir-aula')&&l.includes('data-accion="enfocar"'));
  assert.ok(css.includes('.figura.modo-aula-enfocada'));
  assert.ok(css.includes('height:calc(100dvh - 12px)'));
+ assert.ok(css.includes('height:clamp(310px,85vw,420px)'),'lienzo móvil sin banda vacía');
+ assert.ok(v.includes('window.scrollTo({'),'alineación exacta después de recalcular el layout');
  assert.ok(css.includes('grid-template-columns:clamp(140px,11vw,180px)'));
  assert.ok(css.includes('figura.modo-proyector .figura-lienzo'));
  assert.ok(v.includes('ajusteAula: esLeccion'));

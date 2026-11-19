@@ -1007,10 +1007,14 @@
       figura.classList.toggle('modo-aula-enfocada', mostrar);
       btnEnfocar.setAttribute('aria-pressed',String(mostrar));
       btnEnfocar.textContent = mostrar ? '↩ Vista normal' : '◉ Vista aula';
-      if (mostrar) figura.scrollIntoView({
-        block:'start',behavior:prefiereReducido()?'auto':'smooth'
-      });
+      if (mostrar) figura.scrollIntoView({block:'start',behavior:'instant'});
       requestAnimationFrame(function() {
+        // El alto cambia al activar la vista: alinear tras el reflow y no
+        // dejar el párrafo anterior flotando encima del laboratorio.
+        if (mostrar) window.scrollTo({
+          top:Math.max(0,window.scrollY+figura.getBoundingClientRect().top-8),
+          behavior:'instant'
+        });
         if (estado.api && estado.api._resize) estado.api._resize();
         else if (estado.tipo === '2d') pintar2d();
       });

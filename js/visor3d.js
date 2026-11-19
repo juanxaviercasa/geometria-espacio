@@ -520,7 +520,7 @@
     var ojo = [cp*st,sp,cp*ct];
     var derecha = [ct,0,-st];
     var arriba = [-sp*st,cp,-sp*ct];
-    var seguro = 0.73; // 27% del semieje visual reservado a márgenes y letras
+    var seguro = 0.78; // margen para etiquetas sin perder presencia en el aula
     var d = 0;
     for (var i=0; i<puntos.length; i++) {
       var p=puntos[i], x=p[0]-this.centro.x,y=p[1]-this.centro.y,z=p[2]-this.centro.z;
