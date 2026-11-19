@@ -695,7 +695,7 @@
     var startTheta = this.theta;
     var startPhi = this.phi;
     var startZoom = this.zoom;
-    if (this.opciones.ajusteAula && targetDist == null) {
+    if (this.opciones && this.opciones.ajusteAula && targetDist == null) {
       this.zoomBase = this._zoomParaAula(targetTheta,targetPhi);
       this._zoomManual = false;
     }
