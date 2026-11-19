@@ -1649,6 +1649,8 @@ test('Fase 3 aula Zénit: un docente visual, navegación académica y controles 
  assert.ok(visor.includes("data-accion=\"proyectar\""),'proyector conservado');
  assert.ok(visor.includes("data-accion=\"giro\"")&&visor.includes("data-accion=\"contraste\""),'opciones secundarias conservadas');
  assert.ok(visor.includes('mm-pasos-titulos'),'lista de pasos detallada plegable en lecciones');
+ assert.ok(visor.includes('barraSup.offsetHeight + 8'),'panel de ajustes situado debajo de la barra');
+ assert.ok(visor.includes('aria-label="Paso'),'pasos numerados accesibles');
  assert.ok(visor.includes('controlesExternos.appendChild(barraSup)'),'portada con controles externos intacta');
  assert.ok(css.includes('@media(max-width:680px)')&&css.includes('@media(max-width:420px)'),'mobile adaptativo');
  assert.ok(css.includes('.leccion-feedback[hidden]'),'avisos cerrados no ocupan espacio');

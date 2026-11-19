@@ -195,6 +195,7 @@
     }
     btnAjustes.addEventListener('click', function () {
       var abierto = !panelAjustes.hidden;
+      if (esLeccion && abierto) panelAjustes.style.top = (barraSup.offsetTop + barraSup.offsetHeight + 8) + 'px';
       panelAjustes.hidden = abierto;
       btnAjustes.setAttribute('aria-expanded', String(!abierto));
       figura.classList.toggle('ajustes-abiertos', !abierto);
@@ -291,7 +292,7 @@
     colMaestro.setAttribute('aria-label', 'Explicación paso a paso con Profesor Xavier');
 
     var puntosHtml = pasos.map(function (p, idx) {
-      return '<button type="button" class="mm-punto-paso' + (idx === 0 ? ' activo' : '') + '" data-mm-ir="' + idx + '" title="Ir al paso ' + (idx + 1) + ': ' + p.titulo + '">' + (idx + 1) + '</button>';
+      return '<button type="button" class="mm-punto-paso' + (idx === 0 ? ' activo' : '') + '" data-mm-ir="' + idx + '" aria-label="Paso ' + (idx + 1) + ': ' + p.titulo + '" title="Ir al paso ' + (idx + 1) + ': ' + p.titulo + '">' + (idx + 1) + '</button>';
     }).join('');
 
     var capaInicial = nombreCapa(spec, pasos[0].capaResaltada);
