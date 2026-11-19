@@ -368,12 +368,43 @@
         { a: 'O', b: 'Y', capa: 'aristas' },
         { a: 'O', b: 'Z', capa: 'aristas' }
       ],
+      // Tres marcas cuadradas de 90°: xOy, yOz y zOx.
+      // Son ángulos planos entre semirrectas, no símbolos decorativos.
+      lineas: [
+        { pts: marcaRecta(v(0,0,0),v(1,0,0),v(0,1,0),0.53), capa:'angulos', grosor:2.8 },
+        { pts: marcaRecta(v(0,0,0),v(0,1,0),v(0,0,1),0.53), capa:'angulos', grosor:2.8 },
+        { pts: marcaRecta(v(0,0,0),v(0,0,1),v(1,0,0),0.53), capa:'angulos', grosor:2.8 }
+      ],
+      pasosGuia: [
+        {
+          titulo:'El ángulo triedro',
+          texto:'Tres semirrectas con origen O forman un triedro. Observa las caras xOy, yOz y zOx.',
+          camara:{theta:0.78,phi:0.34},
+          capaResaltada:'caraA',
+          capasVisibles:['caraA','caraB','caraC','aristas','etiquetas']
+        },
+        {
+          titulo:'Reconoce los tres ángulos rectos',
+          texto:'En este triedro trirrectángulo, los ángulos planos xOy, yOz y zOx miden 90 grados. Activa Ángulos 90° para identificar las marcas junto al vértice O.',
+          camara:{theta:0.92,phi:0.33},
+          capaResaltada:'angulos',
+          capasVisibles:['caraA','caraB','caraC','aristas','etiquetas','angulos']
+        },
+        {
+          titulo:'De las caras a los diedros',
+          texto:'Cada par de aristas determina una cara angular. Además, en este modelo los planos de las tres caras son perpendiculares dos a dos, por lo que sus diedros son rectos.',
+          camara:{theta:0.60,phi:0.40},
+          capaResaltada:'caraB',
+          capasVisibles:['caraA','caraB','caraC','aristas','etiquetas','angulos']
+        }
+      ],
       capas: [
         { id: 'caraA', nombre: 'Cara xOy', color: '#2c3c9e', activa: true, opacidad: 0.14 },
         { id: 'caraB', nombre: 'Cara yOz', color: '#b85c0d', activa: true, opacidad: 0.14 },
         { id: 'caraC', nombre: 'Cara zOx', color: '#0c7367', activa: true, opacidad: 0.14 },
         { id: 'aristas', nombre: 'Aristas', color: '#131829', activa: true },
-        { id: 'etiquetas', nombre: 'Nombres', color: '#6c748c', activa: true }
+        { id: 'etiquetas', nombre: 'Nombres', color: '#6c748c', activa: true },
+        { id: 'angulos', nombre: 'Ángulos 90°', color: '#b7791f', activa: false, auxiliar: true }
       ]
     });
   })();

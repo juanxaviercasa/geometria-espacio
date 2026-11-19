@@ -1688,3 +1688,67 @@ test('Triedro TV: puntos auxiliares, cámara permanente y etiquetas legibles',()
  assert.ok(styles.includes('@media (min-width:1400px)'));
  assert.ok(styles.includes('.figura.modo-proyector'));
 });
+
+test('Aula visual a pantalla: triedro con tres marcas rectas y control de ángulos 2D/3D',()=>{
+ const fs=require('fs'),path=require('path'),vm=require('node:vm');
+ const window={};vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/figuras.js'),'utf8'),{window});
+ const s=window.Figuras.obtener('triedro');
+ assert.equal(s.vertices.O.etiqueta,'O');
+ assert.equal(s.lineas.filter(l=>l.capa==='angulos').length,3);
+ for (const l of s.lineas.filter(l=>l.capa==='angulos')){
+   assert.equal(l.pts.length,3);
+   const a=l.pts[0],b=l.pts[1],c=l.pts[2];
+   const dot=(b[0]-a[0])*(c[0]-b[0])+(b[1]-a[1])*(c[1]-b[1])+(b[2]-a[2])*(c[2]-b[2]);
+   assert.ok(Math.abs(dot)<1e-8,'las marcas deben tener un vértice de 90°');
+ }
+ assert.ok(s.capas.some(c=>c.id==='angulos'&&c.activa===false&&c.auxiliar===true));
+ assert.equal(s.pasosGuia.length,3);
+ assert.ok(s.pasosGuia[1].capasVisibles.includes('angulos'),'el paso 2 muestra los 90°');
+ assert.ok(s.pasosGuia[0].capasVisibles.every(id=>s.capas.some(c=>c.id===id)));
+});
+test('Aula visual: cámara 3D encaja en cualquier proporción sin recortar vértices',()=>{
+ const fs=require('fs'),path=require('path'),vm=require('node:vm');
+ const window={};vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/figuras.js'),'utf8'),{window});
+ const spec=window.Figuras.obtener('triedro');
+ const module={exports:{}};
+ vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/visor3d.js'),'utf8'),{module,exports:module.exports});
+ const fit=module.exports.Visor3D.prototype._zoomParaAula;
+ assert.equal(typeof fit,'function');
+ for(const aspect of [0.67,1,1.4,1.75,2.3]){
+   for(const theta of [0.2,0.78,1.7,2.8]){
+     const vfov=34, radio=2.77, distBase=(radio/Math.sin(Math.atan(Math.tan(vfov*Math.PI/360)*Math.min(1,aspect))))*1.24;
+     const view={opciones:{ajusteAula:true},spec,centro:{x:1.6,y:1.5,z:1.6},
+       radio,distBase,camara:{aspect,fov:vfov},zoomBase:.7};
+     const zoom=fit.call(view,theta,.34);
+     const d=distBase*zoom;
+     const cp=Math.cos(.34),sp=Math.sin(.34),ct=Math.cos(theta),st=Math.sin(theta);
+     const eye=[cp*st,sp,cp*ct],right=[ct,0,-st],up=[-sp*st,cp,-sp*ct];
+     for(const key of ['O','X','Y','Z']){
+       const p=spec.vertices[key].p,r=p.map((x,i)=>x-[1.6,1.5,1.6][i]);
+       const proj=(axis)=>r.reduce((acc,x,i)=>acc+x*axis[i],0);
+       const depth=d-proj(eye);
+       assert.ok(depth>0);
+       assert.ok(Math.abs(proj(right)/(depth*Math.tan(vfov*Math.PI/360)*aspect))<.85,'vértice horizontal cabe: '+aspect+' '+theta+' '+key);
+       assert.ok(Math.abs(proj(up)/(depth*Math.tan(vfov*Math.PI/360)))<.85,'vértice vertical cabe: '+aspect+' '+theta+' '+key);
+     }
+   }
+ }
+});
+test('Aula UX: botón de enfoque, navegación directa y profesor a un lado',()=>{
+ const fs=require('fs'),path=require('path');
+ const html=fs.readFileSync(path.join(__dirname,'leccion.html'),'utf8');
+ const v=fs.readFileSync(path.join(__dirname,'js/visor.js'),'utf8');
+ const l=fs.readFileSync(path.join(__dirname,'js/leccion.js'),'utf8');
+ const css=fs.readFileSync(path.join(__dirname,'css/leccion-aula-enfoque.css'),'utf8');
+ assert.ok(html.includes('leccion-aula-enfoque.css'));
+ assert.ok(v.includes('data-accion="enfocar"'));
+ assert.ok(v.includes('figura.scrollIntoView'));
+ assert.ok(v.includes('enfocarAula: enfocarAula'));
+ assert.ok(l.includes('leccion-abrir-aula')&&l.includes('data-accion="enfocar"'));
+ assert.ok(css.includes('.figura.modo-aula-enfocada'));
+ assert.ok(css.includes('height:calc(100dvh - 12px)'));
+ assert.ok(css.includes('grid-template-columns:clamp(140px,11vw,180px)'));
+ assert.ok(css.includes('figura.modo-proyector .figura-lienzo'));
+ assert.ok(v.includes('ajusteAula: esLeccion'));
+ assert.ok(v.includes('.figura-leyenda-angulos'));
+});

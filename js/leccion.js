@@ -261,6 +261,25 @@
       '<h1>' + leccion.titulo + '</h1>' +
       '<p class="objetivo"><strong>Al terminar podrás:</strong> ' + leccion.objetivo + '</p>';
 
+    /* Acceso directo a la figura: abrir el aula ya encuadrada sin hacer
+       que el estudiante busque manualmente el visor entre los párrafos. */
+    var primeraFigura = leccion.bloques.find(function(b){return b.tipo === 'figura';});
+    if (primeraFigura) {
+      var irAlAula = document.createElement('a');
+      irAlAula.className = 'leccion-abrir-aula';
+      irAlAula.href = '#fig-' + primeraFigura.figura;
+      irAlAula.textContent = '⛶ Ir al laboratorio en pantalla';
+      irAlAula.addEventListener('click',function(ev) {
+        var destino = document.getElementById('fig-' + primeraFigura.figura);
+        var btn = destino && destino.querySelector('[data-accion="enfocar"]');
+        if (!btn) return; // En ausencia del visor, el ancla funciona igualmente.
+        ev.preventDefault();
+        if (btn.getAttribute('aria-pressed') !== 'true') btn.click();
+        else destino.scrollIntoView({block:'start',behavior:'smooth'});
+      });
+      document.getElementById('cabecera-leccion').appendChild(irAlAula);
+    }
+
     /* cuerpo: bloques */
     var contenido = document.getElementById('cuerpo-leccion');
     var indice = [];

@@ -480,8 +480,14 @@
     // Enfoque persistente: cambiar de paso o reiniciar no aleja el triedro.
     // Si el estudiante guardó su vista, esa preferencia conserva prioridad.
     this.zoomBase = this.opciones.zoomInicial != null ? this.opciones.zoomInicial : 1;
-    this.zoom = vista.zoom != null ? vista.zoom : this.zoomBase;
+    this._zoomManual = vista.zoom != null;
+    this.zoom = this._zoomManual ? vista.zoom : this.zoomBase;
     this._ajustarDistancia();
+    if (this.opciones.ajusteAula) {
+      this.zoomBase = this._zoomParaAula(this.theta,this.phi);
+      if (!this._zoomManual) this.zoom = this.zoomBase;
+      this.dist = this.distBase * this.zoom;
+    }
     this._actualizarCamara();
   };
 
@@ -494,6 +500,38 @@
     var f = Math.min(vf, hf);
     this.distBase = (this.radio / Math.sin(f / 2)) * 1.24;
     this.dist = this.distBase * this.zoom;
+  };
+
+  /* Encuadre de aula basado en la proyección REAL de los vértices.
+     Incluye un margen para sus etiquetas y funciona también tras girar,
+     cambiar de paso o usar un televisor 16:9. */
+  Visor3D.prototype._zoomParaAula = function(theta,phi) {
+    if (!this.opciones.ajusteAula || !this.spec.vertices || !this.distBase) {
+      return this.zoomBase != null ? this.zoomBase : 1;
+    }
+    var puntos = Object.keys(this.spec.vertices).map(function(k) {
+      return this.spec.vertices[k].p;
+    },this);
+    if (!puntos.length) return this.zoomBase || 1;
+    var aspect = Math.max(0.4,this.camara.aspect || 1);
+    var tanMitad = Math.tan(this.camara.fov * Math.PI / 360);
+    var ct = Math.cos(theta), st = Math.sin(theta);
+    var cp = Math.cos(phi), sp = Math.sin(phi);
+    var ojo = [cp*st,sp,cp*ct];
+    var derecha = [ct,0,-st];
+    var arriba = [-sp*st,cp,-sp*ct];
+    var seguro = 0.73; // 27% del semieje visual reservado a márgenes y letras
+    var d = 0;
+    for (var i=0; i<puntos.length; i++) {
+      var p=puntos[i], x=p[0]-this.centro.x,y=p[1]-this.centro.y,z=p[2]-this.centro.z;
+      var profundidad=x*ojo[0]+y*ojo[1]+z*ojo[2];
+      var horizontal=Math.abs(x*derecha[0]+y*derecha[1]+z*derecha[2]);
+      var vertical=Math.abs(x*arriba[0]+y*arriba[1]+z*arriba[2]);
+      d=Math.max(d,profundidad+Math.max(horizontal/(seguro*aspect*tanMitad),
+                                         vertical/(seguro*tanMitad)));
+    }
+    var zoom=Math.max(d*1.045,this.radio*1.3)/this.distBase;
+    return Math.max(0.45,Math.min(3.2,zoom));
   };
 
   Visor3D.prototype._actualizarCamara = function () {
@@ -518,6 +556,7 @@
   };
 
   Visor3D.prototype._fijarZoom = function (z) {
+    this._zoomManual = true;
     this.zoom = Math.max(0.45, Math.min(3.2, z));
     this.dist = this.distBase * this.zoom;
     this._actualizarCamara();
@@ -533,6 +572,11 @@
     this.renderer.domElement.style.width = '100%';
     this.renderer.domElement.style.height = '100%';
     this._ajustarDistancia();
+    if (this.opciones.ajusteAula) {
+      this.zoomBase = this._zoomParaAula(this.theta,this.phi);
+      if (!this._zoomManual) this.zoom = this.zoomBase;
+      this.dist = this.distBase * this.zoom;
+    }
     this._actualizarCamara();
     if (!this.animando) this.renderer.render(this.escena, this.camara);
   };
@@ -626,6 +670,7 @@
 
   Visor3D.prototype.reset = function () {
     var cam = this.spec.camara || {};
+    this._zoomManual = false;
     this.enfocarCamara(
       cam.theta != null ? cam.theta : 0.7,
       cam.phi != null ? cam.phi : 0.3,
@@ -650,6 +695,10 @@
     var startTheta = this.theta;
     var startPhi = this.phi;
     var startZoom = this.zoom;
+    if (this.opciones.ajusteAula && targetDist == null) {
+      this.zoomBase = this._zoomParaAula(targetTheta,targetPhi);
+      this._zoomManual = false;
+    }
     var finalZoom = targetDist != null ? targetDist / this.distBase
       : (this.zoomBase != null ? this.zoomBase : 1);
     // Camino más corto (el giro automático acumula vueltas)

@@ -1,0 +1,147 @@
+/* Aula Zénit · Enfoque inmersivo accesible (solo en lecciones)
+   El lienzo se ajusta al área real; no se amplía el canvas con transform.
+   En modo aula cabe el conjunto figura, controles y profesor en el viewport. */
+body[data-pagina="leccion"] .leccion-abrir-aula{
+  display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  min-height:46px;margin-top:1rem;padding:.7rem 1.1rem;
+  border-radius:13px;background:#5242bd;color:#fff;font-weight:760;
+  text-decoration:none;box-shadow:0 10px 24px #352a8326;
+}
+body[data-pagina="leccion"] .leccion-abrir-aula:hover{background:#4031a4;color:#fff}
+body[data-pagina="leccion"] .leccion-abrir-aula:focus-visible,
+body[data-pagina="leccion"] .btn-aula-enfocar:focus-visible{
+  outline:3px solid #e6bb5d;outline-offset:3px;
+}
+body[data-pagina="leccion"] .bloque-figura .btn-aula-enfocar{
+  background:#f4edff;border-color:#c6b8ed;color:#372b89;
+}
+body[data-pagina="leccion"] .bloque-figura .btn-aula-enfocar[aria-pressed="true"]{
+  background:#5140b3;border-color:#5140b3;color:#fff;
+}
+body[data-pagina="leccion"] .bloque-figura{
+  scroll-margin-top:10px;
+}
+body[data-pagina="leccion"] .bloque-figura .figura-leyenda-angulos[hidden]{display:none!important}
+body[data-pagina="leccion"] .bloque-figura .figura-leyenda-angulos{
+  flex:1 0 100%;margin:.3rem 0 0;padding:.55rem .9rem;
+  background:#fff7e8;border:1px solid #eac98f;border-radius:11px;
+  color:#684717;line-height:1.45;font-size:clamp(.88rem,.95vw,1rem);font-weight:680;
+}
+body[data-pagina="leccion"] .bloque-figura [data-capa="angulos"]{
+  font-weight:750;min-height:44px;border-color:#e4bf7a;
+}
+body[data-pagina="leccion"] .bloque-figura [data-capa="angulos"][aria-pressed="true"]{
+  background:#ffedca;border-color:#c78f33;color:#57390b;
+}
+/* El docente vuelve a ocupar un lugar visible junto al texto, no se
+   comprime a un muñeco diminuto dentro de una columna vacía. */
+@media(min-width:1081px){
+  body[data-pagina="leccion"] .bloque-figura .mm-profesor-cabecera{
+    display:grid!important;
+    grid-template-columns:clamp(140px,11vw,180px) minmax(0,1fr)!important;
+    gap:clamp(.8rem,1.3vw,1.25rem);
+    align-items:center;text-align:left;
+  }
+  body[data-pagina="leccion"] .bloque-figura .mm-avatar-slot,
+  body[data-pagina="leccion"] .bloque-figura .vertiz-stage-mini .mini-escenario{
+    width:clamp(140px,11vw,180px);
+    height:clamp(190px,25vh,245px);
+    min-height:190px;
+    margin:0;
+  }
+  body[data-pagina="leccion"] .bloque-figura .vertiz-stage-mini .avatar-escena{
+    width:clamp(140px,11vw,180px);
+    height:clamp(190px,25vh,245px);
+    margin-left:calc(clamp(140px,11vw,180px) / -2);
+  }
+  body[data-pagina="leccion"] .bloque-figura .tutor-canvas{
+    transform:scale(1.8);
+  }
+  body[data-pagina="leccion"] .bloque-figura .mm-profesor-nombre{
+    font-size:clamp(1.05rem,1.25vw,1.35rem);
+  }
+  body[data-pagina="leccion"] .bloque-figura .mm-profesor-subtitulo{
+    font-size:clamp(.9rem,1.05vw,1.1rem);
+  }
+  body[data-pagina="leccion"] .bloque-figura .mm-profesor-info{
+    align-items:flex-start;text-align:left;
+  }
+}
+/* Vista de aula: al pulsar el botón, ocupa el alto disponible de esa
+   pantalla, con scroll del documento alineado en el borde superior. */
+@media(min-width:1081px){
+  body[data-pagina="leccion"] .bloque-figura .figura.modo-aula-enfocada{
+    height:calc(100vh - 12px);
+    height:calc(100dvh - 12px);
+    max-height:none;min-height:580px;
+    display:flex;flex-direction:column;
+    overflow:hidden;border-radius:15px;
+  }
+  body[data-pagina="leccion"] .bloque-figura .figura.modo-aula-enfocada > .figura-barra-sup{
+    flex:0 0 auto;min-height:64px;
+  }
+  body[data-pagina="leccion"] .bloque-figura .figura.modo-aula-enfocada .figura-escenario-clase{
+    display:grid;flex:1 1 0;
+    grid-template-columns:minmax(0,1.95fr) minmax(340px,.82fr);
+    min-height:0;height:auto;overflow:hidden;
+  }
+  body[data-pagina="leccion"] .bloque-figura .figura.modo-aula-enfocada .figura-col-lienzo{
+    display:flex;flex-direction:column;min-height:0;height:100%;
+  }
+  body[data-pagina="leccion"] .bloque-figura .figura.modo-aula-enfocada .figura-stage-wrap{
+    position:relative;flex:1 1 auto;min-height:0;
+  }
+  body[data-pagina="leccion"] .bloque-figura .figura.modo-aula-enfocada .figura-lienzo{
+    position:absolute;inset:0;height:100%!important;
+    min-height:0!important;max-height:none!important;
+  }
+  body[data-pagina="leccion"] .bloque-figura .figura.modo-aula-enfocada .figura-capas{
+    flex:0 0 auto;max-height:130px;overflow-y:auto;
+  }
+  body[data-pagina="leccion"] .bloque-figura .figura.modo-aula-enfocada .figura-col-maestro{
+    min-height:0;height:100%;overflow-y:auto;overscroll-behavior:contain;
+  }
+  body[data-pagina="leccion"] .bloque-figura .figura.modo-aula-enfocada > .figura-pie{
+    display:none;
+  }
+}
+/* Modo Proyector: CSS previo definía posiciones absolutas que podían
+   cortar el canvas; al ser flex, etapa y docente ocupan el alto libre. */
+body[data-pagina="leccion"] .bloque-figura .figura.modo-proyector .figura-escenario-clase{
+  flex:1 1 0;min-height:0;height:auto;overflow:hidden;
+}
+body[data-pagina="leccion"] .bloque-figura .figura.modo-proyector .figura-col-lienzo{
+  min-height:0;display:flex;flex-direction:column;
+}
+body[data-pagina="leccion"] .bloque-figura .figura.modo-proyector .figura-stage-wrap{
+  position:relative;min-height:0;flex:1 1 0;
+}
+body[data-pagina="leccion"] .bloque-figura .figura.modo-proyector .figura-lienzo{
+  position:absolute;inset:0;width:100%;height:100%!important;
+  min-height:0!important;max-height:none!important;
+}
+body[data-pagina="leccion"] .bloque-figura .figura.modo-proyector .figura-col-maestro{
+  min-height:0;overflow-y:auto;
+}
+body[data-pagina="leccion"] .bloque-figura .figura.modo-proyector > .figura-pie{
+  display:none;
+}
+@media(max-width:1080px){
+  body[data-pagina="leccion"] .bloque-figura .figura.modo-aula-enfocada{
+    display:flex;flex-direction:column;
+  }
+  body[data-pagina="leccion"] .bloque-figura .figura.modo-aula-enfocada .figura-lienzo{
+    height:clamp(320px,55dvh,600px);min-height:320px;
+  }
+  body[data-pagina="leccion"] .bloque-figura .figura.modo-aula-enfocada .figura-escenario-clase{
+    grid-template-columns:minmax(0,1fr);
+  }
+}
+@media(max-width:680px){
+  body[data-pagina="leccion"] .bloque-figura .figura.modo-aula-enfocada .figura-lienzo{
+    height:clamp(280px,57dvh,480px);min-height:280px;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  body[data-pagina="leccion"] .bloque-figura .figura.modo-aula-enfocada *{scroll-behavior:auto}
+}

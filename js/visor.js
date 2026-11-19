@@ -161,6 +161,7 @@
         '<button type="button" class="btn-fig btn-fig-hud" data-accion="contraste" aria-pressed="false" title="Fondo oscuro de alto contraste para proyector">' +
           '<span>🌙 Fondo</span>' +
         '</button>' +
+        (esLeccion ? '<button type="button" class="btn-fig btn-fig-hud btn-aula-enfocar" data-accion="enfocar" aria-pressed="false" title="Mostrar el laboratorio completo ajustado a la altura de la pantalla">◉ Vista aula</button>' : '') +
         '<button type="button" class="btn-fig btn-fig-hud btn-proyectar" data-accion="proyectar" aria-pressed="false" title="Modo Proyector a pantalla completa (tecla F)">' +
           '<span data-proyectar-texto>⛶ Proyectar</span>' +
         '</button>' +
@@ -179,7 +180,8 @@
     panelAjustes.setAttribute('aria-label', 'Ajustes del aula 3D');
     panelAjustes.innerHTML = '<div class="figura-ajustes-titulo"><strong>Configurar aula</strong><span>Se oculta al terminar</span></div>';
     Array.prototype.slice.call(accionesVisor.children).forEach(function (control) {
-      if (control === btnAjustes || control.classList.contains('btn-proyectar')) return;
+      if (control === btnAjustes || control.classList.contains('btn-proyectar') ||
+          control.getAttribute('data-accion') === 'enfocar') return;
       // Vista y Recentrar se usan constantemente al estudiar: quedan visibles
       // solo en lecciones; otras páginas mantienen su barra compacta anterior.
       var accion = control.getAttribute('data-accion');
@@ -282,6 +284,19 @@
         return '<span class="chip-medida"><b>' + m[0] + ':</b> <span class="m">' + m[1] + '</span></span>';
       }).join('');
       capasBar.appendChild(medWrap);
+    }
+    if (idFigura === 'triedro') {
+      var leyendaAngulos = document.createElement('p');
+      leyendaAngulos.className = 'figura-leyenda-angulos';
+      leyendaAngulos.id = 'angulos-leyenda-' + contadorNarraciones;
+      leyendaAngulos.textContent = 'Ángulos planos: ∠xOy = ∠yOz = ∠zOx = 90°. Las tres marcas cuadradas indican ángulos rectos en O.';
+      leyendaAngulos.hidden = true;
+      capasBar.appendChild(leyendaAngulos);
+      var botonAngulos = capasBar.querySelector('[data-capa="angulos"]');
+      if (botonAngulos) {
+        botonAngulos.title = 'Mostrar u ocultar los tres ángulos rectos de 90 grados';
+        botonAngulos.setAttribute('aria-describedby',leyendaAngulos.id);
+      }
     }
     colLienzo.appendChild(capasBar);
     escenarioClase.appendChild(colLienzo);
@@ -564,6 +579,8 @@
       });
       if(btnTodosAux)btnTodosAux.setAttribute('aria-pressed',
         idsAuxiliares.every(function(id){return !estado.capasOcultas[id];})?'true':'false');
+      var leyenda = capasBar.querySelector('.figura-leyenda-angulos');
+      if (leyenda) leyenda.hidden = !!estado.capasOcultas.angulos;
     }
     var vistaDeseada=vistaPreferida();
     var visibleFigura=!(typeof IntersectionObserver!=='undefined');
@@ -646,6 +663,7 @@
               ? ((spec.presentacion && (lienzo.clientWidth < 600 ? spec.presentacion.zoomMovil : spec.presentacion.zoom)) || 0.94)
               : 1,
             aulaTV: document.body.getAttribute('data-pagina') === 'leccion',
+            ajusteAula: esLeccion && !!(spec.presentacion && spec.presentacion.encuadre),
             alMoverCamara:actualizarAtencion
           });
           estado.tipo='3d';
@@ -979,6 +997,28 @@
       }, 60);
     }
 
+    /* Vista aula: ajuste al tamaño de la pantalla en la página (sin obligar a
+       activar el fullscreen del navegador). Proyectar conserva el fullscreen. */
+    var btnEnfocar = barraSup.querySelector('[data-accion="enfocar"]');
+    function enfocarAula(activar) {
+      if (!esLeccion || !btnEnfocar) return;
+      var mostrar = activar === undefined
+        ? !figura.classList.contains('modo-aula-enfocada') : !!activar;
+      figura.classList.toggle('modo-aula-enfocada', mostrar);
+      btnEnfocar.setAttribute('aria-pressed',String(mostrar));
+      btnEnfocar.textContent = mostrar ? '↩ Vista normal' : '◉ Vista aula';
+      if (mostrar) figura.scrollIntoView({
+        block:'start',behavior:prefiereReducido()?'auto':'smooth'
+      });
+      requestAnimationFrame(function() {
+        if (estado.api && estado.api._resize) estado.api._resize();
+        else if (estado.tipo === '2d') pintar2d();
+      });
+    }
+    if (btnEnfocar) btnEnfocar.addEventListener('click',function() {
+      enfocarAula();
+    });
+
     btnProyectar.addEventListener('click', alternarProyector);
 
     document.addEventListener('fullscreenchange', function () {
@@ -1085,6 +1125,7 @@
       siguientePaso: function () { btnSig.click(); },
       anteriorPaso: function () { btnAnt.click(); },
       alternarProyector: alternarProyector,
+      enfocarAula: enfocarAula,
       obtenerEstado: function () { return estado; },
       origenNarracion: origenNarracion
     };

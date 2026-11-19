@@ -31,7 +31,7 @@ function cargar(){
  if(global.Visor3D&&global.THREE)return Promise.resolve(global.Visor3D);
  if(motor)return motor;
  motor=three().then(function(){
-  return recurso('js/visor3d.js?v=zenit-triedro-tv-20261118',function(){return !!global.Visor3D;});
+  return recurso('js/visor3d.js?v=aula-fit-angulos-20261119',function(){return !!global.Visor3D;});
  }).then(function(){
   if(!global.Visor3D)throw Error('No se registró el visor 3D');
   return global.Visor3D;
