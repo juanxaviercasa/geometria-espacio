@@ -1677,10 +1677,10 @@ test('Triedro TV: puntos auxiliares, cámara permanente y etiquetas legibles',()
  frame(1000);
  assert.equal(viewer.zoom,.70,'la cámara no debe alejarse a 1 al avanzar de paso');
  const doc=fs.readFileSync(path.join(__dirname,'leccion.html'),'utf8');
- assert.ok(doc.includes('aula-fit-angulos-20261119'),'versión nueva del visor');
+ assert.ok(doc.includes('aula-fit-angulos-20261119b'),'versión nueva del visor');
  assert.ok(doc.includes('css/leccion-proyeccion-tv.css'));
  const cargador=fs.readFileSync(path.join(__dirname,'js/cargador3d.js'),'utf8');
- assert.ok(cargador.includes('visor3d.js?v=aula-fit-angulos-20261119'),'motor 3D actualizado sin caché antiguo');
+ assert.ok(cargador.includes('visor3d.js?v=aula-fit-angulos-20261119b'),'motor 3D actualizado sin caché antiguo');
  const v3=fs.readFileSync(path.join(__dirname,'js/visor3d.js'),'utf8');
  assert.ok(v3.includes('this.opciones.aulaTV ? 1.25 : 1'),'aristas legibles');
  assert.ok(v3.includes('this.opciones.aulaTV ? 1.32 : 1'),'etiquetas legibles');
