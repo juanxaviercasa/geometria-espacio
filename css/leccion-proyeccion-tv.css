@@ -1,0 +1,45 @@
+/* Sistema Zénit · Ajustes pedagógicos de proyección.
+   Sin ampliar el elemento canvas por CSS: la cámara 3D mantiene el encuadre. */
+body[data-pagina="leccion"] .bloque-figura .figura-stage-wrap {
+  min-width:0;
+  overflow:hidden;
+  background:radial-gradient(ellipse at 50% 48%,#fff 8%,#f4f4ff 78%,#ededfb 100%);
+}
+body[data-pagina="leccion"] .bloque-figura .figura-lienzo{
+  position:relative;
+  display:block;
+  width:100%;
+  padding:0;
+}
+@media (min-width:1400px) {
+  body[data-pagina="leccion"] .bloque-figura .figura-escenario-clase{
+    grid-template-columns:minmax(0,1.95fr) minmax(320px,.75fr);
+  }
+  body[data-pagina="leccion"] .bloque-figura .figura-lienzo {
+    height:clamp(560px,47vw,760px);
+    min-height:560px;
+  }
+  body[data-pagina="leccion"] .bloque-figura .mm-titulo-paso{
+    font-size:clamp(1.22rem,1.5vw,1.65rem);
+    line-height:1.35;
+  }
+  body[data-pagina="leccion"] .bloque-figura .mm-explicacion{
+    font-size:clamp(1.05rem,1.22vw,1.33rem);
+    line-height:1.65;
+  }
+}
+body[data-pagina="leccion"] .bloque-figura .figura.modo-proyector .figura-lienzo{
+  height:100%!important;
+  min-height:0!important;
+}
+@media (max-width:1080px) {
+  body[data-pagina="leccion"] .bloque-figura .figura-lienzo{
+    height:clamp(430px,62vw,630px);
+  }
+}
+@media (max-width:680px) {
+  body[data-pagina="leccion"] .bloque-figura .figura-lienzo{
+    height:clamp(320px,88vw,500px);
+    min-height:320px;
+  }
+}

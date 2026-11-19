@@ -347,13 +347,12 @@
       O: { p: v(0, 0, 0), etiqueta: 'O' },
       X: { p: v(3.2, 0, 0), etiqueta: 'x' },
       Y: { p: v(0, 3.0, 0), etiqueta: 'y' },
-      Z: { p: v(0, 0, 3.2), etiqueta: 'z' },
-      A: { p: v(2.6, 1.7, 0) },
-      B: { p: v(0, 1.7, 2.6) },
-      C: { p: v(2.6, 0, 2.6) }
+      Z: { p: v(0, 0, 3.2), etiqueta: 'z' }
     };
     registrar('triedro', {
       titulo: 'Triedro trirrectángulo',
+      // El televisor necesita un encuadre más próximo, sin puntos auxiliares.
+      presentacion: { zoom: 0.70, zoomMovil: 0.85 },
       alt: 'Tres semirrectas con origen común O forman un triedro; en este caso los tres diedros son rectos.',
       pie: 'Un triedro está formado por tres semirrectas (aristas) con origen común. Cada par de aristas determina una cara. Los ángulos entre aristas son los ángulos de las caras y los ángulos entre caras son los diedros.',
       medidas: [['O', 'vértice del triedro', 'altura'], ['caras', 'xOy, yOz, zOx', 'plano']],

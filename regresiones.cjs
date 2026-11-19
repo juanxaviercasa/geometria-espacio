@@ -1655,3 +1655,36 @@ test('Fase 3 aula Zénit: un docente visual, navegación académica y controles 
  assert.ok(css.includes('@media(max-width:680px)')&&css.includes('@media(max-width:420px)'),'mobile adaptativo');
  assert.ok(css.includes('.leccion-feedback[hidden]'),'avisos cerrados no ocupan espacio');
 });
+
+test('Triedro TV: puntos auxiliares, cámara permanente y etiquetas legibles',()=>{
+ const fs=require('fs'),path=require('path'),vm=require('vm');
+ const w={};
+ vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/figuras.js'),'utf8'),{window:w});
+ const spec=w.Figuras.obtener('triedro');
+ assert.deepEqual(Object.keys(spec.vertices).sort(),['O','X','Y','Z']);
+ assert.equal(spec.caras.length,3);
+ assert.equal(spec.aristas.length,3);
+ assert.equal(spec.presentacion.zoom,0.70);
+ assert.equal(spec.presentacion.zoomMovil,0.85);
+ for(const cara of spec.caras)for(const id of cara.v)assert.ok(spec.vertices[id]);
+ const mod={exports:{}};let frame=null;
+ const ctx={module:mod,exports:mod.exports,performance:{now:()=>0},requestAnimationFrame:(fn)=>{frame=fn;return 1},cancelAnimationFrame:()=>{}};
+ vm.runInNewContext(fs.readFileSync(path.join(__dirname,'js/visor3d.js'),'utf8'),ctx);
+ const P=mod.exports.Visor3D.prototype;
+ const viewer={zoomBase:.70,zoom:.70,distBase:10,dist:7,theta:.78,phi:.34,reducido:true,_actualizarCamara(){}};
+ P.enfocarCamara.call(viewer,.92,.28,null,1);
+ assert.ok(frame,'el motor inicia el cambio de paso');
+ frame(1000);
+ assert.equal(viewer.zoom,.70,'la cámara no debe alejarse a 1 al avanzar de paso');
+ const doc=fs.readFileSync(path.join(__dirname,'leccion.html'),'utf8');
+ assert.ok(doc.includes('zenit-triedro-tv-20261118'),'actualización de versión del visor');
+ assert.ok(doc.includes('css/leccion-proyeccion-tv.css'));
+ const cargador=fs.readFileSync(path.join(__dirname,'js/cargador3d.js'),'utf8');
+ assert.ok(cargador.includes('visor3d.js?v=zenit-triedro-tv-20261118'),'no servir visor 3D cacheado');
+ const v3=fs.readFileSync(path.join(__dirname,'js/visor3d.js'),'utf8');
+ assert.ok(v3.includes('this.opciones.aulaTV ? 1.25 : 1'),'aristas legibles');
+ assert.ok(v3.includes('this.opciones.aulaTV ? 1.32 : 1'),'etiquetas legibles');
+ const styles=fs.readFileSync(path.join(__dirname,'css/leccion-proyeccion-tv.css'),'utf8');
+ assert.ok(styles.includes('@media (min-width:1400px)'));
+ assert.ok(styles.includes('.figura.modo-proyector'));
+});

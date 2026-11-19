@@ -160,7 +160,8 @@
     this.caja = caja;
     this.centro = centro;
     this.radio = Math.max(radio, 0.6);
-    this.trazo = this.radio * 0.0042; // grosor base de los trazos
+    // Aristas más legibles a distancia únicamente dentro de las lecciones.
+    this.trazo = this.radio * 0.0042 * (this.opciones.aulaTV ? 1.25 : 1);
   };
 
   /* ---------- primitivas ---------- */
@@ -429,7 +430,7 @@
     tex.minFilter = T.LinearFilter;
     var mat = new T.SpriteMaterial({ map: tex, transparent: true, depthTest: false });
     var sprite = new T.Sprite(mat);
-    var alto = this.radio * 0.085;
+    var alto = this.radio * 0.085 * (this.opciones.aulaTV ? 1.32 : 1);
     sprite.scale.set((ancho / 58) * alto, alto, 1);
     sprite.renderOrder = 20;
     return sprite;
@@ -476,10 +477,10 @@
     vista = vista || {};
     this.theta = vista.theta != null ? vista.theta : (cam.theta != null ? cam.theta : 0.7);
     this.phi = vista.phi != null ? vista.phi : (cam.phi != null ? cam.phi : 0.3);
-    // Una ampliación ligera y segura solo cuando la lección la solicita.
-    // Conserva el margen de las etiquetas y respeta la vista guardada.
-    this.zoom = vista.zoom != null ? vista.zoom
-      : (this.opciones.zoomInicial != null ? this.opciones.zoomInicial : 1);
+    // Enfoque persistente: cambiar de paso o reiniciar no aleja el triedro.
+    // Si el estudiante guardó su vista, esa preferencia conserva prioridad.
+    this.zoomBase = this.opciones.zoomInicial != null ? this.opciones.zoomInicial : 1;
+    this.zoom = vista.zoom != null ? vista.zoom : this.zoomBase;
     this._ajustarDistancia();
     this._actualizarCamara();
   };
@@ -649,7 +650,8 @@
     var startTheta = this.theta;
     var startPhi = this.phi;
     var startZoom = this.zoom;
-    var finalZoom = targetDist != null ? targetDist / this.distBase : 1;
+    var finalZoom = targetDist != null ? targetDist / this.distBase
+      : (this.zoomBase != null ? this.zoomBase : 1);
     // Camino más corto (el giro automático acumula vueltas)
     var dif = targetTheta - startTheta;
     dif = Math.atan2(Math.sin(dif), Math.cos(dif));

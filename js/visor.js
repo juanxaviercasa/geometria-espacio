@@ -642,7 +642,10 @@
         try{
           estado.api=new Clase(lienzo,spec,{
             capasOcultas:estado.capasOcultas,reducido:estado.reducido,
-            zoomInicial: document.body.getAttribute('data-pagina') === 'leccion' ? 0.94 : 1,
+            zoomInicial: document.body.getAttribute('data-pagina') === 'leccion'
+              ? ((spec.presentacion && (lienzo.clientWidth < 600 ? spec.presentacion.zoomMovil : spec.presentacion.zoom)) || 0.94)
+              : 1,
+            aulaTV: document.body.getAttribute('data-pagina') === 'leccion',
             alMoverCamara:actualizarAtencion
           });
           estado.tipo='3d';
