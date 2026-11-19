@@ -26,6 +26,7 @@
 <link rel="stylesheet" href="css/zenit-global-art.css?v=visual3">
   <link rel="stylesheet" href="css/avatares-3d.css?v=20261115-3">
   <link rel="stylesheet" href="css/leccion-aula-2.css?v=20261118-1">
+  <link rel="stylesheet" href="css/leccion-aula-3.css?v=20261118-1">
 </head>
 <body data-pagina="leccion">
 <a class="salto-contenido" href="#cuerpo-leccion">Saltar al contenido de la lección</a>
@@ -72,7 +73,7 @@
   <div class="leccion-layout">
     <aside class="aside-leccion" aria-label="Orientación y progreso de la lección">
       <details class="tarjeta-aside leccion-indice-panel">
-        <summary><span>Contenido de la lección</span><span class="leccion-indice-ayuda">Ir a una sección</span></summary>
+        <summary><span>Contenido de la lección</span><span class="leccion-indice-ayuda" id="leccion-indice-actual">Objetivo</span></summary>
         <ul class="indice-leccion" id="indice-leccion"></ul>
       </details>
 
@@ -89,8 +90,20 @@
 
       <details class="tarjeta-aside leccion-consejos-panel">
         <summary>Consejos adicionales</summary>
-        <div id="avatar-guia" aria-label="Vértiz, el personaje guía"></div>
+        <div class="leccion-consejo-cuerpo">
+          <p id="avatar-guia" class="leccion-consejo-texto">Selecciona una sección o prueba una figura para descubrir cómo avanzar.</p>
+          <button type="button" class="leccion-otro-consejo" id="leccion-otro-consejo">Otro consejo de estudio</button>
+        </div>
       </details>
+      <nav class="leccion-secciones-nav" aria-label="Avanzar entre secciones de la lección">
+        <button type="button" id="leccion-seccion-anterior" disabled>← Sección anterior</button>
+        <span id="leccion-seccion-posicion" aria-live="off">Sección 1</span>
+        <button type="button" id="leccion-seccion-siguiente">Siguiente sección →</button>
+      </nav>
+      <div class="leccion-feedback" id="leccion-feedback" role="status" aria-live="polite" hidden>
+        <p id="leccion-feedback-texto"></p>
+        <button type="button" id="leccion-feedback-cerrar" aria-label="Cerrar mensaje">×</button>
+      </div>
     </aside>
 
     <article class="contenido" id="cuerpo-leccion">
@@ -152,9 +165,9 @@
 <script src="js/avatar.js?v=20261115-4"></script>
 <script src="js/ui.js?v=20261114-2"></script>
 <script src="js/narracion-ui.js?v=20261115-3"></script>
-<script src="js/visor.js?v=20261115-6"></script>
+<script src="js/visor.js?v=zenit-aula-3-20261118"></script>
 <script src="js/actividades.js?v=20261114-4"></script>
 <script src="js/guia-academica.js?v=20261114"></script>
-<script src="js/leccion.js?v=20261114-6"></script>
+<script src="js/leccion.js?v=zenit-aula-3-20261118"></script>
 </body>
 </html>

@@ -1628,3 +1628,28 @@ test('Aula Zénit 2.0: laboratorio a ancho completo sin columnas anidadas',()=>{
  assert.ok(v2d.includes('opciones.aulaAmpliada'),'márgenes y etiquetas de 2D responsive');
  assert.ok(v3d.includes('this.opciones.zoomInicial'),'3D respeta ampliación inicial sin cambiar catálogo');
 });
+
+test('Fase 3 aula Zénit: un docente visual, navegación académica y controles principales',()=>{
+ const fs=require('fs'),path=require('path');
+ const html=fs.readFileSync(path.join(__dirname,'leccion.html'),'utf8');
+ const leccion=fs.readFileSync(path.join(__dirname,'js/leccion.js'),'utf8');
+ const visor=fs.readFileSync(path.join(__dirname,'js/visor.js'),'utf8');
+ const css=fs.readFileSync(path.join(__dirname,'css/leccion-aula-3.css'),'utf8');
+ assert.ok(html.includes('css/leccion-aula-3.css'),'estilos de fase 3 cargados');
+ assert.ok(html.includes('id="leccion-seccion-anterior"')&&html.includes('id="leccion-seccion-siguiente"'),'navegación entre secciones');
+ assert.ok(html.includes('id="leccion-indice-actual"')&&html.includes('id="leccion-seccion-posicion"'),'sección actual anunciada');
+ assert.ok(html.includes('id="avatar-guia"')&&html.includes('id="leccion-otro-consejo"'),'consejos sin segundo personaje');
+ assert.ok(html.includes('id="leccion-feedback"')&&html.includes('aria-live="polite"'),'retroalimentación accesible en práctica');
+ assert.ok(leccion.includes('UI.iniciar({ avatar: false })'),'no montar avatar duplicado en lecciones');
+ assert.ok(leccion.includes('global.AvatarMensaje = function (tipo)'),'mantener API de mensajes de ejercicios');
+ assert.ok(leccion.includes("feedbackTexto.textContent = mensaje"),'mensajes visibles sin personaje lateral');
+ assert.ok(leccion.includes('function marcarSeccion(n)')&&leccion.includes('function irASeccion(n)'),'navegación y estado unificados');
+ assert.ok(leccion.includes("a.setAttribute('aria-current','location')"),'sección actual accesible');
+ assert.ok(visor.includes("accion === 'vista' || accion === 'reset'"),'vista y recentrar visibles en lecciones');
+ assert.ok(visor.includes("data-accion=\"proyectar\""),'proyector conservado');
+ assert.ok(visor.includes("data-accion=\"giro\"")&&visor.includes("data-accion=\"contraste\""),'opciones secundarias conservadas');
+ assert.ok(visor.includes('mm-pasos-titulos'),'lista de pasos detallada plegable en lecciones');
+ assert.ok(visor.includes('controlesExternos.appendChild(barraSup)'),'portada con controles externos intacta');
+ assert.ok(css.includes('@media(max-width:680px)')&&css.includes('@media(max-width:420px)'),'mobile adaptativo');
+ assert.ok(css.includes('.leccion-feedback[hidden]'),'avisos cerrados no ocupan espacio');
+});

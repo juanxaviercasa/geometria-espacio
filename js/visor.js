@@ -110,6 +110,7 @@
   function montarFigura(contenedor, idFigura, opciones) {
     opciones = opciones || {};
     var esHero = !!opciones.modoHero;
+    var esLeccion = !esHero && document.body.getAttribute("data-pagina") === "leccion";
     var origenNarracion = 'figura-' + idFigura + '-' + (++contadorNarraciones);
     var spec = global.Figuras && global.Figuras.obtener(idFigura);
     if (!spec) {
@@ -143,7 +144,7 @@
     barraSup.innerHTML =
       (esHero ? '' :
         '<div class="hud-titulo-wrap">' +
-          '<span class="hud-badge">📐 VISOR 3D</span>' +
+          '<span class="hud-badge" data-hud-modo>📐 VISTA 3D</span>' +
           '<p class="hud-fig-titulo">' + spec.titulo + '</p>' +
         '</div>') +
       '<div class="acciones-fig">' +
@@ -172,11 +173,18 @@
     var btnAjustes = accionesVisor.querySelector('[data-accion="ajustes"]');
     var panelAjustes = document.createElement('div');
     panelAjustes.className = 'figura-ajustes';
+    panelAjustes.id = 'ajustes-visor-' + contadorNarraciones;
+    btnAjustes.setAttribute('aria-controls',panelAjustes.id);
     panelAjustes.hidden = true;
     panelAjustes.setAttribute('aria-label', 'Ajustes del aula 3D');
     panelAjustes.innerHTML = '<div class="figura-ajustes-titulo"><strong>Configurar aula</strong><span>Se oculta al terminar</span></div>';
     Array.prototype.slice.call(accionesVisor.children).forEach(function (control) {
-      if (control !== btnAjustes && !control.classList.contains('btn-proyectar')) panelAjustes.appendChild(control);
+      if (control === btnAjustes || control.classList.contains('btn-proyectar')) return;
+      // Vista y Recentrar se usan constantemente al estudiar: quedan visibles
+      // solo en lecciones; otras páginas mantienen su barra compacta anterior.
+      var accion = control.getAttribute('data-accion');
+      if (esLeccion && (accion === 'vista' || accion === 'reset')) return;
+      panelAjustes.appendChild(control);
     });
     figura.appendChild(panelAjustes);
     // Los botones secundarios se trasladan al panel de Ajustes. Buscar en
@@ -198,6 +206,13 @@
         btnAjustes.setAttribute('aria-expanded','false');
         btnAjustes.focus();
       }
+    });
+    // La configuración se cierra también al pulsar fuera del visor.
+    document.addEventListener('pointerdown',function(e){
+      if(panelAjustes.hidden || panelAjustes.contains(e.target) || btnAjustes.contains(e.target))return;
+      panelAjustes.hidden=true;
+      figura.classList.remove('ajustes-abiertos');
+      btnAjustes.setAttribute('aria-expanded','false');
     });
 
     /* 2. Escenario de clase: Columna Lienzo 3D + Columna Profesor Vértiz */
@@ -328,6 +343,7 @@
         '<p class="mm-estado-narracion" data-mm-estado-voz role="status" aria-live="polite">Explicación visible. Pulsa explicar para escuchar.</p>' +
       '</div>' +
 
+      (esLeccion ? '<details class="mm-pasos-titulos"><summary>Ver títulos de los pasos</summary>' : '') +
       '<div class="mm-guion-lista" role="group" aria-label="Índice de pasos de la figura">' +
         pasos.map(function (p, idx) {
           return '<button type="button" class="mm-guion-item' + (idx === 0 ? ' activo' : '') + '" data-mm-ir="' + idx + '">' +
@@ -336,6 +352,7 @@
           '</button>';
         }).join('') +
       '</div>' +
+      (esLeccion ? '</details>' : '') +
 
       '<div class="mm-acciones-fila">' +
         '<button type="button" class="btn-mm-nav btn-mm-ant" data-mm-accion="ant" title="Volver al paso anterior y escucharlo (PageUp)">' +
@@ -583,6 +600,8 @@
 
     function pintar2d() {
       estado.tipo = '2d';
+      var etiquetaModo = barraSup.querySelector('[data-hud-modo]');
+      if (etiquetaModo) etiquetaModo.textContent = '📐 VISTA 2D';
       lienzo.innerHTML = '';
       estado.proyeccion2d=global.Visor2D.render(lienzo, spec, {
         capasOcultas: estado.capasOcultas,
@@ -626,6 +645,8 @@
             alMoverCamara:actualizarAtencion
           });
           estado.tipo='3d';
+          var etiquetaModo = barraSup.querySelector('[data-hud-modo]');
+          if (etiquetaModo) etiquetaModo.textContent = '📐 VISTA 3D';
           estado.api.setAutoGiro(estado.giro && !estado.reducido);
           aviso.hidden=!!opciones.sinAviso;
           aviso.textContent='Arrastra para girar · rueda para zoom';

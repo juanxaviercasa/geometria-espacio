@@ -115,42 +115,40 @@
      AvatarMensaje(tipo) lo llaman las actividades (acierto, fallo, pista).
      El personaje se desplaza y cambia de gesto, sin tapar nunca la figura. */
   function montarMensajeroAvatar(leccion) {
-    var guia = global.AvatarGuia;
+    // En las lecciones el profesor animado se muestra UNA sola vez: en el visor.
+    // Fuera del laboratorio, las reacciones académicas siguen presentes en texto
+    // accesible, sin crear un segundo personaje ni desplazar el contenido.
+    var mensajes = global.Avatar && global.Avatar.MENSAJES || {};
     var mapa = {
-      acierto: { estado: 'celebra', msg: global.Avatar.MENSAJES.acierto },
-      fallo: { estado: 'anima', msg: global.Avatar.MENSAJES.fallo },
-      pista: { estado: 'piensa', msg: global.Avatar.MENSAJES.pista },
-      reto: { estado: 'senala', msg: global.Avatar.MENSAJES.reto }
+      acierto: mensajes.acierto || '¡Bien! Has comprobado tu respuesta.',
+      fallo: mensajes.fallo || 'Revisa tu planteamiento y vuelve a intentarlo.',
+      pista: mensajes.pista || 'Observa los datos y busca una relación útil.',
+      reto: mensajes.reto || 'Lee el enunciado e identifica qué debes demostrar.'
     };
-
-    global.AvatarMensaje = function (tipo) {
-      var m = mapa[tipo];
-      if (!m || !guia) return;
-      if (tipo === 'acierto' && guia.celebracion) {
-        guia.setMensaje(m.msg);
-        guia.celebracion();
-        return;
-      }
-      if (guia.caminaA) {
-        // Camina hasta su postura y termina en el gesto del mensaje
-        guia.caminaA(tipo === 'fallo' ? 'der' : 'izq', m.msg, m.estado, 3400);
-        return;
-      }
-      guia.setEstado(m.estado);
-      guia.setMensaje(m.msg);
-    };
-
-    /* Botón «Otro consejo»: recorre los consejos del tema de la lección */
+    var tip = document.getElementById('avatar-guia');
+    var otroConsejo = document.getElementById('leccion-otro-consejo');
+    var feedback = document.getElementById('leccion-feedback');
+    var feedbackTexto = document.getElementById('leccion-feedback-texto');
+    var cerrarFeedback = document.getElementById('leccion-feedback-cerrar');
     var consejos = consejosDeLeccion(leccion);
     var i = 0;
-    var caja = document.querySelector('#avatar-guia .avatar-caja');
-    if (caja) {
-      caja.addEventListener('avatar-otro', function () {
-        i = (i + 1) % consejos.length;
-        if (!guia) return;
-        guia.caminaA(i % 3 === 0 ? 'centro' : i % 3 === 1 ? 'izq' : 'der', consejos[i], 'habla', 2600);
-      });
-    }
+
+    if (tip && consejos.length) tip.textContent = consejos[0];
+    if (otroConsejo) otroConsejo.addEventListener('click', function () {
+      if (!consejos.length) return;
+      i = (i + 1) % consejos.length;
+      if (tip) tip.textContent = consejos[i];
+    });
+    if (cerrarFeedback) cerrarFeedback.addEventListener('click', function () {
+      if (feedback) feedback.hidden = true;
+    });
+    global.AvatarMensaje = function (tipo) {
+      var mensaje = mapa[tipo];
+      if (!mensaje || !feedback || !feedbackTexto) return;
+      feedback.hidden = false;
+      feedback.setAttribute('data-tipo',tipo);
+      feedbackTexto.textContent = mensaje;
+    };
   }
 
   /* Consejos disponibles para esta lección, según sus títulos */
@@ -185,9 +183,10 @@
 
   /* El personaje comenta la sección visible mientras se lee */
   function seguirSecciones(leccion) {
-    if (!('IntersectionObserver' in window) || !global.AvatarGuia) return;
+    if (!('IntersectionObserver' in window)) return;
     var guia = global.AvatarGuia;
-    var T = global.Avatar.TIPS || {};
+    var consejo = document.getElementById('avatar-guia');
+    var T = global.Avatar && global.Avatar.TIPS || {};
     var mapaSecciones = {
       'sec-practica': { pos: 'der', txt: 'Ahora tú. Escribe qué te piden antes de tocar la calculadora; si te trabas, pide pista.' },
       'sec-retos': { pos: 'der', txt: T.integrador || 'Antes de calcular: nombra los vértices y escribe qué te piden y qué te dan.' }
@@ -204,8 +203,8 @@
         ultimo = e.target.id;
         var m = mapaSecciones[e.target.id];
         if (!m) return;
-        if (guia.caminaA) guia.caminaA(m.pos, m.txt);
-        else { guia.setMensaje(m.txt); }
+        if (guia && guia.caminaA) guia.caminaA(m.pos, m.txt);
+        else if (consejo) consejo.textContent = m.txt;
       });
     }, { rootMargin: '-30% 0px -45% 0px' });
     nodos.forEach(function (n) { obs.observe(n); });
@@ -366,20 +365,67 @@
       if (global.AvatarMensaje) global.AvatarMensaje('acierto');
     });
 
-    /* índice lateral */
+    /* Navegación por secciones: índice desplegable, posición actual y
+       anterior/siguiente con el mismo estado. No duplica el progreso. */
     var ul = document.getElementById('indice-leccion');
     ul.innerHTML = '<li><a href="#sec-inicio">Objetivo</a></li>' + indice.map(function (i) {
       return '<li><a href="#' + i.id + '">' + i.texto + '</a></li>';
     }).join('');
-
+    var enlaces = Array.prototype.slice.call(ul.querySelectorAll('a'));
+    var indicePanel = document.querySelector('.leccion-indice-panel');
+    var indicador = document.getElementById('leccion-indice-actual');
+    var posicion = document.getElementById('leccion-seccion-posicion');
+    var btnAnteriorSeccion = document.getElementById('leccion-seccion-anterior');
+    var btnSiguienteSeccion = document.getElementById('leccion-seccion-siguiente');
+    var indiceActual = 0;
+    function marcarSeccion(n) {
+      if (n < 0 || n >= enlaces.length) return;
+      indiceActual = n;
+      enlaces.forEach(function (a,j) {
+        a.classList.toggle('activo', j === n);
+        if (j === n) a.setAttribute('aria-current','location');
+        else a.removeAttribute('aria-current');
+      });
+      var nombre = enlaces[n].textContent.trim();
+      if (indicador) indicador.textContent = nombre;
+      if (posicion) posicion.textContent = (n + 1) + ' de ' + enlaces.length + ' · ' + nombre;
+      if (btnAnteriorSeccion) btnAnteriorSeccion.disabled = n === 0;
+      if (btnSiguienteSeccion) btnSiguienteSeccion.disabled = n === enlaces.length - 1;
+    }
+    function irASeccion(n) {
+      if (n < 0 || n >= enlaces.length) return;
+      var id = enlaces[n].getAttribute('href').slice(1);
+      var destino = document.getElementById(id);
+      if (!destino) return;
+      marcarSeccion(n);
+      destino.scrollIntoView({
+        behavior: Progreso.prefiereMovimientoReducido() ? 'auto' : 'smooth',
+        block: 'start'
+      });
+      if (indicePanel && window.matchMedia('(max-width:780px)').matches) indicePanel.open = false;
+    }
+    if (btnAnteriorSeccion) btnAnteriorSeccion.addEventListener('click',function(){
+      irASeccion(indiceActual-1);
+    });
+    if (btnSiguienteSeccion) btnSiguienteSeccion.addEventListener('click',function(){
+      irASeccion(indiceActual+1);
+    });
+    ul.addEventListener('click',function (e) {
+      var a = e.target.closest('a[href^="#"]');
+      if (!a || !ul.contains(a)) return;
+      var n = enlaces.indexOf(a);
+      if (n !== -1) marcarSeccion(n);
+      if (indicePanel && window.matchMedia('(max-width:780px)').matches) indicePanel.open = false;
+    });
+    marcarSeccion(0);
     if ('IntersectionObserver' in window) {
-      var enlaces = Array.prototype.slice.call(ul.querySelectorAll('a'));
       var obs = new IntersectionObserver(function (entradas) {
         entradas.forEach(function (e) {
           if (!e.isIntersecting) return;
-          enlaces.forEach(function (a) {
-            a.classList.toggle('activo', a.getAttribute('href') === '#' + e.target.id);
+          var n = enlaces.findIndex(function (a) {
+            return a.getAttribute('href') === '#' + e.target.id;
           });
+          if (n >= 0) marcarSeccion(n);
         });
       }, { rootMargin: '-90px 0px -65% 0px' });
       ['sec-inicio'].concat(indice.map(function (i) { return i.id; })).forEach(function (id) {
@@ -413,14 +459,8 @@
     }
 
     P.marcarEnCurso(leccion.id);
-    UI.iniciar({
-      avatar: {
-        estado: 'senala',
-        mensaje: leccion.destacada
-          ? 'Esta es la lección completa del módulo 6. En la figura puedes aislar cada diagonal: empieza por la de cara.'
-          : 'Lee la definición, mira la figura y después resuelve. Si te trabas, pide pista.'
-      }
-    });
+    // La lección usa un solo profesor animado dentro del visor geométrico.
+    UI.iniciar({ avatar: false });
     montarMensajeroAvatar(leccion);
     seguirSecciones(leccion);
     actualizarAvance();
