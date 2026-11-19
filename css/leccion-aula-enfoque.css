@@ -96,7 +96,8 @@ body[data-pagina="leccion"] .bloque-figura [data-capa="angulos"][aria-pressed="t
     min-height:0!important;max-height:none!important;
   }
   body[data-pagina="leccion"] .bloque-figura .figura.modo-aula-enfocada .figura-capas{
-    flex:0 0 auto;max-height:130px;overflow-y:auto;
+    flex:0 0 auto;max-height:none;overflow:visible;
+    /* Altura natural: las marcas de 90° y su leyenda no se recortan. */
   }
   body[data-pagina="leccion"] .bloque-figura .figura.modo-aula-enfocada .figura-col-maestro{
     min-height:0;height:100%;overflow-y:auto;overscroll-behavior:contain;
@@ -125,6 +126,11 @@ body[data-pagina="leccion"] .bloque-figura .figura.modo-proyector .figura-col-ma
 }
 body[data-pagina="leccion"] .bloque-figura .figura.modo-proyector > .figura-pie{
   display:none;
+}
+@media (min-width:1081px) {
+  body[data-pagina="leccion"] .bloque-figura .figura.modo-proyector .figura-capas{
+    flex:0 0 auto;max-height:none;overflow:visible;
+  }
 }
 @media(max-width:1080px){
   body[data-pagina="leccion"] .bloque-figura .figura.modo-aula-enfocada{
